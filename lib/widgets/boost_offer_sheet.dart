@@ -110,33 +110,40 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
     final l10n = AppLocalizations.of(context);
 
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+        filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(28, 16, 28, 0),
+          padding: const EdgeInsets.fromLTRB(28, 14, 28, 0),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+              begin: const Alignment(0.0, 2.41),
+              end: const Alignment(0.0, -2.41),
               colors: [
-                colors.modalBg3.withOpacity(0.92),
-                colors.modalBg2.withOpacity(0.88),
-                colors.modalBg1.withOpacity(0.92),
+                colors.modalBg1.withOpacity(0.96),
+                colors.modalBg2.withOpacity(0.93),
+                colors.modalBg3.withOpacity(0.95),
               ],
               stops: const [0.0, 0.5, 1.0],
             ),
             borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(24)),
-            border: const Border(
-              top: BorderSide(color: Color(0x66FFFFFF), width: 1),
+                const BorderRadius.vertical(top: Radius.circular(32)),
+            border: Border.all(
+              color: const Color(0xFFFFFFFF).withOpacity(0.5),
+              width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: colors.modalShadow.withOpacity(0.25),
-                blurRadius: 32,
-                spreadRadius: -4,
-                offset: const Offset(0, -8),
+                color: colors.modalShadow.withOpacity(0.4),
+                blurRadius: 70,
+                offset: const Offset(0, -25),
+              ),
+              BoxShadow(
+                color: const Color(0xFFFFFFFF).withOpacity(0.6),
+                blurRadius: 0,
+                offset: const Offset(0, 1),
+                spreadRadius: 0,
+                blurStyle: BlurStyle.inner,
               ),
             ],
           ),
@@ -154,7 +161,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
 
                 // Title
                 Text(
@@ -162,42 +169,45 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Sora',
-                    fontSize: 22,
+                    fontSize: 24,
                     fontWeight: FontWeight.w600,
                     color: colors.textPrimary,
-                    letterSpacing: -0.3,
+                    letterSpacing: -0.4,
                     height: 1.25,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
 
                 // Description
-                Text(
-                  widget.description,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'DM Sans',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    color: colors.textSecondary,
-                    height: 1.4,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    widget.description,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'DM Sans',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: colors.textSecondary,
+                      height: 1.45,
+                    ),
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
 
                 // Boost card (if applicable)
                 if (widget.showBoostOption) ...[
                   _buildBoostCard(colors, l10n),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                   _buildOrDivider(colors, l10n),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                 ],
 
                 // Go unlimited button
                 _buildUnlimitedButton(colors, l10n),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
               ],
             ),
           ),
@@ -206,16 +216,73 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
     );
   }
 
+  Widget _buildBenefitRow(
+    AppColorScheme colors,
+    String benefit,
+    String? detail,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFFFFF).withOpacity(0.2),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: const Center(
+              child: Text(
+                '\u2713',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFFFFFFFF),
+                  height: 1,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            benefit,
+            style: const TextStyle(
+              fontFamily: 'DM Sans',
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFFFFFFFF),
+              height: 1.3,
+            ),
+          ),
+          if (detail != null) ...[
+            const SizedBox(width: 6),
+            Text(
+              detail,
+              style: TextStyle(
+                fontFamily: 'DM Sans',
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFFFFFFFF).withOpacity(0.55),
+                height: 1.3,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _buildBoostCard(AppColorScheme colors, AppLocalizations l10n) {
     return GestureDetector(
       onTap: _isLoading ? null : _purchaseBoost,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -225,7 +292,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                   colors.ctaSecondary.withOpacity(0.84),
                 ],
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: colors.ctaPrimary.withOpacity(0.35),
                 width: 1,
@@ -233,11 +300,11 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
               boxShadow: [
                 BoxShadow(
                   color: colors.textPrimary.withOpacity(0.2),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
+                  blurRadius: 20,
+                  offset: const Offset(0, 6),
                 ),
                 BoxShadow(
-                  color: const Color(0xFFFFFFFF).withOpacity(0.12),
+                  color: const Color(0xFFFFFFFF).withOpacity(0.15),
                   blurRadius: 0,
                   offset: const Offset(0, 1),
                   spreadRadius: 0,
@@ -248,7 +315,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
             child: _isLoading
                 ? const Center(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8),
+                      padding: EdgeInsets.symmetric(vertical: 24),
                       child:
                           CupertinoActivityIndicator(color: Color(0xFFFFFFFF)),
                     ),
@@ -260,9 +327,10 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                         l10n.boostCardTitle,
                         style: const TextStyle(
                           fontFamily: 'Sora',
-                          fontSize: 16,
+                          fontSize: 17,
                           fontWeight: FontWeight.w600,
                           color: Color(0xFFFFFFFF),
+                          letterSpacing: -0.2,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -272,10 +340,19 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                           fontFamily: 'DM Sans',
                           fontSize: 13.5,
                           fontWeight: FontWeight.w400,
-                          color: const Color(0xFFFFFFFF).withOpacity(0.80),
+                          color: const Color(0xFFFFFFFF).withOpacity(0.70),
                           height: 1.35,
                         ),
                       ),
+                      const SizedBox(height: 16),
+                      // Benefits list
+                      _buildBenefitRow(
+                          colors, l10n.boostBenefit1, l10n.boostBenefit1Detail),
+                      _buildBenefitRow(
+                          colors, l10n.boostBenefit2, l10n.boostBenefit2Detail),
+                      _buildBenefitRow(
+                          colors, l10n.boostBenefit3, l10n.boostBenefit3Detail),
+                      _buildBenefitRow(colors, l10n.boostBenefit4, null),
                     ],
                   ),
           ),
@@ -318,39 +395,41 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
   Widget _buildUnlimitedButton(AppColorScheme colors, AppLocalizations l10n) {
     return SizedBox(
       width: double.infinity,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFFFFF).withOpacity(0.25),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: const Color(0xFFFFFFFF).withOpacity(0.4),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: colors.textPrimary.withOpacity(0.05),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colors.ctaPrimary.withOpacity(0.12),
+              colors.ctaSecondary.withOpacity(0.08),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: colors.ctaPrimary.withOpacity(0.30),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: colors.ctaPrimary.withOpacity(0.08),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
             ),
-            child: CupertinoButton(
-              onPressed: _isLoading ? null : _openPaywall,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              borderRadius: BorderRadius.circular(16),
-              child: Text(
-                l10n.boostGoUnlimited,
-                style: TextStyle(
-                  fontFamily: 'Sora',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: colors.ctaPrimary,
-                ),
-              ),
+          ],
+        ),
+        child: CupertinoButton(
+          onPressed: _isLoading ? null : _openPaywall,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          borderRadius: BorderRadius.circular(20),
+          child: Text(
+            l10n.boostGoUnlimited,
+            style: TextStyle(
+              fontFamily: 'Sora',
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: colors.ctaPrimary,
+              letterSpacing: -0.2,
             ),
           ),
         ),

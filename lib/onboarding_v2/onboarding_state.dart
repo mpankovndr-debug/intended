@@ -221,10 +221,19 @@ class OnboardingState extends ChangeNotifier {
 
     // ✅ PRESERVE custom habits - add them back after generating
     userHabits = [...selectedHabits, ..._customHabits];
-    
+
+    // Validate pinned habit still exists in new habit list
+    final pinnedCleared = _pinnedHabit != null && !userHabits.contains(_pinnedHabit);
+    if (pinnedCleared) {
+      _pinnedHabit = null;
+    }
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('user_habits', userHabits);
-    
+    if (pinnedCleared) {
+      await prefs.remove('pinned_habit');
+    }
+
     notifyListeners();
   }
 

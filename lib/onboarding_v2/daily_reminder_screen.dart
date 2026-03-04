@@ -68,311 +68,324 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<OnboardingState>();
     final colors = context.watch<ThemeProvider>().colors;
     final l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
-
-    final userName = state.name;
-    final hasName = userName != null && userName.isNotEmpty;
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
     return CupertinoPageScaffold(
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Base gradient background
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: const Alignment(0.18, -1.0),
-                end: const Alignment(-0.18, 1.0),
-                colors: [
-                  colors.onboardingBg1,
-                  colors.onboardingBg2,
-                  colors.onboardingBg3,
-                  colors.onboardingBg4,
-                ],
-                stops: const [0.0, 0.35, 0.7, 1.0],
+      resizeToAvoidBottomInset: false,
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Base gradient background
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: const Alignment(0.18, -1.0),
+                  end: const Alignment(-0.18, 1.0),
+                  colors: [
+                    colors.onboardingBg1,
+                    colors.onboardingBg2,
+                    colors.onboardingBg3,
+                    colors.onboardingBg4,
+                  ],
+                  stops: const [0.0, 0.35, 0.7, 1.0],
+                ),
               ),
             ),
-          ),
 
-          // Background orbs
-          _buildBackgroundOrbs(size, colors),
+            // Background orbs
+            RepaintBoundary(
+              child: _buildBackgroundOrbs(size, colors),
+            ),
 
-          // Content
-          SafeArea(
-            bottom: false,
-            child: Stack(
-              children: [
-                // Column with Header + Expanded ScrollView
-                Column(
-                  children: [
-                    // Header with back button and label
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(28, 40, 28, 16),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Label (centered)
-                          Center(
-                            child: Text(
-                              l10n.reminderTitle,
-                              style: TextStyle(
-                                fontFamily: 'Sora',
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: colors.textLabel,
-                                letterSpacing: 0.3,
+            // Content
+            SafeArea(
+              bottom: false,
+              child: Stack(
+                children: [
+                  // Column with Header + Expanded ScrollView
+                  Column(
+                    children: [
+                      // Header with back button and label
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(28, 40, 28, 16),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // Label (centered)
+                            Center(
+                              child: Text(
+                                l10n.reminderTitle,
+                                style: TextStyle(
+                                  fontFamily: 'Sora',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: colors.textLabel,
+                                  letterSpacing: 0.3,
+                                ),
                               ),
                             ),
-                          ),
 
-                          // Back button (left aligned)
-                          Positioned(
-                            left: 0,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: BackdropFilter(
-                                filter:
-                                    ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        const Color(0xFFFFFFFF)
-                                            .withOpacity(0.35),
-                                        const Color(0xFFFFFFFF)
-                                            .withOpacity(0.2),
+                            // Back button (left aligned)
+                            Positioned(
+                              left: 0,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                                  child: Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          const Color(0xFFFFFFFF)
+                                              .withOpacity(0.35),
+                                          const Color(0xFFFFFFFF)
+                                              .withOpacity(0.2),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: const Color(0xFFFFFFFF)
+                                            .withOpacity(0.3),
+                                        width: 1,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: colors.textPrimary
+                                              .withOpacity(0.08),
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 2),
+                                        ),
                                       ],
                                     ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: const Color(0xFFFFFFFF)
-                                          .withOpacity(0.3),
-                                      width: 1,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: colors.textPrimary
-                                            .withOpacity(0.08),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 2),
+                                    child: CupertinoButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Icon(
+                                        CupertinoIcons.back,
+                                        size: 20,
+                                        color: colors.ctaPrimary,
                                       ),
-                                    ],
-                                  ),
-                                  child: CupertinoButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Icon(
-                                      CupertinoIcons.back,
-                                      size: 20,
-                                      color: colors.ctaPrimary,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
 
-                    // Main content
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 28),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 32),
-                            Text(
-                              l10n.reminderSubtitle,
-                              style: TextStyle(
-                                fontFamily: 'Sora',
-                                fontSize: 26,
-                                fontWeight: FontWeight.w600,
-                                color: colors.textPrimary,
-                                height: 1.3,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              l10n.reminderDescription,
-                              style: TextStyle(
-                                fontFamily: 'Sora',
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: colors.ctaSecondary,
-                              ),
-                            ),
-
-                            const SizedBox(height: 60),
-
-                            // Toggle card
-                            _buildToggleCard(state, colors, l10n),
-
-                            const SizedBox(height: 16),
-
-                            // Weekly summary toggle
-                            _buildWeeklySummaryCard(state, colors, l10n),
-
-                            // Helper message when OFF
-                            if (!state.dailyReminderEnabled &&
-                                !_permissionDenied)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 4, bottom: 20),
-                                child: Center(
-                                  child: Text(
-                                    l10n.reminderSwitchHint,
-                                    textAlign: TextAlign.center,
+                      // Main content
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 28),
+                          child: Consumer<OnboardingState>(
+                            builder: (context, state, _) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 32),
+                                  Text(
+                                    l10n.reminderSubtitle,
                                     style: TextStyle(
                                       fontFamily: 'Sora',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: colors.textTertiary,
-                                      height: 1.5,
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.w600,
+                                      color: colors.textPrimary,
+                                      height: 1.3,
+                                      letterSpacing: -0.3,
                                     ),
                                   ),
-                                ),
-                              ),
-
-                            // Permission denied message
-                            if (_permissionDenied)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 4, bottom: 20),
-                                child: Center(
-                                  child: Text(
-                                    l10n.reminderNoWorries,
-                                    textAlign: TextAlign.center,
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    l10n.reminderDescription,
                                     style: TextStyle(
                                       fontFamily: 'Sora',
-                                      fontSize: 14,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.w500,
-                                      color: colors.textTertiary,
-                                      height: 1.5,
+                                      color: colors.ctaSecondary,
                                     ),
                                   ),
-                                ),
-                              ),
 
-                            const SizedBox(height: 160),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                                  const SizedBox(height: 60),
 
-                // Gradient overlay
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  height: 180,
-                  child: IgnorePointer(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            colors.onboardingBg4.withOpacity(0.0),
-                            colors.onboardingBg4.withOpacity(0.92),
-                            colors.onboardingBg4.withOpacity(0.98),
-                          ],
-                          stops: const [0.0, 0.5, 1.0],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                                  // Toggle card
+                                  _buildToggleCard(state, colors, l10n),
 
-                // Buttons
-                Positioned(
-                  left: 28,
-                  right: 28,
-                  bottom: 34,
-                  child: Column(
-                    children: [
-                      // Start button
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: colors.textPrimary.withOpacity(0.3),
-                              blurRadius: 24,
-                              offset: const Offset(0, 8),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    colors.ctaPrimary.withOpacity(0.92),
-                                    colors.ctaSecondary.withOpacity(0.88),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: CupertinoButton(
-                                onPressed: _handleContinue,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                child: Text(
-                                  hasName
-                                      ? l10n.reminderLetsGo(userName)
-                                      : l10n.commonStart,
-                                  style: const TextStyle(
-                                    fontFamily: 'Sora',
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      // Skip button
-                      CupertinoButton(
-                        padding: const EdgeInsets.all(12),
-                        onPressed: _handleContinue,
-                        child: Text(
-                          l10n.commonSkip,
-                          style: TextStyle(
-                            fontFamily: 'Sora',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: colors.textTertiary,
+                                  const SizedBox(height: 16),
+
+                                  // Weekly summary toggle
+                                  _buildWeeklySummaryCard(state, colors, l10n),
+
+                                  // Helper message when OFF
+                                  if (!state.dailyReminderEnabled &&
+                                      !_permissionDenied)
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(top: 4, bottom: 20),
+                                      child: Center(
+                                        child: Text(
+                                          l10n.reminderSwitchHint,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: 'Sora',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: colors.textTertiary,
+                                            height: 1.5,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                  // Permission denied message
+                                  if (_permissionDenied)
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(top: 4, bottom: 20),
+                                      child: Center(
+                                        child: Text(
+                                          l10n.reminderNoWorries,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: 'Sora',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: colors.textTertiary,
+                                            height: 1.5,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                  const SizedBox(height: 160),
+                                ],
+                              );
+                            },
                           ),
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
+
+                  // Gradient overlay
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: bottomInset,
+                    height: 180,
+                    child: IgnorePointer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              colors.onboardingBg4.withOpacity(0.0),
+                              colors.onboardingBg4.withOpacity(0.92),
+                              colors.onboardingBg4.withOpacity(0.98),
+                            ],
+                            stops: const [0.0, 0.5, 1.0],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Buttons
+                  Positioned(
+                    left: 28,
+                    right: 28,
+                    bottom: 34 + bottomInset,
+                    child: Consumer<OnboardingState>(
+                      builder: (context, state, _) {
+                        final userName = state.name;
+                        final hasName = userName != null && userName.isNotEmpty;
+                        return Column(
+                          children: [
+                            // Start button
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: colors.textPrimary.withOpacity(0.3),
+                                    blurRadius: 24,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          colors.ctaPrimary.withOpacity(0.92),
+                                          colors.ctaSecondary.withOpacity(0.88),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: CupertinoButton(
+                                      onPressed: _handleContinue,
+                                      padding:
+                                          const EdgeInsets.symmetric(vertical: 16),
+                                      child: Text(
+                                        hasName
+                                            ? l10n.reminderLetsGo(userName)
+                                            : l10n.commonStart,
+                                        style: const TextStyle(
+                                          fontFamily: 'Sora',
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xFFFFFFFF),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            // Skip button
+                            CupertinoButton(
+                              padding: const EdgeInsets.all(12),
+                              onPressed: _handleContinue,
+                              child: Text(
+                                l10n.commonSkip,
+                                style: TextStyle(
+                                  fontFamily: 'Sora',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: colors.textTertiary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -593,10 +606,7 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                                     child: ClipRRect(
                                       borderRadius: const BorderRadius.vertical(
                                           top: Radius.circular(32)),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                            sigmaX: 40, sigmaY: 40),
-                                        child: Container(
+                                      child: Container(
                                           height: 340,
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
@@ -809,7 +819,6 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                                             ],
                                           ),
                                         ),
-                                      ),
                                     ),
                                   ),
                                 );
@@ -892,6 +901,13 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                   onTap: () async {
                     HapticFeedback.selectionClick();
                     final value = !_weeklyEnabled;
+
+                    if (value) {
+                      final granted =
+                          await NotificationScheduler.requestPermission();
+                      if (!granted) return;
+                    }
+
                     setState(() => _weeklyEnabled = value);
                     await NotificationPreferencesService.setWeeklyEnabled(
                         value);

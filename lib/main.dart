@@ -15,6 +15,7 @@ import 'services/analytics_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 
+import 'utils/habit_l10n.dart';
 import 'theme/app_colors.dart';
 import 'theme/theme_provider.dart';
 import 'onboarding_v2/onboarding_state.dart';
@@ -426,8 +427,7 @@ void main() {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      await NotificationScheduler.initialize();
-      await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
       try {
         await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
@@ -438,7 +438,6 @@ void main() {
 
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-      await IOSVersion.init();
       final prefs = await SharedPreferences.getInstance();
 
       // Check if this is first run
@@ -473,7 +472,6 @@ void main() {
 
       final userState = UserState();
       final revenueCatService = RevenueCatService(userState);
-      await revenueCatService.init();
 
       runApp(
         MultiProvider(
@@ -486,6 +484,14 @@ void main() {
           child: const IntendedApp(),
         ),
       );
+
+      // Deferred initialization — runs after the first frame is rendered
+      // so the UI appears instantly instead of waiting for network calls.
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await NotificationScheduler.initialize();
+        IOSVersion.init();
+        revenueCatService.init();
+      });
     },
     (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
@@ -510,6 +516,14 @@ class IntendedApp extends StatelessWidget {
         Locale('en'),
         Locale('ru'),
       ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        // Only use Russian if the device language is explicitly Russian
+        if (locale?.languageCode == 'ru') {
+          return const Locale('ru');
+        }
+        // Default to English for all other languages
+        return const Locale('en');
+      },
       theme: const CupertinoThemeData(
         textTheme: CupertinoTextThemeData(
           textStyle: TextStyle(
@@ -1989,35 +2003,29 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                       // ============================================================
                       // TEXT INPUT FIELD
                       // ============================================================
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                          child: CupertinoTextField(
-                            controller: _controller,
-                            placeholder: l10n.customHabitPlaceholder,
-                            autofocus: true,
-                            maxLength: 50,
-                            onChanged: (_) => setState(() {}),
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: colors.textPrimary,
-                              fontFamily: 'Sora',
-                            ),
-                            placeholderStyle: TextStyle(
-                              fontSize: 17,
-                              color: colors.textSecondary,
-                              fontFamily: 'Sora',
-                            ),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFFFFFF).withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: colors.buttonDark.withOpacity(0.12),
-                                width: 1,
-                              ),
-                            ),
+                      CupertinoTextField(
+                        controller: _controller,
+                        placeholder: l10n.customHabitPlaceholder,
+                        autofocus: true,
+                        maxLength: 50,
+                        onChanged: (_) => setState(() {}),
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: colors.textPrimary,
+                          fontFamily: 'Sora',
+                        ),
+                        placeholderStyle: TextStyle(
+                          fontSize: 17,
+                          color: colors.textSecondary,
+                          fontFamily: 'Sora',
+                        ),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFFFFF).withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: colors.buttonDark.withOpacity(0.12),
+                            width: 1,
                           ),
                         ),
                       ),
@@ -2563,7 +2571,7 @@ class _HabitCardState extends State<_HabitCard>
 
                         Text(
                           l10n.replacePinDescription(
-                              currentPinned!, widget.habitTitle),
+                              localizeHabitName(currentPinned!, l10n), localizeHabitName(widget.habitTitle, l10n)),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'DM Sans',
@@ -2763,7 +2771,7 @@ class _HabitCardState extends State<_HabitCard>
                         children: [
                           // Title
                           Text(
-                            l10n.swapTitle(widget.habitTitle),
+                            l10n.swapTitle(localizeHabitName(widget.habitTitle, l10n)),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'Sora',
@@ -2857,7 +2865,7 @@ class _HabitCardState extends State<_HabitCard>
                                           borderRadius:
                                               BorderRadius.circular(18),
                                           child: Text(
-                                            habit,
+                                            localizeHabitName(habit, l10n),
                                             style: TextStyle(
                                               fontFamily: 'Sora',
                                               fontSize: 15,
@@ -3169,7 +3177,7 @@ class _HabitCardState extends State<_HabitCard>
 
                       // Description
                       Text(
-                        l10n.deleteHabitMessage(widget.habitTitle),
+                        l10n.deleteHabitMessage(localizeHabitName(widget.habitTitle, l10n)),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Sora',
@@ -3293,6 +3301,7 @@ class _HabitCardState extends State<_HabitCard>
   Widget build(BuildContext context) {
     super.build(context); // Required by AutomaticKeepAliveClientMixin
     final colors = context.watch<ThemeProvider>().colors;
+    final l10n = AppLocalizations.of(context);
     final isCustom =
         context.read<OnboardingState>().isCustomHabit(widget.habitTitle);
 
@@ -3446,7 +3455,7 @@ class _HabitCardState extends State<_HabitCard>
                                         ? _textFadeAnimation.value
                                         : 1.0,
                                     child: Text(
-                                      widget.habitTitle,
+                                      localizeHabitName(widget.habitTitle, l10n),
                                       style: TextStyle(
                                         fontSize: _isDoneToday ? 15 : 16,
                                         fontWeight: FontWeight.w500,
@@ -4081,66 +4090,60 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
           // ============================================================
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF).withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: colors.buttonDark.withOpacity(0.12),
-                      width: 1,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: colors.textPrimary.withOpacity(0.04),
-                        blurRadius: 3,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        CupertinoIcons.search,
-                        size: 18,
-                        color: colors.textSecondary.withOpacity(0.6),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: CupertinoTextField(
-                          controller: _searchController,
-                          placeholder: l10n.browseHabitsSearch,
-                          padding: EdgeInsets.zero,
-                          decoration: const BoxDecoration(
-                            color: Colors.transparent,
-                          ),
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: colors.textPrimary,
-                            fontFamily: 'DMSans',
-                          ),
-                          placeholderStyle: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: colors.textSecondary.withOpacity(0.6),
-                            fontFamily: 'DMSans',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              _searchQuery = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFFFF).withOpacity(0.7),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: colors.buttonDark.withOpacity(0.12),
+                  width: 1,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: colors.textPrimary.withOpacity(0.04),
+                    blurRadius: 3,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.search,
+                    size: 18,
+                    color: colors.textSecondary.withOpacity(0.6),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: CupertinoTextField(
+                      controller: _searchController,
+                      placeholder: l10n.browseHabitsSearch,
+                      padding: EdgeInsets.zero,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: colors.textPrimary,
+                        fontFamily: 'DMSans',
+                      ),
+                      placeholderStyle: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: colors.textSecondary.withOpacity(0.6),
+                        fontFamily: 'DMSans',
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          _searchQuery = value;
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -4171,7 +4174,7 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
                       Padding(
                         padding: const EdgeInsets.only(left: 4, bottom: 14),
                         child: Text(
-                          category.toUpperCase(),
+                          localizeCategoryName(category, l10n).toUpperCase(),
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -4245,6 +4248,7 @@ class _BrowseHabitCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.watch<ThemeProvider>().colors;
+    final l10n = AppLocalizations.of(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -4290,7 +4294,7 @@ class _BrowseHabitCard extends StatelessWidget {
                       // Habit title
                       Expanded(
                         child: Text(
-                          habitTitle,
+                          localizeHabitName(habitTitle, l10n),
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,

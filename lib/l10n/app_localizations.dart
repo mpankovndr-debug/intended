@@ -152,6 +152,12 @@ abstract class AppLocalizations {
   /// **'Not now'**
   String get commonNotNow;
 
+  /// No description provided for @commonDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get commonDismiss;
+
   /// No description provided for @commonStart.
   ///
   /// In en, this message translates to:
@@ -343,6 +349,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can select up to 2 areas. Deselect one to choose another.'**
   String get focusAreasLimitMessage;
+
+  /// No description provided for @focusLimitFreeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Two is a great start'**
+  String get focusLimitFreeTitle;
+
+  /// No description provided for @focusLimitFreeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Want to explore more? Upgrade to Intended+ for unlimited focus areas.'**
+  String get focusLimitFreeMessage;
+
+  /// No description provided for @focusLimitFreeUpgrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade'**
+  String get focusLimitFreeUpgrade;
+
+  /// No description provided for @focusNudgeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A gentle thought'**
+  String get focusNudgeTitle;
+
+  /// No description provided for @focusNudgeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You can choose as many as you\'d like! Focusing on fewer areas tends to lead to deeper growth. But you know yourself best.'**
+  String get focusNudgeMessage;
+
+  /// No description provided for @focusNudgeGotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get focusNudgeGotIt;
 
   /// No description provided for @reminderTitle.
   ///
@@ -2792,6 +2834,18 @@ abstract class AppLocalizations {
   /// **'Sign in with Apple'**
   String get profileSignInApple;
 
+  /// No description provided for @profileSignedInGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in with Google'**
+  String get profileSignedInGoogle;
+
+  /// No description provided for @profileSignedInApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in with Apple'**
+  String get profileSignedInApple;
+
   /// No description provided for @profileSignOut.
   ///
   /// In en, this message translates to:
@@ -3791,7 +3845,7 @@ abstract class AppLocalizations {
   /// No description provided for @boostCardSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'+1 habit, +1 focus area, share cards'**
+  /// **'A little extra room to grow.'**
   String get boostCardSubtitle;
 
   /// No description provided for @boostOrDivider.
@@ -3812,6 +3866,48 @@ abstract class AppLocalizations {
   /// **'Something went wrong with the purchase. Please try again.'**
   String get boostPurchaseError;
 
+  /// No description provided for @boostBenefit1.
+  ///
+  /// In en, this message translates to:
+  /// **'3 custom habits'**
+  String get boostBenefit1;
+
+  /// No description provided for @boostBenefit1Detail.
+  ///
+  /// In en, this message translates to:
+  /// **'up from 2'**
+  String get boostBenefit1Detail;
+
+  /// No description provided for @boostBenefit2.
+  ///
+  /// In en, this message translates to:
+  /// **'3 focus areas'**
+  String get boostBenefit2;
+
+  /// No description provided for @boostBenefit2Detail.
+  ///
+  /// In en, this message translates to:
+  /// **'up from 2'**
+  String get boostBenefit2Detail;
+
+  /// No description provided for @boostBenefit3.
+  ///
+  /// In en, this message translates to:
+  /// **'3 habit swaps/month'**
+  String get boostBenefit3;
+
+  /// No description provided for @boostBenefit3Detail.
+  ///
+  /// In en, this message translates to:
+  /// **'up from 2'**
+  String get boostBenefit3Detail;
+
+  /// No description provided for @boostBenefit4.
+  ///
+  /// In en, this message translates to:
+  /// **'Shareable progress cards'**
+  String get boostBenefit4;
+
   /// No description provided for @boostOfferHabitTitle.
   ///
   /// In en, this message translates to:
@@ -3821,7 +3917,7 @@ abstract class AppLocalizations {
   /// No description provided for @boostOfferHabitDesc.
   ///
   /// In en, this message translates to:
-  /// **'Create one more habit that fits your life.'**
+  /// **'You\'re building something meaningful — give yourself room for one more.'**
   String get boostOfferHabitDesc;
 
   /// No description provided for @boostOfferFocusTitle.
@@ -3833,7 +3929,7 @@ abstract class AppLocalizations {
   /// No description provided for @boostOfferFocusDesc.
   ///
   /// In en, this message translates to:
-  /// **'Add one more area to focus on what matters.'**
+  /// **'Your growth doesn\'t fit in a box — expand what you focus on.'**
   String get boostOfferFocusDesc;
 
   /// No description provided for @boostOfferSwapTitle.
@@ -3845,7 +3941,7 @@ abstract class AppLocalizations {
   /// No description provided for @boostOfferSwapDesc.
   ///
   /// In en, this message translates to:
-  /// **'Get a few more swaps to find the right habits.'**
+  /// **'Finding the right habits takes exploring — get a few more tries.'**
   String get boostOfferSwapDesc;
 
   /// No description provided for @boostOfferShareTitle.
@@ -3857,7 +3953,7 @@ abstract class AppLocalizations {
   /// No description provided for @boostOfferShareDesc.
   ///
   /// In en, this message translates to:
-  /// **'Unlock shareable milestone cards.'**
+  /// **'Your journey is worth celebrating — share it with people who care.'**
   String get boostOfferShareDesc;
 }
 

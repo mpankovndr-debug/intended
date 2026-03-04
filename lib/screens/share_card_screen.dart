@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../main.dart';
+import '../utils/habit_l10n.dart';
 import '../models/share_card_type.dart';
 import '../services/milestone_service.dart';
 import '../services/share_service.dart';
@@ -206,7 +207,7 @@ class _ShareCardScreenState extends State<ShareCardScreen>
         subtitleText = l10n.milestoneAreaSubtitle;
         break;
       case MilestoneVariant.identity:
-        heroText = l10n.milestoneIdentityHero(data.topHabitName ?? '');
+        heroText = l10n.milestoneIdentityHero(localizeHabitName(data.topHabitName ?? '', l10n));
         subtitleText = l10n.milestoneIdentitySubtitle;
         break;
     }

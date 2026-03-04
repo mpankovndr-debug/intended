@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Colors;
+import 'package:flutter/material.dart' show CircleAvatar, Colors, NetworkImage;
+import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +19,7 @@ import '../state/user_state.dart';
 import '../utils/profanity_filter.dart';
 import '../utils/text_styles.dart';
 import '../utils/responsive_utils.dart';
+import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import 'paywall_screen.dart';
 import 'subscription_management_modal.dart';
@@ -27,6 +31,8 @@ import '../services/notification_scheduler.dart';
 import '../services/notification_preferences_service.dart';
 import 'moments_collection_screen.dart';
 import '../widgets/boost_offer_sheet.dart';
+import '../widgets/focus_area_card.dart';
+import '../onboarding_v2/focus_areas_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -38,6 +44,12 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final controller = TextEditingController();
   bool _isEditing = false;
+
+  bool _isSigningIn = false;
+
+  // Auth state
+  User? _currentUser;
+  late final StreamSubscription<User?> _authSub;
 
   // Notification prefs state
   bool _dailyEnabled = false;
@@ -53,6 +65,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     AnalyticsService.logScreenView('profile');
     controller.addListener(() {
       setState(() {});
+    });
+    _currentUser = FirebaseAuth.instance.currentUser;
+    _authSub = FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (mounted) setState(() => _currentUser = user);
     });
     _loadNotificationPrefs();
   }
@@ -74,6 +90,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    setState(() => _isSigningIn = true);
+    try {
+      final credential = await AuthService.signInWithGoogle();
+      if (credential?.user != null && context.mounted) {
+        await context.read<RevenueCatService>().logIn(credential!.user!.uid);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        _showSignInError(context, e);
+      }
+    } finally {
+      if (mounted) setState(() => _isSigningIn = false);
+    }
+  }
+
+  Future<void> _signInWithApple(BuildContext context) async {
+    setState(() => _isSigningIn = true);
+    try {
+      final credential = await AuthService.signInWithApple();
+      if (credential?.user != null && context.mounted) {
+        await context.read<RevenueCatService>().logIn(credential!.user!.uid);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        _showSignInError(context, e);
+      }
+    } finally {
+      if (mounted) setState(() => _isSigningIn = false);
+    }
+  }
+
+  void _showSignInError(BuildContext context, Object error) {
+    showCupertinoDialog(
+      context: context,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text('Sign in failed'),
+        content: const Text('Something went wrong. Please try again.'),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   String _formatTime(int hour, int minute) {
     final period = hour >= 12 ? 'PM' : 'AM';
     final displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
@@ -82,6 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void dispose() {
+    _authSub.cancel();
     controller.dispose();
     super.dispose();
   }
@@ -1164,6 +1230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     // Notifications Card
                     _GlassCard(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                       child: Column(
                         children: [
                           // Row 1: Daily reminders toggle
@@ -1335,17 +1402,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       ],
                                                     ),
                                                     Expanded(
-                                                      child:
-                                                          CupertinoDatePicker(
-                                                        mode:
-                                                            CupertinoDatePickerMode
-                                                                .time,
-                                                        initialDateTime:
-                                                            tempTime,
-                                                        onDateTimeChanged:
-                                                            (dt) {
-                                                          tempTime = dt;
-                                                        },
+                                                      child: CupertinoTheme(
+                                                        data: CupertinoThemeData(
+                                                          textTheme:
+                                                              CupertinoTextThemeData(
+                                                            dateTimePickerTextStyle:
+                                                                TextStyle(
+                                                              fontFamily: 'Sora',
+                                                              fontSize: 22,
+                                                              fontWeight:
+                                                                  FontWeight.w500,
+                                                              color:
+                                                                  colors.textPrimary,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        child:
+                                                            CupertinoDatePicker(
+                                                          mode:
+                                                              CupertinoDatePickerMode
+                                                                  .time,
+                                                          initialDateTime:
+                                                              tempTime,
+                                                          backgroundColor:
+                                                              Colors.transparent,
+                                                          onDateTimeChanged:
+                                                              (dt) {
+                                                            tempTime = dt;
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
@@ -1631,25 +1716,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     const SizedBox(height: 16),
 
-                    // CONNECT ACCOUNT label (dimmed)
+                    // CONNECT ACCOUNT label
                     Padding(
                       padding: const EdgeInsets.only(top: 16, bottom: 4),
-                      child: Opacity(
-                        opacity: 0.6,
-                        child: Text(
-                          l10n.profileConnectAccount,
-                          style: TextStyle(
-                            fontFamily: 'Sora',
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            color: colors.textSecondary,
-                            letterSpacing: 0.8,
-                          ),
+                      child: Text(
+                        l10n.profileConnectAccount,
+                        style: TextStyle(
+                          fontFamily: 'Sora',
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                          color: colors.textSecondary,
+                          letterSpacing: 0.8,
                         ),
                       ),
                     ),
 
-                    // Sign-In Card (Multi-Button)
+                    // Sign-In / Account Card
                     Container(
                       decoration: BoxDecoration(
                         color: colors.profileCard
@@ -1667,92 +1749,178 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      child: Column(
-                        children: [
-                          // Google Sign In Button
-                          CupertinoButton(
-                            padding: const EdgeInsets.all(16),
-                            onPressed: () async {
-                              try {
-                                final credential =
-                                    await AuthService.signInWithGoogle();
-                                if (credential?.user != null) {
-                                  await context
-                                      .read<RevenueCatService>()
-                                      .logIn(credential!.user!.uid);
-                                }
-                              } catch (e) {
-                                // handle error
-                              }
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Google "G" logo
-                                SvgPicture.asset(
-                                  'assets/images/google_logo.svg',
-                                  width: 22,
-                                  height: 22,
-                                ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  l10n.profileSignInGoogle,
-                                  style: TextStyle(
-                                    fontFamily: 'Sora',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: colors.textPrimary,
+                      child: _currentUser != null
+                          // Already signed in — show account info
+                          ? Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Row(
+                                children: [
+                                  // Avatar
+                                  CircleAvatar(
+                                    radius: 22,
+                                    backgroundColor:
+                                        colors.ctaPrimary.withOpacity(0.15),
+                                    backgroundImage:
+                                        _currentUser?.photoURL != null
+                                            ? NetworkImage(
+                                                _currentUser!.photoURL!)
+                                            : null,
+                                    child: _currentUser?.photoURL == null
+                                        ? Icon(
+                                            CupertinoIcons.person_fill,
+                                            size: 20,
+                                            color: colors.ctaPrimary,
+                                          )
+                                        : null,
                                   ),
+                                  const SizedBox(width: 14),
+                                  // Name, email, provider
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (_currentUser?.displayName !=
+                                                null &&
+                                            _currentUser!
+                                                .displayName!.isNotEmpty)
+                                          Text(
+                                            _currentUser!.displayName!,
+                                            style: TextStyle(
+                                              fontFamily: 'Sora',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: colors.textPrimary,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        if (_currentUser?.email != null)
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              top: _currentUser?.displayName !=
+                                                          null &&
+                                                      _currentUser!
+                                                          .displayName!
+                                                          .isNotEmpty
+                                                  ? 2
+                                                  : 0,
+                                            ),
+                                            child: Text(
+                                              _currentUser!.email!,
+                                              style: TextStyle(
+                                                fontFamily: 'Sora',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                color: colors.textSecondary,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 4),
+                                          child: Text(
+                                            _currentUser!.providerData.any(
+                                                    (p) =>
+                                                        p.providerId ==
+                                                        'apple.com')
+                                                ? l10n.profileSignedInApple
+                                                : _currentUser!.providerData
+                                                        .any((p) =>
+                                                            p.providerId ==
+                                                            'google.com')
+                                                    ? l10n.profileSignedInGoogle
+                                                    : 'Connected',
+                                            style: TextStyle(
+                                              fontFamily: 'Sora',
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: colors.ctaPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    CupertinoIcons.checkmark_shield_fill,
+                                    size: 20,
+                                    color: colors.ctaPrimary,
+                                  ),
+                                ],
+                              ),
+                            )
+                          // Not signed in — show sign-in buttons
+                          : Column(
+                              children: [
+                                // Google Sign In Button
+                                CupertinoButton(
+                                  padding: const EdgeInsets.all(16),
+                                  onPressed: _isSigningIn
+                                      ? null
+                                      : () => _signInWithGoogle(context),
+                                  child: _isSigningIn
+                                      ? const CupertinoActivityIndicator()
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/images/google_logo.svg',
+                                              width: 22,
+                                              height: 22,
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Text(
+                                              l10n.profileSignInGoogle,
+                                              style: TextStyle(
+                                                fontFamily: 'Sora',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: colors.textPrimary,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                ),
+                                Container(
+                                  height: 1,
+                                  color: colors.ctaPrimary.withOpacity(0.1),
+                                ),
+                                // Apple Sign In Button
+                                CupertinoButton(
+                                  padding: const EdgeInsets.all(16),
+                                  onPressed: _isSigningIn
+                                      ? null
+                                      : () => _signInWithApple(context),
+                                  child: _isSigningIn
+                                      ? const CupertinoActivityIndicator()
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '\uF8FF',
+                                              style: TextStyle(
+                                                fontSize: 22,
+                                                color: colors.textPrimary,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Text(
+                                              l10n.profileSignInApple,
+                                              style: TextStyle(
+                                                fontFamily: 'Sora',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: colors.textPrimary,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                 ),
                               ],
                             ),
-                          ),
-                          Container(
-                            height: 1,
-                            color: colors.ctaPrimary.withOpacity(0.1),
-                          ),
-                          // Apple Sign In Button
-                          CupertinoButton(
-                            padding: const EdgeInsets.all(16),
-                            onPressed: () async {
-                              try {
-                                final credential =
-                                    await AuthService.signInWithApple();
-                                if (credential?.user != null) {
-                                  await context
-                                      .read<RevenueCatService>()
-                                      .logIn(credential!.user!.uid);
-                                }
-                              } catch (e) {
-                                // handle error
-                              }
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Apple logo
-                                Text(
-                                  '\uF8FF',
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    color: colors.textPrimary,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  l10n.profileSignInApple,
-                                  style: TextStyle(
-                                    fontFamily: 'Sora',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: colors.textPrimary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
 
                     const SizedBox(height: 40),
@@ -1760,56 +1928,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // Footer Section
                     Column(
                       children: [
-                        // Sign Out Button
-                        Container(
-                          decoration: BoxDecoration(
-                            color: colors.profileCard
-                                .withOpacity(colors.profileCardOpacity),
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(
-                              color: const Color(0xFFFFFFFF).withOpacity(0.6),
-                              width: 1,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: colors.textPrimary.withOpacity(0.04),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
+                        // Sign Out Button (only when signed in)
+                        if (_currentUser != null)
+                          Container(
+                            decoration: BoxDecoration(
+                              color: colors.profileCard
+                                  .withOpacity(colors.profileCardOpacity),
+                              borderRadius: BorderRadius.circular(100),
+                              border: Border.all(
+                                color: const Color(0xFFFFFFFF).withOpacity(0.6),
+                                width: 1,
                               ),
-                            ],
-                          ),
-                          child: CupertinoButton(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            onPressed: () async {
-                              await AuthService.signOut();
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  CupertinoIcons.arrow_right_square,
-                                  size: 18,
-                                  color: colors.textMutedBrown,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  l10n.profileSignOut,
-                                  style: TextStyle(
-                                    fontFamily: 'Sora',
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    color: colors.textMutedBrown,
-                                  ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: colors.textPrimary.withOpacity(0.04),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
                                 ),
                               ],
                             ),
+                            child: CupertinoButton(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              onPressed: () async {
+                                await context
+                                    .read<RevenueCatService>()
+                                    .logOut();
+                                await AuthService.signOut();
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    CupertinoIcons.arrow_right_square,
+                                    size: 18,
+                                    color: colors.textMutedBrown,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    l10n.profileSignOut,
+                                    style: TextStyle(
+                                      fontFamily: 'Sora',
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      color: colors.textMutedBrown,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
 
                         const SizedBox(height: 32),
 
-                        // Delete Profile Data Link
+                        // Delete Profile Data Link (always visible)
                         CupertinoButton(
                           padding: EdgeInsets.zero,
                           onPressed: _deleteProfileData,
@@ -1957,28 +2129,6 @@ class _FocusAreaChangeScreen extends StatefulWidget {
 class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
   final List<String> _selectedAreas = [];
 
-  static const List<String> areas = [
-    'Health',
-    'Mood',
-    'Productivity',
-    'Home & organization',
-    'Relationships',
-    'Creativity',
-    'Finances',
-    'Self-care',
-  ];
-
-  Map<String, String> _localizedAreaNames(AppLocalizations l10n) => {
-        'Health': l10n.focusAreaHealth,
-        'Mood': l10n.focusAreaMood,
-        'Productivity': l10n.focusAreaProductivity,
-        'Home & organization': l10n.focusAreaHome,
-        'Relationships': l10n.focusAreaRelationships,
-        'Creativity': l10n.focusAreaCreativity,
-        'Finances': l10n.focusAreaFinances,
-        'Self-care': l10n.focusAreaSelfCare,
-      };
-
   @override
   void initState() {
     super.initState();
@@ -1986,22 +2136,168 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
     _selectedAreas.addAll(onboardingState.focusAreas);
   }
 
-  void _toggleArea(String area) {
+  int _getMaxAreas() {
     final userState = context.read<UserState>();
     final onboardingState = context.read<OnboardingState>();
-    final maxAreas = userState.hasSubscription
-        ? 8 // unlimited — all categories
+    return userState.hasSubscription
+        ? 8
         : onboardingState.maxFocusAreas(hasBoost: userState.hasBoost);
+  }
+
+  void _toggleArea(String area) {
+    final userState = context.read<UserState>();
+    HapticFeedback.selectionClick();
 
     setState(() {
       if (_selectedAreas.contains(area)) {
         _selectedAreas.remove(area);
       } else {
+        final maxAreas = _getMaxAreas();
         if (_selectedAreas.length < maxAreas) {
           _selectedAreas.add(area);
+          // Paid user nudge: show once when selecting 4th area
+          if (userState.hasSubscription && _selectedAreas.length == 4) {
+            _showLessIsMoreNudge();
+          }
+        } else {
+          // Free/boost user hit the limit — show upgrade modal
+          HapticFeedback.lightImpact();
+          _showFreeUserLimitModal();
         }
       }
     });
+  }
+
+  void _showFreeUserLimitModal() {
+    final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
+    final l10n = AppLocalizations.of(context);
+    showIntendedModal(
+      context: context,
+      title: l10n.focusLimitFreeTitle,
+      subtitle: l10n.focusLimitFreeMessage,
+      actions: [
+        // Upgrade button
+        SizedBox(
+          width: double.infinity,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      colors.ctaPrimary.withOpacity(0.92),
+                      colors.ctaSecondary.withOpacity(0.88),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: CupertinoButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    showCupertinoModalPopup(
+                      context: context,
+                      barrierColor: Colors.black.withOpacity(0.5),
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      builder: (_) =>
+                          const PaywallScreen(source: 'focus_area_limit'),
+                    );
+                  },
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  borderRadius: BorderRadius.circular(20),
+                  child: Text(
+                    l10n.focusLimitFreeUpgrade,
+                    style: const TextStyle(
+                      fontFamily: 'Sora',
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFFFFFFFF),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        // Dismiss button
+        SizedBox(
+          width: double.infinity,
+          child: CupertinoButton(
+            onPressed: () => Navigator.pop(context),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Text(
+              l10n.commonDismiss,
+              style: TextStyle(
+                fontFamily: 'Sora',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: colors.textTertiary,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _showLessIsMoreNudge() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('focus_nudge_shown') == true) return;
+
+    if (!mounted) return;
+    final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
+    final l10n = AppLocalizations.of(context);
+
+    await prefs.setBool('focus_nudge_shown', true);
+
+    if (!mounted) return;
+    showIntendedModal(
+      context: context,
+      title: l10n.focusNudgeTitle,
+      subtitle: l10n.focusNudgeMessage,
+      actions: [
+        SizedBox(
+          width: double.infinity,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      colors.ctaPrimary.withOpacity(0.92),
+                      colors.ctaSecondary.withOpacity(0.88),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: CupertinoButton(
+                  onPressed: () => Navigator.pop(context),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  borderRadius: BorderRadius.circular(20),
+                  child: Text(
+                    l10n.focusNudgeGotIt,
+                    style: const TextStyle(
+                      fontFamily: 'Sora',
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFFFFFFFF),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Future<void> _saveAreas() async {
@@ -2009,7 +2305,6 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
 
     final onboardingState = context.read<OnboardingState>();
 
-    // Use the changeFocusAreas method which handles everything
     await onboardingState.changeFocusAreas(_selectedAreas);
     AnalyticsService.logFocusAreasChanged(_selectedAreas);
     AnalyticsService.setFocusAreaCount(_selectedAreas.length);
@@ -2019,125 +2314,256 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
     }
   }
 
+  Widget _buildBackgroundOrbs(Size size, AppColorScheme colors) {
+    return Stack(
+      children: [
+        Positioned(
+          top: size.height * 0.1,
+          right: size.width * -0.05,
+          child: Container(
+            width: 256,
+            height: 256,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                center: const Alignment(-0.35, -0.35),
+                radius: 0.9,
+                colors: [
+                  colors.surfaceLightest.withOpacity(0.6),
+                  colors.borderMedium.withOpacity(0.2),
+                ],
+              ),
+            ),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
+              child: Container(color: Colors.transparent),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: size.height * 0.2,
+          left: size.width * -0.08,
+          child: Container(
+            width: 224,
+            height: 224,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                center: const Alignment(-0.35, -0.35),
+                radius: 0.9,
+                colors: [
+                  colors.onboardingBg1.withOpacity(0.55),
+                  colors.onboardingBg4.withOpacity(0.18),
+                ],
+              ),
+            ),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 55, sigmaY: 55),
+              child: Container(color: Colors.transparent),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.watch<ThemeProvider>().colors;
     final l10n = AppLocalizations.of(context);
-    final areaNames = _localizedAreaNames(l10n);
+    final maxAreas = _getMaxAreas();
+    final selectedCount = _selectedAreas.length;
+    final canSave = _selectedAreas.isNotEmpty;
+    final size = MediaQuery.of(context).size;
 
     return CupertinoPageScaffold(
-      backgroundColor: colors.surfaceLightest,
-      child: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () => Navigator.pop(context),
-                    child: Icon(
-                      CupertinoIcons.chevron_left,
-                      color: colors.buttonDark,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    l10n.profileChangeFocusAreasScreenTitle,
-                    style: AppTextStyles.h2(context),
-                  ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Base gradient background (same as onboarding)
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: const Alignment(0.15, -1.0),
+                end: const Alignment(-0.15, 1.0),
+                colors: [
+                  colors.onboardingBg1,
+                  colors.onboardingBg2,
+                  colors.onboardingBg3,
+                  colors.onboardingBg4,
                 ],
+                stops: const [0.0, 0.3, 0.6, 1.0],
               ),
             ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(24),
-                children: [
-                  Text(
-                    l10n.profileChooseUpTo2,
-                    style: AppTextStyles.body(context),
-                  ),
-                  const SizedBox(height: 24),
-                  ...areas.map((area) {
-                    final isSelected = _selectedAreas.contains(area);
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () => _toggleArea(area),
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? colors.buttonDark.withOpacity(0.1)
-                                : Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isSelected
-                                  ? colors.buttonDark
-                                  : colors.borderWarm,
-                              width: isSelected ? 2 : 1,
+          ),
+
+          // Background orbs
+          _buildBackgroundOrbs(size, colors),
+
+          // Content
+          SafeArea(
+            bottom: false,
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    // Header with back button
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 8, 28, 0),
+                      child: Row(
+                        children: [
+                          CupertinoButton(
+                            padding: const EdgeInsets.all(8),
+                            onPressed: () => Navigator.pop(context),
+                            child: Icon(
+                              CupertinoIcons.chevron_left,
+                              size: 22,
+                              color: colors.textPrimary,
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  areaNames[area] ?? area,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w500,
-                                    color: isSelected
-                                        ? colors.buttonDark
-                                        : colors.textPrimary,
-                                    fontFamily: 'Sora',
-                                  ),
-                                ),
-                              ),
-                              if (isSelected)
-                                Icon(
-                                  CupertinoIcons.checkmark_circle_fill,
-                                  color: colors.buttonDark,
-                                  size: 24,
-                                ),
-                            ],
+                        ],
+                      ),
+                    ),
+
+                    // Title + subtitle
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(28, 8, 28, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.profileChangeFocusAreasScreenTitle,
+                            style: TextStyle(
+                              fontFamily: 'Sora',
+                              fontSize: 26,
+                              fontWeight: FontWeight.w600,
+                              color: colors.textPrimary,
+                              height: 1.3,
+                              letterSpacing: -0.3,
+                            ),
                           ),
+                          const SizedBox(height: 10),
+                          Text(
+                            l10n.focusAreasChooseCount(selectedCount, maxAreas),
+                            style: TextStyle(
+                              fontFamily: 'Sora',
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: colors.ctaSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Cards (scrollable)
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(28, 0, 28, 160),
+                        child: Column(
+                          children: FocusAreasScreen.areas.map((area) {
+                            final selected = _selectedAreas.contains(area);
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 14),
+                              child: FocusAreaCard(
+                                label: FocusAreasScreen.localizedAreaName(
+                                    l10n, area),
+                                icon: FocusAreasScreen.areaIcons[area]!,
+                                selected: selected,
+                                onTap: () => _toggleArea(area),
+                              ),
+                            );
+                          }).toList(),
                         ),
                       ),
-                    );
-                  }),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: SizedBox(
-                width: double.infinity,
-                child: CupertinoButton(
-                  color: _selectedAreas.isNotEmpty
-                      ? colors.buttonDark
-                      : colors.borderMedium,
-                  borderRadius:
-                      BorderRadius.circular(ComponentSizes.buttonRadius),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  onPressed: _selectedAreas.isNotEmpty ? _saveAreas : null,
-                  child: Text(
-                    l10n.profileSaveChanges,
-                    style: TextStyle(
-                      color: _selectedAreas.isNotEmpty
-                          ? colors.surfaceLightest
-                          : colors.textDisabled,
-                      fontFamily: 'Sora',
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
+                    ),
+                  ],
+                ),
+
+                // Gradient overlay (behind button)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  height: 180,
+                  child: IgnorePointer(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            colors.onboardingBg4.withOpacity(0.0),
+                            colors.onboardingBg4.withOpacity(0.92),
+                            colors.onboardingBg4.withOpacity(0.98),
+                          ],
+                          stops: const [0.0, 0.6, 1.0],
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+
+                // Save button
+                if (canSave)
+                  Positioned(
+                    left: 28,
+                    right: 28,
+                    bottom: 95,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: colors.textPrimary.withOpacity(0.35),
+                            blurRadius: 24,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  colors.ctaPrimary.withOpacity(0.92),
+                                  colors.ctaSecondary.withOpacity(0.88),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: CupertinoButton(
+                              onPressed: _saveAreas,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16),
+                              borderRadius: BorderRadius.circular(20),
+                              child: Text(
+                                l10n.profileSaveChanges,
+                                style: const TextStyle(
+                                  fontFamily: 'Sora',
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFFFFFFFF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

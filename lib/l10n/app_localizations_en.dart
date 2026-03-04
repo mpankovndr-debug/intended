@@ -36,6 +36,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonNotNow => 'Not now';
 
   @override
+  String get commonDismiss => 'Dismiss';
+
+  @override
   String get commonStart => 'Start';
 
   @override
@@ -140,6 +143,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get focusAreasLimitMessage =>
       'You can select up to 2 areas. Deselect one to choose another.';
+
+  @override
+  String get focusLimitFreeTitle => 'Two is a great start';
+
+  @override
+  String get focusLimitFreeMessage =>
+      'Want to explore more? Upgrade to Intended+ for unlimited focus areas.';
+
+  @override
+  String get focusLimitFreeUpgrade => 'Upgrade';
+
+  @override
+  String get focusNudgeTitle => 'A gentle thought';
+
+  @override
+  String get focusNudgeMessage =>
+      "You can choose as many as you'd like! Focusing on fewer areas tends to lead to deeper growth. But you know yourself best.";
+
+  @override
+  String get focusNudgeGotIt => 'Got it';
 
   @override
   String get reminderTitle => 'Reminder';
@@ -1544,6 +1567,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSignInApple => 'Sign in with Apple';
 
   @override
+  String get profileSignedInGoogle => 'Signed in with Google';
+
+  @override
+  String get profileSignedInApple => 'Signed in with Apple';
+
+  @override
   String get profileSignOut => 'Sign out';
 
   @override
@@ -2083,7 +2112,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boostCardTitle => 'Intended Boost — €1.99 one-time';
 
   @override
-  String get boostCardSubtitle => '+1 habit, +1 focus area, share cards';
+  String get boostCardSubtitle => 'A little extra room to grow.';
 
   @override
   String get boostOrDivider => 'or';
@@ -2092,29 +2121,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boostGoUnlimited => 'Go unlimited with Intended+';
 
   @override
-  String get boostPurchaseError => 'Something went wrong with the purchase. Please try again.';
+  String get boostPurchaseError =>
+      'Something went wrong with the purchase. Please try again.';
+
+  @override
+  String get boostBenefit1 => '3 custom habits';
+
+  @override
+  String get boostBenefit1Detail => 'up from 2';
+
+  @override
+  String get boostBenefit2 => '3 focus areas';
+
+  @override
+  String get boostBenefit2Detail => 'up from 2';
+
+  @override
+  String get boostBenefit3 => '3 habit swaps/month';
+
+  @override
+  String get boostBenefit3Detail => 'up from 2';
+
+  @override
+  String get boostBenefit4 => 'Shareable progress cards';
 
   @override
   String get boostOfferHabitTitle => 'Want one more habit?';
 
   @override
-  String get boostOfferHabitDesc => 'Create one more habit that fits your life.';
+  String get boostOfferHabitDesc =>
+      'You\'re building something meaningful — give yourself room for one more.';
 
   @override
   String get boostOfferFocusTitle => 'Need another focus area?';
 
   @override
-  String get boostOfferFocusDesc => 'Add one more area to focus on what matters.';
+  String get boostOfferFocusDesc =>
+      'Your growth doesn\'t fit in a box — expand what you focus on.';
 
   @override
   String get boostOfferSwapTitle => 'Out of swaps this month?';
 
   @override
-  String get boostOfferSwapDesc => 'Get a few more swaps to find the right habits.';
+  String get boostOfferSwapDesc =>
+      'Finding the right habits takes exploring — get a few more tries.';
 
   @override
   String get boostOfferShareTitle => 'Share your progress?';
 
   @override
-  String get boostOfferShareDesc => 'Unlock shareable milestone cards.';
+  String get boostOfferShareDesc =>
+      'Your journey is worth celebrating — share it with people who care.';
 }

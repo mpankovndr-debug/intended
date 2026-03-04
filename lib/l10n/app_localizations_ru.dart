@@ -36,6 +36,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get commonNotNow => 'Не сейчас';
 
   @override
+  String get commonDismiss => 'Закрыть';
+
+  @override
   String get commonStart => 'Начать';
 
   @override
@@ -139,6 +142,26 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get focusAreasLimitMessage =>
       'Можно выбрать до 2 направлений. Убери одно, чтобы выбрать другое.';
+
+  @override
+  String get focusLimitFreeTitle => 'Два — отличное начало';
+
+  @override
+  String get focusLimitFreeMessage =>
+      'Хочешь больше? Перейди на Intended+, чтобы выбирать без ограничений.';
+
+  @override
+  String get focusLimitFreeUpgrade => 'Улучшить';
+
+  @override
+  String get focusNudgeTitle => 'Мягкая мысль';
+
+  @override
+  String get focusNudgeMessage =>
+      'Ты можешь выбрать сколько угодно! Но фокус на меньшем часто ведёт к более глубокому росту. Впрочем, тебе виднее.';
+
+  @override
+  String get focusNudgeGotIt => 'Понятно';
 
   @override
   String get reminderTitle => 'Напоминание';
@@ -1538,6 +1561,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileSignInApple => 'Войти через Apple';
 
   @override
+  String get profileSignedInGoogle => 'Вход выполнен через Google';
+
+  @override
+  String get profileSignedInApple => 'Вход выполнен через Apple';
+
+  @override
   String get profileSignOut => 'Выйти';
 
   @override
@@ -2078,7 +2107,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get boostCardTitle => 'Intended Boost — €1,99 разово';
 
   @override
-  String get boostCardSubtitle => '+1 привычка, +1 направление, карточки для друзей';
+  String get boostCardSubtitle => 'Немного больше пространства для роста.';
 
   @override
   String get boostOrDivider => 'или';
@@ -2087,29 +2116,55 @@ class AppLocalizationsRu extends AppLocalizations {
   String get boostGoUnlimited => 'Безлимит с Intended+';
 
   @override
-  String get boostPurchaseError => 'Что-то пошло не так с покупкой. Попробуй ещё раз.';
+  String get boostPurchaseError =>
+      'Что-то пошло не так с покупкой. Попробуй ещё раз.';
+
+  @override
+  String get boostBenefit1 => '3 свои привычки';
+
+  @override
+  String get boostBenefit1Detail => 'вместо 2';
+
+  @override
+  String get boostBenefit2 => '3 направления';
+
+  @override
+  String get boostBenefit2Detail => 'вместо 2';
+
+  @override
+  String get boostBenefit3 => '3 замены/месяц';
+
+  @override
+  String get boostBenefit3Detail => 'вместо 2';
+
+  @override
+  String get boostBenefit4 => 'Карточки прогресса для друзей';
 
   @override
   String get boostOfferHabitTitle => 'Хочешь ещё одну привычку?';
 
   @override
-  String get boostOfferHabitDesc => 'Создай ещё одну привычку, которая подходит тебе.';
+  String get boostOfferHabitDesc =>
+      'Ты строишь что-то важное — дай себе место для ещё одной.';
 
   @override
   String get boostOfferFocusTitle => 'Нужно ещё одно направление?';
 
   @override
-  String get boostOfferFocusDesc => 'Добавь ещё одну область, которая тебе важна.';
+  String get boostOfferFocusDesc =>
+      'Твой рост не помещается в рамки — расширь то, на чём фокусируешься.';
 
   @override
   String get boostOfferSwapTitle => 'Замены закончились?';
 
   @override
-  String get boostOfferSwapDesc => 'Получи ещё несколько замен, чтобы найти нужные привычки.';
+  String get boostOfferSwapDesc =>
+      'Поиск подходящих привычек — это путь. Получи ещё несколько попыток.';
 
   @override
   String get boostOfferShareTitle => 'Поделиться прогрессом?';
 
   @override
-  String get boostOfferShareDesc => 'Открой карточки достижений для друзей.';
+  String get boostOfferShareDesc =>
+      'Твой путь стоит того, чтобы им делиться — покажи его близким.';
 }

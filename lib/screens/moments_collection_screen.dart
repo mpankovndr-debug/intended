@@ -4,6 +4,7 @@ import '../l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/moment.dart';
+import '../utils/habit_l10n.dart';
 import '../services/analytics_service.dart';
 import '../services/moments_service.dart';
 import '../theme/app_colors.dart';
@@ -285,7 +286,7 @@ class _MomentsCollectionScreenState extends State<MomentsCollectionScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    l10n.monthSummaryTopIntention(topIntention),
+                    l10n.monthSummaryTopIntention(localizeHabitName(topIntention, l10n)),
                     style: TextStyle(
                       fontFamily: 'Sora',
                       fontSize: 13,
@@ -394,7 +395,7 @@ class _MomentsHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   _MomentsHeaderDelegate({required this.topPadding, required this.onBack});
 
-  double get _headerHeight => topPadding + 16 + 56 + 8; // top padding + 16 gap + content + 8 bottom
+  double get _headerHeight => topPadding + 16 + 72 + 8; // top padding + 16 gap + content + 8 bottom
 
   @override
   double get maxExtent => _headerHeight;
@@ -410,17 +411,16 @@ class _MomentsHeaderDelegate extends SliverPersistentHeaderDelegate {
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final colors = context.watch<ThemeProvider>().colors;
     final l10n = AppLocalizations.of(context);
+    final double progress = (shrinkOffset / 50.0).clamp(0.0, 1.0);
 
     return ClipRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(
-          sigmaX: shrinkOffset > 0 ? 20 : 0,
-          sigmaY: shrinkOffset > 0 ? 20 : 0,
+          sigmaX: 20 * progress,
+          sigmaY: 20 * progress,
         ),
         child: Container(
-          color: shrinkOffset > 0
-              ? colors.modalBg2.withOpacity(0.85)
-              : const Color(0x00000000),
+          color: colors.modalBg2.withOpacity(0.85 * progress),
           padding: EdgeInsets.fromLTRB(24, topPadding + 16, 24, 8),
           child: Row(
             children: [
@@ -457,6 +457,8 @@ class _MomentsHeaderDelegate extends SliverPersistentHeaderDelegate {
                   children: [
                     Text(
                       l10n.momentsTitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontFamily: 'Sora',
                         fontSize: 32,
@@ -466,6 +468,8 @@ class _MomentsHeaderDelegate extends SliverPersistentHeaderDelegate {
                     ),
                     Text(
                       l10n.momentsSubtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontFamily: 'Sora',
                         fontSize: 13,
@@ -544,7 +548,7 @@ class _MomentRow extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        moment.habitName,
+                        localizeHabitName(moment.habitName, l10n),
                         style: TextStyle(
                           fontFamily: 'Sora',
                           fontSize: 15,
