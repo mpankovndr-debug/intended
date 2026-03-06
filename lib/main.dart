@@ -532,13 +532,11 @@ void main() {
         await NotificationScheduler.initialize();
 
         // Re-schedule daily notifications if enabled and running low
-        final dailyEnabled =
-            await NotificationPreferencesService.isEnabled();
+        final dailyEnabled = await NotificationPreferencesService.isEnabled();
         if (dailyEnabled) {
           final pending = await NotificationScheduler.pendingDailyCount();
           if (pending < 3) {
-            final locale =
-                WidgetsBinding.instance.platformDispatcher.locale;
+            final locale = WidgetsBinding.instance.platformDispatcher.locale;
             final l10n = lookupAppLocalizations(
               locale.languageCode == 'ru'
                   ? const Locale('ru')
@@ -1517,8 +1515,9 @@ class _HabitsScreenState extends State<HabitsScreen>
                                       accentColor:
                                           colors.accentRegular, // Warm taupe
                                     );
-                                    if (habit != unpinnedHabit)
+                                    if (habit != unpinnedHabit) {
                                       return habitCard;
+                                    }
                                     // Arrival animation for card returning from pinned section
                                     return TweenAnimationBuilder<double>(
                                       key: ValueKey('unpin_arrive_$habit'),
@@ -1642,6 +1641,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                     padding: const EdgeInsets.only(left: 16),
                                     child: GestureDetector(
                                       onTap: () {
+                                        if (context.read<RevenueCatService>().isPremium) return;
                                         showCupertinoModalPopup(
                                           context: context,
                                           barrierColor:
@@ -2009,7 +2009,8 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
     final navigator = Navigator.of(context);
     final navContext = navigator.context;
 
-    await onboardingState.addCustomHabit(habitTitle, hasBoost: userState.hasBoost);
+    await onboardingState.addCustomHabit(habitTitle,
+        hasBoost: userState.hasBoost);
     AnalyticsService.logCustomHabitCreated(habitTitle);
 
     if (!mounted) return;
@@ -2924,7 +2925,8 @@ class _HabitCardState extends State<_HabitCard>
 
                           // Description (REVERTED to DM Sans)
                           Text(
-                            l10n.swapCategoryHabits(localizeCategoryName(category, l10n)),
+                            l10n.swapCategoryHabits(
+                                localizeCategoryName(category, l10n)),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: 'DM Sans',
@@ -3152,7 +3154,8 @@ class _HabitCardState extends State<_HabitCard>
 
                             // Description
                             Text(
-                              l10n.swapSuccessMessage(localizeHabitName(newHabit, l10n)),
+                              l10n.swapSuccessMessage(
+                                  localizeHabitName(newHabit, l10n)),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: AppTextStyles.bodyFont(context),
@@ -3601,7 +3604,7 @@ class _HabitCardState extends State<_HabitCard>
                                       child: Text(
                                         localizeHabitName(
                                             widget.habitTitle, l10n),
-                                        maxLines: 1,
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           fontSize: _isDoneToday ? 15 : 16,
@@ -3779,7 +3782,8 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
           const SizedBox(height: 12),
           Text(
             isPremium
-                ? l10n.browseSwapConfirmMessage(localizeHabitName(newHabit, l10n))
+                ? l10n
+                    .browseSwapConfirmMessage(localizeHabitName(newHabit, l10n))
                 : '${l10n.browseSwapConfirmMessage(localizeHabitName(newHabit, l10n))}\n\n${l10n.browseSwapRemainingCount(remainingSwaps)}',
             style: AppTextStyles.body(context),
             textAlign: TextAlign.center,
@@ -3834,7 +3838,8 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
           ),
           const SizedBox(height: 12),
           Text(
-            l10n.browseChooseToReplaceMessage(localizeHabitName(newHabit, l10n)),
+            l10n.browseChooseToReplaceMessage(
+                localizeHabitName(newHabit, l10n)),
             style: AppTextStyles.body(context),
             textAlign: TextAlign.center,
           ),
@@ -3970,7 +3975,8 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
 
                           // Description (Sora to match Unpin modal)
                           Text(
-                            l10n.swapSuccessMessage(localizeHabitName(newHabit, l10n)),
+                            l10n.swapSuccessMessage(
+                                localizeHabitName(newHabit, l10n)),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: AppTextStyles.bodyFont(context),
@@ -4137,7 +4143,9 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
       final filtered = entry.value
           .where((h) =>
               h.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-              localizeHabitName(h, l10n).toLowerCase().contains(_searchQuery.toLowerCase()))
+              localizeHabitName(h, l10n)
+                  .toLowerCase()
+                  .contains(_searchQuery.toLowerCase()))
           .toList();
       if (filtered.isNotEmpty) {
         filteredCategories[entry.key] = filtered;

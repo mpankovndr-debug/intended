@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Colors, ScaffoldMessenger, SnackBar;
+import 'package:flutter/material.dart' show Colors;
+import '../widgets/app_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -532,9 +533,7 @@ class _PaywallScreenState extends State<PaywallScreen>
                     } catch (_) {
                       AnalyticsService.logPurchaseFailed();
                       if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(l10n.boostPurchaseError)),
-                        );
+                        AppToast.show(context, l10n.boostPurchaseError);
                       }
                     } finally {
                       if (mounted) setState(() => _isLoading = false);

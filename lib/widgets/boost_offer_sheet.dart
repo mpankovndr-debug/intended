@@ -104,6 +104,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
 
   void _openPaywall() {
     Navigator.pop(context);
+    if (context.read<RevenueCatService>().isPremium) return;
     showCupertinoModalPopup(
       context: context,
       barrierColor: Colors.black.withOpacity(0.5),

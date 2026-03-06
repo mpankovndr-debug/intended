@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Colors, ScaffoldMessenger, SnackBar;
+import 'package:flutter/material.dart' show Colors;
+import '../widgets/app_toast.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
@@ -73,9 +74,7 @@ class _ShareCardScreenState extends State<ShareCardScreen>
     } catch (e) {
       if (mounted) {
         final l10n = AppLocalizations.of(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.shareError)),
-        );
+        AppToast.show(context, l10n.shareError);
       }
     } finally {
       if (mounted) {
