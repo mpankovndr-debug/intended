@@ -479,7 +479,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get customHabitLimitMessage =>
-      'Core: 2 свои привычки\nBoost: 3 свои привычки\nIntended+: без ограничений';
+      'Core: 2 свои привычки\nIntended+: без ограничений';
 
   @override
   String get menuUnpin => 'Открепить';
@@ -543,7 +543,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get swapLimitMessage =>
-      'Все бесплатные замены в этом месяце использованы.\n\nBoost: 3 замены/мес.\nIntended+: без ограничений';
+      'Все бесплатные замены в этом месяце использованы.\n\nIntended+: без ограничений';
 
   @override
   String get swapNoAltTitle => 'Нет альтернатив';
@@ -1385,23 +1385,31 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get paywallTitle => 'Intended+ растёт вместе с тобой';
+  String get paywallTitle => 'Узнай себя лучше';
 
   @override
   String get paywallDescription =>
-      'Больше способов понять себя — и это только начало.';
+      'Intended+ превращает ежедневную практику в настоящее понимание себя.';
 
   @override
-  String get paywallFeature1 => 'Все 10 цветовых тем, включая тёмный режим';
+  String get paywallFeature1 =>
+      'Еженедельные инсайты, которые раскрывают твои привычки со временем';
 
   @override
-  String get paywallFeature2 => 'Готовые наборы привычек на каждый день';
+  String get paywallFeature2 =>
+      'Виджет на главном экране — мягкое напоминание о себе';
 
   @override
-  String get paywallFeature3 => 'Еженедельные инсайты, чтобы лучше узнать себя';
+  String get paywallFeature3 =>
+      'Готовые наборы привычек: ритуалы, созданные под твой ритм жизни';
 
   @override
-  String get paywallFeature4 => 'Безлимитные привычки, замены и фокусы';
+  String get paywallFeature4 =>
+      '10 тем на любое настроение — включая тёмный режим';
+
+  @override
+  String get paywallFeature5 =>
+      'Безлимитные привычки, замены и фокусы — расти без ограничений';
 
   @override
   String get paywallMonthly => 'Ежемесячно';
@@ -1476,7 +1484,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get paywallFooter =>
-      'Новые функции добавляются регулярно. Твоя подписка поддерживает независимую разработку.';
+      'Новые функции добавляются регулярно. Подписка поддерживает независимую разработку.\nСоздано одним человеком, которому это так же важно, как и тебе.';
 
   @override
   String get subscriptionTitle => 'Intended+';
@@ -1644,8 +1652,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Бесплатная замена в этом месяце уже использована.';
 
   @override
-  String get profileFocusLimitOptions =>
-      '• Boost: Доп. смены\n• Intended+: без ограничений';
+  String get profileFocusLimitOptions => '• Intended+: без ограничений';
 
   @override
   String get profilePayAmount => 'Оплатить €0,99';
@@ -2136,6 +2143,30 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shareCardDescriptor => 'намерение важнее совершенства';
 
   @override
+  String get shareCardSubtitleSingular => 'раз я выбираю себя на этой неделе';
+
+  @override
+  String get shareCardSubtitlePlural => 'раз я выбираю себя на этой неделе';
+
+  @override
+  String get shareCardSubtitleDays => 'дней я выбираю себя на этой неделе';
+
+  @override
+  String shareCardInsightTwoDays(String day1, String day2) {
+    return '$day1 и $day2 — мои дни';
+  }
+
+  @override
+  String shareCardInsightOneDay(String day) {
+    return '$day — мой день';
+  }
+
+  @override
+  String shareCardInsightFocus(String area) {
+    return 'На этой неделе тянет к «$area»';
+  }
+
+  @override
   String get shareButton => 'Поделиться';
 
   @override
@@ -2196,47 +2227,30 @@ class AppLocalizationsRu extends AppLocalizations {
   String get milestoneIdentitySubtitle => 'становится твоей привычкой';
 
   @override
-  String get boostCardTitle => 'Intended Boost — €1,99 разово';
+  String get boostCardTitle => 'Intended Boost — €1,99';
 
   @override
   String boostCardTitleDynamic(String price) {
-    return 'Intended Boost — $price разово';
+    return 'Intended Boost — $price';
   }
 
   @override
-  String get boostCardSubtitle =>
-      'Тёмный режим + 1 дополнительная привычка и направление.';
+  String get boostCardSubtitle => 'Открой обе тёмные темы.';
 
   @override
   String get boostOrDivider => 'или';
 
   @override
-  String get boostGoUnlimited => 'Безлимит с Intended+';
+  String get boostGoUnlimited =>
+      'Хочешь больше? Безлимитный доступ с Intended+';
 
   @override
   String get boostPurchaseError =>
       'Что-то пошло не так с покупкой. Попробуй ещё раз.';
 
   @override
-  String get boostBenefit1 => 'Тема «Глубокий фокус»';
-
-  @override
-  String get boostBenefit1Detail => '';
-
-  @override
-  String get boostBenefit2 => '+1 своя привычка';
-
-  @override
-  String get boostBenefit2Detail => 'всего 3';
-
-  @override
-  String get boostBenefit3 => '+1 направление';
-
-  @override
-  String get boostBenefit3Detail => 'всего 3';
-
-  @override
-  String get boostBenefit4 => '+1 замена привычки в месяц';
+  String get boostBenefit1 =>
+      'Тёмный уют и Ночное небо — спокойный вид для вечерних проверок.';
 
   @override
   String get boostOfferHabitTitle => 'Хочешь ещё одну привычку?';
@@ -2265,6 +2279,13 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get boostOfferShareDesc =>
       'Твой путь стоит того, чтобы им делиться - поделись им с близкими.';
+
+  @override
+  String get boostOfferThemeTitle => 'Открой обе тёмные темы';
+
+  @override
+  String get boostOfferThemeDesc =>
+      'Тёмный уют и Ночное небо — спокойный вид для вечерних проверок.';
 
   @override
   String get commonDismiss => 'Закрыть';
@@ -2410,11 +2431,34 @@ class AppLocalizationsRu extends AppLocalizations {
   String get reflectionSectionNotice => 'НА ЗАМЕТКУ';
 
   @override
+  String get reflectionPreviewRhythm =>
+      'Через пару недель мы покажем, в какие дни ты стабильнее всего';
+
+  @override
+  String get reflectionPreviewFocus =>
+      'Выполняй больше привычек, чтобы увидеть, к чему тебя тянет';
+
+  @override
+  String get reflectionBlurRhythm =>
+      'Узнай, какие дни и ритмы подходят тебе лучше всего';
+
+  @override
+  String get reflectionBlurFocus =>
+      'Узнай, на что уходит твоя энергия каждую неделю';
+
+  @override
+  String get reflectionUnlockPlus => 'Мои недельные инсайты';
+
+  @override
   String get tipPinHabit => 'Удерживайте привычку, чтобы закрепить её сверху';
 
   @override
   String get tipCuratedPack =>
       'Попробуйте готовый набор привычек — найдите его в «Все привычки»';
+
+  @override
+  String get tipWidget =>
+      'Добавь Intended на главный экран — удерживай обои и добавь виджет';
 
   @override
   String get tipGotIt => 'Понятно';
@@ -2531,4 +2575,39 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get packStayConnectedDescription =>
       'Четыре микро-привычки, чтобы оставаться ближе к своим людям. Не грандиозные жесты — просто быть рядом.';
+
+  @override
+  String get widgetToday => 'сегодня';
+
+  @override
+  String widgetMore(int n) {
+    return 'ещё $n';
+  }
+
+  @override
+  String get widgetUpgrade => 'Обновите для подробностей';
+
+  @override
+  String get widgetNoHabits => 'Пока нет привычек';
+
+  @override
+  String get widgetAllDone => 'Всё сделано!';
+
+  @override
+  String get appIconSectionTitle => 'ИКОНКА ПРИЛОЖЕНИЯ';
+
+  @override
+  String get appIconDefault => 'По умолчанию';
+
+  @override
+  String get appIconMidnight => 'Полночь';
+
+  @override
+  String get appIconRose => 'Роза';
+
+  @override
+  String get appIconForest => 'Лес';
+
+  @override
+  String get appIconSky => 'Небо';
 }

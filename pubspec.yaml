@@ -2,7 +2,7 @@ name: intended
 description: "Intended - A gentle approach to building better habits."
 publish_to: 'none'
 
-version: 1.0.0+7
+version: 1.0.0+9
 environment:
   sdk: ^3.5.4
 
@@ -37,6 +37,7 @@ dependencies:
   flutter_timezone: ^5.0.1
   crypto: ^3.0.7
   flutter_slidable: ^4.0.3
+  home_widget: ^0.7.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.3

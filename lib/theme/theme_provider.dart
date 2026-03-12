@@ -13,6 +13,7 @@ class ThemeProvider extends ChangeNotifier {
 
   static const List<AppTheme> boostThemes = [
     AppTheme.deepFocus,
+    AppTheme.nightBloom,
   ];
 
   static const List<AppTheme> premiumThemes = [
@@ -21,7 +22,6 @@ class ThemeProvider extends ChangeNotifier {
     AppTheme.softDusk,
     AppTheme.forestFloor,
     AppTheme.goldenHour,
-    AppTheme.nightBloom,
     AppTheme.sandDune,
   ];
 

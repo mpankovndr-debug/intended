@@ -43,6 +43,7 @@ import 'widgets/app_toast.dart';
 import 'widgets/tip_banner.dart';
 import 'models/curated_pack.dart';
 import 'services/tips_service.dart';
+import 'services/widget_service.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 // ✅ ADD THIS HELPER HERE (before the main() function):
@@ -483,6 +484,44 @@ class HabitTracker {
   }
 }
 
+/// Pushes current habit & theme data to the iOS home screen widget.
+/// Safe to call from anywhere with a BuildContext.
+Future<void> refreshHomeWidget(BuildContext context) async {
+  try {
+    final onboarding = context.read<OnboardingState>();
+    final userState = context.read<UserState>();
+    final themeProvider = context.read<ThemeProvider>();
+    final locale = Localizations.localeOf(context);
+    final l10n = AppLocalizations.of(context);
+
+    // Compute today's greeting (same logic as HabitsScreen)
+    final messages = List.generate(23, (i) => [
+      l10n.dailyMessage1, l10n.dailyMessage2, l10n.dailyMessage3,
+      l10n.dailyMessage4, l10n.dailyMessage5, l10n.dailyMessage6,
+      l10n.dailyMessage7, l10n.dailyMessage8, l10n.dailyMessage9,
+      l10n.dailyMessage10, l10n.dailyMessage11, l10n.dailyMessage12,
+      l10n.dailyMessage13, l10n.dailyMessage14, l10n.dailyMessage15,
+      l10n.dailyMessage16, l10n.dailyMessage17, l10n.dailyMessage18,
+      l10n.dailyMessage19, l10n.dailyMessage20, l10n.dailyMessage21,
+      l10n.dailyMessage22, l10n.dailyMessage23,
+    ][i]);
+    final now = DateTime.now();
+    final dayOfYear = now.difference(DateTime(now.year, 1, 1)).inDays;
+    final greeting = messages[dayOfYear % messages.length];
+
+    await WidgetService.updateWidget(
+      userHabits: onboarding.userHabits,
+      customHabitFocusAreas: onboarding.customHabitFocusAreas,
+      isPremium: userState.hasSubscription,
+      theme: themeProvider.theme,
+      greeting: greeting,
+      locale: locale.languageCode,
+    );
+  } catch (_) {
+    // Widget update is non-critical — never crash the app for it.
+  }
+}
+
 void main() {
   runZonedGuarded(
     () async {
@@ -570,7 +609,9 @@ void main() {
         }
 
         IOSVersion.init();
-        await revenueCatService.init();
+        WidgetService.initialize();
+        final firebaseUid = FirebaseAuth.instance.currentUser?.uid;
+        await revenueCatService.init(firebaseUid: firebaseUid);
       });
     },
     (error, stack) {
@@ -806,6 +847,7 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       NotificationScheduler.refreshTimezone(AppLocalizations.of(context));
       context.read<RevenueCatService>().refreshPurchaseStatus();
+      refreshHomeWidget(context);
     }
   }
 
@@ -1253,6 +1295,11 @@ class _HabitsScreenState extends State<HabitsScreen>
     ));
 
     _checkAndTriggerEntrance();
+
+    // Refresh home screen widget on first load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) refreshHomeWidget(context);
+    });
   }
 
   @override
@@ -1275,6 +1322,7 @@ class _HabitsScreenState extends State<HabitsScreen>
     if (today != _currentDateStr) {
       _currentDateStr = today;
       setState(() {}); // Cascade rebuild to all habit cards
+      refreshHomeWidget(context);
     }
   }
 
@@ -1300,15 +1348,17 @@ class _HabitsScreenState extends State<HabitsScreen>
     final userState = context.read<UserState>();
 
     if (!userState.hasSubscription &&
-        !onboardingState.canAddCustomHabit(hasBoost: userState.hasBoost)) {
+        !onboardingState.canAddCustomHabit()) {
       final l10n = AppLocalizations.of(context);
       showBoostOfferSheet(
         context: context,
         title: l10n.boostOfferHabitTitle,
         description: l10n.boostOfferHabitDesc,
-        showBoostOption: !userState.hasBoost,
+        showBoostOption: false,
         source: 'custom_habit_limit',
-      );
+      ).then((result) {
+        if (result == 'paywall') openPaywallFromContext(context, source: 'custom_habit_limit');
+      });
       return;
     }
 
@@ -1580,8 +1630,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                   final userSt = context.read<UserState>();
                                   final isDark = context.read<ThemeProvider>().theme.isDark;
                                   final maxCustom =
-                                      onboardingState.maxCustomHabits(
-                                          hasBoost: userSt.hasBoost);
+                                      onboardingState.maxCustomHabits();
 
                                   if (customCount < maxCustom ||
                                       userSt.hasSubscription) {
@@ -1982,12 +2031,11 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
     if (!_canSave) return;
 
     final onboardingState = context.read<OnboardingState>();
-    final userState = context.read<UserState>();
     final navigator = Navigator.of(context);
     final navContext = navigator.context;
 
     await onboardingState.addCustomHabit(habitTitle,
-        hasBoost: userState.hasBoost, focusArea: _selectedFocusArea);
+        focusArea: _selectedFocusArea);
     AnalyticsService.logCustomHabitCreated(habitTitle);
 
     if (!mounted) return;
@@ -2438,11 +2486,16 @@ class _HabitCardState extends State<_HabitCard>
 
     HapticFeedback.lightImpact();
 
+    final isPremium = context.read<RevenueCatService>().isPremium;
+
     // Show modal dialog
     final completed = await showCupertinoDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => HabitCompletionModal(habitTitle: widget.habitTitle),
+      builder: (_) => HabitCompletionModal(
+        habitTitle: widget.habitTitle,
+        isPremium: isPremium,
+      ),
     );
 
     // If completed, animate checkmark
@@ -2453,6 +2506,25 @@ class _HabitCardState extends State<_HabitCard>
 
       // Trigger checkmark animation
       _checkmarkController.forward();
+
+      // Premium "all done" haptic — heavy thud when last habit is completed
+      if (isPremium) {
+        _checkAllDoneHaptic();
+      }
+    }
+  }
+
+  /// Checks if all habits are now complete; if so, fires a heavy haptic.
+  Future<void> _checkAllDoneHaptic() async {
+    final onboarding = context.read<OnboardingState>();
+    final habits = onboarding.userHabits;
+    if (habits.isEmpty) return;
+    final completedIds = await HabitTracker.allCompletedIdsForDate(DateTime.now());
+    final allDone = habits.every(
+      (h) => completedIds.contains(HabitTracker.habitId(h)),
+    );
+    if (allDone) {
+      HapticFeedback.heavyImpact();
     }
   }
 
@@ -2958,9 +3030,8 @@ class _HabitCardState extends State<_HabitCard>
     }
 
     final isPremium = context.read<UserState>().hasSubscription;
-    final hasBoost = context.read<UserState>().hasBoost;
     if (!isPremium &&
-        !onboardingState.canSwapInCategory(category, hasBoost: hasBoost)) {
+        !onboardingState.canSwapInCategory(category)) {
       _showSwapLimitDialog(category);
       return;
     }
@@ -2979,9 +3050,8 @@ class _HabitCardState extends State<_HabitCard>
   void _showSwapDialog(String category, List<String> alternatives) {
     final onboardingState = context.read<OnboardingState>();
     final isPremium = context.read<UserState>().hasSubscription;
-    final hasBoost = context.read<UserState>().hasBoost;
     final remaining =
-        onboardingState.getRemainingSwaps(category, hasBoost: hasBoost);
+        onboardingState.getRemainingSwaps(category);
     final themeP = Provider.of<ThemeProvider>(context, listen: false);
     final colors = themeP.colors;
     final isDark = themeP.theme.isDark;
@@ -3200,7 +3270,6 @@ class _HabitCardState extends State<_HabitCard>
     final onboardingState = context.read<OnboardingState>();
     final userState = context.read<UserState>();
     final isPremium = userState.hasSubscription;
-    final hasBoost = userState.hasBoost;
     // Capture context values before await — the card may be deactivated
     // after swapHabit calls notifyListeners() and the parent rebuilds.
     final navigator = Navigator.of(context);
@@ -3210,7 +3279,7 @@ class _HabitCardState extends State<_HabitCard>
     final l10n = AppLocalizations.of(context);
 
     final success = await onboardingState.swapHabit(widget.habitTitle, newHabit,
-        isPremium: isPremium, hasBoost: hasBoost);
+        isPremium: isPremium);
 
     if (success) {
       AnalyticsService.logHabitSwapped();
@@ -3352,14 +3421,15 @@ class _HabitCardState extends State<_HabitCard>
   void _showSwapLimitDialog(String category) {
     AnalyticsService.logHabitSwapLimitReached();
     final l10n = AppLocalizations.of(context);
-    final userState = context.read<UserState>();
     showBoostOfferSheet(
       context: context,
       title: l10n.boostOfferSwapTitle,
       description: l10n.boostOfferSwapDesc,
-      showBoostOption: !userState.hasBoost,
+      showBoostOption: false,
       source: 'swap_limit',
-    );
+    ).then((result) {
+      if (result == 'paywall') openPaywallFromContext(context, source: 'swap_limit');
+    });
   }
 
   void _showNoAlternativesDialog() {
@@ -4095,11 +4165,10 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
     final onboardingState = context.read<OnboardingState>();
     final userState = context.read<UserState>();
     final isPremium = userState.hasSubscription;
-    final hasBoost = userState.hasBoost;
     final canSwap =
-        isPremium || onboardingState.canSwapFromBrowse(hasBoost: hasBoost);
+        isPremium || onboardingState.canSwapFromBrowse();
     final remainingSwaps =
-        onboardingState.getRemainingBrowseSwaps(hasBoost: hasBoost);
+        onboardingState.getRemainingBrowseSwaps();
     final l10n = AppLocalizations.of(context);
 
     if (!canSwap) {
@@ -4107,9 +4176,11 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
         context: context,
         title: l10n.boostOfferSwapTitle,
         description: l10n.boostOfferSwapDesc,
-        showBoostOption: !hasBoost,
+        showBoostOption: false,
         source: 'browse_swap_limit',
-      );
+      ).then((result) {
+        if (result == 'paywall') openPaywallFromContext(context, source: 'browse_swap_limit');
+      });
       return;
     }
 
@@ -4249,7 +4320,7 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
     final onboardingState = context.read<OnboardingState>();
     final userState = context.read<UserState>();
     final success = await onboardingState.swapHabit(oldHabit, newHabit,
-        isPremium: userState.hasSubscription, hasBoost: userState.hasBoost);
+        isPremium: userState.hasSubscription);
 
     if (success && mounted) {
       AnalyticsService.logHabitSwapped();
@@ -5967,6 +6038,9 @@ class _HabitActionScreenState extends State<HabitActionScreen> {
       ),
     );
     MilestoneService.invalidate();
+
+    // Update home screen widget
+    if (mounted) refreshHomeWidget(context);
 
     // Show heart + support for 1 second
     await Future.delayed(const Duration(milliseconds: 1000));

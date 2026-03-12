@@ -11,12 +11,24 @@ import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
 
+/// Opens the full paywall modal. Use after [showBoostOfferSheet] returns
+/// `'paywall'` to show the paywall from the correct context.
+void openPaywallFromContext(BuildContext context, {String source = 'boost'}) {
+  if (!context.mounted) return;
+  if (context.read<RevenueCatService>().isPremium) return;
+  showCupertinoModalPopup(
+    context: context,
+    barrierColor: Colors.black.withOpacity(0.5),
+    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+    builder: (_) => PaywallScreen(source: source),
+  );
+}
+
 /// Shows the Boost mini-paywall bottom sheet.
 ///
-/// [title] and [description] are contextual to the feature gate.
-/// [showBoostOption] should be false if the user already owns Boost.
-/// [source] is for analytics tracking.
-Future<void> showBoostOfferSheet({
+/// Returns `'paywall'` if the user tapped "Go unlimited", so the caller
+/// can handle showing the full paywall from its own context.
+Future<String?> showBoostOfferSheet({
   required BuildContext context,
   required String title,
   required String description,
@@ -24,7 +36,7 @@ Future<void> showBoostOfferSheet({
   String source = 'unknown',
 }) {
   AnalyticsService.logScreenView('boost_offer_sheet');
-  return showCupertinoModalPopup(
+  return showCupertinoModalPopup<String>(
     context: context,
     barrierColor: Colors.black.withOpacity(0.4),
     filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
@@ -103,14 +115,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
   }
 
   void _openPaywall() {
-    Navigator.pop(context);
-    if (context.read<RevenueCatService>().isPremium) return;
-    showCupertinoModalPopup(
-      context: context,
-      barrierColor: Colors.black.withOpacity(0.5),
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      builder: (_) => PaywallScreen(source: widget.source),
-    );
+    Navigator.pop(context, 'paywall');
   }
 
   @override
@@ -254,14 +259,16 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
             ),
           ),
           const SizedBox(width: 10),
-          Text(
-            benefit,
-            style: const TextStyle(
-              fontFamily: 'DM Sans',
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFFFFFFFF),
-              height: 1.3,
+          Expanded(
+            child: Text(
+              benefit,
+              style: const TextStyle(
+                fontFamily: 'DM Sans',
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFFFFFFFF),
+                height: 1.3,
+              ),
             ),
           ),
           if (detail != null) ...[
@@ -356,12 +363,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                       const SizedBox(height: 16),
                       // Benefits list
                       _buildBenefitRow(
-                          colors, l10n.boostBenefit1, l10n.boostBenefit1Detail),
-                      _buildBenefitRow(
-                          colors, l10n.boostBenefit2, l10n.boostBenefit2Detail),
-                      _buildBenefitRow(
-                          colors, l10n.boostBenefit3, l10n.boostBenefit3Detail),
-                      _buildBenefitRow(colors, l10n.boostBenefit4, null),
+                          colors, l10n.boostBenefit1, null),
                     ],
                   ),
           ),

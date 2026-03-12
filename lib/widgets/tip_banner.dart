@@ -83,6 +83,8 @@ class _TipBannerState extends State<TipBanner>
         return l10n.tipPinHabit;
       case 1:
         return l10n.tipCuratedPack;
+      case 2:
+        return l10n.tipWidget;
       default:
         return '';
     }

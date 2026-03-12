@@ -33,10 +33,13 @@ class _PaywallScreenState extends State<PaywallScreen>
     // Defensive check: if user is already subscribed, pop immediately
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      if (context.read<RevenueCatService>().isPremium) {
+      final rc = context.read<RevenueCatService>();
+      if (rc.isPremium) {
         Navigator.of(context).pop();
         return;
       }
+      // Lazy-load offerings when the paywall is actually shown
+      rc.ensureOfferings();
     });
     AnalyticsService.logScreenView('paywall');
     AnalyticsService.logPaywallShown(widget.source);
@@ -45,10 +48,11 @@ class _PaywallScreenState extends State<PaywallScreen>
       duration: const Duration(milliseconds: 600),
     );
     _bulletAnimations = [
-      CurvedAnimation(parent: _bulletController, curve: const Interval(0.0, 0.55, curve: Curves.easeOut)),
-      CurvedAnimation(parent: _bulletController, curve: const Interval(0.15, 0.70, curve: Curves.easeOut)),
-      CurvedAnimation(parent: _bulletController, curve: const Interval(0.30, 0.85, curve: Curves.easeOut)),
-      CurvedAnimation(parent: _bulletController, curve: const Interval(0.45, 1.0, curve: Curves.easeOut)),
+      CurvedAnimation(parent: _bulletController, curve: const Interval(0.0, 0.50, curve: Curves.easeOut)),
+      CurvedAnimation(parent: _bulletController, curve: const Interval(0.12, 0.62, curve: Curves.easeOut)),
+      CurvedAnimation(parent: _bulletController, curve: const Interval(0.24, 0.74, curve: Curves.easeOut)),
+      CurvedAnimation(parent: _bulletController, curve: const Interval(0.36, 0.86, curve: Curves.easeOut)),
+      CurvedAnimation(parent: _bulletController, curve: const Interval(0.48, 1.0, curve: Curves.easeOut)),
     ];
     _bulletController.forward();
   }
@@ -182,13 +186,15 @@ class _PaywallScreenState extends State<PaywallScreen>
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: Column(
                             children: [
-                              _buildAnimatedBullet(0, CupertinoIcons.paintbrush, l10n.paywallFeature1),
+                              _buildAnimatedBullet(0, CupertinoIcons.lightbulb, l10n.paywallFeature1),
                               const SizedBox(height: 12),
-                              _buildAnimatedBullet(1, CupertinoIcons.cube, l10n.paywallFeature2),
+                              _buildAnimatedBullet(1, CupertinoIcons.rectangle_on_rectangle, l10n.paywallFeature2),
                               const SizedBox(height: 12),
-                              _buildAnimatedBullet(2, CupertinoIcons.lightbulb, l10n.paywallFeature3),
+                              _buildAnimatedBullet(2, CupertinoIcons.cube, l10n.paywallFeature3),
                               const SizedBox(height: 12),
-                              _buildAnimatedBullet(3, CupertinoIcons.star, l10n.paywallFeature4),
+                              _buildAnimatedBullet(3, CupertinoIcons.paintbrush, l10n.paywallFeature4),
+                              const SizedBox(height: 12),
+                              _buildAnimatedBullet(4, CupertinoIcons.star, l10n.paywallFeature5),
                             ],
                           ),
                         ),

@@ -16,11 +16,8 @@ class OnboardingState extends ChangeNotifier {
   List<String> _customHabits = [];
   Map<String, String> _customHabitFocusAreas = {}; // habitTitle -> focusArea
   static const int _maxCustomHabitsFree = 2;
-  static const int _maxCustomHabitsBoost = 3;
   static const int _maxSwapsFree = 2;
-  static const int _maxSwapsBoost = 3;
   static const int _maxFocusAreasFree = 2;
-  static const int _maxFocusAreasBoost = 3;
 
   // NEW: Pin tracking
   String? _pinnedHabit;
@@ -178,14 +175,13 @@ class OnboardingState extends ChangeNotifier {
 
   /// Max focus areas for the user's current tier (free or boost).
   /// Subscription users get unlimited focus areas.
-  int maxFocusAreas({bool hasBoost = false}) =>
-      hasBoost ? _maxFocusAreasBoost : _maxFocusAreasFree;
+  int maxFocusAreas() => _maxFocusAreasFree;
 
-  void toggleFocusArea(String area, {bool hasBoost = false}) {
+  void toggleFocusArea(String area) {
     if (_focusAreas.contains(area)) {
       _focusAreas.remove(area);
     } else {
-      if (_focusAreas.length >= maxFocusAreas(hasBoost: hasBoost)) return;
+      if (_focusAreas.length >= maxFocusAreas()) return;
       _focusAreas.add(area);
     }
     notifyListeners();
@@ -507,27 +503,26 @@ class OnboardingState extends ChangeNotifier {
 
   /// Max swaps for the user's current tier (free or boost).
   /// Subscription users bypass this entirely at the call site.
-  int maxSwaps({bool hasBoost = false}) =>
-      hasBoost ? _maxSwapsBoost : _maxSwapsFree;
+  int maxSwaps() => _maxSwapsFree;
 
   // Check if user can swap (free: 2/month, boost: 3/month)
-  bool canSwapInCategory(String category, {bool hasBoost = false}) {
+  bool canSwapInCategory(String category) {
     _checkMonthlyReset();
-    return getTotalSwapsUsed() < maxSwaps(hasBoost: hasBoost);
+    return getTotalSwapsUsed() < maxSwaps();
   }
 
   // Get remaining swaps (global, not per-category)
-  int getRemainingSwaps(String category, {bool hasBoost = false}) {
+  int getRemainingSwaps(String category) {
     _checkMonthlyReset();
-    return maxSwaps(hasBoost: hasBoost) - getTotalSwapsUsed();
+    return maxSwaps() - getTotalSwapsUsed();
   }
 
   // Swap a habit
-  Future<bool> swapHabit(String oldHabit, String newHabit, {bool isPremium = false, bool hasBoost = false}) async {
+  Future<bool> swapHabit(String oldHabit, String newHabit, {bool isPremium = false}) async {
     final category = getCategoryForHabit(oldHabit);
     if (category == null) return false;
 
-    if (!isPremium && !canSwapInCategory(category, hasBoost: hasBoost)) return false;
+    if (!isPremium && !canSwapInCategory(category)) return false;
 
     final index = userHabits.indexOf(oldHabit);
     if (index == -1) return false;
@@ -564,13 +559,13 @@ class OnboardingState extends ChangeNotifier {
   }
 
   // Check if user can swap from Browse (free: 2/month, boost: 3/month)
-  bool canSwapFromBrowse({bool hasBoost = false}) {
-    return getTotalSwapsUsed() < maxSwaps(hasBoost: hasBoost);
+  bool canSwapFromBrowse() {
+    return getTotalSwapsUsed() < maxSwaps();
   }
 
   // Get remaining Browse swaps
-  int getRemainingBrowseSwaps({bool hasBoost = false}) {
-    return maxSwaps(hasBoost: hasBoost) - getTotalSwapsUsed();
+  int getRemainingBrowseSwaps() {
+    return maxSwaps() - getTotalSwapsUsed();
   }
 
 
@@ -663,15 +658,14 @@ class OnboardingState extends ChangeNotifier {
 
   /// Max custom habits for the user's current tier (free or boost).
   /// Subscription users bypass this entirely at the call site.
-  int maxCustomHabits({bool hasBoost = false}) =>
-      hasBoost ? _maxCustomHabitsBoost : _maxCustomHabitsFree;
+  int maxCustomHabits() => _maxCustomHabitsFree;
 
-  bool canAddCustomHabit({bool hasBoost = false}) {
-    return _customHabits.length < maxCustomHabits(hasBoost: hasBoost);
+  bool canAddCustomHabit() {
+    return _customHabits.length < maxCustomHabits();
   }
 
-  Future<void> addCustomHabit(String habitTitle, {bool hasBoost = false, String? focusArea}) async {
-    if (!canAddCustomHabit(hasBoost: hasBoost)) return;
+  Future<void> addCustomHabit(String habitTitle, {String? focusArea}) async {
+    if (!canAddCustomHabit()) return;
     if (userHabits.any((h) => h.toLowerCase() == habitTitle.toLowerCase())) return;
 
     _customHabits.add(habitTitle);

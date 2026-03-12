@@ -18,7 +18,7 @@ import '../utils/habit_l10n.dart';
 import '../utils/responsive_utils.dart';
 import '../utils/text_styles.dart';
 import '../widgets/app_toast.dart';
-import 'reflection_share_card.dart';
+import 'tiered_share_card.dart';
 
 class WeeklyReflectionCard extends StatefulWidget {
   final WeekStats stats;
@@ -141,7 +141,10 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
                     maxHeight: 1920,
                     child: RepaintBoundary(
                       key: _repaintKey,
-                      child: ReflectionShareCard(data: _data!),
+                      child: TieredShareCard(
+                        stats: widget.stats,
+                        reflection: _data!,
+                      ),
                     ),
                   ),
                 ),
@@ -247,52 +250,8 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
               _buildHabitsList(context, colors, l10n),
               const SizedBox(height: 8),
               _buildDayDots(context, colors, l10n),
-              const SizedBox(height: 16),
-              // Upsell prompt with dynamic teaser
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  showCupertinoModalPopup(
-                    context: context,
-                    barrierColor: Colors.black.withValues(alpha: 0.5),
-                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                    builder: (_) =>
-                        const PaywallScreen(source: 'reflection_card'),
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        _teaserText(l10n, data),
-                        style: AppTextStyles.caption(context).copyWith(
-                          color: colors.ctaPrimary,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: colors.ctaPrimary.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        '+',
-                        style: TextStyle(
-                          fontFamily: 'Sora',
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: colors.ctaPrimary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Blurred premium section previews
+              ..._buildBlurredPremiumPreviews(context, colors, l10n),
             ],
           ),
         ),
@@ -435,7 +394,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
     final reframe = _reframeText(l10n, data);
     final hasReframe = reframe != null;
 
-    // Section 2: YOUR RHYTHM (pattern)
+    // Section 2: YOUR RHYTHM (pattern) — show preview if no data yet
     if (hasPattern) {
       sections.add(const SizedBox(height: 16));
       sections.add(_buildSectionDivider(colors));
@@ -443,9 +402,21 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
       sections.add(_buildSectionLabel(l10n.reflectionSectionYourRhythm, colors));
       sections.add(const SizedBox(height: 8));
       sections.add(_reflectionText(context, _patternText(l10n, data), colors));
+    } else {
+      sections.add(const SizedBox(height: 16));
+      sections.add(_buildSectionDivider(colors));
+      sections.add(const SizedBox(height: 16));
+      sections.add(_buildSectionLabel(l10n.reflectionSectionYourRhythm, colors));
+      sections.add(const SizedBox(height: 8));
+      sections.add(_reflectionText(
+        context,
+        l10n.reflectionPreviewRhythm,
+        colors,
+        opacity: 0.4,
+      ));
     }
 
-    // Section 3: YOUR FOCUS
+    // Section 3: YOUR FOCUS — show preview if no data yet
     if (hasFocus) {
       sections.add(const SizedBox(height: 16));
       sections.add(_buildSectionDivider(colors));
@@ -457,6 +428,18 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
         _focusText(l10n, data),
         colors,
         opacity: 0.85,
+      ));
+    } else {
+      sections.add(const SizedBox(height: 16));
+      sections.add(_buildSectionDivider(colors));
+      sections.add(const SizedBox(height: 16));
+      sections.add(_buildSectionLabel(l10n.reflectionSectionYourFocus, colors));
+      sections.add(const SizedBox(height: 8));
+      sections.add(_reflectionText(
+        context,
+        l10n.reflectionPreviewFocus,
+        colors,
+        opacity: 0.4,
       ));
     }
 
@@ -479,6 +462,107 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
   }
 
   // ---------------------------------------------------------------------------
+  // Blurred premium previews (free users)
+  // ---------------------------------------------------------------------------
+
+  List<Widget> _buildBlurredPremiumPreviews(
+      BuildContext context, AppColorScheme colors, AppLocalizations l10n) {
+    return [
+      // YOUR RHYTHM — readable preview with lock badge
+      const SizedBox(height: 16),
+      _buildSectionDivider(colors),
+      const SizedBox(height: 16),
+      _buildLockedSectionLabel(l10n.reflectionSectionYourRhythm, colors),
+      const SizedBox(height: 8),
+      Text(
+        l10n.reflectionBlurRhythm,
+        style: AppTextStyles.body(context).copyWith(
+          color: colors.textPrimary.withValues(alpha: 0.45),
+          height: 1.55,
+        ),
+      ),
+      // YOUR FOCUS — readable preview with lock badge
+      const SizedBox(height: 16),
+      _buildSectionDivider(colors),
+      const SizedBox(height: 16),
+      _buildLockedSectionLabel(l10n.reflectionSectionYourFocus, colors),
+      const SizedBox(height: 8),
+      Text(
+        l10n.reflectionBlurFocus,
+        style: AppTextStyles.body(context).copyWith(
+          color: colors.textPrimary.withValues(alpha: 0.45),
+          height: 1.55,
+        ),
+      ),
+      // Unlock button
+      const SizedBox(height: 20),
+      Center(
+        child: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            showCupertinoModalPopup(
+              context: context,
+              barrierColor: Colors.black.withValues(alpha: 0.5),
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              builder: (_) =>
+                  const PaywallScreen(source: 'reflection_card'),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: colors.ctaPrimary.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l10n.reflectionUnlockPlus,
+                  style: AppTextStyles.caption(context).copyWith(
+                    color: colors.ctaPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  CupertinoIcons.chevron_right,
+                  size: 12,
+                  color: colors.ctaPrimary,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  /// Section label with a small lock icon — signals premium without obscuring.
+  Widget _buildLockedSectionLabel(String label, AppColorScheme colors) {
+    return Row(
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'Sora',
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.0,
+            color: colors.textSecondary.withValues(alpha: 0.55),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Icon(
+          CupertinoIcons.lock_fill,
+          size: 11,
+          color: colors.textSecondary.withValues(alpha: 0.35),
+        ),
+      ],
+    );
+  }
+
+  // ---------------------------------------------------------------------------
   // Shared building blocks
   // ---------------------------------------------------------------------------
 
@@ -487,7 +571,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
       label,
       style: TextStyle(
         fontFamily: 'Sora',
-        fontSize: 10,
+        fontSize: 12,
         fontWeight: FontWeight.w600,
         letterSpacing: 1.0,
         color: colors.textSecondary,
@@ -498,7 +582,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
   Widget _buildSectionDivider(AppColorScheme colors) {
     return Container(
       height: 0.5,
-      color: colors.textSecondary.withValues(alpha: 0.15),
+      color: colors.divider.withValues(alpha: colors.dividerOpacity),
     );
   }
 
@@ -601,10 +685,6 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
           data.topFocusArea!, data.secondFocusArea!);
     }
     return l10n.reflectionFocusDominant(data.topFocusArea!);
-  }
-
-  String _teaserText(AppLocalizations l10n, ReflectionData data) {
-    return l10n.reflectionTeaser;
   }
 
   String? _reframeText(AppLocalizations l10n, ReflectionData data) {

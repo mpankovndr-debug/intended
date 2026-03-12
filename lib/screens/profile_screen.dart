@@ -33,6 +33,7 @@ import '../services/moments_service.dart';
 import '../services/notification_scheduler.dart';
 import '../services/notification_preferences_service.dart';
 import 'moments_collection_screen.dart';
+import '../widgets/app_icon_picker.dart';
 import '../widgets/boost_offer_sheet.dart';
 import '../widgets/focus_area_card.dart';
 import '../onboarding_v2/focus_areas_screen.dart';
@@ -322,9 +323,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final onboardingState = context.read<OnboardingState>();
     final userState = context.read<UserState>();
 
-    // Subscription & boost users bypass the monthly focus area change limit
+    // Subscription users bypass the monthly focus area change limit
     if (!userState.hasSubscription &&
-        !userState.hasBoost &&
         !onboardingState.canChangeFocusAreas()) {
       AnalyticsService.logFocusAreaChangeLimitShown();
       _showFocusAreaLimitDialog();
@@ -526,12 +526,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _showFocusAreaLimitDialog() {
     final l10n = AppLocalizations.of(context);
-    final userState = Provider.of<UserState>(context, listen: false);
     showBoostOfferSheet(
       context: context,
       title: l10n.boostOfferFocusTitle,
       description: l10n.boostOfferFocusDesc,
-      showBoostOption: !userState.hasBoost,
+      showBoostOption: false,
       source: 'focus_area_limit',
     );
   }
@@ -630,6 +629,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           });
                         },
                         onBoostTap: () {
+                          Navigator.pop(context);
+                          final l10n = AppLocalizations.of(this.context);
+                          showBoostOfferSheet(
+                            context: this.context,
+                            title: l10n.boostOfferThemeTitle,
+                            description: l10n.boostOfferThemeDesc,
+                            showBoostOption: true,
+                            source: 'theme_picker',
+                          ).then((result) {
+                            if (!mounted) return;
+                            if (result == 'paywall') {
+                              _showUpgradeScreen().then((_) {
+                                if (mounted) _showAppearancePicker(this.context);
+                              });
+                            } else {
+                              _showAppearancePicker(this.context);
+                            }
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      // App icon picker
+                      AppIconPicker(
+                        isPremium: userState.hasSubscription,
+                        onPremiumTap: () {
                           Navigator.pop(context);
                           _showUpgradeScreen().then((_) {
                             if (mounted) _showAppearancePicker(this.context);
@@ -2128,18 +2152,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12, left: 4),
-                      child: Text(
-                        l10n.profileLocalDataNote,
-                        style: TextStyle(
-                          fontFamily: AppTextStyles.bodyFont(context),
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-
                     const SizedBox(height: 16),
 
                     // CONNECT ACCOUNT label
@@ -2388,7 +2400,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                     ),
 
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 24),
 
                     // Footer Section
                     Column(
@@ -2529,7 +2541,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
 
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 24),
+
+                        // Local data note
+                        Text(
+                          l10n.profileLocalDataNote,
+                          style: TextStyle(
+                            fontFamily: AppTextStyles.bodyFont(context),
+                            fontSize: 11,
+                            color: colors.textMutedBrown.withValues(alpha: 0.5),
+                          ),
+                        ),
+
+                        const SizedBox(height: 8),
 
                         // Version Label
                         Text(
@@ -2678,7 +2702,7 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
     final onboardingState = context.read<OnboardingState>();
     return userState.hasSubscription
         ? 8
-        : onboardingState.maxFocusAreas(hasBoost: userState.hasBoost);
+        : onboardingState.maxFocusAreas();
   }
 
   void _toggleArea(String area) {

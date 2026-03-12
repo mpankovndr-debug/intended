@@ -477,7 +477,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get customHabitLimitMessage =>
-      'Core: 2 custom habits\nBoost: 3 custom habits\nIntended+: Unlimited custom habits';
+      'Core: 2 custom habits\nIntended+: Unlimited custom habits';
 
   @override
   String get menuUnpin => 'Unpin';
@@ -541,7 +541,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get swapLimitMessage =>
-      'You\'ve used all your free swaps this month.\n\nBoost: 3 swaps/month\nIntended+: Unlimited swaps';
+      'You\'ve used all your free swaps this month.\n\nIntended+: Unlimited swaps';
 
   @override
   String get swapNoAltTitle => 'No alternatives';
@@ -1391,25 +1391,30 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get paywallTitle => 'Intended+ grows with you';
+  String get paywallTitle => 'See yourself more clearly';
 
   @override
   String get paywallDescription =>
-      'More ways to understand yourself — with more on the way.';
+      'Intended+ turns your daily practice into lasting self-knowledge.';
 
   @override
-  String get paywallFeature1 => 'All 10 color themes including dark mode';
+  String get paywallFeature1 =>
+      'Weekly reflections that reveal your patterns over time';
 
   @override
-  String get paywallFeature2 =>
-      'Curated habit packs: thoughtfully assembled routines';
+  String get paywallFeature2 => 'Home screen widget to stay gently connected';
 
   @override
-  String get paywallFeature3 => 'Weekly reflections & insights';
+  String get paywallFeature3 =>
+      'Curated packs: routines designed around how you actually live';
 
   @override
   String get paywallFeature4 =>
-      'Unlimited custom habits, swaps, and focus areas';
+      '10 themes to match your mood — including dark mode';
+
+  @override
+  String get paywallFeature5 =>
+      'Unlimited habits, swaps, and focus areas — grow without limits';
 
   @override
   String get paywallMonthly => 'Monthly';
@@ -1483,7 +1488,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paywallFooter =>
-      'New features added regularly. Your subscription supports independent development.';
+      'New features added regularly. Your subscription supports independent development.\nBuilt by one person who cares about this as much as you do.';
 
   @override
   String get subscriptionTitle => 'Intended+';
@@ -1651,8 +1656,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'You\'ve used your free change this month.';
 
   @override
-  String get profileFocusLimitOptions =>
-      '• Boost: Extra changes\n• Intended+: Unlimited';
+  String get profileFocusLimitOptions => '• Intended+: Unlimited';
 
   @override
   String get profilePayAmount => 'Pay €0.99';
@@ -2142,6 +2146,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareCardDescriptor => 'intention, not perfection';
 
   @override
+  String get shareCardSubtitleSingular => 'time I showed up this week';
+
+  @override
+  String get shareCardSubtitlePlural => 'times I showed up this week';
+
+  @override
+  String get shareCardSubtitleDays => 'days I showed up this week';
+
+  @override
+  String shareCardInsightTwoDays(String day1, String day2) {
+    return '$day1 and $day2 are my days';
+  }
+
+  @override
+  String shareCardInsightOneDay(String day) {
+    return '$day is my day';
+  }
+
+  @override
+  String shareCardInsightFocus(String area) {
+    return 'Drawn to $area this week';
+  }
+
+  @override
   String get shareButton => 'Share';
 
   @override
@@ -2199,47 +2227,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get milestoneIdentitySubtitle => 'is becoming your thing';
 
   @override
-  String get boostCardTitle => 'Intended Boost — €1.99 one-time';
+  String get boostCardTitle => 'Intended Boost — €1.99';
 
   @override
   String boostCardTitleDynamic(String price) {
-    return 'Intended Boost — $price one-time';
+    return 'Intended Boost — $price';
   }
 
   @override
-  String get boostCardSubtitle =>
-      'Unlock dark mode + 1 extra custom habit and focus area.';
+  String get boostCardSubtitle => 'Unlock both dark themes.';
 
   @override
   String get boostOrDivider => 'or';
 
   @override
-  String get boostGoUnlimited => 'Go unlimited with Intended+';
+  String get boostGoUnlimited => 'Want more? Go unlimited with Intended+';
 
   @override
   String get boostPurchaseError =>
       'Something went wrong with the purchase. Please try again.';
 
   @override
-  String get boostBenefit1 => 'Deep Focus dark theme';
-
-  @override
-  String get boostBenefit1Detail => '';
-
-  @override
-  String get boostBenefit2 => '+1 custom habit';
-
-  @override
-  String get boostBenefit2Detail => '3 total';
-
-  @override
-  String get boostBenefit3 => '+1 focus area';
-
-  @override
-  String get boostBenefit3Detail => '3 total';
-
-  @override
-  String get boostBenefit4 => '+1 habit swap per month';
+  String get boostBenefit1 =>
+      'Deep Focus and Night Bloom — a calmer look for evening check-ins.';
 
   @override
   String get boostOfferHabitTitle => 'Want one more habit?';
@@ -2268,6 +2278,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get boostOfferShareDesc =>
       'Your journey is worth celebrating — share it with people you care about.';
+
+  @override
+  String get boostOfferThemeTitle => 'Unlock both dark themes';
+
+  @override
+  String get boostOfferThemeDesc =>
+      'Deep Focus and Night Bloom — a calmer look for evening check-ins.';
 
   @override
   String get commonDismiss => 'Dismiss';
@@ -2418,11 +2435,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reflectionSectionNotice => 'SOMETHING TO NOTICE';
 
   @override
+  String get reflectionPreviewRhythm =>
+      'After a few weeks, we\'ll show you which days you\'re most consistent';
+
+  @override
+  String get reflectionPreviewFocus =>
+      'Complete more habits to see what you\'re drawn to';
+
+  @override
+  String get reflectionBlurRhythm =>
+      'See which days and patterns work best for you';
+
+  @override
+  String get reflectionBlurFocus => 'Discover where your energy goes each week';
+
+  @override
+  String get reflectionUnlockPlus => 'See my weekly insights';
+
+  @override
   String get tipPinHabit => 'Long press on a habit to pin it to the top';
 
   @override
   String get tipCuratedPack =>
       'Try a curated pack — find them in Browse all habits';
+
+  @override
+  String get tipWidget =>
+      'Add Intended to your home screen — long press your wallpaper and add a widget';
 
   @override
   String get tipGotIt => 'Got it';
@@ -2539,4 +2578,39 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get packStayConnectedDescription =>
       'Four micro-habits for staying close to the people in your life. Not grand gestures — just showing up.';
+
+  @override
+  String get widgetToday => 'today';
+
+  @override
+  String widgetMore(int n) {
+    return '+$n more';
+  }
+
+  @override
+  String get widgetUpgrade => 'Upgrade to see more';
+
+  @override
+  String get widgetNoHabits => 'No habits yet';
+
+  @override
+  String get widgetAllDone => 'All done for today!';
+
+  @override
+  String get appIconSectionTitle => 'APP ICON';
+
+  @override
+  String get appIconDefault => 'Default';
+
+  @override
+  String get appIconMidnight => 'Midnight';
+
+  @override
+  String get appIconRose => 'Rose';
+
+  @override
+  String get appIconForest => 'Forest';
+
+  @override
+  String get appIconSky => 'Sky';
 }

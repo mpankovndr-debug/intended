@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
+import '../main.dart' show refreshHomeWidget;
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 
@@ -176,8 +177,6 @@ class ThemePicker extends StatelessWidget {
       isPremium: isPremium,
     );
     final isDark = entry.theme.isDark;
-    final tierLabel = themeProvider.tierLabel(entry.theme);
-
     return GestureDetector(
       onTap: () {
         if (isLocked) {
@@ -188,6 +187,10 @@ class ThemePicker extends StatelessWidget {
           }
         } else {
           context.read<ThemeProvider>().setTheme(entry.theme);
+          // Update home screen widget with new theme
+          Future.delayed(const Duration(milliseconds: 100), () {
+            if (context.mounted) refreshHomeWidget(context);
+          });
         }
       },
       child: ClipRRect(
@@ -215,57 +218,41 @@ class ThemePicker extends StatelessWidget {
                   ),
                 ],
               ),
-              child: compact
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 22,
-                          height: 22,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: compact ? 12 : 16),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: compact ? 22 : 28,
+                        height: compact ? 22 : 28,
+                        child: DecoratedBox(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: entry.accentColor,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Text(
+                      ),
+                      SizedBox(width: compact ? 8 : 10),
+                      Flexible(
+                        child: Text(
                           entry.name,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: compact ? 13 : 14,
                             fontWeight: FontWeight.w500,
                             color: isDark
                                 ? Colors.white.withValues(alpha: 0.75)
                                 : Colors.black.withValues(alpha: 0.65),
                           ),
                         ),
-                      ],
-                    )
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 8),
-                        Container(
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: entry.accentColor,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          entry.name,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: isDark
-                                ? Colors.white.withValues(alpha: 0.75)
-                                : Colors.black.withValues(alpha: 0.65),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
             if (isSelected)
               Positioned(
@@ -292,65 +279,43 @@ class ThemePicker extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                     color: entry.swatchColor,
                   ),
-                  child: Center(
-                    child: compact
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: compact ? 12 : 16),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: compact ? 22 : 28,
+                            height: compact ? 22 : 28,
+                            child: Center(
+                              child: Icon(
                                 Icons.lock_rounded,
-                                size: 16,
+                                size: compact ? 16 : 18,
                                 color: isDark
                                     ? Colors.white.withValues(alpha: 0.35)
                                     : Colors.black.withValues(alpha: 0.3),
                               ),
-                              const SizedBox(width: 6),
-                              Text(
-                                entry.name,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.50)
-                                      : Colors.black.withValues(alpha: 0.45),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.lock_rounded,
-                                size: 20,
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.35)
-                                    : Colors.black.withValues(alpha: 0.3),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                tierLabel ?? AppLocalizations.of(context).appNameIntendedPlus,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.35)
-                                      : Colors.black.withValues(alpha: 0.3),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                entry.name,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.50)
-                                      : Colors.black.withValues(alpha: 0.45),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
+                          SizedBox(width: compact ? 8 : 10),
+                          Flexible(
+                            child: Text(
+                              entry.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: compact ? 13 : 14,
+                                fontWeight: FontWeight.w500,
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.50)
+                                    : Colors.black.withValues(alpha: 0.45),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),

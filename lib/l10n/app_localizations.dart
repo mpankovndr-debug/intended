@@ -977,7 +977,7 @@ abstract class AppLocalizations {
   /// No description provided for @customHabitLimitMessage.
   ///
   /// In en, this message translates to:
-  /// **'Core: 2 custom habits\nBoost: 3 custom habits\nIntended+: Unlimited custom habits'**
+  /// **'Core: 2 custom habits\nIntended+: Unlimited custom habits'**
   String get customHabitLimitMessage;
 
   /// No description provided for @menuUnpin.
@@ -1079,7 +1079,7 @@ abstract class AppLocalizations {
   /// No description provided for @swapLimitMessage.
   ///
   /// In en, this message translates to:
-  /// **'You\'ve used all your free swaps this month.\n\nBoost: 3 swaps/month\nIntended+: Unlimited swaps'**
+  /// **'You\'ve used all your free swaps this month.\n\nIntended+: Unlimited swaps'**
   String get swapLimitMessage;
 
   /// No description provided for @swapNoAltTitle.
@@ -2507,38 +2507,44 @@ abstract class AppLocalizations {
   /// No description provided for @paywallTitle.
   ///
   /// In en, this message translates to:
-  /// **'Intended+ grows with you'**
+  /// **'See yourself more clearly'**
   String get paywallTitle;
 
   /// No description provided for @paywallDescription.
   ///
   /// In en, this message translates to:
-  /// **'More ways to understand yourself — with more on the way.'**
+  /// **'Intended+ turns your daily practice into lasting self-knowledge.'**
   String get paywallDescription;
 
   /// No description provided for @paywallFeature1.
   ///
   /// In en, this message translates to:
-  /// **'All 10 color themes including dark mode'**
+  /// **'Weekly reflections that reveal your patterns over time'**
   String get paywallFeature1;
 
   /// No description provided for @paywallFeature2.
   ///
   /// In en, this message translates to:
-  /// **'Curated habit packs: thoughtfully assembled routines'**
+  /// **'Home screen widget to stay gently connected'**
   String get paywallFeature2;
 
   /// No description provided for @paywallFeature3.
   ///
   /// In en, this message translates to:
-  /// **'Weekly reflections & insights'**
+  /// **'Curated packs: routines designed around how you actually live'**
   String get paywallFeature3;
 
   /// No description provided for @paywallFeature4.
   ///
   /// In en, this message translates to:
-  /// **'Unlimited custom habits, swaps, and focus areas'**
+  /// **'10 themes to match your mood — including dark mode'**
   String get paywallFeature4;
+
+  /// No description provided for @paywallFeature5.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited habits, swaps, and focus areas — grow without limits'**
+  String get paywallFeature5;
 
   /// No description provided for @paywallMonthly.
   ///
@@ -2675,7 +2681,7 @@ abstract class AppLocalizations {
   /// No description provided for @paywallFooter.
   ///
   /// In en, this message translates to:
-  /// **'New features added regularly. Your subscription supports independent development.'**
+  /// **'New features added regularly. Your subscription supports independent development.\nBuilt by one person who cares about this as much as you do.'**
   String get paywallFooter;
 
   /// No description provided for @subscriptionTitle.
@@ -2981,7 +2987,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileFocusLimitOptions.
   ///
   /// In en, this message translates to:
-  /// **'• Boost: Extra changes\n• Intended+: Unlimited'**
+  /// **'• Intended+: Unlimited'**
   String get profileFocusLimitOptions;
 
   /// No description provided for @profilePayAmount.
@@ -3884,6 +3890,42 @@ abstract class AppLocalizations {
   /// **'intention, not perfection'**
   String get shareCardDescriptor;
 
+  /// No description provided for @shareCardSubtitleSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'time I showed up this week'**
+  String get shareCardSubtitleSingular;
+
+  /// No description provided for @shareCardSubtitlePlural.
+  ///
+  /// In en, this message translates to:
+  /// **'times I showed up this week'**
+  String get shareCardSubtitlePlural;
+
+  /// No description provided for @shareCardSubtitleDays.
+  ///
+  /// In en, this message translates to:
+  /// **'days I showed up this week'**
+  String get shareCardSubtitleDays;
+
+  /// No description provided for @shareCardInsightTwoDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{day1} and {day2} are my days'**
+  String shareCardInsightTwoDays(String day1, String day2);
+
+  /// No description provided for @shareCardInsightOneDay.
+  ///
+  /// In en, this message translates to:
+  /// **'{day} is my day'**
+  String shareCardInsightOneDay(String day);
+
+  /// No description provided for @shareCardInsightFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Drawn to {area} this week'**
+  String shareCardInsightFocus(String area);
+
   /// No description provided for @shareButton.
   ///
   /// In en, this message translates to:
@@ -3977,19 +4019,19 @@ abstract class AppLocalizations {
   /// No description provided for @boostCardTitle.
   ///
   /// In en, this message translates to:
-  /// **'Intended Boost — €1.99 one-time'**
+  /// **'Intended Boost — €1.99'**
   String get boostCardTitle;
 
   /// No description provided for @boostCardTitleDynamic.
   ///
   /// In en, this message translates to:
-  /// **'Intended Boost — {price} one-time'**
+  /// **'Intended Boost — {price}'**
   String boostCardTitleDynamic(String price);
 
   /// No description provided for @boostCardSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Unlock dark mode + 1 extra custom habit and focus area.'**
+  /// **'Unlock both dark themes.'**
   String get boostCardSubtitle;
 
   /// No description provided for @boostOrDivider.
@@ -4001,7 +4043,7 @@ abstract class AppLocalizations {
   /// No description provided for @boostGoUnlimited.
   ///
   /// In en, this message translates to:
-  /// **'Go unlimited with Intended+'**
+  /// **'Want more? Go unlimited with Intended+'**
   String get boostGoUnlimited;
 
   /// No description provided for @boostPurchaseError.
@@ -4013,44 +4055,8 @@ abstract class AppLocalizations {
   /// No description provided for @boostBenefit1.
   ///
   /// In en, this message translates to:
-  /// **'Deep Focus dark theme'**
+  /// **'Deep Focus and Night Bloom — a calmer look for evening check-ins.'**
   String get boostBenefit1;
-
-  /// No description provided for @boostBenefit1Detail.
-  ///
-  /// In en, this message translates to:
-  /// **''**
-  String get boostBenefit1Detail;
-
-  /// No description provided for @boostBenefit2.
-  ///
-  /// In en, this message translates to:
-  /// **'+1 custom habit'**
-  String get boostBenefit2;
-
-  /// No description provided for @boostBenefit2Detail.
-  ///
-  /// In en, this message translates to:
-  /// **'3 total'**
-  String get boostBenefit2Detail;
-
-  /// No description provided for @boostBenefit3.
-  ///
-  /// In en, this message translates to:
-  /// **'+1 focus area'**
-  String get boostBenefit3;
-
-  /// No description provided for @boostBenefit3Detail.
-  ///
-  /// In en, this message translates to:
-  /// **'3 total'**
-  String get boostBenefit3Detail;
-
-  /// No description provided for @boostBenefit4.
-  ///
-  /// In en, this message translates to:
-  /// **'+1 habit swap per month'**
-  String get boostBenefit4;
 
   /// No description provided for @boostOfferHabitTitle.
   ///
@@ -4099,6 +4105,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your journey is worth celebrating — share it with people you care about.'**
   String get boostOfferShareDesc;
+
+  /// No description provided for @boostOfferThemeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock both dark themes'**
+  String get boostOfferThemeTitle;
+
+  /// No description provided for @boostOfferThemeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep Focus and Night Bloom — a calmer look for evening check-ins.'**
+  String get boostOfferThemeDesc;
 
   /// No description provided for @commonDismiss.
   ///
@@ -4334,6 +4352,36 @@ abstract class AppLocalizations {
   /// **'SOMETHING TO NOTICE'**
   String get reflectionSectionNotice;
 
+  /// No description provided for @reflectionPreviewRhythm.
+  ///
+  /// In en, this message translates to:
+  /// **'After a few weeks, we\'ll show you which days you\'re most consistent'**
+  String get reflectionPreviewRhythm;
+
+  /// No description provided for @reflectionPreviewFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete more habits to see what you\'re drawn to'**
+  String get reflectionPreviewFocus;
+
+  /// No description provided for @reflectionBlurRhythm.
+  ///
+  /// In en, this message translates to:
+  /// **'See which days and patterns work best for you'**
+  String get reflectionBlurRhythm;
+
+  /// No description provided for @reflectionBlurFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover where your energy goes each week'**
+  String get reflectionBlurFocus;
+
+  /// No description provided for @reflectionUnlockPlus.
+  ///
+  /// In en, this message translates to:
+  /// **'See my weekly insights'**
+  String get reflectionUnlockPlus;
+
   /// No description provided for @tipPinHabit.
   ///
   /// In en, this message translates to:
@@ -4345,6 +4393,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try a curated pack — find them in Browse all habits'**
   String get tipCuratedPack;
+
+  /// No description provided for @tipWidget.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Intended to your home screen — long press your wallpaper and add a widget'**
+  String get tipWidget;
 
   /// No description provided for @tipGotIt.
   ///
@@ -4525,6 +4579,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Four micro-habits for staying close to the people in your life. Not grand gestures — just showing up.'**
   String get packStayConnectedDescription;
+
+  /// No description provided for @widgetToday.
+  ///
+  /// In en, this message translates to:
+  /// **'today'**
+  String get widgetToday;
+
+  /// No description provided for @widgetMore.
+  ///
+  /// In en, this message translates to:
+  /// **'+{n} more'**
+  String widgetMore(int n);
+
+  /// No description provided for @widgetUpgrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to see more'**
+  String get widgetUpgrade;
+
+  /// No description provided for @widgetNoHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'No habits yet'**
+  String get widgetNoHabits;
+
+  /// No description provided for @widgetAllDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All done for today!'**
+  String get widgetAllDone;
+
+  /// No description provided for @appIconSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'APP ICON'**
+  String get appIconSectionTitle;
+
+  /// No description provided for @appIconDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get appIconDefault;
+
+  /// No description provided for @appIconMidnight.
+  ///
+  /// In en, this message translates to:
+  /// **'Midnight'**
+  String get appIconMidnight;
+
+  /// No description provided for @appIconRose.
+  ///
+  /// In en, this message translates to:
+  /// **'Rose'**
+  String get appIconRose;
+
+  /// No description provided for @appIconForest.
+  ///
+  /// In en, this message translates to:
+  /// **'Forest'**
+  String get appIconForest;
+
+  /// No description provided for @appIconSky.
+  ///
+  /// In en, this message translates to:
+  /// **'Sky'**
+  String get appIconSky;
 }
 
 class _AppLocalizationsDelegate

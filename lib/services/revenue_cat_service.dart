@@ -57,8 +57,10 @@ class RevenueCatService extends ChangeNotifier {
     return null;
   }
 
-  /// Initialize RevenueCat SDK (iOS only for now)
-  Future<void> init() async {
+  /// Initialize RevenueCat SDK (iOS only for now).
+  /// Pass [firebaseUid] to configure with the user's identity upfront,
+  /// avoiding an anonymous→identified migration later.
+  Future<void> init({String? firebaseUid}) async {
     if (_isInitialized) return;
 
     if (!Platform.isIOS && !Platform.isMacOS) {
@@ -69,6 +71,9 @@ class RevenueCatService extends ChangeNotifier {
 
     try {
       final configuration = PurchasesConfiguration(_appleApiKey);
+      if (firebaseUid != null) {
+        configuration.appUserID = firebaseUid;
+      }
       await Purchases.configure(configuration);
 
       // Listen for customer info changes (e.g. subscription renewals, expirations)
@@ -77,8 +82,8 @@ class RevenueCatService extends ChangeNotifier {
       // Check current entitlement status
       await refreshPurchaseStatus();
 
-      // Pre-fetch offerings
-      await loadOfferings();
+      // Don't pre-fetch offerings here — it triggers an App Store sign-in
+      // dialog. Offerings will be loaded lazily when the paywall is shown.
 
       _isInitialized = true;
     } catch (e) {
@@ -121,12 +126,21 @@ class RevenueCatService extends ChangeNotifier {
     }
   }
 
-  /// Load available offerings
+  /// Load available offerings (lazy — only called when needed)
   Future<void> loadOfferings() async {
+    if (_offerings != null) return;
     try {
       _offerings = await Purchases.getOfferings();
+      notifyListeners();
     } catch (e) {
       debugPrint('RevenueCat: Failed to load offerings: $e');
+    }
+  }
+
+  /// Ensure offerings are loaded before showing the paywall.
+  Future<void> ensureOfferings() async {
+    if (_offerings == null && _isInitialized) {
+      await loadOfferings();
     }
   }
 
@@ -205,17 +219,19 @@ class RevenueCatService extends ChangeNotifier {
     return purchasePackage(package);
   }
 
-  /// Log in to RevenueCat with a user identifier (device ID or Firebase UID).
-  /// Automatically logs out the previous user if switching to a different ID.
+  /// Log in to RevenueCat with a user identifier (Firebase UID).
+  /// RevenueCat handles identity switching and merges anonymous purchases
+  /// automatically, so no manual logOut is needed before logIn.
+  /// Also restores purchases to catch Apple ID entitlements on new devices.
   Future<void> logIn(String userId) async {
     if (!_isInitialized) return;
     try {
-      final currentId = await Purchases.appUserID;
-      if (currentId != userId && !currentId.startsWith('\$RCAnonymousID:')) {
-        await Purchases.logOut();
-      }
       final result = await Purchases.logIn(userId);
       _updatePremiumStatus(result.customerInfo);
+
+      // Restore purchases to pick up Apple ID entitlements that RevenueCat
+      // may not yet have associated with this user (e.g. new device).
+      await restorePurchases();
     } catch (e) {
       debugPrint('RevenueCat: logIn failed: $e');
     }

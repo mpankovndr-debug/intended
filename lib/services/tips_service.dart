@@ -14,7 +14,7 @@ class TipsService {
 
   static const _currentIndexKey = 'tips_current_index';
   static const _dismissedKey = 'tips_dismissed';
-  static const _tipCount = 2;
+  static const _tipCount = 3;
 
   /// Returns the current tip index, or null if tips are done/dismissed.
   static Future<int?> getCurrentTipIndex() async {

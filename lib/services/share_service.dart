@@ -16,7 +16,7 @@ class ShareService {
       throw Exception('Could not capture image');
     }
 
-    final image = await renderObject.toImage(pixelRatio: 2.0);
+    final image = await renderObject.toImage(pixelRatio: 3.0);
     final byteData = await image.toByteData(format: ImageByteFormat.png);
     if (byteData == null) throw Exception('Could not encode image');
 

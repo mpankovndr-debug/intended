@@ -18,10 +18,12 @@ import '../utils/text_styles.dart';
 /// Implements the full completion sequence from design specs
 class HabitCompletionModal extends StatefulWidget {
   final String habitTitle;
+  final bool isPremium;
 
   const HabitCompletionModal({
     super.key,
     required this.habitTitle,
+    this.isPremium = false,
   });
 
   @override
@@ -172,7 +174,14 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
     // Start color transition
     _colorController.forward();
 
-    HapticFeedback.mediumImpact();
+    // Premium: satisfying double-tap; Free: single tap
+    if (widget.isPremium) {
+      HapticFeedback.mediumImpact();
+      await Future.delayed(const Duration(milliseconds: 100));
+      HapticFeedback.lightImpact();
+    } else {
+      HapticFeedback.mediumImpact();
+    }
 
     // Mark as done
     await HabitTracker.markDone(widget.habitTitle);
