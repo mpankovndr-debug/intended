@@ -1629,7 +1629,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileDeleteData => 'Удалить мои данные';
 
   @override
-  String get profileVersion => 'Intended v1.0.0';
+  String get profileVersion => 'Intended v1.1.0';
 
   @override
   String get profileCannotOpenEmail => 'Не удалось открыть почту';

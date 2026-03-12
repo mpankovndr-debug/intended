@@ -534,7 +534,7 @@
   "signOutWarningMessage": "Your data stays on this device only. You won't be able to access it on other devices or after reinstalling.",
   "profileSignOut": "Sign out",
   "profileDeleteData": "Delete profile data",
-  "profileVersion": "Intended v1.0.0",
+  "profileVersion": "Intended v1.1.0",
   "profileCannotOpenEmail": "Cannot open email",
   "profileEmailFallback": "Please email us at\nsupport@intendedapp.com",
   "profileChangeFocusTitle": "Change focus areas?",

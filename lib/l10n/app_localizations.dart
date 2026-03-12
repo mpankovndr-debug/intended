@@ -2945,7 +2945,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileVersion.
   ///
   /// In en, this message translates to:
-  /// **'Intended v1.0.0'**
+  /// **'Intended v1.1.0'**
   String get profileVersion;
 
   /// No description provided for @profileCannotOpenEmail.
