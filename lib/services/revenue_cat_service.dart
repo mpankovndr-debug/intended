@@ -104,7 +104,6 @@ class RevenueCatService extends ChangeNotifier {
     final wasPremium = _isPremium;
     final hadBoost = _hasBoost;
     _isPremium = entitlement?.isActive ?? false;
-    _isPremium = true; // TODO: TEMP debug override – remove!
     _hasBoost = boostEntitlement?.isActive ?? false;
 
     if (wasPremium != _isPremium || hadBoost != _hasBoost) {

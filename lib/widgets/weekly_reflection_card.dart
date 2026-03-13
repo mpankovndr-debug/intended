@@ -176,7 +176,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
               _buildDayDots(context, colors, l10n),
               // Premium sections with labeled dividers
               ..._buildPremiumSections(context, data, colors, l10n),
-              if (widget.stats.completionCount >= 0 || widget.stats.dailyActivity.where((d) => d).length >= 0) ...[ // TODO: TEMP – restore to >= 3 / >= 2
+              if (widget.stats.completionCount >= 3 || widget.stats.dailyActivity.where((d) => d).length >= 2) ...[
                 const SizedBox(height: 16),
                 _buildShareButton(context, colors),
               ],
