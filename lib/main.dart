@@ -12,6 +12,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'services/analytics_service.dart';
+import 'services/app_icon_service.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
@@ -844,10 +845,20 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
   }
 
   void _onSubscriptionChanged() {
-    final isPremium = context.read<UserState>().hasSubscription;
+    final userState = context.read<UserState>();
+    final isPremium = userState.hasSubscription;
     if (_lastPremiumStatus != isPremium) {
       _lastPremiumStatus = isPremium;
       refreshHomeWidget(context);
+
+      // Revert premium-only features when subscription lapses.
+      if (!isPremium) {
+        context.read<ThemeProvider>().revertIfLocked(
+              hasBoost: userState.hasBoost,
+              isPremium: false,
+            );
+        AppIconService.resetIfPremium();
+      }
     }
   }
 

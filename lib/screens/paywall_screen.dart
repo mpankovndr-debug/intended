@@ -66,7 +66,9 @@ class _PaywallScreenState extends State<PaywallScreen>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final colors = context.watch<ThemeProvider>().colors;
+    final themeProvider = context.watch<ThemeProvider>();
+    final colors = themeProvider.colors;
+    final isDark = themeProvider.theme.isDark;
     final l10n = AppLocalizations.of(context);
 
     return SafeArea(
@@ -85,18 +87,30 @@ class _PaywallScreenState extends State<PaywallScreen>
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [
-                        colors.modalBg1.withOpacity(0.96),
-                        colors.modalBg2.withOpacity(0.96),
-                        colors.modalBg3.withOpacity(0.96),
-                      ],
+                      begin: isDark
+                          ? const Alignment(-0.4, -1.0)
+                          : Alignment.bottomCenter,
+                      end: isDark
+                          ? const Alignment(0.4, 1.0)
+                          : Alignment.topCenter,
+                      colors: isDark
+                          ? [
+                              Color.lerp(colors.onboardingBg1, colors.modalBg1, 0.5)!,
+                              Color.lerp(colors.onboardingBg2, colors.modalBg2, 0.5)!,
+                              Color.lerp(colors.onboardingBg3, colors.modalBg3, 0.7)!,
+                            ]
+                          : [
+                              colors.modalBg1.withOpacity(0.96),
+                              colors.modalBg2.withOpacity(0.96),
+                              colors.modalBg3.withOpacity(0.96),
+                            ],
                       stops: const [0.0, 0.5, 1.0],
                     ),
                     borderRadius: BorderRadius.circular(36),
                     border: Border.all(
-                      color: const Color(0xFFFFFFFF).withOpacity(0.5),
+                      color: isDark
+                          ? colors.borderCard.withOpacity(0.4)
+                          : const Color(0xFFFFFFFF).withOpacity(0.5),
                       width: 1.5,
                     ),
                     boxShadow: [
@@ -106,7 +120,9 @@ class _PaywallScreenState extends State<PaywallScreen>
                         offset: const Offset(0, 16),
                       ),
                       BoxShadow(
-                        color: const Color(0xFFFFFFFF).withOpacity(0.25),
+                        color: isDark
+                            ? colors.borderCard.withOpacity(0.12)
+                            : const Color(0xFFFFFFFF).withOpacity(0.25),
                         blurRadius: 0,
                         offset: const Offset(0, 1),
                         spreadRadius: 0,
@@ -156,7 +172,7 @@ class _PaywallScreenState extends State<PaywallScreen>
                             ),
                           ),
                         ),
-                        _buildTulipIcon(colors),
+                        _buildTulipIcon(colors, isDark: isDark),
                         const SizedBox(height: 16),
                         Text(
                           l10n.paywallTitle,
@@ -199,7 +215,7 @@ class _PaywallScreenState extends State<PaywallScreen>
                           ),
                         ),
                         const SizedBox(height: 16),
-                        _buildPricingOptions(colors, l10n),
+                        _buildPricingOptions(colors, l10n, isDark: isDark),
                         const SizedBox(height: 12),
                         _buildCTAButton(colors, l10n),
                         const SizedBox(height: 8),
@@ -247,7 +263,49 @@ class _PaywallScreenState extends State<PaywallScreen>
     );
   }
 
-  Widget _buildTulipIcon(AppColorScheme colors) {
+  Widget _buildTulipIcon(AppColorScheme colors, {required bool isDark}) {
+    final icon = SizedBox(
+      width: 48,
+      height: 48,
+      child: ColorFiltered(
+        colorFilter: ColorFilter.mode(colors.ctaPrimary, BlendMode.srcIn),
+        child: Image.asset(
+          'assets/images/intended_icon_transparent.png',
+          width: 48,
+          height: 48,
+        ),
+      ),
+    );
+
+    if (isDark) {
+      return Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colors.surfaceLightest,
+              colors.cardBackground,
+            ],
+          ),
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: colors.borderCard.withOpacity(0.45),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: colors.textPrimary.withOpacity(0.08),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: icon,
+      );
+    }
+
     return ClipOval(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
@@ -275,24 +333,13 @@ class _PaywallScreenState extends State<PaywallScreen>
               ),
             ],
           ),
-          child: SizedBox(
-            width: 48,
-            height: 48,
-            child: ColorFiltered(
-              colorFilter: ColorFilter.mode(colors.ctaPrimary, BlendMode.srcIn),
-              child: Image.asset(
-                'assets/images/intended_icon_transparent.png',
-                width: 48,
-                height: 48,
-              ),
-            ),
-          ),
+          child: icon,
         ),
       ),
     );
   }
 
-  Widget _buildPricingOptions(AppColorScheme colors, AppLocalizations l10n) {
+  Widget _buildPricingOptions(AppColorScheme colors, AppLocalizations l10n, {required bool isDark}) {
     final rc = context.read<RevenueCatService>();
     final monthlyPrice = rc.monthlyPriceString ?? l10n.paywallMonthlyPrice;
     final yearlyPrice = rc.yearlyPriceString ?? l10n.paywallYearlyPrice;
@@ -313,6 +360,7 @@ class _PaywallScreenState extends State<PaywallScreen>
           pricePerPeriod: l10n.paywallMonthlyPeriod,
           badge: null,
           isSelected: _selectedPlan == 'monthly',
+          isDark: isDark,
           onTap: () => setState(() => _selectedPlan = 'monthly'),
         ),
 
@@ -331,6 +379,7 @@ class _PaywallScreenState extends State<PaywallScreen>
             secondaryColor: colors.success,
           ),
           isSelected: _selectedPlan == 'yearly',
+          isDark: isDark,
           onTap: () => setState(() => _selectedPlan = 'yearly'),
         ),
 
@@ -349,6 +398,7 @@ class _PaywallScreenState extends State<PaywallScreen>
             secondaryColor: colors.buttonDark,
           ),
           isSelected: _selectedPlan == 'lifetime',
+          isDark: isDark,
           onTap: () => setState(() => _selectedPlan = 'lifetime'),
         ),
       ],
@@ -363,6 +413,7 @@ class _PaywallScreenState extends State<PaywallScreen>
     required String pricePerPeriod,
     required _PricingBadge? badge,
     required bool isSelected,
+    required bool isDark,
     required VoidCallback onTap,
   }) {
     Color borderColor;
@@ -372,29 +423,41 @@ class _PaywallScreenState extends State<PaywallScreen>
     List<BoxShadow>? boxShadow;
 
     if (isSelected) {
-      borderColor = colors.ctaPrimary;
-      backgroundColor = colors.ctaPrimary.withOpacity(0.12);
+      borderColor = isDark
+          ? colors.ctaPrimary.withOpacity(0.6)
+          : colors.ctaPrimary;
+      backgroundColor = isDark
+          ? colors.cardBackground.withOpacity(0.85)
+          : colors.ctaPrimary.withOpacity(0.12);
       priceColor = colors.ctaPrimary;
       suffixColor = colors.ctaPrimary;
-      boxShadow = [
-        BoxShadow(
-          color: colors.ctaPrimary.withOpacity(0.2),
-          blurRadius: 16,
-          offset: const Offset(0, 4),
-        ),
-      ];
+      boxShadow = isDark
+          ? null
+          : [
+              BoxShadow(
+                color: colors.ctaPrimary.withOpacity(0.2),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ];
     } else {
-      borderColor = colors.ctaPrimary.withOpacity(0.15);
-      backgroundColor = const Color(0xFFFFFFFF).withOpacity(0.6);
+      borderColor = isDark
+          ? colors.borderCard.withOpacity(0.35)
+          : colors.ctaPrimary.withOpacity(0.15);
+      backgroundColor = isDark
+          ? colors.surfaceLight.withOpacity(0.5)
+          : const Color(0xFFFFFFFF).withOpacity(0.6);
       priceColor = colors.ctaPrimary;
       suffixColor = colors.textMutedBrown;
-      boxShadow = [
-        BoxShadow(
-          color: colors.textPrimary.withOpacity(0.06),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-        ),
-      ];
+      boxShadow = isDark
+          ? null
+          : [
+              BoxShadow(
+                color: colors.textPrimary.withOpacity(0.06),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ];
     }
 
     return GestureDetector(

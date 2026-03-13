@@ -59,6 +59,14 @@ class ThemeProvider extends ChangeNotifier {
     }
   }
 
+  /// Reverts to Warm Clay if the current theme requires a tier the user no
+  /// longer has.
+  void revertIfLocked({required bool hasBoost, required bool isPremium}) {
+    if (isLocked(_theme, hasBoost: hasBoost, isPremium: isPremium)) {
+      setTheme(AppTheme.warmClay);
+    }
+  }
+
   Future<void> setTheme(AppTheme t) async {
     _theme = t;
     notifyListeners();

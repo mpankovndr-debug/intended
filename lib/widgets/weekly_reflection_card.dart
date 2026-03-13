@@ -8,8 +8,8 @@ import '../l10n/app_localizations.dart';
 import '../models/reflection_data.dart';
 import '../screens/moments_collection_screen.dart';
 import '../screens/paywall_screen.dart';
+import '../screens/share_card_reveal_screen.dart';
 import '../services/reflection_service.dart';
-import '../services/share_service.dart';
 import '../services/week_stats_service.dart';
 import '../state/user_state.dart';
 import '../theme/app_colors.dart';
@@ -17,8 +17,6 @@ import '../theme/theme_provider.dart';
 import '../utils/habit_l10n.dart';
 import '../utils/responsive_utils.dart';
 import '../utils/text_styles.dart';
-import '../widgets/app_toast.dart';
-import 'tiered_share_card.dart';
 
 class WeeklyReflectionCard extends StatefulWidget {
   final WeekStats stats;
@@ -33,8 +31,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
     with SingleTickerProviderStateMixin {
   ReflectionData? _data;
   bool _loading = true;
-  bool _isSharing = false;
-  final GlobalKey _repaintKey = GlobalKey();
+  final GlobalKey _shareButtonKey = GlobalKey();
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -94,23 +91,21 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
     super.dispose();
   }
 
-  Future<void> _share() async {
-    if (_isSharing) return;
-    setState(() => _isSharing = true);
-    final size = MediaQuery.of(context).size;
-    try {
-      await WidgetsBinding.instance.endOfFrame;
-      await ShareService.shareCard(
-        _repaintKey,
-        sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2),
-      );
-    } catch (_) {
-      if (mounted) {
-        AppToast.show(context, AppLocalizations.of(context).shareError);
-      }
-    } finally {
-      if (mounted) setState(() => _isSharing = false);
+  void _openShareReveal() {
+    if (_data == null) return;
+    final box = _shareButtonKey.currentContext?.findRenderObject() as RenderBox?;
+    Rect? originRect;
+    if (box != null && box.hasSize) {
+      final pos = box.localToGlobal(Offset.zero);
+      originRect = pos & box.size;
     }
+    Navigator.of(context).push(
+      ShareCardRevealRoute(
+        stats: widget.stats,
+        reflection: _data!,
+        originRect: originRect,
+      ),
+    );
   }
 
   @override
@@ -130,25 +125,6 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
         child: Column(
           children: [
             // Hidden capture card for share
-            if (isPremium)
-              ClipRect(
-                child: SizedBox(
-                  width: 0,
-                  height: 0,
-                  child: OverflowBox(
-                    alignment: Alignment.topLeft,
-                    maxWidth: 1080,
-                    maxHeight: 1920,
-                    child: RepaintBoundary(
-                      key: _repaintKey,
-                      child: TieredShareCard(
-                        stats: widget.stats,
-                        reflection: _data!,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             if (isPremium)
               _buildFullCard(context, _data!)
             else
@@ -200,7 +176,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
               _buildDayDots(context, colors, l10n),
               // Premium sections with labeled dividers
               ..._buildPremiumSections(context, data, colors, l10n),
-              if (widget.stats.completionCount >= 3 || widget.stats.dailyActivity.where((d) => d).length >= 2) ...[
+              if (widget.stats.completionCount >= 0 || widget.stats.dailyActivity.where((d) => d).length >= 0) ...[ // TODO: TEMP – restore to >= 3 / >= 2
                 const SizedBox(height: 16),
                 _buildShareButton(context, colors),
               ],
@@ -614,26 +590,25 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
   Widget _buildShareButton(BuildContext context, dynamic colors) {
     final l10n = AppLocalizations.of(context);
     return Center(
+      key: _shareButtonKey,
       child: CupertinoButton(
         padding: EdgeInsets.zero,
-        onPressed: _isSharing ? null : _share,
-        child: _isSharing
-            ? CupertinoActivityIndicator(color: colors.textSecondary)
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    CupertinoIcons.share,
-                    size: 16,
-                    color: colors.textSecondary,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    l10n.reflectionShare,
-                    style: AppTextStyles.buttonSecondary(context),
-                  ),
-                ],
-              ),
+        onPressed: _openShareReveal,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              CupertinoIcons.share,
+              size: 16,
+              color: colors.textSecondary,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              l10n.reflectionShare,
+              style: AppTextStyles.buttonSecondary(context),
+            ),
+          ],
+        ),
       ),
     );
   }

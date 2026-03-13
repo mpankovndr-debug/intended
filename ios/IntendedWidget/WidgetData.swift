@@ -167,11 +167,19 @@ struct WidgetStrings {
     func upgrade(habitCount: Int) -> String {
         if habitCount > 0 {
             if locale == "ru" {
-                return "Intended+ — покажет \(habitCount) привычек"
+                return "Intended+ — покажет \(habitCount) \(ruHabitForm(habitCount))"
             }
             return "Intended+ — see your \(habitCount) habits"
         }
         return locale == "ru" ? "Intended+ — покажет привычки" : "Intended+ — see your habits"
+    }
+
+    private func ruHabitForm(_ n: Int) -> String {
+        let mod10 = n % 10
+        let mod100 = n % 100
+        if mod10 == 1 && mod100 != 11 { return "привычку" }
+        if mod10 >= 2 && mod10 <= 4 && !(mod100 >= 12 && mod100 <= 14) { return "привычки" }
+        return "привычек"
     }
 
     var noHabits: String {

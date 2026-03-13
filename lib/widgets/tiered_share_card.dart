@@ -60,7 +60,7 @@ class TieredShareCard extends StatelessWidget {
       child: Stack(
         children: [
           // Background
-          _buildBackground(colors),
+          _buildBackground(colors, accent),
 
           // Content
           Padding(
@@ -82,6 +82,7 @@ class TieredShareCard extends StatelessWidget {
                 Expanded(
                   child: _buildTierContent(
                     tier: tier,
+                    theme: theme,
                     l10n: l10n,
                     colors: colors,
                     t1: t1,
@@ -105,14 +106,14 @@ class TieredShareCard extends StatelessWidget {
   // Background
   // ---------------------------------------------------------------------------
 
-  Widget _buildBackground(AppColorScheme colors) {
+  Widget _buildBackground(AppColorScheme colors, Color accent) {
     final bg1 = colors.onboardingBg1;
     final bg2 = colors.onboardingBg2;
     final bg3 = colors.onboardingBg3;
 
     return Stack(
       children: [
-        Positioned.fill(child: Container(color: bg1)),
+        // Base linear gradient
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
@@ -121,6 +122,23 @@ class TieredShareCard extends StatelessWidget {
                 end: const Alignment(0.4, 1.0),
                 colors: [bg1, bg2, bg3],
                 stops: const [0.0, 0.5, 1.0],
+              ),
+            ),
+          ),
+        ),
+        // Radial glow in center — gives depth and warmth
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: const Alignment(0.0, -0.1),
+                radius: 0.9,
+                colors: [
+                  accent.withValues(alpha: 0.18),
+                  accent.withValues(alpha: 0.06),
+                  const Color(0x00000000),
+                ],
+                stops: const [0.0, 0.4, 1.0],
               ),
             ),
           ),
@@ -182,6 +200,7 @@ class TieredShareCard extends StatelessWidget {
 
   Widget _buildTierContent({
     required ShareCardTier tier,
+    required AppTheme theme,
     required AppLocalizations l10n,
     required AppColorScheme colors,
     required Color t1,
@@ -194,11 +213,11 @@ class TieredShareCard extends StatelessWidget {
   }) {
     switch (tier) {
       case ShareCardTier.tier1:
-        return _buildTier1(l10n, t1, t2, t3, accent, numberGradient, daysActive, userName);
+        return _buildTier1(l10n, t1, t2, t3, accent, numberGradient, daysActive, userName, theme);
       case ShareCardTier.tier2:
-        return _buildTier2(l10n, colors, t1, t2, t3, accent, numberGradient, daysActive, userName);
+        return _buildTier2(l10n, colors, t1, t2, t3, accent, numberGradient, daysActive, userName, theme);
       case ShareCardTier.tier3:
-        return _buildTier3(l10n, colors, t1, t2, t3, accent, numberGradient, daysActive, userName);
+        return _buildTier3(l10n, colors, t1, t2, t3, accent, numberGradient, daysActive, userName, theme);
     }
   }
 
@@ -207,7 +226,7 @@ class TieredShareCard extends StatelessWidget {
   // ---------------------------------------------------------------------------
 
   Widget _buildTier1(AppLocalizations l10n, Color t1, Color t2, Color t3,
-      Color accent, List<Color> numberGradient, int daysActive, String? userName) {
+      Color accent, List<Color> numberGradient, int daysActive, String? userName, AppTheme theme) {
     final subtitleText = daysActive == 1
         ? l10n.shareCardSubtitleSingular
         : l10n.shareCardSubtitlePlural;
@@ -242,7 +261,7 @@ class TieredShareCard extends StatelessWidget {
         ),
 
         // Bottom section
-        _buildBottomBranding(userName, t1, t2, accent),
+        _buildBottomBranding(userName, t1, t2, accent, theme),
       ],
     );
   }
@@ -253,7 +272,7 @@ class TieredShareCard extends StatelessWidget {
 
   Widget _buildTier2(AppLocalizations l10n, AppColorScheme colors,
       Color t1, Color t2, Color t3, Color accent, List<Color> numberGradient,
-      int daysActive, String? userName) {
+      int daysActive, String? userName, AppTheme theme) {
 
     return Column(
       children: [
@@ -279,7 +298,7 @@ class TieredShareCard extends StatelessWidget {
         _buildDayDots(t3, accent),
         const SizedBox(height: 140),
         // Bottom branding
-        _buildBottomBranding(userName, t1, t2, accent),
+        _buildBottomBranding(userName, t1, t2, accent, theme),
       ],
     );
   }
@@ -290,7 +309,7 @@ class TieredShareCard extends StatelessWidget {
 
   Widget _buildTier3(AppLocalizations l10n, AppColorScheme colors,
       Color t1, Color t2, Color t3, Color accent, List<Color> numberGradient,
-      int daysActive, String? userName) {
+      int daysActive, String? userName, AppTheme theme) {
 
     final insightLine = _getInsightLine(l10n);
 
@@ -342,7 +361,7 @@ class TieredShareCard extends StatelessWidget {
 
         const SizedBox(height: 40),
         // Bottom branding
-        _buildBottomBranding(userName, t1, t2, accent),
+        _buildBottomBranding(userName, t1, t2, accent, theme),
       ],
     );
   }
@@ -402,7 +421,21 @@ class TieredShareCard extends StatelessWidget {
                 height: 36,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isActive ? accent : t3.withValues(alpha:0.3),
+                  color: isActive ? accent : t3.withValues(alpha: 0.3),
+                  boxShadow: isActive
+                      ? [
+                          BoxShadow(
+                            color: accent.withValues(alpha: 0.5),
+                            blurRadius: 16,
+                            spreadRadius: 4,
+                          ),
+                          BoxShadow(
+                            color: accent.withValues(alpha: 0.25),
+                            blurRadius: 32,
+                            spreadRadius: 8,
+                          ),
+                        ]
+                      : null,
                 ),
               ),
             ],
@@ -484,7 +517,7 @@ class TieredShareCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomBranding(String? userName, Color t1, Color t2, Color accent) {
+  Widget _buildBottomBranding(String? userName, Color t1, Color t2, Color accent, AppTheme theme) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -502,11 +535,11 @@ class TieredShareCard extends StatelessWidget {
           ),
           const SizedBox(height: 40),
         ],
-        // App icon
+        // App icon — use midnight variant for dark themes
         ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Image.asset(
-            'assets/images/intended_icon_transparent.png',
+            _iconAssetForTheme(theme),
             width: 80,
             height: 80,
             fit: BoxFit.cover,
@@ -593,6 +626,21 @@ class TieredShareCard extends StatelessWidget {
   // ---------------------------------------------------------------------------
   // Theme-specific number gradient colors (135deg)
   // ---------------------------------------------------------------------------
+
+  static String _iconAssetForTheme(AppTheme theme) {
+    return switch (theme) {
+      AppTheme.warmClay =>     'assets/images/intended-icon-warmclay-1024.png',
+      AppTheme.iris =>         'assets/images/intended-icon-iris-1024.png',
+      AppTheme.clearSky =>     'assets/images/intended-icon-clearsky-1024.png',
+      AppTheme.morningSlate => 'assets/images/intended-icon-morningslate-1024.png',
+      AppTheme.softDusk =>     'assets/images/intended-icon-softdusk-1024.png',
+      AppTheme.forestFloor =>  'assets/images/intended-icon-forestfloor-1024.png',
+      AppTheme.goldenHour =>   'assets/images/intended-icon-goldenhour-1024.png',
+      AppTheme.sandDune =>     'assets/images/intended-icon-sanddune-1024.png',
+      AppTheme.deepFocus =>    'assets/images/intended-icon-deepfocus-1024.png',
+      AppTheme.nightBloom =>   'assets/images/intended-icon-nightbloom-1024.png',
+    };
+  }
 
   static List<Color> _numberGradientForTheme(AppTheme theme) {
     return switch (theme) {

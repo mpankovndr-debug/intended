@@ -2,7 +2,7 @@ name: intended
 description: "Intended - A gentle approach to building better habits."
 publish_to: 'none'
 
-version: 1.1.0+3
+version: 1.0.1
 environment:
   sdk: ^3.5.4
 

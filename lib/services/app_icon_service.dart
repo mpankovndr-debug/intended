@@ -36,6 +36,14 @@ class AppIconService {
     );
   }
 
+  /// Resets to the default icon if the current icon is a premium one.
+  static Future<void> resetIfPremium() async {
+    final current = await getCurrent();
+    if (current != AppIcon.defaultIcon) {
+      await setIcon(AppIcon.defaultIcon);
+    }
+  }
+
   /// Sets the app icon. Returns true on success.
   /// Saves preference even if the native call fails (e.g. on simulator).
   static Future<bool> setIcon(AppIcon icon) async {

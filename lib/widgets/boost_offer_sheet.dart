@@ -120,7 +120,9 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.watch<ThemeProvider>().colors;
+    final themeProvider = context.watch<ThemeProvider>();
+    final colors = themeProvider.colors;
+    final isDark = themeProvider.theme.isDark;
     final l10n = AppLocalizations.of(context);
 
     return ClipRRect(
@@ -131,19 +133,31 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
           padding: const EdgeInsets.fromLTRB(28, 14, 28, 0),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: const Alignment(0.0, 2.41),
-              end: const Alignment(0.0, -2.41),
-              colors: [
-                colors.modalBg1.withOpacity(0.96),
-                colors.modalBg2.withOpacity(0.93),
-                colors.modalBg3.withOpacity(0.95),
-              ],
+              begin: isDark
+                  ? const Alignment(-0.4, -1.0)
+                  : const Alignment(0.0, 2.41),
+              end: isDark
+                  ? const Alignment(0.4, 1.0)
+                  : const Alignment(0.0, -2.41),
+              colors: isDark
+                  ? [
+                      Color.lerp(colors.onboardingBg1, colors.modalBg1, 0.5)!,
+                      Color.lerp(colors.onboardingBg2, colors.modalBg2, 0.5)!,
+                      Color.lerp(colors.onboardingBg3, colors.modalBg3, 0.7)!,
+                    ]
+                  : [
+                      colors.modalBg1.withOpacity(0.96),
+                      colors.modalBg2.withOpacity(0.93),
+                      colors.modalBg3.withOpacity(0.95),
+                    ],
               stops: const [0.0, 0.5, 1.0],
             ),
             borderRadius:
                 const BorderRadius.vertical(top: Radius.circular(32)),
             border: Border.all(
-              color: const Color(0xFFFFFFFF).withOpacity(0.5),
+              color: isDark
+                  ? colors.borderCard.withOpacity(0.4)
+                  : const Color(0xFFFFFFFF).withOpacity(0.5),
               width: 1.5,
             ),
             boxShadow: [
@@ -153,7 +167,9 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                 offset: const Offset(0, -16),
               ),
               BoxShadow(
-                color: const Color(0xFFFFFFFF).withOpacity(0.25),
+                color: isDark
+                    ? colors.borderCard.withOpacity(0.12)
+                    : const Color(0xFFFFFFFF).withOpacity(0.25),
                 blurRadius: 0,
                 offset: const Offset(0, 1),
                 spreadRadius: 0,
@@ -212,7 +228,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
 
                 // Boost card (if applicable)
                 if (widget.showBoostOption) ...[
-                  _buildBoostCard(colors, l10n),
+                  _buildBoostCard(colors, l10n, isDark: isDark),
                   const SizedBox(height: 20),
                   _buildOrDivider(colors, l10n),
                   const SizedBox(height: 20),
@@ -289,7 +305,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
     );
   }
 
-  Widget _buildBoostCard(AppColorScheme colors, AppLocalizations l10n) {
+  Widget _buildBoostCard(AppColorScheme colors, AppLocalizations l10n, {required bool isDark}) {
     return GestureDetector(
       onTap: _isLoading ? null : _purchaseBoost,
       child: ClipRRect(
@@ -319,13 +335,14 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                   blurRadius: 20,
                   offset: const Offset(0, 6),
                 ),
-                BoxShadow(
-                  color: const Color(0xFFFFFFFF).withOpacity(0.15),
-                  blurRadius: 0,
-                  offset: const Offset(0, 1),
-                  spreadRadius: 0,
-                  blurStyle: BlurStyle.inner,
-                ),
+                if (!isDark)
+                  BoxShadow(
+                    color: const Color(0xFFFFFFFF).withOpacity(0.15),
+                    blurRadius: 0,
+                    offset: const Offset(0, 1),
+                    spreadRadius: 0,
+                    blurStyle: BlurStyle.inner,
+                  ),
               ],
             ),
             child: _isLoading
@@ -431,16 +448,18 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
         ),
         child: CupertinoButton(
           onPressed: _isLoading ? null : _openPaywall,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
           borderRadius: BorderRadius.circular(20),
           child: Text(
             l10n.boostGoUnlimited,
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: AppTextStyles.bodyFont(context),
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: colors.ctaPrimary,
               letterSpacing: -0.2,
+              height: 1.35,
             ),
           ),
         ),
