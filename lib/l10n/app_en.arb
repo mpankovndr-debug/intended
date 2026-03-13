@@ -862,5 +862,11 @@
   "appIconMidnight": "Midnight",
   "appIconRose": "Rose",
   "appIconForest": "Forest",
-  "appIconSky": "Sky"
+  "appIconSky": "Sky",
+
+  "legalDisclaimerPrefix": "By continuing, you agree to our ",
+  "legalDisclaimerTerms": "Terms",
+  "legalDisclaimerAnd": " and ",
+  "legalDisclaimerPrivacy": "Privacy Policy",
+  "legalDisclaimerSuffix": "."
 }

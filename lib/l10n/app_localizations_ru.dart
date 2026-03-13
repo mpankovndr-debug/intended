@@ -2542,4 +2542,20 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get appIconSky => 'Небо';
+
+  @override
+  String get legalDisclaimerPrefix =>
+      'Нажимая «Продолжить», вы соглашаетесь с нашими ';
+
+  @override
+  String get legalDisclaimerTerms => 'Условиями';
+
+  @override
+  String get legalDisclaimerAnd => ' и ';
+
+  @override
+  String get legalDisclaimerPrivacy => 'Политикой конфиденциальности';
+
+  @override
+  String get legalDisclaimerSuffix => '.';
 }

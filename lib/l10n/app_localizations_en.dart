@@ -2545,4 +2545,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appIconSky => 'Sky';
+
+  @override
+  String get legalDisclaimerPrefix => 'By continuing, you agree to our ';
+
+  @override
+  String get legalDisclaimerTerms => 'Terms';
+
+  @override
+  String get legalDisclaimerAnd => ' and ';
+
+  @override
+  String get legalDisclaimerPrivacy => 'Privacy Policy';
+
+  @override
+  String get legalDisclaimerSuffix => '.';
 }

@@ -4513,6 +4513,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sky'**
   String get appIconSky;
+
+  /// No description provided for @legalDisclaimerPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing, you agree to our '**
+  String get legalDisclaimerPrefix;
+
+  /// No description provided for @legalDisclaimerTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms'**
+  String get legalDisclaimerTerms;
+
+  /// No description provided for @legalDisclaimerAnd.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get legalDisclaimerAnd;
+
+  /// No description provided for @legalDisclaimerPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get legalDisclaimerPrivacy;
+
+  /// No description provided for @legalDisclaimerSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'.'**
+  String get legalDisclaimerSuffix;
 }
 
 class _AppLocalizationsDelegate

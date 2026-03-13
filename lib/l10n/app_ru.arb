@@ -997,5 +997,11 @@
   "appIconMidnight": "Полночь",
   "appIconRose": "Роза",
   "appIconForest": "Лес",
-  "appIconSky": "Небо"
+  "appIconSky": "Небо",
+
+  "legalDisclaimerPrefix": "Нажимая «Продолжить», вы соглашаетесь с нашими ",
+  "legalDisclaimerTerms": "Условиями",
+  "legalDisclaimerAnd": " и ",
+  "legalDisclaimerPrivacy": "Политикой конфиденциальности",
+  "legalDisclaimerSuffix": "."
 }

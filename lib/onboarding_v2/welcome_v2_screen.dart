@@ -2,8 +2,10 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../l10n/app_localizations.dart';
 import '../main.dart';
@@ -598,7 +600,55 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                                     ],
                                   ),
 
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 12),
+
+                                  // Legal disclaimer
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                                    child: Text.rich(
+                                      TextSpan(
+                                        style: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w400,
+                                          color: colors.textTertiary,
+                                          height: 1.4,
+                                        ),
+                                        children: [
+                                          TextSpan(text: l10n.legalDisclaimerPrefix),
+                                          TextSpan(
+                                            text: l10n.legalDisclaimerTerms,
+                                            style: TextStyle(
+                                              decoration: TextDecoration.underline,
+                                              color: colors.textSecondary,
+                                            ),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () => launchUrl(
+                                                    Uri.parse('https://intendedapp.com/terms'),
+                                                    mode: LaunchMode.externalApplication,
+                                                  ),
+                                          ),
+                                          TextSpan(text: l10n.legalDisclaimerAnd),
+                                          TextSpan(
+                                            text: l10n.legalDisclaimerPrivacy,
+                                            style: TextStyle(
+                                              decoration: TextDecoration.underline,
+                                              color: colors.textSecondary,
+                                            ),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () => launchUrl(
+                                                    Uri.parse('https://intendedapp.com/privacy'),
+                                                    mode: LaunchMode.externalApplication,
+                                                  ),
+                                          ),
+                                          TextSpan(text: l10n.legalDisclaimerSuffix),
+                                        ],
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 16),
                                 ],
                               ),
                             ),
