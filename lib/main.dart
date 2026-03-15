@@ -45,6 +45,7 @@ import 'widgets/tip_banner.dart';
 import 'models/curated_pack.dart';
 import 'services/tips_service.dart';
 import 'services/widget_service.dart';
+import 'services/backup_service.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 // ✅ ADD THIS HELPER HERE (before the main() function):
@@ -577,6 +578,8 @@ void main() {
 
       final userState = UserState();
       final revenueCatService = RevenueCatService(userState);
+      final backupService = BackupService();
+      await backupService.init();
 
       runApp(
         MultiProvider(
@@ -584,6 +587,7 @@ void main() {
             ChangeNotifierProvider.value(value: onboardingState),
             ChangeNotifierProvider.value(value: userState),
             ChangeNotifierProvider.value(value: revenueCatService),
+            ChangeNotifierProvider.value(value: backupService),
             ChangeNotifierProvider(create: (_) => ThemeProvider()),
           ],
           child: const IntendedApp(),
@@ -876,6 +880,9 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
       NotificationScheduler.refreshTimezone(AppLocalizations.of(context));
       context.read<RevenueCatService>().refreshPurchaseStatus();
       refreshHomeWidget(context);
+    }
+    if (state == AppLifecycleState.paused && mounted) {
+      context.read<BackupService>().backup();
     }
   }
 
@@ -6077,6 +6084,7 @@ class _HabitActionScreenState extends State<HabitActionScreen> {
       ),
     );
     MilestoneService.invalidate();
+    if (mounted) context.read<BackupService>().backup();
 
     // Update home screen widget
     if (mounted) refreshHomeWidget(context);

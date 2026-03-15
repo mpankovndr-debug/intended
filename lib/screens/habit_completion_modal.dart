@@ -7,6 +7,7 @@ import '../models/moment.dart';
 import '../services/moments_service.dart';
 import '../services/milestone_service.dart';
 import '../services/analytics_service.dart';
+import '../services/backup_service.dart';
 import '../widgets/warmth_toast_overlay.dart';
 import '../main.dart';
 import '../utils/completion_messages.dart';
@@ -197,6 +198,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
       ),
     );
     MilestoneService.invalidate();
+    if (mounted) context.read<BackupService>().backup();
 
     // Wait for color transition to complete
     await Future.delayed(const Duration(milliseconds: 300));

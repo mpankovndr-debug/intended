@@ -215,7 +215,7 @@ class _MomentsCollectionScreenState extends State<MomentsCollectionScreen> {
     for (final m in moments) {
       if (counts[m.habitName] == maxCount) return m.habitName;
     }
-    return moments.first.habitName;
+    return moments.firstOrNull?.habitName ?? '';
   }
 
   Widget _buildList(AppColorScheme colors) {

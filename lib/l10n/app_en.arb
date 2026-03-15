@@ -758,12 +758,22 @@
   "focusNudgeMessage": "Focus on one area at a time for the best results.",
   "focusNudgeGotIt": "Got it",
 
-  "profileLocalDataNote": "Your data is stored on this device only.",
-
   "shareError": "Could not share. Please try again.",
 
   "restoreSuccess": "Purchases restored!",
   "restoreNotFound": "No purchases found.",
+
+  "restoreBackupTitle": "Welcome back!",
+  "restoreBackupMessage": "We found your data from a previous session. Would you like to restore it?",
+  "restoreBackupConfirm": "Restore my data",
+  "restoreBackupSkip": "Start fresh",
+
+  "profileBackedUp": "Backed up {time}",
+  "profileNotBackedUp": "Not backed up",
+  "profileBackupNow": "Back up now",
+  "profileBackingUp": "Backing up…",
+  "profileBackedUpNote": "Your data is backed up to your account.",
+  "profileLocalDataNote": "Your data is stored on this device only. Sign in to back it up.",
 
   "onboardingAlreadyHaveAccount": "Sign in",
   "onboardingSignInWithApple": "Sign in with Apple",

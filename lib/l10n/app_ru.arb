@@ -893,12 +893,22 @@
   "focusNudgeMessage": "Меньше направлений — глубже рост. Но тебе виднее.",
   "focusNudgeGotIt": "Понятно",
 
-  "profileLocalDataNote": "Данные хранятся только на этом устройстве.",
-
   "shareError": "Не удалось поделиться. Попробуй ещё раз.",
 
   "restoreSuccess": "Покупки восстановлены!",
   "restoreNotFound": "Покупки не найдены.",
+
+  "restoreBackupTitle": "С возвращением!",
+  "restoreBackupMessage": "Мы нашли твои данные из прошлой сессии. Восстановить?",
+  "restoreBackupConfirm": "Восстановить",
+  "restoreBackupSkip": "Начать заново",
+
+  "profileBackedUp": "Сохранено {time}",
+  "profileNotBackedUp": "Нет резервной копии",
+  "profileBackupNow": "Сохранить сейчас",
+  "profileBackingUp": "Сохраняем…",
+  "profileBackedUpNote": "Твои данные сохранены в аккаунте.",
+  "profileLocalDataNote": "Данные хранятся только на этом устройстве. Войди, чтобы сохранить.",
 
   "onboardingAlreadyHaveAccount": "Войти",
   "onboardingSignInWithApple": "Войти через Apple",

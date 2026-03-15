@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart';
 import '../services/auth_service.dart';
+import '../services/backup_service.dart';
 import '../utils/profanity_filter.dart';
 import 'focus_areas_screen.dart';
 import 'onboarding_state.dart';
@@ -130,6 +131,8 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                 prefs.setString('user_name', firstName!);
               });
             }
+            // Back up existing data to the newly linked account
+            context.read<BackupService>().backup();
             Navigator.pushReplacement(
               context,
               PageRouteBuilder(
@@ -141,10 +144,84 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
               ),
             );
           } else {
-            _navigateToFocusAreas(name: firstName);
+            // Check for cloud backup before starting onboarding
+            _tryRestore(context, firstName);
           }
         },
       ),
+    );
+  }
+
+  Future<void> _tryRestore(BuildContext context, String? firstName) async {
+    final backupService = context.read<BackupService>();
+    final backupInfo = await backupService.checkForBackup();
+
+    if (!mounted) return;
+
+    if (backupInfo == null) {
+      // No backup found — proceed with onboarding
+      _navigateToFocusAreas(name: firstName);
+      return;
+    }
+
+    final l10n = AppLocalizations.of(context);
+
+    showIntendedDialog(
+      context: context,
+      title: l10n.restoreBackupTitle,
+      subtitle: l10n.restoreBackupMessage,
+      actions: [
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () async {
+            Navigator.pop(context);
+            final success = await backupService.restore();
+            if (!mounted) return;
+            if (success) {
+              // Reload state from restored prefs
+              final onboarding = context.read<OnboardingState>();
+              await onboarding.loadUserHabits();
+              final prefs = await SharedPreferences.getInstance();
+              final name = prefs.getString('user_name');
+              if (name != null) {
+                userNameNotifier.value = name;
+                onboarding.setName(name);
+              }
+              final theme = prefs.getString('selected_theme');
+              if (theme != null && mounted) {
+                context.read<ThemeProvider>().setTheme(
+                  AppTheme.values.firstWhere(
+                    (t) => t.name == theme,
+                    orElse: () => AppTheme.warmClay,
+                  ),
+                );
+              }
+              if (mounted) {
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => const MainTabs(),
+                    transitionDuration: const Duration(milliseconds: 400),
+                    transitionsBuilder: (_, animation, __, child) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
+                  ),
+                );
+              }
+            } else {
+              _navigateToFocusAreas(name: firstName);
+            }
+          },
+          child: Text(l10n.restoreBackupConfirm),
+        ),
+        CupertinoDialogAction(
+          onPressed: () {
+            Navigator.pop(context);
+            _navigateToFocusAreas(name: firstName);
+          },
+          child: Text(l10n.restoreBackupSkip),
+        ),
+      ],
     );
   }
 

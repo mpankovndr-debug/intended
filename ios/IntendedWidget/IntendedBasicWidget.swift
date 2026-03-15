@@ -17,7 +17,7 @@ struct BasicProvider: TimelineProvider {
         let entry = BasicEntry(date: Date(), content: content)
         // Refresh at midnight for new day
         let calendar = Calendar.current
-        let tomorrow = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: Date())!)
+        let tomorrow = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: Date()) ?? Date())
         let timeline = Timeline(entries: [entry], policy: .after(tomorrow))
         completion(timeline)
     }

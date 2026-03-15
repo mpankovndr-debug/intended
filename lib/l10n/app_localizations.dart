@@ -4028,12 +4028,6 @@ abstract class AppLocalizations {
   /// **'Got it'**
   String get focusNudgeGotIt;
 
-  /// No description provided for @profileLocalDataNote.
-  ///
-  /// In en, this message translates to:
-  /// **'Your data is stored on this device only.'**
-  String get profileLocalDataNote;
-
   /// No description provided for @shareError.
   ///
   /// In en, this message translates to:
@@ -4051,6 +4045,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No purchases found.'**
   String get restoreNotFound;
+
+  /// No description provided for @restoreBackupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back!'**
+  String get restoreBackupTitle;
+
+  /// No description provided for @restoreBackupMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We found your data from a previous session. Would you like to restore it?'**
+  String get restoreBackupMessage;
+
+  /// No description provided for @restoreBackupConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore my data'**
+  String get restoreBackupConfirm;
+
+  /// No description provided for @restoreBackupSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Start fresh'**
+  String get restoreBackupSkip;
+
+  /// No description provided for @profileBackedUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Backed up {time}'**
+  String profileBackedUp(Object time);
+
+  /// No description provided for @profileNotBackedUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Not backed up'**
+  String get profileNotBackedUp;
+
+  /// No description provided for @profileBackupNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up now'**
+  String get profileBackupNow;
+
+  /// No description provided for @profileBackingUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Backing up…'**
+  String get profileBackingUp;
+
+  /// No description provided for @profileBackedUpNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is backed up to your account.'**
+  String get profileBackedUpNote;
+
+  /// No description provided for @profileLocalDataNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is stored on this device only. Sign in to back it up.'**
+  String get profileLocalDataNote;
 
   /// No description provided for @onboardingAlreadyHaveAccount.
   ///

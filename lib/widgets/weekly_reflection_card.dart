@@ -325,7 +325,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(7, (index) {
-          final isCompleted = widget.stats.dailyActivity[index];
+          final isCompleted = index < widget.stats.dailyActivity.length && widget.stats.dailyActivity[index];
           return Column(
             children: [
               Container(

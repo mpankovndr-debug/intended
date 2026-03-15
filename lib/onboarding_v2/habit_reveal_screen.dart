@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart';
 import '../services/analytics_service.dart';
+import '../services/backup_service.dart';
 import '../services/revenue_cat_service.dart';
 import '../utils/habit_l10n.dart';
 import 'onboarding_state.dart';
@@ -149,6 +150,7 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
     await revenueCat.logIn(deviceId);
 
     if (mounted) {
+      context.read<BackupService>().backup();
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(

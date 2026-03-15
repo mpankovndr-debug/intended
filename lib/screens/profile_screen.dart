@@ -37,6 +37,7 @@ import '../widgets/app_icon_picker.dart';
 import '../widgets/boost_offer_sheet.dart';
 import '../widgets/focus_area_card.dart';
 import '../onboarding_v2/focus_areas_screen.dart';
+import '../services/backup_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -1048,6 +1049,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 final user = FirebaseAuth.instance.currentUser;
                 if (user != null) {
                   final revenueCat = context.read<RevenueCatService>();
+                  final backupService = context.read<BackupService>();
                   try {
                     // Apple users: always re-auth first to revoke token
                     // (App Store requirement + solves requires-recent-login)
@@ -1058,6 +1060,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     }
 
                     await revenueCat.logOut();
+                    await backupService.deleteBackup();
                     await user.delete();
                     try {
                       FirebaseAnalytics.instance
@@ -2561,15 +2564,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                         const SizedBox(height: 24),
 
-                        // Local data note
-                        Text(
-                          l10n.profileLocalDataNote,
-                          style: TextStyle(
-                            fontFamily: AppTextStyles.bodyFont(context),
-                            fontSize: 11,
-                            color: colors.textMutedBrown.withValues(alpha: 0.5),
-                          ),
-                        ),
+                        // Backup status
+                        _buildBackupNote(context, colors, l10n),
 
                         const SizedBox(height: 8),
 
@@ -2593,6 +2589,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildBackupNote(BuildContext context, AppColorScheme colors, AppLocalizations l10n) {
+    final isSignedIn = FirebaseAuth.instance.currentUser != null;
+    if (!isSignedIn) {
+      return Text(
+        l10n.profileLocalDataNote,
+        style: TextStyle(
+          fontFamily: AppTextStyles.bodyFont(context),
+          fontSize: 11,
+          color: colors.textMutedBrown.withValues(alpha: 0.5),
+        ),
+      );
+    }
+
+    final backup = context.watch<BackupService>();
+    final lastBackup = backup.lastBackupTime;
+    final isBackingUp = backup.isBackingUp;
+
+    return Column(
+      children: [
+        Text(
+          lastBackup != null
+              ? l10n.profileBackedUpNote
+              : l10n.profileLocalDataNote,
+          style: TextStyle(
+            fontFamily: AppTextStyles.bodyFont(context),
+            fontSize: 11,
+            color: colors.textMutedBrown.withValues(alpha: 0.5),
+          ),
+        ),
+        const SizedBox(height: 4),
+        GestureDetector(
+          onTap: isBackingUp ? null : () => backup.backup(),
+          child: Text(
+            isBackingUp
+                ? l10n.profileBackingUp
+                : lastBackup != null
+                    ? l10n.profileBackedUp(_formatBackupTime(lastBackup))
+                    : l10n.profileBackupNow,
+            style: TextStyle(
+              fontFamily: AppTextStyles.bodyFont(context),
+              fontSize: 11,
+              fontWeight: lastBackup == null ? FontWeight.w600 : FontWeight.w400,
+              color: lastBackup == null
+                  ? colors.ctaPrimary
+                  : colors.textMutedBrown.withValues(alpha: 0.5),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatBackupTime(DateTime time) {
+    final now = DateTime.now();
+    final diff = now.difference(time);
+    if (diff.inMinutes < 1) return 'just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    return '${diff.inDays}d ago';
   }
 }
 

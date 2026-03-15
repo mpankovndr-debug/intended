@@ -16,7 +16,7 @@ struct PremiumProvider: TimelineProvider {
         let content = loadWidgetContent()
         let entry = PremiumEntry(date: Date(), content: content)
         let calendar = Calendar.current
-        let tomorrow = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: Date())!)
+        let tomorrow = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: Date()) ?? Date())
         let timeline = Timeline(entries: [entry], policy: .after(tomorrow))
         completion(timeline)
     }

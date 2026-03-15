@@ -2243,10 +2243,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get focusNudgeGotIt => 'Понятно';
 
   @override
-  String get profileLocalDataNote =>
-      'Данные хранятся только на этом устройстве.';
-
-  @override
   String get shareError => 'Не удалось поделиться. Попробуй ещё раз.';
 
   @override
@@ -2254,6 +2250,40 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get restoreNotFound => 'Покупки не найдены.';
+
+  @override
+  String get restoreBackupTitle => 'С возвращением!';
+
+  @override
+  String get restoreBackupMessage =>
+      'Мы нашли твои данные из прошлой сессии. Восстановить?';
+
+  @override
+  String get restoreBackupConfirm => 'Восстановить';
+
+  @override
+  String get restoreBackupSkip => 'Начать заново';
+
+  @override
+  String profileBackedUp(Object time) {
+    return 'Сохранено $time';
+  }
+
+  @override
+  String get profileNotBackedUp => 'Нет резервной копии';
+
+  @override
+  String get profileBackupNow => 'Сохранить сейчас';
+
+  @override
+  String get profileBackingUp => 'Сохраняем…';
+
+  @override
+  String get profileBackedUpNote => 'Твои данные сохранены в аккаунте.';
+
+  @override
+  String get profileLocalDataNote =>
+      'Данные хранятся только на этом устройстве. Войди, чтобы сохранить.';
 
   @override
   String get onboardingAlreadyHaveAccount => 'Войти';

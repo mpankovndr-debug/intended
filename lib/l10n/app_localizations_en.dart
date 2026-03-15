@@ -2242,9 +2242,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get focusNudgeGotIt => 'Got it';
 
   @override
-  String get profileLocalDataNote => 'Your data is stored on this device only.';
-
-  @override
   String get shareError => 'Could not share. Please try again.';
 
   @override
@@ -2252,6 +2249,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restoreNotFound => 'No purchases found.';
+
+  @override
+  String get restoreBackupTitle => 'Welcome back!';
+
+  @override
+  String get restoreBackupMessage =>
+      'We found your data from a previous session. Would you like to restore it?';
+
+  @override
+  String get restoreBackupConfirm => 'Restore my data';
+
+  @override
+  String get restoreBackupSkip => 'Start fresh';
+
+  @override
+  String profileBackedUp(Object time) {
+    return 'Backed up $time';
+  }
+
+  @override
+  String get profileNotBackedUp => 'Not backed up';
+
+  @override
+  String get profileBackupNow => 'Back up now';
+
+  @override
+  String get profileBackingUp => 'Backing up…';
+
+  @override
+  String get profileBackedUpNote => 'Your data is backed up to your account.';
+
+  @override
+  String get profileLocalDataNote =>
+      'Your data is stored on this device only. Sign in to back it up.';
 
   @override
   String get onboardingAlreadyHaveAccount => 'Sign in';
