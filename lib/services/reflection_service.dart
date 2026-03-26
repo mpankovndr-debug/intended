@@ -192,7 +192,27 @@ class ReflectionService {
     );
 
     // Cache the card.
+    final previousCache = prefs.getString(_currentCardKey);
     await prefs.setString(_currentCardKey, jsonEncode(reflection.toJson()));
+
+    // Flag unseen reflection if this is a new week's data.
+    if (previousCache != null) {
+      try {
+        final prevJson = jsonDecode(previousCache) as Map<String, dynamic>;
+        final prevRange = prevJson['weekRange'] as String?;
+        if (prevRange != reflection.weekRange && reflection.daysActive > 0) {
+          await prefs.setBool('has_unseen_reflection', true);
+        }
+      } catch (_) {
+        // Corrupted previous cache — treat as new week.
+        if (reflection.daysActive > 0) {
+          await prefs.setBool('has_unseen_reflection', true);
+        }
+      }
+    } else if (reflection.daysActive > 0) {
+      // First reflection ever.
+      await prefs.setBool('has_unseen_reflection', true);
+    }
 
     return reflection;
   }

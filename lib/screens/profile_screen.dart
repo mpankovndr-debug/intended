@@ -38,6 +38,10 @@ import '../widgets/boost_offer_sheet.dart';
 import '../widgets/focus_area_card.dart';
 import '../onboarding_v2/focus_areas_screen.dart';
 import '../services/backup_service.dart';
+import '../services/coach_mark_service.dart';
+import '../features/profile/faq_screen.dart';
+import '../features/profile/change_path_screen.dart';
+import '../models/intention_path.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -92,6 +96,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _weeklyEnabled = weeklyEnabled;
         _notifPrefsLoaded = true;
       });
+    }
+  }
+
+  String _pathTitle(AppLocalizations l10n, String key) {
+    switch (key) {
+      case 'gentle_mornings': return l10n.pathGentleMorningsTitle;
+      case 'finding_calm': return l10n.pathFindingCalmTitle;
+      case 'gratitude_self_love': return l10n.pathGratitudeSelfLoveTitle;
+      case 'winding_down': return l10n.pathWindingDownTitle;
+      default: return l10n.pathYourOwnWayTitle;
     }
   }
 
@@ -245,81 +259,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  Future<void> _contactSupport() async {
-    final Uri emailUri = Uri(
-      scheme: 'mailto',
-      path: 'support@intendedapp.com',
-      query: 'subject=Intended App — Support Request',
-    );
-
-    if (await canLaunchUrl(emailUri)) {
-      await launchUrl(emailUri);
-    } else {
-      if (mounted) {
-        final l10n = AppLocalizations.of(context);
-        final colors =
-            Provider.of<ThemeProvider>(context, listen: false).colors;
-        showIntendedModal(
-          context: context,
-          title: l10n.profileCannotOpenEmail,
-          subtitle: l10n.profileEmailFallback,
-          actions: [
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: colors.textPrimary.withOpacity(0.2),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          colors.ctaPrimary.withOpacity(0.85),
-                          colors.ctaSecondary.withOpacity(0.75),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: colors.ctaPrimary.withOpacity(0.3),
-                        width: 1,
-                      ),
-                    ),
-                    child: CupertinoButton(
-                      padding: const EdgeInsets.symmetric(vertical: 13),
-                      borderRadius: BorderRadius.circular(16),
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        l10n.commonOk,
-                        style: TextStyle(
-                          fontFamily: AppTextStyles.bodyFont(context),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFFFFFFFF),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      }
-    }
-  }
-
   void _changeFocusAreas() {
     final onboardingState = context.read<OnboardingState>();
     final userState = context.read<UserState>();
@@ -415,7 +354,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           l10n.profileChangeFocusMessage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: 'DM Sans',
+                            fontFamily: 'Sora',
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: colors.ctaPrimary,
@@ -429,7 +368,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(24),
                             child: BackdropFilter(
                               filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                               child: Container(
@@ -442,7 +381,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       colors.ctaSecondary.withOpacity(0.88),
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(24),
                                   border: Border.all(
                                     color: colors.ctaPrimary.withOpacity(0.4),
                                     width: 1,
@@ -477,7 +416,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   },
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 16),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(24),
                                   child: Text(
                                     l10n.profileChangeAreas,
                                     style: TextStyle(
@@ -577,104 +516,110 @@ class _ProfileScreenState extends State<ProfileScreen> {
               maxHeight: screenHeight * 0.7,
             ),
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(32)),
               child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    colors.modalBg1.withOpacity(0.98),
-                    colors.modalBg2.withOpacity(0.96),
-                    colors.modalBg3.withOpacity(0.98),
-                  ],
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      colors.modalBg1.withOpacity(0.98),
+                      colors.modalBg2.withOpacity(0.96),
+                      colors.modalBg3.withOpacity(0.98),
+                    ],
+                  ),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(32)),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.6),
+                    width: 1.5,
+                  ),
                 ),
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(32)),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.6),
-                  width: 1.5,
-                ),
-              ),
-              child: SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Drag handle
-                        Container(
-                          width: 36,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(2),
+                child: SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Drag handle
+                          Container(
+                            width: 36,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        // Title
-                        Text(
-                          l10n.profileChangeSpace,
-                          style: TextStyle(
-                            fontFamily: AppTextStyles.bodyFont(context),
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                            color: colors.textPrimary,
+                          const SizedBox(height: 12),
+                          // Title
+                          Text(
+                            l10n.profileChangeSpace,
+                            style: TextStyle(
+                              fontFamily: AppTextStyles.bodyFont(context),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color: colors.textPrimary,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        // Theme picker
-                        ThemePicker(
-                          isPremium: userState.hasSubscription,
-                          hasBoost: userState.hasBoost,
-                          compact: true,
-                          onPremiumTap: () {
-                            Navigator.pop(context);
-                            _showUpgradeScreen().then((_) {
-                              if (mounted) _showAppearancePicker(this.context);
-                            });
-                          },
-                          onBoostTap: () {
-                            Navigator.pop(context);
-                            final l10n = AppLocalizations.of(this.context);
-                            showBoostOfferSheet(
-                              context: this.context,
-                              title: l10n.boostOfferThemeTitle,
-                              description: l10n.boostOfferThemeDesc,
-                              showBoostOption: true,
-                              source: 'theme_picker',
-                            ).then((result) {
-                              if (!mounted) return;
-                              if (result == 'paywall') {
-                                _showUpgradeScreen().then((_) {
-                                  if (mounted)
-                                    _showAppearancePicker(this.context);
-                                });
-                              } else {
-                                _showAppearancePicker(this.context);
-                              }
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        // App icon picker
-                        AppIconPicker(
-                          isPremium: userState.hasSubscription,
-                          labelColor: colors.textPrimary,
-                          onPremiumTap: () {
-                            Navigator.pop(context);
-                            _showUpgradeScreen().then((_) {
-                              if (mounted) _showAppearancePicker(this.context);
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                      ],
+                          const SizedBox(height: 16),
+                          // Theme picker
+                          ThemePicker(
+                            isPremium: userState.hasSubscription,
+                            hasBoost: userState.hasBoost,
+                            compact: true,
+                            onPremiumTap: () {
+                              Navigator.pop(context);
+                              _showUpgradeScreen().then((_) {
+                                if (mounted) {
+                                  _showAppearancePicker(this.context);
+                                }
+                              });
+                            },
+                            onBoostTap: () {
+                              Navigator.pop(context);
+                              final l10n = AppLocalizations.of(this.context);
+                              showBoostOfferSheet(
+                                context: this.context,
+                                title: l10n.boostOfferThemeTitle,
+                                description: l10n.boostOfferThemeDesc,
+                                showBoostOption: true,
+                                source: 'theme_picker',
+                              ).then((result) {
+                                if (!mounted) return;
+                                if (result == 'paywall') {
+                                  _showUpgradeScreen().then((_) {
+                                    if (mounted) {
+                                      _showAppearancePicker(this.context);
+                                    }
+                                  });
+                                } else {
+                                  _showAppearancePicker(this.context);
+                                }
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          // App icon picker
+                          AppIconPicker(
+                            isPremium: userState.hasSubscription,
+                            labelColor: colors.textPrimary,
+                            onPremiumTap: () {
+                              Navigator.pop(context);
+                              _showUpgradeScreen().then((_) {
+                                if (mounted) {
+                                  _showAppearancePicker(this.context);
+                                }
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
             ),
           );
         },
@@ -945,7 +890,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   colors.ctaPrimary.withOpacity(0.88),
                 ],
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
                   color: colors.ctaPrimary.withOpacity(0.3),
@@ -1027,7 +972,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   colors.destructiveDark.withOpacity(0.88),
                 ],
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
                   color: colors.destructiveDark.withOpacity(0.3),
@@ -1167,7 +1112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             l10n.profileYourName,
                             style: TextStyle(
                               fontFamily: AppTextStyles.bodyFont(context),
-                              fontSize: 13,
+                              fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: colors.textSecondary,
                             ),
@@ -1297,7 +1242,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             l10n.profilePlan,
                             style: TextStyle(
                               fontFamily: AppTextStyles.bodyFont(context),
-                              fontSize: 13,
+                              fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: colors.textSecondary,
                             ),
@@ -1397,7 +1342,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               l10n.profileFocusAreas,
                               style: TextStyle(
                                 fontFamily: AppTextStyles.bodyFont(context),
-                                fontSize: 13,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w500,
                                 color: colors.textSecondary,
                               ),
@@ -1432,6 +1377,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                           ],
+
+                          // Divider
+                          const SizedBox(height: 24),
+                          Container(
+                            height: 1,
+                            color: colors.ctaPrimary.withOpacity(0.1),
+                          ),
+                          const SizedBox(height: 24),
+
+                          // Section: Your Path
+                          Text(
+                            l10n.profileYourPath,
+                            style: TextStyle(
+                              fontFamily: AppTextStyles.bodyFont(context),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: colors.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  _pathTitle(l10n, onboardingState.selectedIntentionPath),
+                                  style: TextStyle(
+                                    fontFamily: AppTextStyles.bodyFont(context),
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                    color: colors.textPrimary,
+                                  ),
+                                ),
+                              ),
+                              CupertinoButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () async {
+                                  await Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (_) => const ChangePathScreen(),
+                                    ),
+                                  );
+                                  if (mounted) setState(() {});
+                                },
+                                child: Icon(
+                                  CupertinoIcons.chevron_right,
+                                  size: 20,
+                                  color: colors.ctaPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
 
                           // Divider
                           const SizedBox(height: 24),
@@ -1559,6 +1556,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 thumbColor: const Color(0xFFFFFFFF),
                                 onChanged: (value) async {
                                   final l10n = AppLocalizations.of(context);
+                                  // User engaged with notification settings — silent coach mark dismiss
+                                  CoachMarkService.instance.markAsSeen(CoachMarkKeys.smartNotifications);
+                                  final prefs = await SharedPreferences.getInstance();
+                                  await prefs.setBool('has_visited_notification_settings', true);
                                   if (value) {
                                     final granted = await NotificationScheduler
                                         .requestPermission();
@@ -2039,7 +2040,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: BoxDecoration(
                         color: colors.profileCard
                             .withOpacity(colors.profileCardOpacity),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(24),
                         border: Border.all(
                           color: isDark
                               ? colors.borderCard
@@ -2065,7 +2066,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 48,
                                 decoration: BoxDecoration(
                                   color: colors.accentRegular.withOpacity(0.12),
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
                                 child: Icon(
                                   CupertinoIcons.question_circle,
@@ -2074,7 +2075,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               title: l10n.profileHelpSupport,
-                              onTap: _contactSupport,
+                              onTap: () => Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (_) => const FaqScreen(),
+                                ),
+                              ),
                             ),
                           ),
                           Container(
@@ -2089,7 +2095,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 48,
                                 decoration: BoxDecoration(
                                   color: colors.accentRegular.withOpacity(0.12),
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
                                 child: Icon(
                                   CupertinoIcons.arrow_2_circlepath,
@@ -2131,7 +2137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 48,
                                 decoration: BoxDecoration(
                                   color: colors.ctaPrimary.withOpacity(0.12),
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
                                 child: Icon(
                                   CupertinoIcons.shield,
@@ -2155,7 +2161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 48,
                                 decoration: BoxDecoration(
                                   color: colors.textSecondary.withOpacity(0.12),
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
                                 child: Icon(
                                   CupertinoIcons.doc_text,
@@ -2193,7 +2199,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: BoxDecoration(
                         color: colors.profileCard
                             .withOpacity(colors.profileCardOpacity),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(24),
                         border: Border.all(
                           color: isDark
                               ? colors.borderCard
@@ -2591,7 +2597,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildBackupNote(BuildContext context, AppColorScheme colors, AppLocalizations l10n) {
+  Widget _buildBackupNote(
+      BuildContext context, AppColorScheme colors, AppLocalizations l10n) {
     final isSignedIn = FirebaseAuth.instance.currentUser != null;
     if (!isSignedIn) {
       return Text(
@@ -2632,7 +2639,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(
               fontFamily: AppTextStyles.bodyFont(context),
               fontSize: 11,
-              fontWeight: lastBackup == null ? FontWeight.w600 : FontWeight.w400,
+              fontWeight:
+                  lastBackup == null ? FontWeight.w600 : FontWeight.w400,
               color: lastBackup == null
                   ? colors.ctaPrimary
                   : colors.textMutedBrown.withValues(alpha: 0.5),
@@ -2669,7 +2677,7 @@ class _GlassCard extends StatelessWidget {
       padding: padding ?? const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: colors.profileCard.withOpacity(colors.profileCardOpacity),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: isDark
               ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -2698,8 +2706,8 @@ class _ProfileButton extends StatelessWidget {
   const _ProfileButton({
     required this.iconContainer,
     required this.title,
-    required this.onTap,
     this.subtitle,
+    required this.onTap,
   });
 
   @override
@@ -2814,7 +2822,7 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
         SizedBox(
           width: double.infinity,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(24),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
               child: Container(
@@ -2827,7 +2835,7 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
                       colors.ctaSecondary.withOpacity(0.88),
                     ],
                   ),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(24),
                 ),
                 child: CupertinoButton(
                   onPressed: () {
@@ -2838,11 +2846,11 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
                       barrierColor: Colors.black.withOpacity(0.5),
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                       builder: (_) =>
-                          const PaywallScreen(source: 'focus_area_limit'),
+                          const PaywallScreen(source: 'focus_area_limit', triggeredByCeiling: true),
                     );
                   },
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(24),
                   child: Text(
                     l10n.focusLimitFreeUpgrade,
                     style: TextStyle(
@@ -2898,7 +2906,7 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
         SizedBox(
           width: double.infinity,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(24),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
               child: Container(
@@ -2911,12 +2919,12 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
                       colors.ctaSecondary.withOpacity(0.88),
                     ],
                   ),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(24),
                 ),
                 child: CupertinoButton(
                   onPressed: () => Navigator.pop(context),
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(24),
                   child: Text(
                     l10n.focusNudgeGotIt,
                     style: TextStyle(
@@ -3149,7 +3157,7 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
                     bottom: 95,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
                             color: colors.textPrimary.withOpacity(0.35),
@@ -3170,12 +3178,12 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
                               colors.ctaSecondary.withOpacity(0.88),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                         child: CupertinoButton(
                           onPressed: _saveAreas,
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(24),
                           child: Text(
                             l10n.profileSaveChanges,
                             style: TextStyle(

@@ -122,7 +122,7 @@ class SubscriptionManagementModal extends StatelessWidget {
                             l10n.subscriptionSupporter,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'DM Sans',
+                              fontFamily: 'Sora',
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                               color: colors.ctaPrimary,
@@ -137,7 +137,7 @@ class SubscriptionManagementModal extends StatelessWidget {
 
                       // Plan Details Card
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(24),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                           child: Container(
@@ -146,7 +146,7 @@ class SubscriptionManagementModal extends StatelessWidget {
                                 ? BoxDecoration(
                                     color: colors.cardBackground
                                         .withOpacity(colors.cardBackgroundOpacity),
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(24),
                                     border: Border.all(
                                       color: colors.borderCard
                                           .withOpacity(colors.borderCardOpacity),
@@ -162,7 +162,7 @@ class SubscriptionManagementModal extends StatelessWidget {
                                         colors.surfaceLight.withOpacity(0.3),
                                       ],
                                     ),
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(24),
                                     border: Border.all(
                                       color: const Color(0xFFFFFFFF).withOpacity(0.4),
                                       width: 1.5,
@@ -225,7 +225,7 @@ class SubscriptionManagementModal extends StatelessWidget {
                         l10n.subscriptionThankYou,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: 'DM Sans',
+                          fontFamily: 'Sora',
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
                           color: colors.ctaPrimary,
@@ -239,7 +239,7 @@ class SubscriptionManagementModal extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(24),
                           child: BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                             child: Container(
@@ -252,7 +252,7 @@ class SubscriptionManagementModal extends StatelessWidget {
                                     colors.ctaSecondary,
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(24),
                                 border: isDark
                                     ? null
                                     : Border.all(
@@ -279,7 +279,7 @@ class SubscriptionManagementModal extends StatelessWidget {
                               child: CupertinoButton(
                                 onPressed: _openAppStoreSubscriptions,
                                 padding: const EdgeInsets.symmetric(vertical: 16),
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(24),
                                 child: Text(
                                   l10n.subscriptionManage,
                                   style: TextStyle(

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
 import '../main.dart';
+import '../models/intention_path.dart';
 import '../services/analytics_service.dart';
 import '../services/backup_service.dart';
 import '../services/revenue_cat_service.dart';
@@ -15,6 +16,7 @@ import 'onboarding_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
+import '../widgets/onboarding_progress_bar.dart';
 
 class HabitRevealScreen extends StatefulWidget {
   const HabitRevealScreen({super.key});
@@ -209,9 +211,19 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
             bottom: false,
             child: Stack(
               children: [
+                // Progress bar
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  child: OnboardingProgressBar(
+                    currentStep: 4,
+                    totalSteps: 4,
+                    onBack: () => Navigator.pop(context),
+                  ),
+                ),
+
                 // Scrollable content
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(28, 80, 28, 0),
+                  padding: const EdgeInsets.fromLTRB(28, 68, 28, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -294,7 +306,7 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
                     children: [
                       // Reassurance message
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(24),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                           child: Container(
@@ -308,7 +320,7 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
                                   colors.surfaceLight.withOpacity(0.50),
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(24),
                               border: Border.all(
                                 color: const Color(0xFFFFFFFF).withOpacity(0.35),
                                 width: 1.5,
@@ -342,7 +354,7 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
                               color: colors.textPrimary.withOpacity(0.35),
@@ -353,7 +365,7 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
                           ],
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(24),
                           child: BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                             child: AnimatedContainer(
@@ -373,7 +385,7 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
                                           colors.ctaSecondary.withOpacity(0.85),
                                         ],
                                 ),
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(24),
                                 border: Border.all(
                                   color: _allCardsRevealed
                                       ? colors.ctaAlternative.withOpacity(0.6)
@@ -391,7 +403,7 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
                               child: CupertinoButton(
                                 onPressed: _allCardsRevealed ? _handleContinue : null,
                                 padding: const EdgeInsets.symmetric(vertical: 16),
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(24),
                                 child: Text(
                                   l10n.habitRevealBegin,
                                   style: TextStyle(
@@ -419,39 +431,20 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
 
   Widget _buildSubheading(OnboardingState state, AppColorScheme colors) {
     final l10n = AppLocalizations.of(context);
+    final pathKey = state.selectedIntentionPath;
+    final isOwnWay = pathKey == IntentionPathId.yourOwnWay.key;
 
-    if (state.focusAreas.isEmpty) {
-      return Text(
-        l10n.habitRevealSubtitleDefault,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontFamily: AppTextStyles.bodyFont(context),
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-          color: colors.ctaSecondary,
-          height: 1.5,
-        ),
-      );
-    }
-
-    final areas = state.focusAreas;
-
-    if (areas.length == 1) {
-      return Text(
-        l10n.habitRevealSubtitleOneArea(localizeCategoryName(areas[0], l10n)),
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontFamily: AppTextStyles.bodyFont(context),
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-          color: colors.ctaSecondary,
-          height: 1.5,
-        ),
-      );
+    String subtitle;
+    if (!isOwnWay) {
+      final path = IntentionPath.getById(IntentionPathId.fromKey(pathKey));
+      final title = _resolvePathTitle(l10n, path);
+      subtitle = l10n.habitRevealSubtitlePath(title);
+    } else {
+      subtitle = l10n.habitRevealSubtitleOwnWay;
     }
 
     return Text(
-      l10n.habitRevealSubtitleTwoAreas(localizeCategoryName(areas[0], l10n), localizeCategoryName(areas[1], l10n)),
+      subtitle,
       textAlign: TextAlign.center,
       style: TextStyle(
         fontFamily: AppTextStyles.bodyFont(context),
@@ -461,6 +454,21 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
         height: 1.5,
       ),
     );
+  }
+
+  String _resolvePathTitle(AppLocalizations l10n, IntentionPath path) {
+    switch (path.titleKey) {
+      case 'pathGentleMorningsTitle':
+        return l10n.pathGentleMorningsTitle;
+      case 'pathFindingCalmTitle':
+        return l10n.pathFindingCalmTitle;
+      case 'pathGratitudeSelfLoveTitle':
+        return l10n.pathGratitudeSelfLoveTitle;
+      case 'pathWindingDownTitle':
+        return l10n.pathWindingDownTitle;
+      default:
+        return path.titleKey;
+    }
   }
 
   Widget _buildAnimatedHabitCard(String habit, int index, OnboardingState state, AppColorScheme colors) {
@@ -477,14 +485,14 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
         child: ScaleTransition(
           scale: _scaleAnimations[index],
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(24),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFFFFF).withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(24),
                   border: Border.all(
                     color: const Color(0xFFFFFFFF).withOpacity(0.3),
                     width: 1,

@@ -147,7 +147,7 @@ class _PhilosophyScreenState extends State<PhilosophyScreen>
                               child: Text(
                                 l10n.onboardingPhilosophyLabel.toUpperCase(),
                                 style: const TextStyle(
-                                  fontFamily: 'DMSans',
+                                  fontFamily: 'Sora',
                                   fontSize: 11,
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xFF8C7A6B),
@@ -249,7 +249,7 @@ class _PhilosophyScreenState extends State<PhilosophyScreen>
                     l10n.onboardingPhilosophyBody,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      fontFamily: 'DMSans',
+                      fontFamily: 'Sora',
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
                       color: Color(0xFF7A6B5F),

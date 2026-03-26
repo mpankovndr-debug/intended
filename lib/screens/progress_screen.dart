@@ -9,10 +9,15 @@ import '../onboarding_v2/onboarding_state.dart';
 import '../models/moment.dart';
 import '../services/moments_service.dart';
 import '../services/analytics_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../services/coach_mark_service.dart';
+import '../services/monthly_reflection_service.dart';
+import '../services/reflection_service.dart';
 import '../services/week_stats_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
+import '../widgets/monthly_reflection_card.dart';
 import '../widgets/weekly_reflection_card.dart';
 import 'moments_collection_screen.dart';
 
@@ -25,6 +30,9 @@ class ProgressScreen extends StatefulWidget {
 }
 
 class _ProgressScreenState extends State<ProgressScreen> {
+  final _reflectionCardKey = GlobalKey();
+  final _monthlyReflectionCardKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +48,75 @@ class _ProgressScreenState extends State<ProgressScreen> {
       if (userHabits.isNotEmpty) {
         _refreshStats(userHabits);
       }
+      // Clear the unseen-reflection badge now that the user is here.
+      SharedPreferences.getInstance().then(
+        (prefs) => prefs.setBool('has_unseen_reflection', false),
+      );
+      // Check weekly & monthly reflection coach marks
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _checkReflectionCoachMarks();
+          _checkMonthlyReflectionCoachMark();
+        }
+      });
     }
+  }
+
+  Future<void> _checkReflectionCoachMarks() async {
+    final l10n = AppLocalizations.of(context);
+    final service = CoachMarkService.instance;
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+
+    // Mark that the user has now visited the Progress tab.
+    final wasViewed = prefs.getBool('has_viewed_reflection') ?? false;
+    if (!wasViewed) {
+      await prefs.setBool('has_viewed_reflection', true);
+    }
+
+    final alreadySeen = await service.hasBeenSeen(CoachMarkKeys.weeklyReflection);
+    if (!mounted) return;
+    if (alreadySeen) return;
+
+    if (wasViewed) {
+      // User navigated here before the coach mark fired — they found it themselves.
+      await service.markAsSeen(CoachMarkKeys.weeklyReflection);
+      return;
+    }
+
+    // First ever visit to Progress tab — enqueue coach mark if a reflection exists.
+    final reflection = await ReflectionService.getCurrentReflection();
+    if (!mounted) return;
+    if (reflection.daysActive == 0) return; // no meaningful reflection yet
+
+    await service.enqueue(
+      key: CoachMarkKeys.weeklyReflection,
+      targetKey: _reflectionCardKey,
+      title: l10n.coachMarkWeeklyReflectionTitle,
+      body: l10n.coachMarkWeeklyReflectionBody,
+    );
+    if (mounted) service.showNext(context);
+  }
+
+  Future<void> _checkMonthlyReflectionCoachMark() async {
+    final l10n = AppLocalizations.of(context);
+    final service = CoachMarkService.instance;
+
+    final alreadySeen = await service.hasBeenSeen(CoachMarkKeys.monthlyReflection);
+    if (!mounted) return;
+    if (alreadySeen) return;
+
+    // Only fire if a monthly reflection exists
+    final monthly = await MonthlyReflectionService.getCurrentReflection();
+    if (!mounted || monthly == null) return;
+
+    await service.enqueue(
+      key: CoachMarkKeys.monthlyReflection,
+      targetKey: _monthlyReflectionCardKey,
+      title: l10n.coachMarkMonthlyReflectionTitle,
+      body: l10n.coachMarkMonthlyReflectionBody,
+    );
+    if (mounted) service.showNext(context);
   }
 
   Future<WeekStats>? _weekStatsFuture;
@@ -157,8 +233,16 @@ class _ProgressScreenState extends State<ProgressScreen> {
                               children: [
                           // 1. Weekly Reflection Card (unified)
                           Padding(
+                            key: _reflectionCardKey,
                             padding: const EdgeInsets.only(bottom: 24),
                             child: WeeklyReflectionCard(stats: stats),
+                          ),
+
+                          // 1b. Monthly Reflection Card (premium, 30+ days)
+                          Padding(
+                            key: _monthlyReflectionCardKey,
+                            padding: const EdgeInsets.only(bottom: 24),
+                            child: const MonthlyReflectionCard(),
                           ),
 
                           // 2. Motivational Text
@@ -167,7 +251,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                             child: Text(
                               _getTodaysAffirmation(l10n),
                               style: TextStyle(
-                                fontFamily: 'DMSans',
+                                fontFamily: 'Sora',
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
                                 color: colors.textSecondary,
@@ -244,7 +328,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
             );
           },
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(24),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
               child: Container(
@@ -252,7 +336,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: colors.momentsCard.withOpacity(colors.momentsCardOpacity),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(24),
                   border: Border.all(
                     color: isDark
                         ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -268,7 +352,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           Text(
                             l10n.progressMomentsCollected(count),
                             style: TextStyle(
-                              fontFamily: 'DMSans',
+                              fontFamily: 'Sora',
                               fontSize: 15,
                               fontWeight: FontWeight.w400,
                               color: colors.textPrimary,
@@ -278,7 +362,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           Text(
                             '· $timeLabel',
                             style: TextStyle(
-                              fontFamily: 'DMSans',
+                              fontFamily: 'Sora',
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                               color: colors.textSecondary,

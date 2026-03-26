@@ -83,7 +83,7 @@ class _WarmthToastState extends State<WarmthToast>
           child: SlideTransition(
             position: _slide,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(24),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                 child: Container(
@@ -100,7 +100,7 @@ class _WarmthToastState extends State<WarmthToast>
                         colors.surfaceLight.withOpacity(0.40),
                       ],
                     ),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(24),
                     border: Border.all(
                       color: const Color(0xFFFFFFFF).withOpacity(0.45),
                       width: 1.5,

@@ -21,11 +21,13 @@ class ShareCardRevealRoute extends PageRoute<void> {
   final WeekStats stats;
   final ReflectionData reflection;
   final Rect? originRect;
+  final ShareCardTier? forceTier;
 
   ShareCardRevealRoute({
     required this.stats,
     required this.reflection,
     this.originRect,
+    this.forceTier,
   });
 
   @override
@@ -49,6 +51,7 @@ class ShareCardRevealRoute extends PageRoute<void> {
     return ShareCardRevealScreen(
       stats: stats,
       reflection: reflection,
+      forceTier: forceTier,
     );
   }
 
@@ -74,11 +77,13 @@ class ShareCardRevealRoute extends PageRoute<void> {
 class ShareCardRevealScreen extends StatefulWidget {
   final WeekStats stats;
   final ReflectionData reflection;
+  final ShareCardTier? forceTier;
 
   const ShareCardRevealScreen({
     super.key,
     required this.stats,
     required this.reflection,
+    this.forceTier,
   });
 
   @override
@@ -191,6 +196,7 @@ class _ShareCardRevealScreenState extends State<ShareCardRevealScreen>
                         child: TieredShareCard(
                           stats: widget.stats,
                           reflection: widget.reflection,
+                          forceTier: widget.forceTier,
                         ),
                       ),
                     ),
@@ -369,6 +375,7 @@ class _ShareCardRevealScreenState extends State<ShareCardRevealScreen>
             child: TieredShareCard(
               stats: widget.stats,
               reflection: widget.reflection,
+              forceTier: widget.forceTier,
             ),
           ),
         ),

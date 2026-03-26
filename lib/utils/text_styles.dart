@@ -83,6 +83,7 @@ class AppTextStyles {
       fontFamily: _headerFont,
       color: colors.textPrimary,
       letterSpacing: -0.5,
+      height: _localizedHeight(1.2, locale),
     );
   }
 
@@ -97,6 +98,7 @@ class AppTextStyles {
       fontFamily: _headerFont,
       color: colors.ctaPrimary, // Warm brown for main titles
       letterSpacing: -0.5,
+      height: _localizedHeight(1.25, locale),
     );
   }
 
@@ -110,6 +112,7 @@ class AppTextStyles {
       fontWeight: FontWeight.w600,
       fontFamily: _headerFont,
       color: colors.textPrimary,
+      height: _localizedHeight(1.3, locale),
     );
   }
 
@@ -146,7 +149,7 @@ class AppTextStyles {
   // ============================================================
 
   /// Body Large - Habit card text, primary content
-  /// 16px, DM Sans, weight 500
+  /// 16px, Sora (EN) / Montserrat (RU), weight 500
   static TextStyle bodyLarge(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
@@ -160,7 +163,7 @@ class AppTextStyles {
   }
 
   /// Body - Descriptions, secondary text
-  /// 15px, DM Sans, weight 500
+  /// 15px, Sora (EN) / Montserrat (RU), weight 500
   static TextStyle body(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
@@ -174,7 +177,7 @@ class AppTextStyles {
   }
 
   /// Subtitle - Below titles ("12 habits available")
-  /// 15px, DM Sans, weight 500, muted color
+  /// 15px, Sora (EN) / Montserrat (RU), weight 500, muted color
   static TextStyle subtitle(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
@@ -183,6 +186,7 @@ class AppTextStyles {
       fontWeight: FontWeight.w500,
       fontFamily: _bodyFontForLocale(locale),
       color: colors.textSecondary, // Muted brown
+      height: _localizedHeight(1.5, locale),
     );
   }
 
@@ -192,7 +196,7 @@ class AppTextStyles {
   }
 
   /// Caption - Timestamps, metadata, hints
-  /// 13px, DM Sans, weight 500
+  /// 13px, Sora (EN) / Montserrat (RU), weight 500
   static TextStyle caption(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
@@ -201,11 +205,12 @@ class AppTextStyles {
       fontWeight: FontWeight.w500,
       fontFamily: _bodyFontForLocale(locale),
       color: colors.textDisabled,
+      height: _localizedHeight(1.4, locale),
     );
   }
 
   /// Tiny text - Version numbers, fine print
-  /// 12px, DM Sans, weight 400
+  /// 12px, Sora (EN) / Montserrat (RU), weight 400
   static TextStyle tiny(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
@@ -214,6 +219,7 @@ class AppTextStyles {
       fontWeight: FontWeight.w400,
       fontFamily: _bodyFontForLocale(locale),
       color: colors.textDisabled,
+      height: _localizedHeight(1.4, locale),
     );
   }
 
@@ -222,7 +228,7 @@ class AppTextStyles {
   // ============================================================
 
   /// Primary button text
-  /// 17px, DM Sans, weight 600
+  /// 17px, Sora (EN) / Montserrat (RU), weight 600
   static TextStyle buttonPrimary(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
@@ -235,7 +241,7 @@ class AppTextStyles {
   }
 
   /// Secondary/text button ("Close", "Cancel", "Skip")
-  /// 16px, DM Sans, weight 600
+  /// 16px, Sora (EN) / Montserrat (RU), weight 600
   static TextStyle buttonSecondary(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
@@ -248,7 +254,7 @@ class AppTextStyles {
   }
 
   /// Link button (e.g., "Skip for now", "Not now")
-  /// 16px, DM Sans, weight 500
+  /// 16px, Sora (EN) / Montserrat (RU), weight 500
   static TextStyle buttonLink(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
@@ -265,7 +271,7 @@ class AppTextStyles {
   // ============================================================
 
   /// Input field text
-  /// 15px, DM Sans, weight 500
+  /// 15px, Sora (EN) / Montserrat (RU), weight 500
   static TextStyle input(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
@@ -288,7 +294,7 @@ class AppTextStyles {
   // ============================================================
 
   /// Tagline text ("Small steps. No pressure.")
-  /// 20px, DM Sans, weight 500
+  /// 20px, Sora (EN) / Montserrat (RU), weight 500
   static TextStyle tagline(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
@@ -302,7 +308,7 @@ class AppTextStyles {
   }
 
   /// Date string (e.g., "Saturday, February 7")
-  /// 15px, DM Sans, weight 400
+  /// 15px, Sora (EN) / Montserrat (RU), weight 400
   static TextStyle dateLabel(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;

@@ -1,5 +1,6 @@
 import WidgetKit
 import SwiftUI
+import AppIntents
 
 // MARK: - Premium Widget (Intended+ only) — Medium & Large sizes
 
@@ -36,7 +37,7 @@ struct HabitRow: View {
     var body: some View {
         let textPrimary = Color(argbHex: theme.textPrimary)
         let textSecondary = Color(argbHex: theme.textSecondary)
-        let checkmark = Color(argbHex: theme.checkmark)
+        let checkmarkColor = Color(argbHex: theme.checkmark)
 
         HStack(spacing: 10) {
             // Focus area color dot
@@ -59,15 +60,24 @@ struct HabitRow: View {
 
             Spacer()
 
-            // Checkmark
+            // Checkmark / interactive button
             if habit.done {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 16))
-                    .foregroundColor(checkmark)
+                    .foregroundColor(checkmarkColor)
             } else {
-                Circle()
-                    .stroke(textSecondary.opacity(0.3), lineWidth: 1.5)
-                    .frame(width: 16, height: 16)
+                if #available(iOS 17.0, *) {
+                    Button(intent: CompleteHabitIntent(habitName: habit.name)) {
+                        Circle()
+                            .stroke(textSecondary.opacity(0.3), lineWidth: 1.5)
+                            .frame(width: 16, height: 16)
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    Circle()
+                        .stroke(textSecondary.opacity(0.3), lineWidth: 1.5)
+                        .frame(width: 16, height: 16)
+                }
             }
         }
     }

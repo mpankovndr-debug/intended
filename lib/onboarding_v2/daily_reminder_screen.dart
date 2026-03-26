@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'theme_selection_screen.dart';
+import 'habit_reveal_screen.dart';
 import 'onboarding_state.dart';
 import '../services/analytics_service.dart';
 import '../services/notification_scheduler.dart';
@@ -13,6 +13,7 @@ import '../services/notification_preferences_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
+import '../widgets/onboarding_progress_bar.dart';
 
 class DailyReminderScreen extends StatefulWidget {
   const DailyReminderScreen({super.key});
@@ -43,19 +44,36 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
     super.dispose();
   }
 
-  void _handleContinue() {
+  Future<void> _handleContinue() async {
     HapticFeedback.mediumImpact();
 
     final state = context.read<OnboardingState>();
     AnalyticsService.logOnboardingStepCompleted('daily_reminder');
     AnalyticsService.logDailyReminderToggled(state.dailyReminderEnabled);
 
+    // Permission was already requested when the user turned on the toggle.
+    // If daily reminder is still ON here, permission was granted — just schedule.
+    if (state.dailyReminderEnabled) {
+      final l10n = AppLocalizations.of(context);
+      await NotificationPreferencesService.setEnabled(true);
+      final time = _parseTime(_timeController.text);
+      await NotificationPreferencesService.setHour(time.hour);
+      await NotificationPreferencesService.setMinute(time.minute);
+      await NotificationScheduler.scheduleDaily(l10n);
+      if (_weeklyEnabled) {
+        await NotificationPreferencesService.setWeeklyEnabled(true);
+        await NotificationScheduler.scheduleWeekly(l10n);
+      }
+    }
+
+    if (!mounted) return;
+
     // Navigate to Habit Reveal screen
     Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            const ThemeSelectionScreen(),
+            const HabitRevealScreen(),
         transitionDuration: const Duration(milliseconds: 350),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
@@ -111,77 +129,13 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                   // Column with Header + Expanded ScrollView
                   Column(
                     children: [
-                      // Header with back button and label
+                      // Progress bar
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(28, 40, 28, 16),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            // Label (centered)
-                            Center(
-                              child: Text(
-                                l10n.reminderTitle,
-                                style: TextStyle(
-                                  fontFamily: AppTextStyles.bodyFont(context),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: colors.textLabel,
-                                  letterSpacing: 0.3,
-                                ),
-                              ),
-                            ),
-
-                            // Back button (left aligned)
-                            Positioned(
-                              left: 0,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: BackdropFilter(
-                                  filter:
-                                      ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                                  child: Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                          const Color(0xFFFFFFFF)
-                                              .withOpacity(0.35),
-                                          const Color(0xFFFFFFFF)
-                                              .withOpacity(0.2),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: const Color(0xFFFFFFFF)
-                                            .withOpacity(0.3),
-                                        width: 1,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: colors.textPrimary
-                                              .withOpacity(0.08),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: CupertinoButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Icon(
-                                        CupertinoIcons.back,
-                                        size: 20,
-                                        color: colors.ctaPrimary,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                        child: OnboardingProgressBar(
+                          currentStep: 3,
+                          totalSteps: 4,
+                          onBack: () => Navigator.pop(context),
                         ),
                       ),
 
@@ -222,23 +176,19 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                                   // Toggle card
                                   _buildToggleCard(state, colors, l10n),
 
-                                  const SizedBox(height: 16),
-
-                                  // Weekly summary toggle
-                                  _buildWeeklySummaryCard(state, colors, l10n),
-
-                                  // Helper message when OFF
+                                  // Helper text directly under daily reminder card
                                   if (!state.dailyReminderEnabled &&
                                       !_permissionDenied)
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.only(top: 4, bottom: 20),
+                                      padding: const EdgeInsets.only(
+                                          top: 10, bottom: 6),
                                       child: Center(
                                         child: Text(
                                           l10n.reminderSwitchHint,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontFamily: AppTextStyles.bodyFont(context),
+                                            fontFamily: AppTextStyles.bodyFont(
+                                                context),
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
                                             color: colors.textTertiary,
@@ -248,17 +198,18 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                                       ),
                                     ),
 
-                                  // Permission denied message
+                                  // Permission denied text under daily reminder card
                                   if (_permissionDenied)
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.only(top: 4, bottom: 20),
+                                      padding: const EdgeInsets.only(
+                                          top: 10, bottom: 6),
                                       child: Center(
                                         child: Text(
                                           l10n.reminderNoWorries,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontFamily: AppTextStyles.bodyFont(context),
+                                            fontFamily: AppTextStyles.bodyFont(
+                                                context),
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
                                             color: colors.textTertiary,
@@ -267,6 +218,11 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                                         ),
                                       ),
                                     ),
+
+                                  const SizedBox(height: 16),
+
+                                  // Weekly summary toggle
+                                  _buildWeeklySummaryCard(state, colors, l10n),
 
                                   const SizedBox(height: 160),
                                 ],
@@ -317,7 +273,7 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                             Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(24),
                                 boxShadow: [
                                   BoxShadow(
                                     color: colors.textPrimary.withOpacity(0.3),
@@ -327,7 +283,7 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                                 ],
                               ),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(24),
                                 child: BackdropFilter(
                                   filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                                   child: Container(
@@ -340,7 +296,7 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                                           colors.ctaSecondary.withOpacity(0.88),
                                         ],
                                       ),
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(24),
                                     ),
                                     child: CupertinoButton(
                                       onPressed: _handleContinue,
@@ -549,7 +505,7 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                       ),
                       const SizedBox(height: 12),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(24),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                           child: Container(
@@ -564,7 +520,7 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                                   const Color(0xFFFFFFFF).withOpacity(0.4),
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(24),
                               border: Border.all(
                                 color: colors.borderMedium.withOpacity(0.25),
                                 width: 1.5,
@@ -899,27 +855,9 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () async {
+                  onTap: () {
                     HapticFeedback.selectionClick();
-                    final value = !_weeklyEnabled;
-
-                    if (value) {
-                      final granted =
-                          await NotificationScheduler.requestPermission();
-                      if (!granted) return;
-                    }
-
-                    setState(() => _weeklyEnabled = value);
-                    await NotificationPreferencesService.setWeeklyEnabled(
-                        value);
-                    final l10n = AppLocalizations.of(context);
-                    if (value) {
-                      if (state.dailyReminderEnabled) {
-                        await NotificationScheduler.rescheduleAll(l10n);
-                      }
-                    } else {
-                      await NotificationScheduler.rescheduleAll(l10n);
-                    }
+                    setState(() => _weeklyEnabled = !_weeklyEnabled);
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
@@ -940,7 +878,7 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                                 colors.onboardingBg3.withOpacity(0.7),
                               ],
                       ),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(24),
                       border: Border.all(
                         color: _weeklyEnabled
                             ? colors.ctaPrimary.withOpacity(0.3)
@@ -995,33 +933,26 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
       onTap: () async {
         HapticFeedback.selectionClick();
         final enabling = !state.dailyReminderEnabled;
-
         if (enabling) {
+          // Ask for permission the moment the user turns the toggle on.
           final granted = await NotificationScheduler.requestPermission();
+          if (!mounted) return;
           if (granted) {
-            await NotificationPreferencesService.setEnabled(true);
-            final time = _parseTime(_timeController.text);
-            await NotificationPreferencesService.setHour(time.hour);
-            await NotificationPreferencesService.setMinute(time.minute);
-            final l10n = AppLocalizations.of(context);
-            await NotificationScheduler.scheduleDaily(l10n);
-            if (mounted) {
-              setState(() => _permissionDenied = false);
-              context.read<OnboardingState>().setDailyReminder(true);
-            }
+            setState(() {
+              _permissionDenied = false;
+              _weeklyEnabled = true;
+            });
+            context.read<OnboardingState>().setDailyReminder(true);
           } else {
-            await NotificationPreferencesService.setEnabled(false);
-            if (mounted) {
-              setState(() => _permissionDenied = true);
-            }
+            setState(() => _permissionDenied = true);
+            // Toggle stays off — don't call setDailyReminder(true).
           }
         } else {
-          await NotificationPreferencesService.setEnabled(false);
-          await NotificationScheduler.cancelAll();
-          if (mounted) {
-            setState(() => _permissionDenied = false);
-            context.read<OnboardingState>().setDailyReminder(false);
-          }
+          setState(() {
+            _permissionDenied = false;
+            _weeklyEnabled = false;
+          });
+          context.read<OnboardingState>().setDailyReminder(false);
         }
       },
       child: AnimatedContainer(
@@ -1043,7 +974,7 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                     colors.onboardingBg3.withOpacity(0.7),
                   ],
           ),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: state.dailyReminderEnabled
                 ? colors.ctaPrimary.withOpacity(0.3)

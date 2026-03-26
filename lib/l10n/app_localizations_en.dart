@@ -81,6 +81,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingNamePrompt => 'What should we call you?';
 
   @override
+  String get onboardingLetsGetStarted => 'Let\'s get started';
+
+  @override
   String get onboardingSkipForNow => 'Skip for now';
 
   @override
@@ -241,11 +244,29 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String habitRevealSubtitlePath(String pathTitle) {
+    return 'Here\'s what your $pathTitle practice looks like.';
+  }
+
+  @override
+  String get habitRevealSubtitleOwnWay =>
+      'Here\'s what your practice looks like.';
+
+  @override
   String get habitRevealDescription =>
       'Pick what feels right. Skip what doesn\'t. There\'s no pressure to do them all — one is enough.';
 
   @override
   String get habitRevealBegin => 'Let\'s begin';
+
+  @override
+  String get focusAreasStartingPointsTitle =>
+      'We\'ve picked some starting points for you';
+
+  @override
+  String focusAreasStartingPointsSubtext(String pathTitle) {
+    return 'Based on the intention path $pathTitle. Add or remove areas anytime.';
+  }
 
   @override
   String get habitsHoldForOptions => 'Long press a habit for options';
@@ -1076,6 +1097,26 @@ class AppLocalizationsEn extends AppLocalizations {
       'Check in with how your week felt. Your habits were there for you.';
 
   @override
+  String get notifWeeklyPathGentleMornings =>
+      'Your week of gentle mornings is ready to look back on.';
+
+  @override
+  String get notifWeeklyPathFindingCalm =>
+      'A week of finding calm. See how it unfolded.';
+
+  @override
+  String get notifWeeklyPathGratitudeSelfLove =>
+      'Your week of gratitude is waiting for you to reflect on.';
+
+  @override
+  String get notifWeeklyPathWindingDown =>
+      'A week of winding down. Take a moment to look back.';
+
+  @override
+  String get notifWeeklyPathYourOwnWay =>
+      'Your week is ready to reflect on. See what showed up.';
+
+  @override
   String get notifDailyChannelName => 'Daily Reminders';
 
   @override
@@ -1330,23 +1371,31 @@ class AppLocalizationsEn extends AppLocalizations {
       'Intended+ turns your daily practice into lasting self-knowledge.';
 
   @override
-  String get paywallFeature1 =>
-      'Weekly reflections that reveal your patterns over time';
+  String get paywallCeilingTitle => 'You\'re building something good';
 
   @override
-  String get paywallFeature2 => 'Home screen widget to stay gently connected';
+  String get paywallCeilingDescription =>
+      'Intended+ gives you room to grow. But the free version always has what you need.';
+
+  @override
+  String get paywallFeature1 =>
+      'Monthly & weekly reflections — see how far you\'ve come';
+
+  @override
+  String get paywallFeature2 =>
+      'A home screen widget that keeps your intentions close';
 
   @override
   String get paywallFeature3 =>
-      'Curated packs: routines designed around how you actually live';
+      '10 beautiful themes & premium app icons — make it yours';
 
   @override
   String get paywallFeature4 =>
-      '10 themes to match your mood — including dark mode';
+      'Shareable moment cards & curated routines designed for real life';
 
   @override
   String get paywallFeature5 =>
-      'Unlimited habits, swaps, and focus areas — grow without limits';
+      'Unlimited habits, swaps, and focus areas — no ceiling on growth';
 
   @override
   String get paywallMonthly => 'Monthly';
@@ -1490,6 +1539,9 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get profileYourPath => 'Your path';
 
   @override
   String get profileSettings => 'SETTINGS';
@@ -2591,4 +2643,853 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get legalDisclaimerSuffix => '.';
+
+  @override
+  String get pathGentleMorningsTitle => 'Gentle Mornings';
+
+  @override
+  String get pathGentleMorningsSubtitle =>
+      'Start your day with calm, not chaos';
+
+  @override
+  String get pathFindingCalmTitle => 'Finding Calm';
+
+  @override
+  String get pathFindingCalmSubtitle =>
+      'Small daily anchors for stress and anxiety';
+
+  @override
+  String get pathGratitudeSelfLoveTitle => 'Gratitude & Self-Love';
+
+  @override
+  String get pathGratitudeSelfLoveSubtitle =>
+      'Build a kinder relationship with yourself';
+
+  @override
+  String get pathWindingDownTitle => 'Winding Down';
+
+  @override
+  String get pathWindingDownSubtitle => 'End your day peacefully';
+
+  @override
+  String get pathYourOwnWayTitle => 'Your Own Way';
+
+  @override
+  String get pathYourOwnWaySubtitle =>
+      'I know what I need — just give me the tools';
+
+  @override
+  String get intentionPathHeadline => 'What brings you here?';
+
+  @override
+  String get intentionPathSubtext =>
+      'This helps us set up your experience. You can always change it later.';
+
+  @override
+  String intentionPathUpdateFocusAreas(String pathName) {
+    return 'Update your focus areas to match \"$pathName\"?';
+  }
+
+  @override
+  String get intentionPathUpdateYes => 'Yes, update focus areas';
+
+  @override
+  String get intentionPathUpdateNo => 'No, keep my current areas';
+
+  @override
+  String get coachMarkFirstCompletionTitle => 'Your first check-in';
+
+  @override
+  String get coachMarkFirstCompletionBody =>
+      'That\'s it. That\'s the whole practice. Show up when you can, skip when you can\'t.';
+
+  @override
+  String get coachMarkPinningTitle => 'This one\'s sticking';
+
+  @override
+  String get coachMarkPinningBody =>
+      'Long-press any habit to pin it to the top. Your anchors deserve the spotlight.';
+
+  @override
+  String get coachMarkWidgetTitle =>
+      'See your intentions without opening the app';
+
+  @override
+  String get coachMarkWidgetBody =>
+      'Add an Intended widget to your home or lock screen. A quiet reminder of what matters today.';
+
+  @override
+  String get coachMarkWeeklyReflectionTitle => 'Your first reflection is here';
+
+  @override
+  String get coachMarkWeeklyReflectionBody =>
+      'Every week, Intended looks back at your patterns — gently, never critically. Tap to see your week.';
+
+  @override
+  String get coachMarkSmartNotificationsTitle =>
+      'Your reminders learn from you';
+
+  @override
+  String get coachMarkSmartNotificationsBody =>
+      'Intended adjusts when and how often it nudges you based on your rhythm. Check in a lot? We step back. Been away? Just one gentle note.';
+
+  @override
+  String get coachMarkMonthlyReflectionTitle => 'A month of showing up';
+
+  @override
+  String get coachMarkMonthlyReflectionBody =>
+      'Your monthly reflection finds patterns across weeks that you might not notice day-to-day. It\'s here whenever you want it.';
+
+  @override
+  String get coachMarkReflectionShareTitle => 'Worth sharing?';
+
+  @override
+  String get coachMarkReflectionShareBody =>
+      'Tap the share button to turn this into a card you can send to someone or post. Your data stays private — only the summary is shared.';
+
+  @override
+  String get reviewPromptMessage =>
+      'Enjoying Intended? A quick rating helps others find a gentler way to build habits.';
+
+  @override
+  String get reviewPromptRate => 'Rate now';
+
+  @override
+  String get reviewPromptNotYet => 'Not yet';
+
+  @override
+  String get upgradeNudgeBody =>
+      'Your practice is growing. Intended+ gives you room to grow with it.';
+
+  @override
+  String get upgradeNudgeLearnMore => 'Learn more';
+
+  @override
+  String get notifWeeklyDynamic0 =>
+      'Your weekly reflection is here. Every week is a fresh start.';
+
+  @override
+  String get notifWeeklyDynamic1 =>
+      'Your weekly reflection is here — you showed up for yourself this week.';
+
+  @override
+  String notifWeeklyDynamicN(int count) {
+    return 'Your weekly reflection is here — you showed up $count times for yourself this week.';
+  }
+
+  @override
+  String get faqSectionGettingStarted => 'Getting Started';
+
+  @override
+  String get faqWhatIsIntended => 'What is Intended?';
+
+  @override
+  String get faqWhatIsIntendedAnswer =>
+      'Intended is a gentle habit app for iOS. It helps you build daily habits without streaks, guilt, or pressure. There\'s no counter that resets when you miss a day — just a calm space to check in with your intentions whenever you\'re ready.';
+
+  @override
+  String get faqWhatIsIntentionPath => 'What\'s an Intention Path?';
+
+  @override
+  String get faqWhatIsIntentionPathAnswer =>
+      'When you first open Intended, you choose a path based on what brings you here — like Finding Calm or Gentle Mornings. Your path shapes your default habits, the tone of your reminders, and your reflection questions. You can change it anytime in your profile.';
+
+  @override
+  String get faqChangeIntentionPath => 'Can I change my Intention Path?';
+
+  @override
+  String get faqChangeIntentionPathAnswer =>
+      'Yes, anytime. Go to your Profile, tap your Intention Path card, and pick a new one. Your history and check-ins stay exactly as they are.';
+
+  @override
+  String get faqWhatAreFocusAreas => 'What are Focus Areas?';
+
+  @override
+  String get faqWhatAreFocusAreasAnswer =>
+      'Focus areas are categories of habits — like Health, Mood, or Self-care. Each area comes with curated habits. Your path pre-selects a couple, but you can add or remove them anytime.';
+
+  @override
+  String get faqHowIsDifferent => 'How is Intended different?';
+
+  @override
+  String get faqHowIsDifferentAnswer =>
+      'Most habit apps use streaks and gamification. Intended takes the opposite approach. No streaks to break, no leaderboards, no guilt. Your progress never resets.';
+
+  @override
+  String get faqSectionDailyHabits => 'Daily Habits';
+
+  @override
+  String get faqHowToCheckIn => 'How do I check in?';
+
+  @override
+  String get faqHowToCheckInAnswer =>
+      'Tap any habit card on your home screen. A single tap is all it takes.';
+
+  @override
+  String get faqMissedDay => 'What if I miss a day?';
+
+  @override
+  String get faqMissedDayAnswer =>
+      'Nothing happens. No streaks break, no counters reset. Tomorrow is a new day.';
+
+  @override
+  String get faqHowToPin => 'How do I pin a habit?';
+
+  @override
+  String get faqHowToPinAnswer =>
+      'Long-press any habit card to pin it to the top. You can have one pinned habit at a time.';
+
+  @override
+  String get faqCustomHabits => 'Can I add custom habits?';
+
+  @override
+  String get faqCustomHabitsAnswer =>
+      'Yes! Tap the + button. Free users can have up to 2 custom habits. Intended+ gives you unlimited.';
+
+  @override
+  String get faqSwapHabit => 'How do I swap a habit?';
+
+  @override
+  String get faqSwapHabitAnswer =>
+      'Tap the swap icon on any habit card. Free users get 2 swaps per month.';
+
+  @override
+  String get faqRefreshes => 'What are refreshes?';
+
+  @override
+  String get faqRefreshesAnswer =>
+      'Refreshing gives you new random habits from your focus areas. 3 per day on the free plan.';
+
+  @override
+  String get faqSectionReflections => 'Reflections';
+
+  @override
+  String get faqWeeklyReflection => 'What is a Weekly Reflection?';
+
+  @override
+  String get faqWeeklyReflectionAnswer =>
+      'Every week, Intended generates a reflection card based on your check-in patterns — which habits stuck, your most active days, and gentle observations. Never judgments.';
+
+  @override
+  String get faqMonthlyReflection => 'What\'s the Monthly Reflection?';
+
+  @override
+  String get faqMonthlyReflectionAnswer =>
+      'After 30 days, a monthly reflection looks across weeks for patterns you might not notice day-to-day. Available with Intended+.';
+
+  @override
+  String get faqShareReflection => 'Can I share my reflection?';
+
+  @override
+  String get faqShareReflectionAnswer =>
+      'Yes! Tap the share button to turn it into a beautiful card for social media.';
+
+  @override
+  String get faqNoReflection => 'Why don\'t I see a reflection?';
+
+  @override
+  String get faqNoReflectionAnswer =>
+      'Weekly reflections appear after 7 days. Monthly after 30. The more you check in, the richer they become.';
+
+  @override
+  String get faqSectionNotifications => 'Notifications';
+
+  @override
+  String get faqHowNotifications => 'How do notifications work?';
+
+  @override
+  String get faqHowNotificationsAnswer =>
+      'Reminders adapt to your rhythm. Check in regularly and they step back. Been away? One gentle nudge — never seven.';
+
+  @override
+  String get faqChangeTime => 'Can I change the time?';
+
+  @override
+  String get faqChangeTimeAnswer => 'Yes. Profile → Notification Settings.';
+
+  @override
+  String get faqPathNotifications => 'Do notifications match my path?';
+
+  @override
+  String get faqPathNotificationsAnswer =>
+      'Yes. Someone on Finding Calm sees different wording than someone on Gentle Mornings.';
+
+  @override
+  String get faqSectionWidgets => 'Widgets';
+
+  @override
+  String get faqAddWidget => 'How do I add a widget?';
+
+  @override
+  String get faqAddWidgetAnswer =>
+      'Long-press your home screen, tap +, search for Intended. You can also add lock screen widgets through iOS Settings.';
+
+  @override
+  String get faqWidgetNotUpdating => 'Why isn\'t my widget updating?';
+
+  @override
+  String get faqWidgetNotUpdatingAnswer =>
+      'iOS controls refresh timing. Open the app briefly to trigger it. Check that Background App Refresh is enabled for Intended.';
+
+  @override
+  String get faqSectionPricing => 'Intended+ & Pricing';
+
+  @override
+  String get faqWhatIsPlus => 'What is Intended+?';
+
+  @override
+  String get faqWhatIsPlusAnswer =>
+      'Unlimited custom habits, swaps, refreshes, library access, focus area changes, all themes, monthly reflections, and deeper insights.';
+
+  @override
+  String get faqPricing => 'How much does it cost?';
+
+  @override
+  String get faqPricingAnswer =>
+      'Monthly: €6.99. Yearly: €49.99 (5 months free). Lifetime: €89.99. All include a 7-day free trial.';
+
+  @override
+  String get faqBoost => 'What is Intended Boost?';
+
+  @override
+  String get faqBoostAnswer =>
+      'A one-time €0.99 purchase. Extra themes, +1 custom habit, milestone cards, +1 focus area, 5 swaps per month.';
+
+  @override
+  String get faqFreeVersion => 'Can I use it for free?';
+
+  @override
+  String get faqFreeVersionAnswer =>
+      'Yes. Free includes intention paths, 2 custom habits, 2 focus areas, weekly reflections, smart notifications, and widgets.';
+
+  @override
+  String get faqRestore => 'How do I restore my purchase?';
+
+  @override
+  String get faqRestoreAnswer => 'Profile → Restore Purchases.';
+
+  @override
+  String get faqCancel => 'How do I cancel?';
+
+  @override
+  String get faqCancelAnswer =>
+      'iPhone Settings → your name → Subscriptions → Intended → Cancel.';
+
+  @override
+  String get faqSectionPrivacy => 'Privacy';
+
+  @override
+  String get faqDataStorage => 'Where is my data stored?';
+
+  @override
+  String get faqDataStorageAnswer =>
+      'All data is stored locally on your device. Nothing is uploaded to any server.';
+
+  @override
+  String get faqDataSelling => 'Does Intended sell my data?';
+
+  @override
+  String get faqDataSellingAnswer =>
+      'No. We use anonymous crash reports to fix bugs. Never your habit data.';
+
+  @override
+  String get faqDeleteApp => 'What if I delete the app?';
+
+  @override
+  String get faqDeleteAppAnswer =>
+      'Data is local, so deleting removes everything. Subscriptions can be restored through the App Store.';
+
+  @override
+  String get faqSectionTroubleshooting => 'Troubleshooting';
+
+  @override
+  String get faqCrash => 'The app crashed.';
+
+  @override
+  String get faqCrashAnswer =>
+      'Try closing and reopening. Make sure you have the latest version.';
+
+  @override
+  String get faqHabitsGone => 'My habits disappeared.';
+
+  @override
+  String get faqHabitsGoneAnswer =>
+      'Try restarting. If they don\'t return, contact support@intendedapp.com.';
+
+  @override
+  String get faqAppleName => 'Apple Sign-In isn\'t showing my name.';
+
+  @override
+  String get faqAppleNameAnswer =>
+      'Apple only sends your name the first time. Go to iPhone Settings → Apple ID → Password & Security → Apps Using Apple ID → Intended → Stop Using, then sign in again.';
+
+  @override
+  String get faqStillHaveQuestion => 'Still have a question?';
+
+  @override
+  String get faqContactButton => 'Email us';
+
+  @override
+  String get faqWidgetCompletion => 'Can I complete habits from my widget?';
+
+  @override
+  String get faqWidgetCompletionAnswer =>
+      'Yes! Tap any habit on your home screen widget to mark it done. It syncs when you next open Intended.';
+
+  @override
+  String get bloomGentleMornings1 => 'A full morning. That\'s something.';
+
+  @override
+  String get bloomGentleMornings2 => 'Every one, gently done.';
+
+  @override
+  String get bloomGentleMornings3 => 'Morning complete. You showed up softly.';
+
+  @override
+  String get bloomGentleMornings4 => 'All here. The morning was yours.';
+
+  @override
+  String get bloomGentleMornings5 => 'Gentle and done. That\'s enough.';
+
+  @override
+  String get bloomFindingCalm1 => 'All here. All done. Breathe.';
+
+  @override
+  String get bloomFindingCalm2 => 'Calm, found — one habit at a time.';
+
+  @override
+  String get bloomFindingCalm3 => 'Everything tended to. Be still now.';
+
+  @override
+  String get bloomFindingCalm4 => 'Done with care. The rest is yours.';
+
+  @override
+  String get bloomFindingCalm5 => 'You found your anchors today.';
+
+  @override
+  String get bloomGratitudeSelfLove1 => 'Every one — a small act of love.';
+
+  @override
+  String get bloomGratitudeSelfLove2 => 'All done. You showed up for yourself.';
+
+  @override
+  String get bloomGratitudeSelfLove3 => 'That was you, taking care of you.';
+
+  @override
+  String get bloomGratitudeSelfLove4 => 'Finished with kindness. Well done.';
+
+  @override
+  String get bloomGratitudeSelfLove5 => 'All of it, for you. That matters.';
+
+  @override
+  String get bloomWindingDown1 => 'The evening is yours now. Rest.';
+
+  @override
+  String get bloomWindingDown2 => 'All wound down. Let the night come.';
+
+  @override
+  String get bloomWindingDown3 => 'Done softly. Tomorrow can wait.';
+
+  @override
+  String get bloomWindingDown4 => 'Everything settled. You did enough.';
+
+  @override
+  String get bloomWindingDown5 => 'Gently closed. Sleep well.';
+
+  @override
+  String get bloomYourOwnWay1 => 'You showed up for all of it today.';
+
+  @override
+  String get bloomYourOwnWay2 => 'All done, your way. That\'s what counts.';
+
+  @override
+  String get bloomYourOwnWay3 => 'Every one, on your terms.';
+
+  @override
+  String get bloomYourOwnWay4 => 'Finished. No one else needed to see this.';
+
+  @override
+  String get bloomYourOwnWay5 => 'Quietly complete. That\'s yours to keep.';
+
+  @override
+  String get notifPathGentleMornings1 =>
+      'Good morning. No rush — what feels right today?';
+
+  @override
+  String get notifPathGentleMornings2 =>
+      'A new morning, a gentle start. You\'ve got this.';
+
+  @override
+  String get notifPathGentleMornings3 =>
+      'The morning is yours. Begin however feels right.';
+
+  @override
+  String get notifPathGentleMornings4 =>
+      'Mornings don\'t need to be perfect. Just present.';
+
+  @override
+  String get notifPathGentleMornings5 =>
+      'Rise gently. One small thing is enough today.';
+
+  @override
+  String get notifPathGentleMornings6 =>
+      'Your morning ritual is waiting. No pressure, just possibility.';
+
+  @override
+  String get notifPathFindingCalm1 =>
+      'How are you, really? Take a moment to check in.';
+
+  @override
+  String get notifPathFindingCalm2 =>
+      'One calm breath can shift the whole day. You know this.';
+
+  @override
+  String get notifPathFindingCalm3 =>
+      'Your anchors are here when the noise gets loud.';
+
+  @override
+  String get notifPathFindingCalm4 =>
+      'Stillness doesn\'t need to be earned. It\'s already yours.';
+
+  @override
+  String get notifPathFindingCalm5 =>
+      'A gentle pause. That\'s all today needs from you.';
+
+  @override
+  String get notifPathFindingCalm6 =>
+      'You don\'t have to fix anything right now. Just be here.';
+
+  @override
+  String get notifPathGratitudeSelfLove1 =>
+      'You deserve kindness today — especially from yourself.';
+
+  @override
+  String get notifPathGratitudeSelfLove2 =>
+      'What\'s one thing you\'re grateful for right now?';
+
+  @override
+  String get notifPathGratitudeSelfLove3 =>
+      'You\'ve already done enough to deserve gentleness today.';
+
+  @override
+  String get notifPathGratitudeSelfLove4 =>
+      'A kind thought for yourself is a habit worth keeping.';
+
+  @override
+  String get notifPathGratitudeSelfLove5 =>
+      'Notice something good about today. It\'s there, even if small.';
+
+  @override
+  String get notifPathGratitudeSelfLove6 =>
+      'You\'re worthy of the care you give others.';
+
+  @override
+  String get notifPathWindingDown1 =>
+      'The day is almost done. Let it go gently.';
+
+  @override
+  String get notifPathWindingDown2 =>
+      'Time to unwind. You carried enough today.';
+
+  @override
+  String get notifPathWindingDown3 =>
+      'Evening is for letting go, not catching up.';
+
+  @override
+  String get notifPathWindingDown4 =>
+      'You showed up today. That\'s worth settling into.';
+
+  @override
+  String get notifPathWindingDown5 => 'The night is yours. Rest without guilt.';
+
+  @override
+  String get notifPathWindingDown6 => 'Slow down. Tomorrow will wait for you.';
+
+  @override
+  String get notifPathYourOwnWay1 =>
+      'Your practice, your pace. What feels right today?';
+
+  @override
+  String get notifPathYourOwnWay2 =>
+      'You know what you need. We\'re just here to remind you.';
+
+  @override
+  String get notifPathYourOwnWay3 =>
+      'Check in when you\'re ready. No schedule, no pressure.';
+
+  @override
+  String get notifPathYourOwnWay4 =>
+      'Your path is your own. Show up however you want.';
+
+  @override
+  String get notifPathYourOwnWay5 =>
+      'One intention. That\'s all. The rest is up to you.';
+
+  @override
+  String get notifPathYourOwnWay6 =>
+      'You built this practice. Trust where it takes you.';
+
+  @override
+  String get warmthPathGentleMornings1 =>
+      'Not every morning needs to be a fresh start. Some just need quiet.';
+
+  @override
+  String get warmthPathGentleMornings2 =>
+      'Even mornings have slow days. That\'s allowed.';
+
+  @override
+  String get warmthPathGentleMornings3 =>
+      'Your morning is still yours, even when you skip this.';
+
+  @override
+  String get warmthPathGentleMornings4 =>
+      'Tomorrow morning will come gently. It always does.';
+
+  @override
+  String get warmthPathGentleMornings5 =>
+      'Rest now. The sunrise doesn\'t keep score.';
+
+  @override
+  String get warmthPathGentleMornings6 =>
+      'A quiet morning is still a morning well spent.';
+
+  @override
+  String get warmthPathFindingCalm1 =>
+      'Skipping can be its own kind of calm. Let it be.';
+
+  @override
+  String get warmthPathFindingCalm2 =>
+      'You don\'t need to find calm today. It will find you.';
+
+  @override
+  String get warmthPathFindingCalm3 =>
+      'Sometimes the most calming thing is letting yourself off the hook.';
+
+  @override
+  String get warmthPathFindingCalm4 =>
+      'Stillness counts, even when nothing gets checked off.';
+
+  @override
+  String get warmthPathFindingCalm5 =>
+      'Peace isn\'t earned. It\'s always available to you.';
+
+  @override
+  String get warmthPathFindingCalm6 =>
+      'Not doing is also a form of being present.';
+
+  @override
+  String get warmthPathGratitudeSelfLove1 =>
+      'Being kind to yourself includes saying \'not today.\'';
+
+  @override
+  String get warmthPathGratitudeSelfLove2 =>
+      'Self-love looks like this too — no guilt, just grace.';
+
+  @override
+  String get warmthPathGratitudeSelfLove3 =>
+      'You don\'t need to perform self-care to practice it.';
+
+  @override
+  String get warmthPathGratitudeSelfLove4 =>
+      'Forgiving yourself for skipping is the habit that matters most.';
+
+  @override
+  String get warmthPathGratitudeSelfLove5 =>
+      'Gentleness isn\'t just for good days. It\'s for these days too.';
+
+  @override
+  String get warmthPathGratitudeSelfLove6 =>
+      'You\'re still worthy of warmth, even when you rest.';
+
+  @override
+  String get warmthPathWindingDown1 =>
+      'Tonight, just rest. That\'s the whole plan.';
+
+  @override
+  String get warmthPathWindingDown2 =>
+      'You don\'t need to wind down perfectly. Just stop.';
+
+  @override
+  String get warmthPathWindingDown3 => 'Let the day go. You held enough.';
+
+  @override
+  String get warmthPathWindingDown4 =>
+      'Some evenings are just for existing. This is one of them.';
+
+  @override
+  String get warmthPathWindingDown5 =>
+      'The night doesn\'t need a routine. It just needs you to let go.';
+
+  @override
+  String get warmthPathWindingDown6 =>
+      'Sleep well. Tomorrow is already gentler than you think.';
+
+  @override
+  String get warmthPathYourOwnWay1 => 'Your own way includes rest. Always has.';
+
+  @override
+  String get warmthPathYourOwnWay2 =>
+      'Skipping is part of the rhythm you\'re building.';
+
+  @override
+  String get warmthPathYourOwnWay3 =>
+      'You chose this path. You also get to pause on it.';
+
+  @override
+  String get warmthPathYourOwnWay4 =>
+      'No one\'s keeping score. Especially not us.';
+
+  @override
+  String get warmthPathYourOwnWay5 =>
+      'Trust yourself. You\'ll come back when it\'s time.';
+
+  @override
+  String get warmthPathYourOwnWay6 => 'Your pace. Your rules. Always.';
+
+  @override
+  String get reflectionPathGentleMorningsIntro =>
+      'Another week of gentle mornings — or at least trying for them.';
+
+  @override
+  String get reflectionPathFindingCalmIntro =>
+      'Another week of finding your anchors.';
+
+  @override
+  String get reflectionPathGratitudeSelfLoveIntro =>
+      'Another week of building warmth with yourself.';
+
+  @override
+  String get reflectionPathWindingDownIntro =>
+      'Another week of winding down, your way.';
+
+  @override
+  String get reflectionPathYourOwnWayIntro => 'Another week on your own terms.';
+
+  @override
+  String get reflectionPathGentleMorningsQuiet =>
+      'A quiet week for mornings. Some weeks are for sleeping in.';
+
+  @override
+  String get reflectionPathFindingCalmQuiet =>
+      'A quiet week. Maybe the calm found you in other ways.';
+
+  @override
+  String get reflectionPathGratitudeSelfLoveQuiet =>
+      'A quiet week. Resting is its own act of self-love.';
+
+  @override
+  String get reflectionPathWindingDownQuiet =>
+      'A quiet week. Sometimes the best evening ritual is doing nothing at all.';
+
+  @override
+  String get reflectionPathYourOwnWayQuiet =>
+      'Quiet week. Your path includes pauses too.';
+
+  @override
+  String get monthlyReflectionTitle => 'Your month';
+
+  @override
+  String get monthlyReflectionSectionOverview => 'THIS MONTH';
+
+  @override
+  String get monthlyReflectionSectionTrends => 'TRENDS';
+
+  @override
+  String get monthlyReflectionSectionGrowth => 'GROWTH';
+
+  @override
+  String monthlyReflectionMonthRange(String month, int year) {
+    return '$month $year';
+  }
+
+  @override
+  String monthlyReflectionOverview(int days, int total) {
+    return 'You showed up $days days out of $total this month.';
+  }
+
+  @override
+  String monthlyReflectionBestWeek(String weekRange, int days) {
+    return 'Your strongest week was $weekRange with $days active days.';
+  }
+
+  @override
+  String monthlyReflectionConsistentHabit(String habit) {
+    return '$habit was your most consistent habit this month.';
+  }
+
+  @override
+  String get monthlyReflectionGrowthUp =>
+      'This month was more active than last month. You\'re finding your rhythm.';
+
+  @override
+  String get monthlyReflectionGrowthSteady =>
+      'Steady month. You\'re maintaining what matters.';
+
+  @override
+  String get monthlyReflectionGrowthDown =>
+      'Quieter month than last. That\'s okay — some seasons are for resting.';
+
+  @override
+  String get monthlyReflectionFirstMonth =>
+      'Your first full month. Everything here is a beginning.';
+
+  @override
+  String get monthlyReflectionNoData =>
+      'Not enough data yet. Keep going — your monthly reflection will arrive soon.';
+
+  @override
+  String get monthlyReflectionUnlock => 'See my monthly insights';
+
+  @override
+  String get monthlyReflectionSectionNotice => 'SOMETHING TO NOTICE';
+
+  @override
+  String monthlyReflectionTopArea(String area) {
+    return 'You gravitated toward $area this month. That seems to matter to you right now.';
+  }
+
+  @override
+  String get adaptiveNotifReducedTitle => 'We\'re stepping back';
+
+  @override
+  String get adaptiveNotifReducedBody =>
+      'You\'ve been checking in regularly — we\'ll remind you less often.';
+
+  @override
+  String get adaptiveNotifReengageBody =>
+      'It\'s been a little while. Just a gentle hello.';
+
+  @override
+  String get adaptiveNotifSilentBody =>
+      'We noticed you\'ve been away. No pressure — we\'ll be here when you\'re ready.';
+
+  @override
+  String get a11yTabHabits => 'Habits';
+
+  @override
+  String get a11yTabProgress => 'Progress';
+
+  @override
+  String get a11yTabProfile => 'Profile';
+
+  @override
+  String a11yHabitCardDone(String habit) {
+    return '$habit, completed';
+  }
+
+  @override
+  String a11yHabitCardTodo(String habit) {
+    return '$habit, tap to complete';
+  }
+
+  @override
+  String a11yHabitCardPinned(String habit) {
+    return '$habit, pinned, tap to complete';
+  }
+
+  @override
+  String get a11yEditHabit => 'Edit habit';
+
+  @override
+  String get a11yDeleteHabit => 'Delete habit';
 }

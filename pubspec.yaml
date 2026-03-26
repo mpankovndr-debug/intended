@@ -39,6 +39,7 @@ dependencies:
   crypto: ^3.0.7
   flutter_slidable: ^4.0.3
   home_widget: ^0.7.0
+  in_app_review: ^2.0.9
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.3
@@ -59,6 +60,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/icons/
 
   fonts:
   - family: Sora

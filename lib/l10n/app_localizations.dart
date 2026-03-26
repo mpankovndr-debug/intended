@@ -236,6 +236,12 @@ abstract class AppLocalizations {
   /// **'What should we call you?'**
   String get onboardingNamePrompt;
 
+  /// No description provided for @onboardingLetsGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s get started'**
+  String get onboardingLetsGetStarted;
+
   /// No description provided for @onboardingSkipForNow.
   ///
   /// In en, this message translates to:
@@ -518,6 +524,18 @@ abstract class AppLocalizations {
   /// **'Based on {area1} & {area2}'**
   String habitRevealSubtitleTwoAreas(String area1, String area2);
 
+  /// No description provided for @habitRevealSubtitlePath.
+  ///
+  /// In en, this message translates to:
+  /// **'Here\'s what your {pathTitle} practice looks like.'**
+  String habitRevealSubtitlePath(String pathTitle);
+
+  /// No description provided for @habitRevealSubtitleOwnWay.
+  ///
+  /// In en, this message translates to:
+  /// **'Here\'s what your practice looks like.'**
+  String get habitRevealSubtitleOwnWay;
+
   /// No description provided for @habitRevealDescription.
   ///
   /// In en, this message translates to:
@@ -529,6 +547,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Let\'s begin'**
   String get habitRevealBegin;
+
+  /// No description provided for @focusAreasStartingPointsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ve picked some starting points for you'**
+  String get focusAreasStartingPointsTitle;
+
+  /// No description provided for @focusAreasStartingPointsSubtext.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on the intention path {pathTitle}. Add or remove areas anytime.'**
+  String focusAreasStartingPointsSubtext(String pathTitle);
 
   /// No description provided for @habitsHoldForOptions.
   ///
@@ -1994,6 +2024,36 @@ abstract class AppLocalizations {
   /// **'Check in with how your week felt. Your habits were there for you.'**
   String get notifWeeklyBody;
 
+  /// No description provided for @notifWeeklyPathGentleMornings.
+  ///
+  /// In en, this message translates to:
+  /// **'Your week of gentle mornings is ready to look back on.'**
+  String get notifWeeklyPathGentleMornings;
+
+  /// No description provided for @notifWeeklyPathFindingCalm.
+  ///
+  /// In en, this message translates to:
+  /// **'A week of finding calm. See how it unfolded.'**
+  String get notifWeeklyPathFindingCalm;
+
+  /// No description provided for @notifWeeklyPathGratitudeSelfLove.
+  ///
+  /// In en, this message translates to:
+  /// **'Your week of gratitude is waiting for you to reflect on.'**
+  String get notifWeeklyPathGratitudeSelfLove;
+
+  /// No description provided for @notifWeeklyPathWindingDown.
+  ///
+  /// In en, this message translates to:
+  /// **'A week of winding down. Take a moment to look back.'**
+  String get notifWeeklyPathWindingDown;
+
+  /// No description provided for @notifWeeklyPathYourOwnWay.
+  ///
+  /// In en, this message translates to:
+  /// **'Your week is ready to reflect on. See what showed up.'**
+  String get notifWeeklyPathYourOwnWay;
+
   /// No description provided for @notifDailyChannelName.
   ///
   /// In en, this message translates to:
@@ -2384,34 +2444,46 @@ abstract class AppLocalizations {
   /// **'Intended+ turns your daily practice into lasting self-knowledge.'**
   String get paywallDescription;
 
+  /// No description provided for @paywallCeilingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re building something good'**
+  String get paywallCeilingTitle;
+
+  /// No description provided for @paywallCeilingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Intended+ gives you room to grow. But the free version always has what you need.'**
+  String get paywallCeilingDescription;
+
   /// No description provided for @paywallFeature1.
   ///
   /// In en, this message translates to:
-  /// **'Weekly reflections that reveal your patterns over time'**
+  /// **'Monthly & weekly reflections — see how far you\'ve come'**
   String get paywallFeature1;
 
   /// No description provided for @paywallFeature2.
   ///
   /// In en, this message translates to:
-  /// **'Home screen widget to stay gently connected'**
+  /// **'A home screen widget that keeps your intentions close'**
   String get paywallFeature2;
 
   /// No description provided for @paywallFeature3.
   ///
   /// In en, this message translates to:
-  /// **'Curated packs: routines designed around how you actually live'**
+  /// **'10 beautiful themes & premium app icons — make it yours'**
   String get paywallFeature3;
 
   /// No description provided for @paywallFeature4.
   ///
   /// In en, this message translates to:
-  /// **'10 themes to match your mood — including dark mode'**
+  /// **'Shareable moment cards & curated routines designed for real life'**
   String get paywallFeature4;
 
   /// No description provided for @paywallFeature5.
   ///
   /// In en, this message translates to:
-  /// **'Unlimited habits, swaps, and focus areas — grow without limits'**
+  /// **'Unlimited habits, swaps, and focus areas — no ceiling on growth'**
   String get paywallFeature5;
 
   /// No description provided for @paywallMonthly.
@@ -2671,6 +2743,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 moment} other{{count} moments}}'**
   String profileMomentsCount(int count);
+
+  /// No description provided for @profileYourPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Your path'**
+  String get profileYourPath;
 
   /// No description provided for @profileSettings.
   ///
@@ -4597,6 +4675,1422 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'.'**
   String get legalDisclaimerSuffix;
+
+  /// No description provided for @pathGentleMorningsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle Mornings'**
+  String get pathGentleMorningsTitle;
+
+  /// No description provided for @pathGentleMorningsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your day with calm, not chaos'**
+  String get pathGentleMorningsSubtitle;
+
+  /// No description provided for @pathFindingCalmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding Calm'**
+  String get pathFindingCalmTitle;
+
+  /// No description provided for @pathFindingCalmSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Small daily anchors for stress and anxiety'**
+  String get pathFindingCalmSubtitle;
+
+  /// No description provided for @pathGratitudeSelfLoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gratitude & Self-Love'**
+  String get pathGratitudeSelfLoveTitle;
+
+  /// No description provided for @pathGratitudeSelfLoveSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Build a kinder relationship with yourself'**
+  String get pathGratitudeSelfLoveSubtitle;
+
+  /// No description provided for @pathWindingDownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Winding Down'**
+  String get pathWindingDownTitle;
+
+  /// No description provided for @pathWindingDownSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'End your day peacefully'**
+  String get pathWindingDownSubtitle;
+
+  /// No description provided for @pathYourOwnWayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Own Way'**
+  String get pathYourOwnWayTitle;
+
+  /// No description provided for @pathYourOwnWaySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'I know what I need — just give me the tools'**
+  String get pathYourOwnWaySubtitle;
+
+  /// No description provided for @intentionPathHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'What brings you here?'**
+  String get intentionPathHeadline;
+
+  /// No description provided for @intentionPathSubtext.
+  ///
+  /// In en, this message translates to:
+  /// **'This helps us set up your experience. You can always change it later.'**
+  String get intentionPathSubtext;
+
+  /// No description provided for @intentionPathUpdateFocusAreas.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your focus areas to match \"{pathName}\"?'**
+  String intentionPathUpdateFocusAreas(String pathName);
+
+  /// No description provided for @intentionPathUpdateYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, update focus areas'**
+  String get intentionPathUpdateYes;
+
+  /// No description provided for @intentionPathUpdateNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No, keep my current areas'**
+  String get intentionPathUpdateNo;
+
+  /// No description provided for @coachMarkFirstCompletionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first check-in'**
+  String get coachMarkFirstCompletionTitle;
+
+  /// No description provided for @coachMarkFirstCompletionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s it. That\'s the whole practice. Show up when you can, skip when you can\'t.'**
+  String get coachMarkFirstCompletionBody;
+
+  /// No description provided for @coachMarkPinningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This one\'s sticking'**
+  String get coachMarkPinningTitle;
+
+  /// No description provided for @coachMarkPinningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Long-press any habit to pin it to the top. Your anchors deserve the spotlight.'**
+  String get coachMarkPinningBody;
+
+  /// No description provided for @coachMarkWidgetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'See your intentions without opening the app'**
+  String get coachMarkWidgetTitle;
+
+  /// No description provided for @coachMarkWidgetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an Intended widget to your home or lock screen. A quiet reminder of what matters today.'**
+  String get coachMarkWidgetBody;
+
+  /// No description provided for @coachMarkWeeklyReflectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first reflection is here'**
+  String get coachMarkWeeklyReflectionTitle;
+
+  /// No description provided for @coachMarkWeeklyReflectionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every week, Intended looks back at your patterns — gently, never critically. Tap to see your week.'**
+  String get coachMarkWeeklyReflectionBody;
+
+  /// No description provided for @coachMarkSmartNotificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reminders learn from you'**
+  String get coachMarkSmartNotificationsTitle;
+
+  /// No description provided for @coachMarkSmartNotificationsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Intended adjusts when and how often it nudges you based on your rhythm. Check in a lot? We step back. Been away? Just one gentle note.'**
+  String get coachMarkSmartNotificationsBody;
+
+  /// No description provided for @coachMarkMonthlyReflectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A month of showing up'**
+  String get coachMarkMonthlyReflectionTitle;
+
+  /// No description provided for @coachMarkMonthlyReflectionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your monthly reflection finds patterns across weeks that you might not notice day-to-day. It\'s here whenever you want it.'**
+  String get coachMarkMonthlyReflectionBody;
+
+  /// No description provided for @coachMarkReflectionShareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Worth sharing?'**
+  String get coachMarkReflectionShareTitle;
+
+  /// No description provided for @coachMarkReflectionShareBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the share button to turn this into a card you can send to someone or post. Your data stays private — only the summary is shared.'**
+  String get coachMarkReflectionShareBody;
+
+  /// No description provided for @reviewPromptMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoying Intended? A quick rating helps others find a gentler way to build habits.'**
+  String get reviewPromptMessage;
+
+  /// No description provided for @reviewPromptRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate now'**
+  String get reviewPromptRate;
+
+  /// No description provided for @reviewPromptNotYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet'**
+  String get reviewPromptNotYet;
+
+  /// No description provided for @upgradeNudgeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your practice is growing. Intended+ gives you room to grow with it.'**
+  String get upgradeNudgeBody;
+
+  /// No description provided for @upgradeNudgeLearnMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn more'**
+  String get upgradeNudgeLearnMore;
+
+  /// No description provided for @notifWeeklyDynamic0.
+  ///
+  /// In en, this message translates to:
+  /// **'Your weekly reflection is here. Every week is a fresh start.'**
+  String get notifWeeklyDynamic0;
+
+  /// No description provided for @notifWeeklyDynamic1.
+  ///
+  /// In en, this message translates to:
+  /// **'Your weekly reflection is here — you showed up for yourself this week.'**
+  String get notifWeeklyDynamic1;
+
+  /// No description provided for @notifWeeklyDynamicN.
+  ///
+  /// In en, this message translates to:
+  /// **'Your weekly reflection is here — you showed up {count} times for yourself this week.'**
+  String notifWeeklyDynamicN(int count);
+
+  /// No description provided for @faqSectionGettingStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting Started'**
+  String get faqSectionGettingStarted;
+
+  /// No description provided for @faqWhatIsIntended.
+  ///
+  /// In en, this message translates to:
+  /// **'What is Intended?'**
+  String get faqWhatIsIntended;
+
+  /// No description provided for @faqWhatIsIntendedAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Intended is a gentle habit app for iOS. It helps you build daily habits without streaks, guilt, or pressure. There\'s no counter that resets when you miss a day — just a calm space to check in with your intentions whenever you\'re ready.'**
+  String get faqWhatIsIntendedAnswer;
+
+  /// No description provided for @faqWhatIsIntentionPath.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s an Intention Path?'**
+  String get faqWhatIsIntentionPath;
+
+  /// No description provided for @faqWhatIsIntentionPathAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'When you first open Intended, you choose a path based on what brings you here — like Finding Calm or Gentle Mornings. Your path shapes your default habits, the tone of your reminders, and your reflection questions. You can change it anytime in your profile.'**
+  String get faqWhatIsIntentionPathAnswer;
+
+  /// No description provided for @faqChangeIntentionPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I change my Intention Path?'**
+  String get faqChangeIntentionPath;
+
+  /// No description provided for @faqChangeIntentionPathAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, anytime. Go to your Profile, tap your Intention Path card, and pick a new one. Your history and check-ins stay exactly as they are.'**
+  String get faqChangeIntentionPathAnswer;
+
+  /// No description provided for @faqWhatAreFocusAreas.
+  ///
+  /// In en, this message translates to:
+  /// **'What are Focus Areas?'**
+  String get faqWhatAreFocusAreas;
+
+  /// No description provided for @faqWhatAreFocusAreasAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus areas are categories of habits — like Health, Mood, or Self-care. Each area comes with curated habits. Your path pre-selects a couple, but you can add or remove them anytime.'**
+  String get faqWhatAreFocusAreasAnswer;
+
+  /// No description provided for @faqHowIsDifferent.
+  ///
+  /// In en, this message translates to:
+  /// **'How is Intended different?'**
+  String get faqHowIsDifferent;
+
+  /// No description provided for @faqHowIsDifferentAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Most habit apps use streaks and gamification. Intended takes the opposite approach. No streaks to break, no leaderboards, no guilt. Your progress never resets.'**
+  String get faqHowIsDifferentAnswer;
+
+  /// No description provided for @faqSectionDailyHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Habits'**
+  String get faqSectionDailyHabits;
+
+  /// No description provided for @faqHowToCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I check in?'**
+  String get faqHowToCheckIn;
+
+  /// No description provided for @faqHowToCheckInAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap any habit card on your home screen. A single tap is all it takes.'**
+  String get faqHowToCheckInAnswer;
+
+  /// No description provided for @faqMissedDay.
+  ///
+  /// In en, this message translates to:
+  /// **'What if I miss a day?'**
+  String get faqMissedDay;
+
+  /// No description provided for @faqMissedDayAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing happens. No streaks break, no counters reset. Tomorrow is a new day.'**
+  String get faqMissedDayAnswer;
+
+  /// No description provided for @faqHowToPin.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I pin a habit?'**
+  String get faqHowToPin;
+
+  /// No description provided for @faqHowToPinAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Long-press any habit card to pin it to the top. You can have one pinned habit at a time.'**
+  String get faqHowToPinAnswer;
+
+  /// No description provided for @faqCustomHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I add custom habits?'**
+  String get faqCustomHabits;
+
+  /// No description provided for @faqCustomHabitsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! Tap the + button. Free users can have up to 2 custom habits. Intended+ gives you unlimited.'**
+  String get faqCustomHabitsAnswer;
+
+  /// No description provided for @faqSwapHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I swap a habit?'**
+  String get faqSwapHabit;
+
+  /// No description provided for @faqSwapHabitAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the swap icon on any habit card. Free users get 2 swaps per month.'**
+  String get faqSwapHabitAnswer;
+
+  /// No description provided for @faqRefreshes.
+  ///
+  /// In en, this message translates to:
+  /// **'What are refreshes?'**
+  String get faqRefreshes;
+
+  /// No description provided for @faqRefreshesAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Refreshing gives you new random habits from your focus areas. 3 per day on the free plan.'**
+  String get faqRefreshesAnswer;
+
+  /// No description provided for @faqSectionReflections.
+  ///
+  /// In en, this message translates to:
+  /// **'Reflections'**
+  String get faqSectionReflections;
+
+  /// No description provided for @faqWeeklyReflection.
+  ///
+  /// In en, this message translates to:
+  /// **'What is a Weekly Reflection?'**
+  String get faqWeeklyReflection;
+
+  /// No description provided for @faqWeeklyReflectionAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Every week, Intended generates a reflection card based on your check-in patterns — which habits stuck, your most active days, and gentle observations. Never judgments.'**
+  String get faqWeeklyReflectionAnswer;
+
+  /// No description provided for @faqMonthlyReflection.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s the Monthly Reflection?'**
+  String get faqMonthlyReflection;
+
+  /// No description provided for @faqMonthlyReflectionAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'After 30 days, a monthly reflection looks across weeks for patterns you might not notice day-to-day. Available with Intended+.'**
+  String get faqMonthlyReflectionAnswer;
+
+  /// No description provided for @faqShareReflection.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I share my reflection?'**
+  String get faqShareReflection;
+
+  /// No description provided for @faqShareReflectionAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! Tap the share button to turn it into a beautiful card for social media.'**
+  String get faqShareReflectionAnswer;
+
+  /// No description provided for @faqNoReflection.
+  ///
+  /// In en, this message translates to:
+  /// **'Why don\'t I see a reflection?'**
+  String get faqNoReflection;
+
+  /// No description provided for @faqNoReflectionAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly reflections appear after 7 days. Monthly after 30. The more you check in, the richer they become.'**
+  String get faqNoReflectionAnswer;
+
+  /// No description provided for @faqSectionNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get faqSectionNotifications;
+
+  /// No description provided for @faqHowNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'How do notifications work?'**
+  String get faqHowNotifications;
+
+  /// No description provided for @faqHowNotificationsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders adapt to your rhythm. Check in regularly and they step back. Been away? One gentle nudge — never seven.'**
+  String get faqHowNotificationsAnswer;
+
+  /// No description provided for @faqChangeTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I change the time?'**
+  String get faqChangeTime;
+
+  /// No description provided for @faqChangeTimeAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes. Profile → Notification Settings.'**
+  String get faqChangeTimeAnswer;
+
+  /// No description provided for @faqPathNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Do notifications match my path?'**
+  String get faqPathNotifications;
+
+  /// No description provided for @faqPathNotificationsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes. Someone on Finding Calm sees different wording than someone on Gentle Mornings.'**
+  String get faqPathNotificationsAnswer;
+
+  /// No description provided for @faqSectionWidgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Widgets'**
+  String get faqSectionWidgets;
+
+  /// No description provided for @faqAddWidget.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I add a widget?'**
+  String get faqAddWidget;
+
+  /// No description provided for @faqAddWidgetAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Long-press your home screen, tap +, search for Intended. You can also add lock screen widgets through iOS Settings.'**
+  String get faqAddWidgetAnswer;
+
+  /// No description provided for @faqWidgetNotUpdating.
+  ///
+  /// In en, this message translates to:
+  /// **'Why isn\'t my widget updating?'**
+  String get faqWidgetNotUpdating;
+
+  /// No description provided for @faqWidgetNotUpdatingAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'iOS controls refresh timing. Open the app briefly to trigger it. Check that Background App Refresh is enabled for Intended.'**
+  String get faqWidgetNotUpdatingAnswer;
+
+  /// No description provided for @faqSectionPricing.
+  ///
+  /// In en, this message translates to:
+  /// **'Intended+ & Pricing'**
+  String get faqSectionPricing;
+
+  /// No description provided for @faqWhatIsPlus.
+  ///
+  /// In en, this message translates to:
+  /// **'What is Intended+?'**
+  String get faqWhatIsPlus;
+
+  /// No description provided for @faqWhatIsPlusAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited custom habits, swaps, refreshes, library access, focus area changes, all themes, monthly reflections, and deeper insights.'**
+  String get faqWhatIsPlusAnswer;
+
+  /// No description provided for @faqPricing.
+  ///
+  /// In en, this message translates to:
+  /// **'How much does it cost?'**
+  String get faqPricing;
+
+  /// No description provided for @faqPricingAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly: €6.99. Yearly: €49.99 (5 months free). Lifetime: €89.99. All include a 7-day free trial.'**
+  String get faqPricingAnswer;
+
+  /// No description provided for @faqBoost.
+  ///
+  /// In en, this message translates to:
+  /// **'What is Intended Boost?'**
+  String get faqBoost;
+
+  /// No description provided for @faqBoostAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'A one-time €0.99 purchase. Extra themes, +1 custom habit, milestone cards, +1 focus area, 5 swaps per month.'**
+  String get faqBoostAnswer;
+
+  /// No description provided for @faqFreeVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I use it for free?'**
+  String get faqFreeVersion;
+
+  /// No description provided for @faqFreeVersionAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes. Free includes intention paths, 2 custom habits, 2 focus areas, weekly reflections, smart notifications, and widgets.'**
+  String get faqFreeVersionAnswer;
+
+  /// No description provided for @faqRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I restore my purchase?'**
+  String get faqRestore;
+
+  /// No description provided for @faqRestoreAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile → Restore Purchases.'**
+  String get faqRestoreAnswer;
+
+  /// No description provided for @faqCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I cancel?'**
+  String get faqCancel;
+
+  /// No description provided for @faqCancelAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'iPhone Settings → your name → Subscriptions → Intended → Cancel.'**
+  String get faqCancelAnswer;
+
+  /// No description provided for @faqSectionPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get faqSectionPrivacy;
+
+  /// No description provided for @faqDataStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'Where is my data stored?'**
+  String get faqDataStorage;
+
+  /// No description provided for @faqDataStorageAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'All data is stored locally on your device. Nothing is uploaded to any server.'**
+  String get faqDataStorageAnswer;
+
+  /// No description provided for @faqDataSelling.
+  ///
+  /// In en, this message translates to:
+  /// **'Does Intended sell my data?'**
+  String get faqDataSelling;
+
+  /// No description provided for @faqDataSellingAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'No. We use anonymous crash reports to fix bugs. Never your habit data.'**
+  String get faqDataSellingAnswer;
+
+  /// No description provided for @faqDeleteApp.
+  ///
+  /// In en, this message translates to:
+  /// **'What if I delete the app?'**
+  String get faqDeleteApp;
+
+  /// No description provided for @faqDeleteAppAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Data is local, so deleting removes everything. Subscriptions can be restored through the App Store.'**
+  String get faqDeleteAppAnswer;
+
+  /// No description provided for @faqSectionTroubleshooting.
+  ///
+  /// In en, this message translates to:
+  /// **'Troubleshooting'**
+  String get faqSectionTroubleshooting;
+
+  /// No description provided for @faqCrash.
+  ///
+  /// In en, this message translates to:
+  /// **'The app crashed.'**
+  String get faqCrash;
+
+  /// No description provided for @faqCrashAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Try closing and reopening. Make sure you have the latest version.'**
+  String get faqCrashAnswer;
+
+  /// No description provided for @faqHabitsGone.
+  ///
+  /// In en, this message translates to:
+  /// **'My habits disappeared.'**
+  String get faqHabitsGone;
+
+  /// No description provided for @faqHabitsGoneAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Try restarting. If they don\'t return, contact support@intendedapp.com.'**
+  String get faqHabitsGoneAnswer;
+
+  /// No description provided for @faqAppleName.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Sign-In isn\'t showing my name.'**
+  String get faqAppleName;
+
+  /// No description provided for @faqAppleNameAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple only sends your name the first time. Go to iPhone Settings → Apple ID → Password & Security → Apps Using Apple ID → Intended → Stop Using, then sign in again.'**
+  String get faqAppleNameAnswer;
+
+  /// No description provided for @faqStillHaveQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Still have a question?'**
+  String get faqStillHaveQuestion;
+
+  /// No description provided for @faqContactButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Email us'**
+  String get faqContactButton;
+
+  /// No description provided for @faqWidgetCompletion.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I complete habits from my widget?'**
+  String get faqWidgetCompletion;
+
+  /// No description provided for @faqWidgetCompletionAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! Tap any habit on your home screen widget to mark it done. It syncs when you next open Intended.'**
+  String get faqWidgetCompletionAnswer;
+
+  /// No description provided for @bloomGentleMornings1.
+  ///
+  /// In en, this message translates to:
+  /// **'A full morning. That\'s something.'**
+  String get bloomGentleMornings1;
+
+  /// No description provided for @bloomGentleMornings2.
+  ///
+  /// In en, this message translates to:
+  /// **'Every one, gently done.'**
+  String get bloomGentleMornings2;
+
+  /// No description provided for @bloomGentleMornings3.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning complete. You showed up softly.'**
+  String get bloomGentleMornings3;
+
+  /// No description provided for @bloomGentleMornings4.
+  ///
+  /// In en, this message translates to:
+  /// **'All here. The morning was yours.'**
+  String get bloomGentleMornings4;
+
+  /// No description provided for @bloomGentleMornings5.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle and done. That\'s enough.'**
+  String get bloomGentleMornings5;
+
+  /// No description provided for @bloomFindingCalm1.
+  ///
+  /// In en, this message translates to:
+  /// **'All here. All done. Breathe.'**
+  String get bloomFindingCalm1;
+
+  /// No description provided for @bloomFindingCalm2.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm, found — one habit at a time.'**
+  String get bloomFindingCalm2;
+
+  /// No description provided for @bloomFindingCalm3.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything tended to. Be still now.'**
+  String get bloomFindingCalm3;
+
+  /// No description provided for @bloomFindingCalm4.
+  ///
+  /// In en, this message translates to:
+  /// **'Done with care. The rest is yours.'**
+  String get bloomFindingCalm4;
+
+  /// No description provided for @bloomFindingCalm5.
+  ///
+  /// In en, this message translates to:
+  /// **'You found your anchors today.'**
+  String get bloomFindingCalm5;
+
+  /// No description provided for @bloomGratitudeSelfLove1.
+  ///
+  /// In en, this message translates to:
+  /// **'Every one — a small act of love.'**
+  String get bloomGratitudeSelfLove1;
+
+  /// No description provided for @bloomGratitudeSelfLove2.
+  ///
+  /// In en, this message translates to:
+  /// **'All done. You showed up for yourself.'**
+  String get bloomGratitudeSelfLove2;
+
+  /// No description provided for @bloomGratitudeSelfLove3.
+  ///
+  /// In en, this message translates to:
+  /// **'That was you, taking care of you.'**
+  String get bloomGratitudeSelfLove3;
+
+  /// No description provided for @bloomGratitudeSelfLove4.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished with kindness. Well done.'**
+  String get bloomGratitudeSelfLove4;
+
+  /// No description provided for @bloomGratitudeSelfLove5.
+  ///
+  /// In en, this message translates to:
+  /// **'All of it, for you. That matters.'**
+  String get bloomGratitudeSelfLove5;
+
+  /// No description provided for @bloomWindingDown1.
+  ///
+  /// In en, this message translates to:
+  /// **'The evening is yours now. Rest.'**
+  String get bloomWindingDown1;
+
+  /// No description provided for @bloomWindingDown2.
+  ///
+  /// In en, this message translates to:
+  /// **'All wound down. Let the night come.'**
+  String get bloomWindingDown2;
+
+  /// No description provided for @bloomWindingDown3.
+  ///
+  /// In en, this message translates to:
+  /// **'Done softly. Tomorrow can wait.'**
+  String get bloomWindingDown3;
+
+  /// No description provided for @bloomWindingDown4.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything settled. You did enough.'**
+  String get bloomWindingDown4;
+
+  /// No description provided for @bloomWindingDown5.
+  ///
+  /// In en, this message translates to:
+  /// **'Gently closed. Sleep well.'**
+  String get bloomWindingDown5;
+
+  /// No description provided for @bloomYourOwnWay1.
+  ///
+  /// In en, this message translates to:
+  /// **'You showed up for all of it today.'**
+  String get bloomYourOwnWay1;
+
+  /// No description provided for @bloomYourOwnWay2.
+  ///
+  /// In en, this message translates to:
+  /// **'All done, your way. That\'s what counts.'**
+  String get bloomYourOwnWay2;
+
+  /// No description provided for @bloomYourOwnWay3.
+  ///
+  /// In en, this message translates to:
+  /// **'Every one, on your terms.'**
+  String get bloomYourOwnWay3;
+
+  /// No description provided for @bloomYourOwnWay4.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished. No one else needed to see this.'**
+  String get bloomYourOwnWay4;
+
+  /// No description provided for @bloomYourOwnWay5.
+  ///
+  /// In en, this message translates to:
+  /// **'Quietly complete. That\'s yours to keep.'**
+  String get bloomYourOwnWay5;
+
+  /// No description provided for @notifPathGentleMornings1.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning. No rush — what feels right today?'**
+  String get notifPathGentleMornings1;
+
+  /// No description provided for @notifPathGentleMornings2.
+  ///
+  /// In en, this message translates to:
+  /// **'A new morning, a gentle start. You\'ve got this.'**
+  String get notifPathGentleMornings2;
+
+  /// No description provided for @notifPathGentleMornings3.
+  ///
+  /// In en, this message translates to:
+  /// **'The morning is yours. Begin however feels right.'**
+  String get notifPathGentleMornings3;
+
+  /// No description provided for @notifPathGentleMornings4.
+  ///
+  /// In en, this message translates to:
+  /// **'Mornings don\'t need to be perfect. Just present.'**
+  String get notifPathGentleMornings4;
+
+  /// No description provided for @notifPathGentleMornings5.
+  ///
+  /// In en, this message translates to:
+  /// **'Rise gently. One small thing is enough today.'**
+  String get notifPathGentleMornings5;
+
+  /// No description provided for @notifPathGentleMornings6.
+  ///
+  /// In en, this message translates to:
+  /// **'Your morning ritual is waiting. No pressure, just possibility.'**
+  String get notifPathGentleMornings6;
+
+  /// No description provided for @notifPathFindingCalm1.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you, really? Take a moment to check in.'**
+  String get notifPathFindingCalm1;
+
+  /// No description provided for @notifPathFindingCalm2.
+  ///
+  /// In en, this message translates to:
+  /// **'One calm breath can shift the whole day. You know this.'**
+  String get notifPathFindingCalm2;
+
+  /// No description provided for @notifPathFindingCalm3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your anchors are here when the noise gets loud.'**
+  String get notifPathFindingCalm3;
+
+  /// No description provided for @notifPathFindingCalm4.
+  ///
+  /// In en, this message translates to:
+  /// **'Stillness doesn\'t need to be earned. It\'s already yours.'**
+  String get notifPathFindingCalm4;
+
+  /// No description provided for @notifPathFindingCalm5.
+  ///
+  /// In en, this message translates to:
+  /// **'A gentle pause. That\'s all today needs from you.'**
+  String get notifPathFindingCalm5;
+
+  /// No description provided for @notifPathFindingCalm6.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have to fix anything right now. Just be here.'**
+  String get notifPathFindingCalm6;
+
+  /// No description provided for @notifPathGratitudeSelfLove1.
+  ///
+  /// In en, this message translates to:
+  /// **'You deserve kindness today — especially from yourself.'**
+  String get notifPathGratitudeSelfLove1;
+
+  /// No description provided for @notifPathGratitudeSelfLove2.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s one thing you\'re grateful for right now?'**
+  String get notifPathGratitudeSelfLove2;
+
+  /// No description provided for @notifPathGratitudeSelfLove3.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve already done enough to deserve gentleness today.'**
+  String get notifPathGratitudeSelfLove3;
+
+  /// No description provided for @notifPathGratitudeSelfLove4.
+  ///
+  /// In en, this message translates to:
+  /// **'A kind thought for yourself is a habit worth keeping.'**
+  String get notifPathGratitudeSelfLove4;
+
+  /// No description provided for @notifPathGratitudeSelfLove5.
+  ///
+  /// In en, this message translates to:
+  /// **'Notice something good about today. It\'s there, even if small.'**
+  String get notifPathGratitudeSelfLove5;
+
+  /// No description provided for @notifPathGratitudeSelfLove6.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re worthy of the care you give others.'**
+  String get notifPathGratitudeSelfLove6;
+
+  /// No description provided for @notifPathWindingDown1.
+  ///
+  /// In en, this message translates to:
+  /// **'The day is almost done. Let it go gently.'**
+  String get notifPathWindingDown1;
+
+  /// No description provided for @notifPathWindingDown2.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to unwind. You carried enough today.'**
+  String get notifPathWindingDown2;
+
+  /// No description provided for @notifPathWindingDown3.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening is for letting go, not catching up.'**
+  String get notifPathWindingDown3;
+
+  /// No description provided for @notifPathWindingDown4.
+  ///
+  /// In en, this message translates to:
+  /// **'You showed up today. That\'s worth settling into.'**
+  String get notifPathWindingDown4;
+
+  /// No description provided for @notifPathWindingDown5.
+  ///
+  /// In en, this message translates to:
+  /// **'The night is yours. Rest without guilt.'**
+  String get notifPathWindingDown5;
+
+  /// No description provided for @notifPathWindingDown6.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow down. Tomorrow will wait for you.'**
+  String get notifPathWindingDown6;
+
+  /// No description provided for @notifPathYourOwnWay1.
+  ///
+  /// In en, this message translates to:
+  /// **'Your practice, your pace. What feels right today?'**
+  String get notifPathYourOwnWay1;
+
+  /// No description provided for @notifPathYourOwnWay2.
+  ///
+  /// In en, this message translates to:
+  /// **'You know what you need. We\'re just here to remind you.'**
+  String get notifPathYourOwnWay2;
+
+  /// No description provided for @notifPathYourOwnWay3.
+  ///
+  /// In en, this message translates to:
+  /// **'Check in when you\'re ready. No schedule, no pressure.'**
+  String get notifPathYourOwnWay3;
+
+  /// No description provided for @notifPathYourOwnWay4.
+  ///
+  /// In en, this message translates to:
+  /// **'Your path is your own. Show up however you want.'**
+  String get notifPathYourOwnWay4;
+
+  /// No description provided for @notifPathYourOwnWay5.
+  ///
+  /// In en, this message translates to:
+  /// **'One intention. That\'s all. The rest is up to you.'**
+  String get notifPathYourOwnWay5;
+
+  /// No description provided for @notifPathYourOwnWay6.
+  ///
+  /// In en, this message translates to:
+  /// **'You built this practice. Trust where it takes you.'**
+  String get notifPathYourOwnWay6;
+
+  /// No description provided for @warmthPathGentleMornings1.
+  ///
+  /// In en, this message translates to:
+  /// **'Not every morning needs to be a fresh start. Some just need quiet.'**
+  String get warmthPathGentleMornings1;
+
+  /// No description provided for @warmthPathGentleMornings2.
+  ///
+  /// In en, this message translates to:
+  /// **'Even mornings have slow days. That\'s allowed.'**
+  String get warmthPathGentleMornings2;
+
+  /// No description provided for @warmthPathGentleMornings3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your morning is still yours, even when you skip this.'**
+  String get warmthPathGentleMornings3;
+
+  /// No description provided for @warmthPathGentleMornings4.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow morning will come gently. It always does.'**
+  String get warmthPathGentleMornings4;
+
+  /// No description provided for @warmthPathGentleMornings5.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest now. The sunrise doesn\'t keep score.'**
+  String get warmthPathGentleMornings5;
+
+  /// No description provided for @warmthPathGentleMornings6.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet morning is still a morning well spent.'**
+  String get warmthPathGentleMornings6;
+
+  /// No description provided for @warmthPathFindingCalm1.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipping can be its own kind of calm. Let it be.'**
+  String get warmthPathFindingCalm1;
+
+  /// No description provided for @warmthPathFindingCalm2.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t need to find calm today. It will find you.'**
+  String get warmthPathFindingCalm2;
+
+  /// No description provided for @warmthPathFindingCalm3.
+  ///
+  /// In en, this message translates to:
+  /// **'Sometimes the most calming thing is letting yourself off the hook.'**
+  String get warmthPathFindingCalm3;
+
+  /// No description provided for @warmthPathFindingCalm4.
+  ///
+  /// In en, this message translates to:
+  /// **'Stillness counts, even when nothing gets checked off.'**
+  String get warmthPathFindingCalm4;
+
+  /// No description provided for @warmthPathFindingCalm5.
+  ///
+  /// In en, this message translates to:
+  /// **'Peace isn\'t earned. It\'s always available to you.'**
+  String get warmthPathFindingCalm5;
+
+  /// No description provided for @warmthPathFindingCalm6.
+  ///
+  /// In en, this message translates to:
+  /// **'Not doing is also a form of being present.'**
+  String get warmthPathFindingCalm6;
+
+  /// No description provided for @warmthPathGratitudeSelfLove1.
+  ///
+  /// In en, this message translates to:
+  /// **'Being kind to yourself includes saying \'not today.\''**
+  String get warmthPathGratitudeSelfLove1;
+
+  /// No description provided for @warmthPathGratitudeSelfLove2.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-love looks like this too — no guilt, just grace.'**
+  String get warmthPathGratitudeSelfLove2;
+
+  /// No description provided for @warmthPathGratitudeSelfLove3.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t need to perform self-care to practice it.'**
+  String get warmthPathGratitudeSelfLove3;
+
+  /// No description provided for @warmthPathGratitudeSelfLove4.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgiving yourself for skipping is the habit that matters most.'**
+  String get warmthPathGratitudeSelfLove4;
+
+  /// No description provided for @warmthPathGratitudeSelfLove5.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentleness isn\'t just for good days. It\'s for these days too.'**
+  String get warmthPathGratitudeSelfLove5;
+
+  /// No description provided for @warmthPathGratitudeSelfLove6.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re still worthy of warmth, even when you rest.'**
+  String get warmthPathGratitudeSelfLove6;
+
+  /// No description provided for @warmthPathWindingDown1.
+  ///
+  /// In en, this message translates to:
+  /// **'Tonight, just rest. That\'s the whole plan.'**
+  String get warmthPathWindingDown1;
+
+  /// No description provided for @warmthPathWindingDown2.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t need to wind down perfectly. Just stop.'**
+  String get warmthPathWindingDown2;
+
+  /// No description provided for @warmthPathWindingDown3.
+  ///
+  /// In en, this message translates to:
+  /// **'Let the day go. You held enough.'**
+  String get warmthPathWindingDown3;
+
+  /// No description provided for @warmthPathWindingDown4.
+  ///
+  /// In en, this message translates to:
+  /// **'Some evenings are just for existing. This is one of them.'**
+  String get warmthPathWindingDown4;
+
+  /// No description provided for @warmthPathWindingDown5.
+  ///
+  /// In en, this message translates to:
+  /// **'The night doesn\'t need a routine. It just needs you to let go.'**
+  String get warmthPathWindingDown5;
+
+  /// No description provided for @warmthPathWindingDown6.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep well. Tomorrow is already gentler than you think.'**
+  String get warmthPathWindingDown6;
+
+  /// No description provided for @warmthPathYourOwnWay1.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own way includes rest. Always has.'**
+  String get warmthPathYourOwnWay1;
+
+  /// No description provided for @warmthPathYourOwnWay2.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipping is part of the rhythm you\'re building.'**
+  String get warmthPathYourOwnWay2;
+
+  /// No description provided for @warmthPathYourOwnWay3.
+  ///
+  /// In en, this message translates to:
+  /// **'You chose this path. You also get to pause on it.'**
+  String get warmthPathYourOwnWay3;
+
+  /// No description provided for @warmthPathYourOwnWay4.
+  ///
+  /// In en, this message translates to:
+  /// **'No one\'s keeping score. Especially not us.'**
+  String get warmthPathYourOwnWay4;
+
+  /// No description provided for @warmthPathYourOwnWay5.
+  ///
+  /// In en, this message translates to:
+  /// **'Trust yourself. You\'ll come back when it\'s time.'**
+  String get warmthPathYourOwnWay5;
+
+  /// No description provided for @warmthPathYourOwnWay6.
+  ///
+  /// In en, this message translates to:
+  /// **'Your pace. Your rules. Always.'**
+  String get warmthPathYourOwnWay6;
+
+  /// No description provided for @reflectionPathGentleMorningsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Another week of gentle mornings — or at least trying for them.'**
+  String get reflectionPathGentleMorningsIntro;
+
+  /// No description provided for @reflectionPathFindingCalmIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Another week of finding your anchors.'**
+  String get reflectionPathFindingCalmIntro;
+
+  /// No description provided for @reflectionPathGratitudeSelfLoveIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Another week of building warmth with yourself.'**
+  String get reflectionPathGratitudeSelfLoveIntro;
+
+  /// No description provided for @reflectionPathWindingDownIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Another week of winding down, your way.'**
+  String get reflectionPathWindingDownIntro;
+
+  /// No description provided for @reflectionPathYourOwnWayIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Another week on your own terms.'**
+  String get reflectionPathYourOwnWayIntro;
+
+  /// No description provided for @reflectionPathGentleMorningsQuiet.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet week for mornings. Some weeks are for sleeping in.'**
+  String get reflectionPathGentleMorningsQuiet;
+
+  /// No description provided for @reflectionPathFindingCalmQuiet.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet week. Maybe the calm found you in other ways.'**
+  String get reflectionPathFindingCalmQuiet;
+
+  /// No description provided for @reflectionPathGratitudeSelfLoveQuiet.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet week. Resting is its own act of self-love.'**
+  String get reflectionPathGratitudeSelfLoveQuiet;
+
+  /// No description provided for @reflectionPathWindingDownQuiet.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet week. Sometimes the best evening ritual is doing nothing at all.'**
+  String get reflectionPathWindingDownQuiet;
+
+  /// No description provided for @reflectionPathYourOwnWayQuiet.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet week. Your path includes pauses too.'**
+  String get reflectionPathYourOwnWayQuiet;
+
+  /// No description provided for @monthlyReflectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your month'**
+  String get monthlyReflectionTitle;
+
+  /// No description provided for @monthlyReflectionSectionOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'THIS MONTH'**
+  String get monthlyReflectionSectionOverview;
+
+  /// No description provided for @monthlyReflectionSectionTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'TRENDS'**
+  String get monthlyReflectionSectionTrends;
+
+  /// No description provided for @monthlyReflectionSectionGrowth.
+  ///
+  /// In en, this message translates to:
+  /// **'GROWTH'**
+  String get monthlyReflectionSectionGrowth;
+
+  /// No description provided for @monthlyReflectionMonthRange.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} {year}'**
+  String monthlyReflectionMonthRange(String month, int year);
+
+  /// No description provided for @monthlyReflectionOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'You showed up {days} days out of {total} this month.'**
+  String monthlyReflectionOverview(int days, int total);
+
+  /// No description provided for @monthlyReflectionBestWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Your strongest week was {weekRange} with {days} active days.'**
+  String monthlyReflectionBestWeek(String weekRange, int days);
+
+  /// No description provided for @monthlyReflectionConsistentHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'{habit} was your most consistent habit this month.'**
+  String monthlyReflectionConsistentHabit(String habit);
+
+  /// No description provided for @monthlyReflectionGrowthUp.
+  ///
+  /// In en, this message translates to:
+  /// **'This month was more active than last month. You\'re finding your rhythm.'**
+  String get monthlyReflectionGrowthUp;
+
+  /// No description provided for @monthlyReflectionGrowthSteady.
+  ///
+  /// In en, this message translates to:
+  /// **'Steady month. You\'re maintaining what matters.'**
+  String get monthlyReflectionGrowthSteady;
+
+  /// No description provided for @monthlyReflectionGrowthDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Quieter month than last. That\'s okay — some seasons are for resting.'**
+  String get monthlyReflectionGrowthDown;
+
+  /// No description provided for @monthlyReflectionFirstMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first full month. Everything here is a beginning.'**
+  String get monthlyReflectionFirstMonth;
+
+  /// No description provided for @monthlyReflectionNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough data yet. Keep going — your monthly reflection will arrive soon.'**
+  String get monthlyReflectionNoData;
+
+  /// No description provided for @monthlyReflectionUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'See my monthly insights'**
+  String get monthlyReflectionUnlock;
+
+  /// No description provided for @monthlyReflectionSectionNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'SOMETHING TO NOTICE'**
+  String get monthlyReflectionSectionNotice;
+
+  /// No description provided for @monthlyReflectionTopArea.
+  ///
+  /// In en, this message translates to:
+  /// **'You gravitated toward {area} this month. That seems to matter to you right now.'**
+  String monthlyReflectionTopArea(String area);
+
+  /// No description provided for @adaptiveNotifReducedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re stepping back'**
+  String get adaptiveNotifReducedTitle;
+
+  /// No description provided for @adaptiveNotifReducedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve been checking in regularly — we\'ll remind you less often.'**
+  String get adaptiveNotifReducedBody;
+
+  /// No description provided for @adaptiveNotifReengageBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s been a little while. Just a gentle hello.'**
+  String get adaptiveNotifReengageBody;
+
+  /// No description provided for @adaptiveNotifSilentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We noticed you\'ve been away. No pressure — we\'ll be here when you\'re ready.'**
+  String get adaptiveNotifSilentBody;
+
+  /// No description provided for @a11yTabHabits.
+  ///
+  /// In en, this message translates to:
+  /// **'Habits'**
+  String get a11yTabHabits;
+
+  /// No description provided for @a11yTabProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get a11yTabProgress;
+
+  /// No description provided for @a11yTabProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get a11yTabProfile;
+
+  /// No description provided for @a11yHabitCardDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{habit}, completed'**
+  String a11yHabitCardDone(String habit);
+
+  /// No description provided for @a11yHabitCardTodo.
+  ///
+  /// In en, this message translates to:
+  /// **'{habit}, tap to complete'**
+  String a11yHabitCardTodo(String habit);
+
+  /// No description provided for @a11yHabitCardPinned.
+  ///
+  /// In en, this message translates to:
+  /// **'{habit}, pinned, tap to complete'**
+  String a11yHabitCardPinned(String habit);
+
+  /// No description provided for @a11yEditHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit habit'**
+  String get a11yEditHabit;
+
+  /// No description provided for @a11yDeleteHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete habit'**
+  String get a11yDeleteHabit;
 }
 
 class _AppLocalizationsDelegate

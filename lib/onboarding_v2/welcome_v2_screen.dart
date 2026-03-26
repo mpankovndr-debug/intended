@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' show Random, sin, cos, pi;
 import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,8 +12,8 @@ import '../main.dart';
 import '../services/auth_service.dart';
 import '../services/backup_service.dart';
 import '../utils/profanity_filter.dart';
-import 'focus_areas_screen.dart';
 import 'onboarding_state.dart';
+import '../features/onboarding/screens/intention_path_screen.dart';
 import '../state/user_state.dart';
 import '../services/analytics_service.dart';
 import '../theme/app_colors.dart';
@@ -33,10 +33,10 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
   late final AnimationController _anim;
   late final Animation<double> _fadeBrand;
   late final Animation<double> _fadeTagline;
-  late final Animation<double> _fadeInput;
-  late final Animation<Offset> _slideInput;
+  late final Animation<double> _fadeBottom;
+  late final Animation<Offset> _slideBottom;
 
-  bool _isEnabled = false;
+  bool _showNameBlock = false;
 
   static const int _maxNameLength = 30;
 
@@ -59,12 +59,12 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
       curve: const Interval(0.35, 0.70, curve: Curves.easeOut),
     );
 
-    _fadeInput = CurvedAnimation(
+    _fadeBottom = CurvedAnimation(
       parent: _anim,
       curve: const Interval(0.60, 1.0, curve: Curves.easeOut),
     );
 
-    _slideInput = Tween<Offset>(
+    _slideBottom = Tween<Offset>(
       begin: const Offset(0, 0.08),
       end: Offset.zero,
     ).animate(CurvedAnimation(
@@ -76,27 +76,38 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
       if (mounted) _anim.forward();
     });
 
-    controller.addListener(_onTextChanged);
-
     AnalyticsService.logScreenView('welcome');
     AnalyticsService.logOnboardingStarted();
   }
 
-  void _onTextChanged() {
-    final newIsEnabled = controller.text.trim().isNotEmpty;
-    if (newIsEnabled != _isEnabled && mounted) {
-      setState(() {
-        _isEnabled = newIsEnabled;
-      });
-    }
-  }
-
   @override
   void dispose() {
-    controller.removeListener(_onTextChanged);
     controller.dispose();
     _anim.dispose();
     super.dispose();
+  }
+
+  void _handleGetStarted() {
+    setState(() => _showNameBlock = true);
+  }
+
+  void _handleContinue() {
+    final name = controller.text.trim();
+
+    if (name.isNotEmpty) {
+      if (name.length > _maxNameLength) {
+        final l10n = AppLocalizations.of(context);
+        _showError(l10n.onboardingNameTooLong(_maxNameLength));
+        return;
+      }
+      if (ProfanityFilter.containsProfanity(name)) {
+        final l10n = AppLocalizations.of(context);
+        _showError(l10n.onboardingNameInappropriate);
+        return;
+      }
+    }
+
+    _navigateToFocusAreas(name: name.isEmpty ? null : name);
   }
 
   void _showSignInSheet(
@@ -109,9 +120,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
         onSignInComplete: (credential) {
           if (credential == null || !mounted) return;
 
-          // Extract first name from the signed-in account
-          final displayName =
-              FirebaseAuth.instance.currentUser?.displayName;
+          final displayName = FirebaseAuth.instance.currentUser?.displayName;
           String? firstName;
           if (displayName != null && displayName.isNotEmpty) {
             firstName = displayName.split(' ').first;
@@ -123,7 +132,6 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
 
           final onboarding = context.read<OnboardingState>();
           if (onboarding.onboardingComplete) {
-            // Returning user — backfill name if missing
             if (firstName != null && userNameNotifier.value == null) {
               userNameNotifier.value = firstName;
               onboarding.setName(firstName);
@@ -131,7 +139,6 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                 prefs.setString('user_name', firstName!);
               });
             }
-            // Back up existing data to the newly linked account
             context.read<BackupService>().backup();
             Navigator.pushReplacement(
               context,
@@ -144,7 +151,6 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
               ),
             );
           } else {
-            // Check for cloud backup before starting onboarding
             _tryRestore(context, firstName);
           }
         },
@@ -159,7 +165,6 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
     if (!mounted) return;
 
     if (backupInfo == null) {
-      // No backup found — proceed with onboarding
       _navigateToFocusAreas(name: firstName);
       return;
     }
@@ -178,7 +183,6 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
             final success = await backupService.restore();
             if (!mounted) return;
             if (success) {
-              // Reload state from restored prefs
               final onboarding = context.read<OnboardingState>();
               await onboarding.loadUserHabits();
               final prefs = await SharedPreferences.getInstance();
@@ -190,11 +194,11 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
               final theme = prefs.getString('selected_theme');
               if (theme != null && mounted) {
                 context.read<ThemeProvider>().setTheme(
-                  AppTheme.values.firstWhere(
-                    (t) => t.name == theme,
-                    orElse: () => AppTheme.warmClay,
-                  ),
-                );
+                      AppTheme.values.firstWhere(
+                        (t) => t.name == theme,
+                        orElse: () => AppTheme.warmClay,
+                      ),
+                    );
               }
               if (mounted) {
                 Navigator.pushReplacement(
@@ -245,33 +249,13 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const FocusAreasScreen(),
+        pageBuilder: (_, __, ___) => const IntentionPathScreen(),
         transitionDuration: const Duration(milliseconds: 400),
         transitionsBuilder: (_, animation, __, child) {
           return FadeTransition(opacity: animation, child: child);
         },
       ),
     );
-  }
-
-  void _handleContinue() {
-    final name = controller.text.trim();
-
-    if (name.isEmpty) return;
-
-    if (name.length > _maxNameLength) {
-      final l10n = AppLocalizations.of(context);
-      _showError(l10n.onboardingNameTooLong(_maxNameLength));
-      return;
-    }
-
-    if (ProfanityFilter.containsProfanity(name)) {
-      final l10n = AppLocalizations.of(context);
-      _showError(l10n.onboardingNameInappropriate);
-      return;
-    }
-
-    _navigateToFocusAreas(name: name);
   }
 
   void _showError(String message) {
@@ -353,32 +337,20 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 28),
-                child: SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom > 0
-                        ? MediaQuery.of(context).viewInsets.bottom + 20
-                        : 0,
-                  ),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height -
-                          MediaQuery.of(context).padding.top -
-                          MediaQuery.of(context).padding.bottom,
-                    ),
-                    child: IntrinsicHeight(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 160),
+                child: Column(
+                  children: [
+                          // Top spacer — shrinks when name block appears
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 350),
+                            curve: Curves.easeInOut,
+                            height: _showNameBlock ? 80 : 160,
+                          ),
 
                           // Brand group (icon + title)
                           FadeTransition(
                             opacity: _fadeBrand,
                             child: Column(
                               children: [
-                                // Logo container (glassmorphic)
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(32),
                                   child: BackdropFilter(
@@ -399,7 +371,8 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                                                 .withOpacity(0.25),
                                           ],
                                         ),
-                                        borderRadius: BorderRadius.circular(32),
+                                        borderRadius:
+                                            BorderRadius.circular(32),
                                         border: Border.all(
                                           color: const Color(0xFFFFFFFF)
                                               .withOpacity(0.4),
@@ -419,7 +392,6 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
 
                                 const SizedBox(height: 40),
 
-                                // Title
                                 Text(
                                   l10n.appNameIntended,
                                   textAlign: TextAlign.center,
@@ -447,7 +419,8 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                                   l10n.onboardingTagline,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily: AppTextStyles.bodyFont(context),
+                                    fontFamily:
+                                        AppTextStyles.bodyFont(context),
                                     fontSize: 17,
                                     fontWeight: FontWeight.w500,
                                     color: colors.ctaSecondary,
@@ -459,10 +432,12 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                                   l10n.onboardingDescriptor,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily: AppTextStyles.bodyFont(context),
+                                    fontFamily:
+                                        AppTextStyles.bodyFont(context),
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
-                                    color: colors.ctaSecondary.withOpacity(0.7),
+                                    color: colors.ctaSecondary
+                                        .withOpacity(0.7),
                                     height: 1.5,
                                   ),
                                 ),
@@ -472,273 +447,290 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
 
                           const Spacer(),
 
-                          // Input group (name + continue + skip)
+                          // Bottom section: fades in on entry, cross-fades between states
                           FadeTransition(
-                            opacity: _fadeInput,
+                            opacity: _fadeBottom,
                             child: SlideTransition(
-                              position: _slideInput,
-                              child: Column(
-                                children: [
-                                  // Name input (glassmorphic)
-                                  Container(
-                                    constraints:
-                                        const BoxConstraints(maxWidth: 384),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                            sigmaX: 25, sigmaY: 25),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              colors: [
-                                                const Color(0xFFFFFFFF)
-                                                    .withOpacity(0.45),
-                                                colors.surfaceLight
-                                                    .withOpacity(0.3),
-                                              ],
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                              color: const Color(0xFFFFFFFF)
-                                                  .withOpacity(0.35),
-                                              width: 1.5,
-                                            ),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: colors.textPrimary
-                                                    .withOpacity(0.08),
-                                                blurRadius: 16,
-                                                offset: const Offset(0, 4),
-                                              ),
-                                            ],
-                                          ),
-                                          child: CupertinoTextField(
-                                            controller: controller,
-                                            placeholder:
-                                                l10n.onboardingNamePrompt,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily:
-                                                  AppTextStyles.bodyFont(
-                                                      context),
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: colors.textPrimary,
-                                            ),
-                                            placeholderStyle: TextStyle(
-                                              fontFamily:
-                                                  AppTextStyles.bodyFont(
-                                                      context),
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: colors.textPrimary
-                                                  .withOpacity(0.4),
-                                            ),
-                                            decoration: const BoxDecoration(),
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 24,
-                                              vertical: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 20),
-
-                                  // Continue button (tinted glass)
-                                  AnimatedOpacity(
-                                    opacity: _isEnabled ? 1.0 : 0.45,
-                                    duration: const Duration(milliseconds: 250),
-                                    child: Container(
-                                      constraints:
-                                          const BoxConstraints(maxWidth: 384),
-                                      width: double.infinity,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: BackdropFilter(
-                                          filter: ImageFilter.blur(
-                                              sigmaX: 20, sigmaY: 20),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                begin: Alignment.topLeft,
-                                                end: Alignment.bottomRight,
-                                                colors: [
-                                                  colors.ctaPrimary
-                                                      .withOpacity(0.75),
-                                                  colors.ctaSecondary
-                                                      .withOpacity(0.65),
-                                                ],
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              border: Border.all(
-                                                color: colors.ctaPrimary
-                                                    .withOpacity(0.3),
-                                                width: 1,
-                                              ),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: colors.textPrimary
-                                                      .withOpacity(0.2),
-                                                  blurRadius: 20,
-                                                  offset: const Offset(0, 4),
-                                                ),
-                                              ],
-                                            ),
-                                            child: CupertinoButton(
-                                              onPressed: _isEnabled
-                                                  ? _handleContinue
-                                                  : null,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 16),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              child: Text(
-                                                l10n.commonContinue,
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      AppTextStyles.bodyFont(
-                                                          context),
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Color(0xFFFFFFFF),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 16),
-
-                                  // Skip & Sign in row
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CupertinoButton(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 4, vertical: 12),
-                                        onPressed: () =>
-                                            _navigateToFocusAreas(),
-                                        child: Text(
-                                          l10n.onboardingSkipForNow,
-                                          style: TextStyle(
-                                            fontFamily:
-                                                AppTextStyles.bodyFont(context),
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500,
-                                            color: colors.textTertiary,
-                                          ),
-                                        ),
-                                        minimumSize: Size(0, 0),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 6),
-                                        child: Text(
-                                          '\u00B7',
-                                          style: TextStyle(
-                                            fontFamily:
-                                                AppTextStyles.bodyFont(context),
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500,
-                                            color: colors.textTertiary
-                                                .withOpacity(0.5),
-                                          ),
-                                        ),
-                                      ),
-                                      CupertinoButton(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 4, vertical: 12),
-                                        onPressed: () => _showSignInSheet(
-                                            context, colors, l10n),
-                                        child: Text(
-                                          l10n.onboardingAlreadyHaveAccount,
-                                          style: TextStyle(
-                                            fontFamily:
-                                                AppTextStyles.bodyFont(context),
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500,
-                                            color: colors.textTertiary,
-                                          ),
-                                        ),
-                                        minimumSize: Size(0, 0),
-                                      ),
-                                    ],
-                                  ),
-
-                                  const SizedBox(height: 12),
-
-                                  // Legal disclaimer
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                                    child: Text.rich(
-                                      TextSpan(
-                                        style: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w400,
-                                          color: colors.textTertiary,
-                                          height: 1.4,
-                                        ),
-                                        children: [
-                                          TextSpan(text: l10n.legalDisclaimerPrefix),
-                                          TextSpan(
-                                            text: l10n.legalDisclaimerTerms,
-                                            style: TextStyle(
-                                              decoration: TextDecoration.underline,
-                                              color: colors.textSecondary,
-                                            ),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () => launchUrl(
-                                                    Uri.parse('https://intendedapp.com/terms'),
-                                                    mode: LaunchMode.externalApplication,
-                                                  ),
-                                          ),
-                                          TextSpan(text: l10n.legalDisclaimerAnd),
-                                          TextSpan(
-                                            text: l10n.legalDisclaimerPrivacy,
-                                            style: TextStyle(
-                                              decoration: TextDecoration.underline,
-                                              color: colors.textSecondary,
-                                            ),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () => launchUrl(
-                                                    Uri.parse('https://intendedapp.com/privacy'),
-                                                    mode: LaunchMode.externalApplication,
-                                                  ),
-                                          ),
-                                          TextSpan(text: l10n.legalDisclaimerSuffix),
-                                        ],
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 16),
-                                ],
+                              position: _slideBottom,
+                              child: AnimatedCrossFade(
+                                duration: const Duration(milliseconds: 300),
+                                crossFadeState: _showNameBlock
+                                    ? CrossFadeState.showSecond
+                                    : CrossFadeState.showFirst,
+                                firstCurve: Curves.easeIn,
+                                secondCurve: Curves.easeOut,
+                                sizeCurve: Curves.easeInOut,
+                                firstChild: _buildGetStartedButton(
+                                    colors, l10n),
+                                secondChild:
+                                    _buildNameBlock(colors, l10n),
                               ),
                             ),
                           ),
+
+                          const SizedBox(height: 16),
+
+                          // Terms — always visible, fades in with bottom section
+                          FadeTransition(
+                            opacity: _fadeBottom,
+                            child: _buildTerms(colors, l10n),
+                          ),
+
+                          const SizedBox(height: 32),
                         ],
                       ),
-                    ),
                   ),
+                ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGetStartedButton(
+      AppColorScheme colors, AppLocalizations l10n) {
+    return Container(
+      width: double.infinity,
+      constraints: const BoxConstraints(maxWidth: 384),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: colors.ctaPrimary.withValues(alpha: 0.30),
+            blurRadius: 20,
+            spreadRadius: 1,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [colors.ctaPrimary, colors.ctaSecondary],
+          ),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: CupertinoButton(
+          onPressed: _handleGetStarted,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          borderRadius: BorderRadius.circular(24),
+          child: Text(
+            l10n.onboardingLetsGetStarted,
+            style: TextStyle(
+              fontFamily: AppTextStyles.bodyFont(context),
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFFFFFFFF),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNameBlock(AppColorScheme colors, AppLocalizations l10n) {
+    return Column(
+      children: [
+        // Name input (glassmorphic)
+        Container(
+          constraints: const BoxConstraints(maxWidth: 384),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      const Color(0xFFFFFFFF).withOpacity(0.45),
+                      colors.surfaceLight.withOpacity(0.3),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: const Color(0xFFFFFFFF).withOpacity(0.35),
+                    width: 1.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colors.textPrimary.withOpacity(0.08),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: CupertinoTextField(
+                  controller: controller,
+                  placeholder: l10n.onboardingNamePrompt,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: AppTextStyles.bodyFont(context),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: colors.textPrimary,
+                  ),
+                  placeholderStyle: TextStyle(
+                    fontFamily: AppTextStyles.bodyFont(context),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: colors.textPrimary.withOpacity(0.4),
+                  ),
+                  decoration: const BoxDecoration(),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 20),
+
+        // Continue button (always active — name is optional)
+        Container(
+          width: double.infinity,
+          constraints: const BoxConstraints(maxWidth: 384),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: colors.ctaPrimary.withValues(alpha: 0.30),
+                blurRadius: 20,
+                spreadRadius: 1,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [colors.ctaPrimary, colors.ctaSecondary],
+              ),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: CupertinoButton(
+              onPressed: _handleContinue,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              borderRadius: BorderRadius.circular(24),
+              child: Text(
+                l10n.commonContinue,
+                style: TextStyle(
+                  fontFamily: AppTextStyles.bodyFont(context),
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFFFFFFFF),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // Skip & Sign in row
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CupertinoButton(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 4, vertical: 12),
+              onPressed: () => _navigateToFocusAreas(),
+              minimumSize: const Size(0, 0),
+              child: Text(
+                l10n.onboardingSkipForNow,
+                style: TextStyle(
+                  fontFamily: AppTextStyles.bodyFont(context),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: colors.textTertiary,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: Text(
+                '\u00B7',
+                style: TextStyle(
+                  fontFamily: AppTextStyles.bodyFont(context),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: colors.textTertiary.withOpacity(0.5),
+                ),
+              ),
+            ),
+            CupertinoButton(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 4, vertical: 12),
+              onPressed: () =>
+                  _showSignInSheet(context, colors, l10n),
+              minimumSize: const Size(0, 0),
+              child: Text(
+                l10n.onboardingAlreadyHaveAccount,
+                style: TextStyle(
+                  fontFamily: AppTextStyles.bodyFont(context),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: colors.textTertiary,
                 ),
               ),
             ),
           ],
         ),
+      ],
+    );
+  }
+
+  Widget _buildTerms(AppColorScheme colors, AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Text.rich(
+        TextSpan(
+          style: TextStyle(
+            fontFamily: 'Sora',
+            fontSize: 11,
+            fontWeight: FontWeight.w400,
+            color: colors.textTertiary,
+            height: 1.4,
+          ),
+          children: [
+            TextSpan(text: l10n.legalDisclaimerPrefix),
+            TextSpan(
+              text: l10n.legalDisclaimerTerms,
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+                color: colors.textSecondary,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => launchUrl(
+                      Uri.parse('https://intendedapp.com/terms'),
+                      mode: LaunchMode.externalApplication,
+                    ),
+            ),
+            TextSpan(text: l10n.legalDisclaimerAnd),
+            TextSpan(
+              text: l10n.legalDisclaimerPrivacy,
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+                color: colors.textSecondary,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => launchUrl(
+                      Uri.parse('https://intendedapp.com/privacy'),
+                      mode: LaunchMode.externalApplication,
+                    ),
+            ),
+            TextSpan(text: l10n.legalDisclaimerSuffix),
+          ],
+        ),
+        textAlign: TextAlign.center,
       ),
     );
   }
@@ -862,7 +854,7 @@ class _SignInSheetState extends State<_SignInSheet> {
     setState(() => _isSigningIn = true);
     try {
       final credential = await AuthService.signInWithApple();
-      if (credential == null) return; // User cancelled
+      if (credential == null) return;
       if (mounted) Navigator.pop(context);
       widget.onSignInComplete(credential);
     } catch (e, stackTrace) {
@@ -1029,7 +1021,7 @@ class _SignInSheetState extends State<_SignInSheet> {
                     colors.ctaSecondary.withOpacity(0.08),
                   ],
                 ),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: isPrimary
                 ? colors.ctaPrimary.withOpacity(0.35)
@@ -1057,7 +1049,7 @@ class _SignInSheetState extends State<_SignInSheet> {
         child: CupertinoButton(
           onPressed: onPressed,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           child: _isSigningIn
               ? CupertinoActivityIndicator(
                   color:
@@ -1212,7 +1204,7 @@ class _FloatingCardsState extends State<_FloatingCards>
                       const Color(0xFFFFFFFF).withOpacity(0.05),
                     ],
                   ),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(24),
                   border: Border.all(
                     color: const Color(0xFFFFFFFF).withOpacity(0.3),
                     width: 1,
@@ -1257,6 +1249,7 @@ class _FloatingCardsState extends State<_FloatingCards>
             ),
           ),
         ),
+
         // Card 3 - Top Left (small)
         Positioned(
           top: size.height * 0.08,

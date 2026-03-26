@@ -141,7 +141,7 @@ class ComponentSizes {
   
   // Border radius
   static double get modalRadius => Responsive.r(28);
-  static double get cardRadius => Responsive.r(16);
+  static double get cardRadius => Responsive.r(24);
   static double get buttonRadius => Responsive.r(20);
   static double get inputRadius => Responsive.r(12);
   static double get smallRadius => Responsive.r(8);

@@ -14,7 +14,8 @@ import '../utils/text_styles.dart';
 
 class PaywallScreen extends StatefulWidget {
   final String source;
-  const PaywallScreen({super.key, this.source = 'unknown'});
+  final bool triggeredByCeiling;
+  const PaywallScreen({super.key, this.source = 'unknown', this.triggeredByCeiling = false});
 
   @override
   State<PaywallScreen> createState() => _PaywallScreenState();
@@ -175,7 +176,9 @@ class _PaywallScreenState extends State<PaywallScreen>
                         _buildTulipIcon(colors, isDark: isDark),
                         const SizedBox(height: 16),
                         Text(
-                          l10n.paywallTitle,
+                          widget.triggeredByCeiling
+                              ? l10n.paywallCeilingTitle
+                              : l10n.paywallTitle,
                           style: TextStyle(
                             fontFamily: 'Sora',
                             fontSize: 30,
@@ -187,7 +190,9 @@ class _PaywallScreenState extends State<PaywallScreen>
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          l10n.paywallDescription,
+                          widget.triggeredByCeiling
+                              ? l10n.paywallCeilingDescription
+                              : l10n.paywallDescription,
                           style: TextStyle(
                             fontFamily: AppTextStyles.bodyFont(context),
                             fontSize: 14,
@@ -469,7 +474,7 @@ class _PaywallScreenState extends State<PaywallScreen>
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: backgroundColor,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: borderColor,
                 width: isSelected ? 2 : 1.5,
@@ -571,7 +576,7 @@ class _PaywallScreenState extends State<PaywallScreen>
 
   Widget _buildCTAButton(AppColorScheme colors, AppLocalizations l10n) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(24),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
         child: Container(
@@ -585,7 +590,7 @@ class _PaywallScreenState extends State<PaywallScreen>
                 colors.ctaSecondary.withOpacity(0.88),
               ],
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: colors.ctaPrimary.withOpacity(0.4),
               width: 1,
@@ -607,7 +612,7 @@ class _PaywallScreenState extends State<PaywallScreen>
           ),
           child: CupertinoButton(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(24),
             onPressed: _isLoading
                 ? null
                 : () async {

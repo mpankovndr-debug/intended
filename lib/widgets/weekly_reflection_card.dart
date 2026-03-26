@@ -3,12 +3,16 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
+import '../services/coach_mark_service.dart';
+import '../models/intention_path.dart';
 import '../models/reflection_data.dart';
 import '../screens/moments_collection_screen.dart';
 import '../screens/paywall_screen.dart';
 import '../screens/share_card_reveal_screen.dart';
+import 'tiered_share_card.dart';
 import '../services/reflection_service.dart';
 import '../services/week_stats_service.dart';
 import '../state/user_state.dart';
@@ -31,6 +35,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
     with SingleTickerProviderStateMixin {
   ReflectionData? _data;
   bool _loading = true;
+  IntentionPathId _pathId = IntentionPathId.yourOwnWay;
   final GlobalKey _shareButtonKey = GlobalKey();
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
@@ -65,14 +70,37 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
   /// Normal load — returns cached reflection if still valid (respects validUntil).
   Future<void> _load() async {
     final data = await ReflectionService.getCurrentReflection();
+    final prefs = await SharedPreferences.getInstance();
+    final pathKey = prefs.getString('selected_intention_path') ?? 'your_own_way';
     if (!mounted) return;
     setState(() {
       _data = data;
+      _pathId = IntentionPathId.fromKey(pathKey);
       _loading = false;
     });
     if (!_animController.isCompleted) {
       _animController.forward();
     }
+    // Moment 4b: "Worth sharing?" coach mark on the share button.
+    // Fires once, the first time the weekly reflection card becomes visible.
+    _checkShareCoachMark();
+  }
+
+  Future<void> _checkShareCoachMark() async {
+    final service = CoachMarkService.instance;
+    if (await service.hasBeenSeen(CoachMarkKeys.reflectionShare)) return;
+    if (!mounted) return;
+    // Wait for the card's entrance animation to finish before overlaying.
+    await Future.delayed(const Duration(milliseconds: 1000));
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
+    await service.enqueue(
+      key: CoachMarkKeys.reflectionShare,
+      targetKey: _shareButtonKey,
+      title: l10n.coachMarkReflectionShareTitle,
+      body: l10n.coachMarkReflectionShareBody,
+    );
+    if (mounted) service.showNext(context);
   }
 
   /// Force-regenerate reflection with fresh data (on stats change).
@@ -91,7 +119,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
     super.dispose();
   }
 
-  void _openShareReveal() {
+  void _openShareReveal({ShareCardTier? forceTier}) {
     if (_data == null) return;
     final box = _shareButtonKey.currentContext?.findRenderObject() as RenderBox?;
     Rect? originRect;
@@ -104,6 +132,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
         stats: widget.stats,
         reflection: _data!,
         originRect: originRect,
+        forceTier: forceTier,
       ),
     );
   }
@@ -144,7 +173,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
     final l10n = AppLocalizations.of(context);
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(28),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
@@ -153,7 +182,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
             color: context.watch<ThemeProvider>().theme.isDark
                 ? colors.cardBackground.withValues(alpha: colors.cardBackgroundOpacity)
                 : CupertinoColors.white.withValues(alpha: 0.35),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(28),
             border: Border.all(
               color: context.watch<ThemeProvider>().theme.isDark
                   ? colors.borderCard.withValues(alpha: colors.borderCardOpacity)
@@ -196,7 +225,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
     final l10n = AppLocalizations.of(context);
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(28),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
@@ -205,7 +234,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
             color: context.watch<ThemeProvider>().theme.isDark
                 ? colors.cardBackground.withValues(alpha: colors.cardBackgroundOpacity)
                 : CupertinoColors.white.withValues(alpha: 0.35),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(28),
             border: Border.all(
               color: context.watch<ThemeProvider>().theme.isDark
                   ? colors.borderCard.withValues(alpha: colors.borderCardOpacity)
@@ -228,6 +257,11 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
               _buildDayDots(context, colors, l10n),
               // Blurred premium section previews
               ..._buildBlurredPremiumPreviews(context, colors, l10n),
+              // Share button — free users get Tier 1 ("The Number") card
+              if (widget.stats.completionCount >= 3 || widget.stats.dailyActivity.where((d) => d).length >= 3) ...[
+                const SizedBox(height: 16),
+                _buildShareButton(context, colors, forceTier: ShareCardTier.tier1),
+              ],
             ],
           ),
         ),
@@ -268,7 +302,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
                   child: Text(
                     localizeHabitName(habit, l10n),
                     style: TextStyle(
-                      fontFamily: 'DMSans',
+                      fontFamily: 'Sora',
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       color: colors.textPrimary,
@@ -295,7 +329,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
               child: Text(
                 l10n.progressMore(hiddenCount),
                 style: TextStyle(
-                  fontFamily: 'DMSans',
+                  fontFamily: 'Sora',
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
                   color: colors.textSecondary,
@@ -342,7 +376,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
               Text(
                 dayLabels[index],
                 style: TextStyle(
-                  fontFamily: 'DMSans',
+                  fontFamily: 'Sora',
                   fontSize: 11,
                   fontWeight: FontWeight.w400,
                   color: isCompleted
@@ -488,7 +522,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               color: colors.ctaPrimary.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(28),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -587,13 +621,13 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
     );
   }
 
-  Widget _buildShareButton(BuildContext context, dynamic colors) {
+  Widget _buildShareButton(BuildContext context, dynamic colors, {ShareCardTier? forceTier}) {
     final l10n = AppLocalizations.of(context);
     return Center(
       key: _shareButtonKey,
       child: CupertinoButton(
         padding: EdgeInsets.zero,
-        onPressed: _openShareReveal,
+        onPressed: () => _openShareReveal(forceTier: forceTier),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -630,13 +664,43 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
     };
   }
 
+  /// Path-aware intro line for the reflection card.
+  String _pathIntro(AppLocalizations l10n, ReflectionData data) {
+    if (data.daysActive == 0) {
+      return switch (_pathId) {
+        IntentionPathId.gentleMornings => l10n.reflectionPathGentleMorningsQuiet,
+        IntentionPathId.findingCalm => l10n.reflectionPathFindingCalmQuiet,
+        IntentionPathId.gratitudeSelfLove => l10n.reflectionPathGratitudeSelfLoveQuiet,
+        IntentionPathId.windingDown => l10n.reflectionPathWindingDownQuiet,
+        IntentionPathId.yourOwnWay => l10n.reflectionPathYourOwnWayQuiet,
+      };
+    }
+    return switch (_pathId) {
+      IntentionPathId.gentleMornings => l10n.reflectionPathGentleMorningsIntro,
+      IntentionPathId.findingCalm => l10n.reflectionPathFindingCalmIntro,
+      IntentionPathId.gratitudeSelfLove => l10n.reflectionPathGratitudeSelfLoveIntro,
+      IntentionPathId.windingDown => l10n.reflectionPathWindingDownIntro,
+      IntentionPathId.yourOwnWay => l10n.reflectionPathYourOwnWayIntro,
+    };
+  }
+
   String _anchorText(AppLocalizations l10n, ReflectionData data) {
+    final intro = _pathIntro(l10n, data);
     final n = data.daysActive;
-    if (n == 7) return l10n.reflectionAnchor7;
-    if (n >= 5) return l10n.reflectionAnchor56(n);
-    if (n >= 3) return l10n.reflectionAnchor34(n);
-    if (n >= 1) return l10n.reflectionAnchor12(n);
-    return l10n.reflectionAnchor0;
+    String detail;
+    if (n == 7) {
+      detail = l10n.reflectionAnchor7;
+    } else if (n >= 5) {
+      detail = l10n.reflectionAnchor56(n);
+    } else if (n >= 3) {
+      detail = l10n.reflectionAnchor34(n);
+    } else if (n >= 1) {
+      detail = l10n.reflectionAnchor12(n);
+    } else {
+      // For 0 days, the path-specific quiet message IS the full text
+      return intro;
+    }
+    return '$intro\n\n$detail';
   }
 
   String _patternText(AppLocalizations l10n, ReflectionData data) {

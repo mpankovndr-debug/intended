@@ -5,13 +5,16 @@ import 'package:provider/provider.dart';
 
 import 'daily_reminder_screen.dart';
 import 'onboarding_state.dart';
-import '../features/onboarding/screens/philosophy_screen.dart';
+// Phase 2: may re-enable philosophy screen
+// import '../features/onboarding/screens/philosophy_screen.dart';
 import '../l10n/app_localizations.dart';
+import '../models/intention_path.dart';
 import '../services/analytics_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
 import '../widgets/focus_area_card.dart';
+import '../widgets/onboarding_progress_bar.dart';
 
 class FocusAreasScreen extends StatelessWidget {
   const FocusAreasScreen({super.key});
@@ -85,6 +88,21 @@ class FocusAreasScreen extends StatelessWidget {
         return l10n.focusAreaSelfCareSub;
       default:
         return null;
+    }
+  }
+
+  static String _resolvePathTitle(AppLocalizations l10n, IntentionPath path) {
+    switch (path.titleKey) {
+      case 'pathGentleMorningsTitle':
+        return l10n.pathGentleMorningsTitle;
+      case 'pathFindingCalmTitle':
+        return l10n.pathFindingCalmTitle;
+      case 'pathGratitudeSelfLoveTitle':
+        return l10n.pathGratitudeSelfLoveTitle;
+      case 'pathWindingDownTitle':
+        return l10n.pathWindingDownTitle;
+      default:
+        return path.titleKey;
     }
   }
 
@@ -170,7 +188,7 @@ class FocusAreasScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(24),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
@@ -183,7 +201,7 @@ class FocusAreasScreen extends StatelessWidget {
                                   colors.ctaSecondary.withOpacity(0.75),
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(24),
                               border: Border.all(
                                 color: colors.ctaPrimary.withOpacity(0.3),
                                 width: 1,
@@ -198,7 +216,7 @@ class FocusAreasScreen extends StatelessWidget {
                             ),
                             child: CupertinoButton(
                               padding: const EdgeInsets.symmetric(vertical: 13),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(24),
                               onPressed: () => Navigator.pop(context),
                               child: Text(
                                 l10n.commonOk,
@@ -230,29 +248,10 @@ class FocusAreasScreen extends StatelessWidget {
     AnalyticsService.logScreenView('focus_areas');
     AnalyticsService.logOnboardingStepCompleted('focus_areas');
 
-    final selectedAreas =
-        context.read<OnboardingState>().focusAreas.toList();
-
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) => PhilosophyScreen(
-          selectedAreas: selectedAreas,
-          onContinue: () {
-            AnalyticsService.logScreenView('philosophy');
-            AnalyticsService.logOnboardingStepCompleted('philosophy');
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (_, __, ___) => const DailyReminderScreen(),
-                transitionDuration: const Duration(milliseconds: 400),
-                transitionsBuilder: (_, animation, __, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-              ),
-            );
-          },
-        ),
+        pageBuilder: (_, __, ___) => const DailyReminderScreen(),
         transitionDuration: const Duration(milliseconds: 400),
         transitionsBuilder: (_, animation, __, child) {
           return FadeTransition(opacity: animation, child: child);
@@ -272,6 +271,21 @@ class FocusAreasScreen extends StatelessWidget {
 
     final userName = state.name;
     final hasName = userName != null && userName.isNotEmpty;
+
+    final pathKey = state.selectedIntentionPath;
+    final isOwnWay = pathKey == IntentionPathId.yourOwnWay.key;
+    IntentionPath? selectedPath;
+    if (!isOwnWay) {
+      selectedPath = IntentionPath.getById(IntentionPathId.fromKey(pathKey));
+      // Re-apply defaults whenever the path has changed since last pre-selection.
+      // This handles back-navigation: user changes path → comes forward → reset.
+      if (pathKey != state.lastPreselectedPathKey &&
+          selectedPath.defaultFocusAreas.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          state.applyPathDefaults(selectedPath!.defaultFocusAreas, pathKey);
+        });
+      }
+    }
 
     return CupertinoPageScaffold(
       child: Stack(
@@ -305,33 +319,28 @@ class FocusAreasScreen extends StatelessWidget {
                 // Scrollable content
                 Column(
                   children: [
-                    // Header
+                    // Progress bar
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(28, 40, 28, 16),
-                      child: Center(
-                        child: Text(
-                          l10n.focusAreasTitle,
-                          style: TextStyle(
-                            fontFamily: AppTextStyles.bodyFont(context),
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: colors.textLabel,
-                            letterSpacing: 0.3,
-                          ),
-                        ),
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                      child: OnboardingProgressBar(
+                        currentStep: 2,
+                        totalSteps: 4,
+                        onBack: () => Navigator.pop(context),
                       ),
                     ),
 
                     // Title + subtitle (fixed)
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(28, 0, 28, 0),
+                      padding: const EdgeInsets.fromLTRB(28, 16, 28, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            hasName
-                                ? l10n.focusAreasPromptWithName(userName)
-                                : l10n.focusAreasPrompt,
+                            isOwnWay
+                                ? (hasName
+                                    ? l10n.focusAreasPromptWithName(userName)
+                                    : l10n.focusAreasPrompt)
+                                : l10n.focusAreasStartingPointsTitle,
                             style: TextStyle(
                               fontFamily: 'Sora',
                               fontSize: 26,
@@ -343,7 +352,10 @@ class FocusAreasScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            l10n.focusAreasChooseCount(selectedCount, maxSelections),
+                            isOwnWay
+                                ? l10n.focusAreasChooseCount(selectedCount, maxSelections)
+                                : l10n.focusAreasStartingPointsSubtext(
+                                    _resolvePathTitle(l10n, selectedPath!)),
                             style: TextStyle(
                               fontFamily: AppTextStyles.bodyFont(context),
                               fontSize: 15,
@@ -351,16 +363,18 @@ class FocusAreasScreen extends StatelessWidget {
                               color: colors.ctaSecondary,
                             ),
                           ),
-                          const SizedBox(height: 6),
-                          Text(
-                            l10n.focusAreasChangeLater,
-                            style: TextStyle(
-                              fontFamily: AppTextStyles.bodyFont(context),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: colors.textTertiary,
+                          if (isOwnWay) ...[
+                            const SizedBox(height: 6),
+                            Text(
+                              l10n.focusAreasChangeLater,
+                              style: TextStyle(
+                                fontFamily: AppTextStyles.bodyFont(context),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: colors.textTertiary,
+                              ),
                             ),
-                          ),
+                          ],
                         ],
                       ),
                     ),
@@ -422,7 +436,7 @@ class FocusAreasScreen extends StatelessWidget {
                     bottom: 95,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
                             color: colors.textPrimary.withOpacity(0.35),
@@ -443,12 +457,12 @@ class FocusAreasScreen extends StatelessWidget {
                                   colors.ctaSecondary.withOpacity(0.88),
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(24),
                             ),
                             child: CupertinoButton(
                               onPressed: () => _handleContinue(context),
                               padding: const EdgeInsets.symmetric(vertical: 16),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(24),
                               child: Text(
                                 l10n.commonContinue,
                                 style: TextStyle(

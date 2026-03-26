@@ -13,14 +13,14 @@ import '../utils/text_styles.dart';
 
 /// Opens the full paywall modal. Use after [showBoostOfferSheet] returns
 /// `'paywall'` to show the paywall from the correct context.
-void openPaywallFromContext(BuildContext context, {String source = 'boost'}) {
+void openPaywallFromContext(BuildContext context, {String source = 'boost', bool triggeredByCeiling = false}) {
   if (!context.mounted) return;
   if (context.read<RevenueCatService>().isPremium) return;
   showCupertinoModalPopup(
     context: context,
     barrierColor: Colors.black.withOpacity(0.5),
     filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-    builder: (_) => PaywallScreen(source: source),
+    builder: (_) => PaywallScreen(source: source, triggeredByCeiling: triggeredByCeiling),
   );
 }
 
@@ -215,7 +215,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                     widget.description,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: 'DM Sans',
+                      fontFamily: 'Sora',
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
                       color: colors.textSecondary,
@@ -279,7 +279,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
             child: Text(
               benefit,
               style: const TextStyle(
-                fontFamily: 'DM Sans',
+                fontFamily: 'Sora',
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Color(0xFFFFFFFF),
@@ -292,7 +292,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
             Text(
               detail,
               style: TextStyle(
-                fontFamily: 'DM Sans',
+                fontFamily: 'Sora',
                 fontSize: 13,
                 fontWeight: FontWeight.w400,
                 color: const Color(0xFFFFFFFF).withOpacity(0.55),
@@ -309,7 +309,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
     return GestureDetector(
       onTap: _isLoading ? null : _purchaseBoost,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
@@ -324,7 +324,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                   colors.ctaSecondary.withOpacity(0.84),
                 ],
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: colors.ctaPrimary.withOpacity(0.35),
                 width: 1,
@@ -370,7 +370,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                       Text(
                         l10n.boostCardSubtitle,
                         style: TextStyle(
-                          fontFamily: 'DM Sans',
+                          fontFamily: 'Sora',
                           fontSize: 13.5,
                           fontWeight: FontWeight.w400,
                           color: const Color(0xFFFFFFFF).withOpacity(0.70),
@@ -403,7 +403,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
           child: Text(
             l10n.boostOrDivider,
             style: TextStyle(
-              fontFamily: 'DM Sans',
+              fontFamily: 'Sora',
               fontSize: 13,
               fontWeight: FontWeight.w400,
               color: colors.textTertiary,
@@ -433,7 +433,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
               colors.ctaSecondary.withOpacity(0.08),
             ],
           ),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: colors.ctaPrimary.withOpacity(0.30),
             width: 1.5,
@@ -449,7 +449,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
         child: CupertinoButton(
           onPressed: _isLoading ? null : _openPaywall,
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           child: Text(
             l10n.boostGoUnlimited,
             textAlign: TextAlign.center,

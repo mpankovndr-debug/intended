@@ -185,7 +185,7 @@ class _ThemeSelectionScreenState extends State<ThemeSelectionScreen> {
                   bottom: 95,
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
                           color: colors.textPrimary.withOpacity(0.35),
@@ -196,7 +196,7 @@ class _ThemeSelectionScreenState extends State<ThemeSelectionScreen> {
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(24),
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                         child: Container(
@@ -210,12 +210,12 @@ class _ThemeSelectionScreenState extends State<ThemeSelectionScreen> {
                                 colors.ctaSecondary.withOpacity(0.88),
                               ],
                             ),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(24),
                           ),
                           child: CupertinoButton(
                             onPressed: () => _handleContinue(context),
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(24),
                             child: Text(
                               l10n.themeSelectionConfirm,
                               style: TextStyle(

@@ -194,13 +194,13 @@ class ThemePicker extends StatelessWidget {
         }
       },
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         child: Stack(
           fit: StackFit.expand,
           children: [
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(24),
                 color: entry.swatchColor,
                 border: isSelected
                     ? Border.all(color: entry.accentColor, width: 2.5)
@@ -276,7 +276,7 @@ class ThemePicker extends StatelessWidget {
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(24),
                     color: entry.swatchColor,
                   ),
                   child: Align(

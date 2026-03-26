@@ -19,6 +19,10 @@ class OnboardingState extends ChangeNotifier {
   static const int _maxSwapsFree = 2;
   static const int _maxFocusAreasFree = 2;
 
+  // Intention path
+  String _selectedIntentionPath = 'your_own_way';
+  String? _lastPreselectedPathKey;
+
   // NEW: Pin tracking
   String? _pinnedHabit;
 
@@ -40,6 +44,8 @@ class OnboardingState extends ChangeNotifier {
   bool get dailyReminderEnabled => _dailyReminderEnabled;
   String? get reminderTime => _reminderTime;
   bool get onboardingComplete => _onboardingComplete;
+  String get selectedIntentionPath => _selectedIntentionPath;
+  String? get lastPreselectedPathKey => _lastPreselectedPathKey;
   String? get pinnedHabit => _pinnedHabit;
   List<String> get customHabits => List.unmodifiable(_customHabits);
   Map<String, String> get customHabitFocusAreas =>
@@ -165,6 +171,32 @@ class OnboardingState extends ChangeNotifier {
 
   void setName(String value) {
     _name = value;
+    notifyListeners();
+  }
+
+  /// Clears current focus-area selections and applies [defaults] as the
+  /// pre-selection for [pathKey]. Tracks which path was last applied so
+  /// FocusAreasScreen can detect when the path changed and re-apply.
+  void applyPathDefaults(List<String> defaults, String pathKey) {
+    _focusAreas.clear();
+    for (final area in defaults) {
+      _focusAreas.add(area);
+    }
+    _lastPreselectedPathKey = pathKey;
+    notifyListeners();
+  }
+
+  Future<void> setSelectedIntentionPath(String pathKey) async {
+    _selectedIntentionPath = pathKey;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selected_intention_path', pathKey);
+  }
+
+  Future<void> loadSelectedIntentionPath() async {
+    final prefs = await SharedPreferences.getInstance();
+    _selectedIntentionPath =
+        prefs.getString('selected_intention_path') ?? 'your_own_way';
     notifyListeners();
   }
 
@@ -780,6 +812,7 @@ class OnboardingState extends ChangeNotifier {
     _welcomeSeen = false;
     _name = null;
     _focusAreas.clear();
+    _lastPreselectedPathKey = null;
     _dailyReminderEnabled = false;
     _onboardingComplete = false;
     userHabits.clear();

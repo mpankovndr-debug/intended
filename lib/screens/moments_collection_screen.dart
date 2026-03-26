@@ -377,7 +377,7 @@ class _MomentsCollectionScreenState extends State<MomentsCollectionScreen> {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(24),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: Container(
@@ -386,7 +386,7 @@ class _MomentsCollectionScreenState extends State<MomentsCollectionScreen> {
                 color: isDark
                     ? colors.momentsCard.withOpacity(colors.momentsCardOpacity)
                     : const Color(0xFFFFFFFF).withOpacity(0.30),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(24),
                 border: Border.all(
                   color: isDark
                       ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -447,7 +447,7 @@ class _MomentsCollectionScreenState extends State<MomentsCollectionScreen> {
               GestureDetector(
                 onTap: () => Navigator.pop(context),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(24),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                     child: Container(
@@ -565,7 +565,7 @@ class _MomentsHeaderDelegate extends SliverPersistentHeaderDelegate {
               GestureDetector(
                 onTap: onBack,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(24),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                     child: Container(
@@ -653,7 +653,7 @@ class _MomentRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
           child: Container(
@@ -662,7 +662,7 @@ class _MomentRow extends StatelessWidget {
               color: isDark
                   ? colors.momentsCard.withOpacity(colors.momentsCardOpacity)
                   : const Color(0xFFFFFFFF).withOpacity(0.30),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: isDark
                     ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -768,7 +768,7 @@ class _ReflectionRow extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(24),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: Container(
@@ -777,7 +777,7 @@ class _ReflectionRow extends StatelessWidget {
                 color: isDark
                     ? colors.momentsCard.withValues(alpha: colors.momentsCardOpacity)
                     : const Color(0xFFFFFFFF).withValues(alpha: 0.30),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(24),
                 border: Border.all(
                   color: isDark
                       ? colors.borderCard.withValues(alpha: colors.borderCardOpacity)
@@ -855,7 +855,7 @@ class _ReflectionRow extends StatelessWidget {
                           Text(
                             dayLabels[i],
                             style: TextStyle(
-                              fontFamily: 'DMSans',
+                              fontFamily: 'Sora',
                               fontSize: 10,
                               fontWeight: FontWeight.w400,
                               color: active

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'dart:ui' show ImageFilter;
@@ -41,12 +42,16 @@ import 'services/notification_preferences_service.dart';
 import 'services/revenue_cat_service.dart';
 import 'widgets/boost_offer_sheet.dart';
 import 'widgets/app_toast.dart';
-import 'widgets/tip_banner.dart';
 import 'models/curated_pack.dart';
-import 'services/tips_service.dart';
+import 'services/widget_completion_service.dart';
 import 'services/widget_service.dart';
 import 'services/backup_service.dart';
+import 'services/app_usage_service.dart';
+import 'services/coach_mark_service.dart';
+import 'services/review_request_service.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'widgets/quiet_bloom_overlay.dart';
+import 'widgets/upgrade_nudge_banner.dart';
 
 // ✅ ADD THIS HELPER HERE (before the main() function):
 Future<T?> showIntendedModal<T>({
@@ -270,7 +275,7 @@ Widget styledPrimaryButton({
       return Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
               color: resolvedColor.withOpacity(0.3),
@@ -281,7 +286,7 @@ Widget styledPrimaryButton({
         ),
         child: CupertinoButton(
           color: resolvedColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(24),
           padding: const EdgeInsets.symmetric(vertical: 16),
           onPressed: onPressed,
           child: Text(
@@ -318,7 +323,7 @@ Widget styledSecondaryButton({
           color: isDark
               ? colors.cardBackground.withOpacity(colors.cardBackgroundOpacity)
               : Colors.white.withOpacity(0.8),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(color: isDark ? colors.borderCard.withOpacity(colors.borderCardOpacity) : colors.borderMedium, width: 1),
           boxShadow: [
             BoxShadow(
@@ -361,19 +366,90 @@ class AppBackground extends StatelessWidget {
     Responsive.init(context);
     final themeProvider = context.watch<ThemeProvider>();
     final colors = themeProvider.colors;
+    final isDark = themeProvider.theme.isDark;
+
+    // Per-theme gradient character:
+    // Light themes — bgGradientBottom is each theme's saturated accent hue
+    // (warmClay=amber, clearSky=blue, softDusk=rose, goldenHour=orange, etc.)
+    // Blending onboardingBg2 32% toward it creates a visible "warm/cool push"
+    // at the center that's unique per theme. bgGradientMid at 25% gives the
+    // bottom a slightly different warm-honey tone so top→bottom shifts clearly.
+    // Dark themes — ctaPrimary at low % adds subtle warm undertone.
+    final Color centerStop = isDark
+        ? Color.lerp(colors.onboardingBg2, colors.ctaPrimary, 0.15)!
+        : Color.lerp(colors.onboardingBg2, colors.bgGradientBottom, 0.32)!;
+    final Color bottomStop = isDark
+        ? Color.lerp(colors.onboardingBg3, colors.ctaPrimary, 0.08)!
+        : Color.lerp(colors.onboardingBg3, colors.bgGradientMid, 0.25)!;
+
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Background image — fully visible, barely softened
-        ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+        // Layer 1: 4-stop diagonal gradient.
+        // warmClay example: cream(245,237,224) → warm-cream(236,220,200)
+        //   → warm-peach(226,202,176) → honey-gold(224,205,183)
+        // The 32-blue-point drop from top→center makes the shift clearly visible.
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: const Alignment(-0.4, -1.0),
+              end: const Alignment(0.4, 1.0),
+              colors: [
+                colors.onboardingBg1,
+                Color.lerp(colors.onboardingBg1, centerStop, 0.5)!,
+                centerStop,
+                bottomStop,
+              ],
+              stops: const [0.0, 0.3, 0.65, 1.0],
+            ),
+          ),
+        ),
+
+        // Layer 2: Background texture image — above the gradient so it's visible,
+        // below the radial glows so they paint over it.
+        Opacity(
+          opacity: 0.22,
           child: Image.asset(
             colors.backgroundSoft,
             fit: BoxFit.cover,
           ),
         ),
 
-        // Warm gradient overlay
+        // Layer 3a: Primary radial glow — subtle warmth, shifted left of center
+        // for natural asymmetry.
+        Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              center: const Alignment(-0.3, -0.2),
+              radius: 0.9,
+              colors: [
+                colors.ctaPrimary.withValues(alpha: 0.22),
+                colors.ctaPrimary.withValues(alpha: 0.05),
+                const Color(0x00000000),
+              ],
+              stops: const [0.0, 0.4, 1.0],
+            ),
+          ),
+        ),
+
+        // Layer 3b: White brightness highlight — soft luminosity at the primary
+        // glow position for depth.
+        Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              center: const Alignment(-0.3, -0.2),
+              radius: 0.75,
+              colors: [
+                Colors.white.withValues(alpha: 0.15),
+                const Color(0x00FFFFFF),
+              ],
+              stops: const [0.0, 1.0],
+            ),
+          ),
+        ),
+
+        // Layer 3c: Faint tonal overlay — reduced to 15% of theme opacity so
+        // only the subtlest hue tint comes through without darkening the bottom.
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -381,15 +457,24 @@ class AppBackground extends StatelessWidget {
               end: Alignment.bottomCenter,
               stops: const [0.0, 0.45, 1.0],
               colors: [
-                colors.bgGradientTop.withOpacity(colors.bgGradientTopOpacity),
-                colors.bgGradientMid.withOpacity(colors.bgGradientMidOpacity),
-                colors.bgGradientBottom.withOpacity(colors.bgGradientBottomOpacity),
+                colors.bgGradientTop.withOpacity(colors.bgGradientTopOpacity * 0.15),
+                colors.bgGradientMid.withOpacity(colors.bgGradientMidOpacity * 0.15),
+                colors.bgGradientBottom.withOpacity(colors.bgGradientBottomOpacity * 0.15),
               ],
             ),
           ),
         ),
 
-        // Grey wash — desaturates the combined bg + gradient (Iris only)
+        // Layer 4: Diagonal light streaks — "light through a window" effect.
+        // Reduced to 8% (was 18%) since the background image adds its own texture.
+        // Static CustomPainter, never repaints on scroll or rebuilds.
+        RepaintBoundary(
+          child: CustomPaint(
+            painter: _LightStreaksPainter(isDark: isDark),
+          ),
+        ),
+
+        // Layer 5: Iris grey wash — desaturates combined gradient (Iris only).
         if (themeProvider.theme == AppTheme.iris)
           Container(color: const Color(0xFFF0EDF2).withOpacity(0.45)),
 
@@ -397,6 +482,61 @@ class AppBackground extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Paints diagonal light streaks that mimic natural light rays through a window.
+///
+/// Each streak has individually varied angle (61°–79°), thickness (0.5–1.5px),
+/// and some are partial (don't span full screen height) — so the result looks
+/// like light rays, not a wallpaper pattern. Opacity 18% light / 4% dark.
+class _LightStreaksPainter extends CustomPainter {
+  final bool isDark;
+
+  const _LightStreaksPainter({required this.isDark});
+
+  // 10 streak types that tile across the screen.
+  // Mostly 0.3px whispers, a couple of 1.0px mediums, two wide soft beams.
+  // Angles vary 61°–79° from horizontal. Spacings are irregular.
+  static const _angles      = [68.0, 75.0, 62.0, 79.0, 66.0, 72.0, 61.0, 76.0, 64.0, 71.0];
+  static const _widths      = [0.3,  1.0,  0.3,  2.5,  0.3,  0.3,  1.0,  0.3,  2.0,  0.3 ];
+  static const _spacings    = [62.0, 96.0, 44.0, 118.0, 70.0, 104.0, 52.0, 82.0, 130.0, 58.0];
+  static const _startFr     = [0.0,  0.0,  0.0,  0.0,  0.18, 0.0,  0.28, 0.0,  0.0,   0.0 ];
+  static const _endFr       = [1.0,  1.0,  1.0,  1.0,  0.72, 1.0,  0.90, 1.0,  1.0,   1.0 ];
+  // Thick beams (idx 3, 8) use 55% alpha so they feel diffused, not sharp.
+  static const _alphaScales = [1.0,  1.0,  1.0,  0.55, 1.0,  1.0,  1.0,  1.0,  0.55,  1.0 ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final baseAlpha = isDark ? 10 : 20; // 4% dark / 8% light
+
+    // Seed x far enough left that even the shallowest (60°) streak covers screen.
+    final maxSpan = size.height / tan(60 * pi / 180);
+    double x = -maxSpan;
+    int i = 0;
+
+    while (x < size.width + 20) {
+      final idx = i % _angles.length;
+      final slopeY = tan(_angles[idx] * pi / 180);
+      final startY = _startFr[idx] * size.height;
+      final endY = _endFr[idx] * size.height;
+      final alpha = (baseAlpha * _alphaScales[idx]).round();
+
+      canvas.drawLine(
+        Offset(x + startY / slopeY, startY),
+        Offset(x + endY / slopeY, endY),
+        Paint()
+          ..color = Color.fromARGB(alpha, 255, 255, 255)
+          ..strokeWidth = _widths[idx]
+          ..style = PaintingStyle.stroke,
+      );
+
+      x += _spacings[idx];
+      i++;
+    }
+  }
+
+  @override
+  bool shouldRepaint(_LightStreaksPainter old) => old.isDark != isDark;
 }
 
 /* -------------------- MODELS -------------------- */
@@ -537,6 +677,7 @@ void main() {
       } catch (_) {
         // Already initialized (e.g. hot restart)
       }
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(kDebugMode == false);
 
       FlutterError.onError =
           FirebaseCrashlytics.instance.recordFlutterFatalError;
@@ -616,6 +757,12 @@ void main() {
 
         IOSVersion.init();
         WidgetService.initialize();
+
+        // Sync any habit completions made from the iOS widget
+        final widgetSynced = await WidgetCompletionService.syncPendingCompletions();
+        if (widgetSynced > 0) {
+          debugPrint('Synced $widgetSynced widget completions');
+        }
         final firebaseUid = FirebaseAuth.instance.currentUser?.uid;
         await revenueCatService.init(firebaseUid: firebaseUid);
       });
@@ -837,16 +984,45 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
   int _currentIndex = 0;
   bool? _lastPremiumStatus;
   UserState? _userState;
+  bool _hasUnseenReflection = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // Listen for weekly notification tap → switch to Progress tab
+    NotificationScheduler.pendingTabSwitch.addListener(_onPendingTabSwitch);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _userState = context.read<UserState>();
       _lastPremiumStatus = _userState!.hasSubscription;
       _userState!.addListener(_onSubscriptionChanged);
+      _loadUnseenReflection();
     });
+  }
+
+  Future<void> _loadUnseenReflection() async {
+    final prefs = await SharedPreferences.getInstance();
+    final unseen = prefs.getBool('has_unseen_reflection') ?? false;
+    if (mounted && unseen != _hasUnseenReflection) {
+      setState(() => _hasUnseenReflection = unseen);
+    }
+  }
+
+  void _onPendingTabSwitch() {
+    final tab = NotificationScheduler.pendingTabSwitch.value;
+    if (tab >= 0 && mounted) {
+      setState(() {
+        _currentIndex = tab;
+        // Clear unseen badge since we're navigating to Progress
+        if (tab == 1) _hasUnseenReflection = false;
+      });
+      NotificationScheduler.pendingTabSwitch.value = -1; // consumed
+      if (tab == 1) {
+        SharedPreferences.getInstance().then(
+          (prefs) => prefs.setBool('has_unseen_reflection', false),
+        );
+      }
+    }
   }
 
   void _onSubscriptionChanged() {
@@ -869,6 +1045,7 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    NotificationScheduler.pendingTabSwitch.removeListener(_onPendingTabSwitch);
     _userState?.removeListener(_onSubscriptionChanged);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -880,6 +1057,7 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
       NotificationScheduler.refreshTimezone(AppLocalizations.of(context));
       context.read<RevenueCatService>().refreshPurchaseStatus();
       refreshHomeWidget(context);
+      _loadUnseenReflection();
     }
     if (state == AppLifecycleState.paused && mounted) {
       context.read<BackupService>().backup();
@@ -918,8 +1096,8 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
                     end: Alignment.bottomCenter,
                     colors: [
                       colors.tabBarFade.withOpacity(0.0),
-                      colors.tabBarFade.withOpacity(0.85),
-                      colors.tabBarFade.withOpacity(0.95),
+                      colors.tabBarFade.withOpacity(0.60),
+                      colors.tabBarFade.withOpacity(0.75),
                     ],
                     stops: const [0.0, 0.6, 1.0],
                   ),
@@ -935,9 +1113,17 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
             bottom: MediaQuery.of(context).padding.bottom + 16,
             child: _CustomTabBar(
               currentIndex: _currentIndex,
+              hasUnseenReflection: _hasUnseenReflection,
               onTap: (index) {
                 HapticFeedback.selectionClick();
                 setState(() => _currentIndex = index);
+                // Clear unseen reflection badge when navigating to Progress tab
+                if (index == 1 && _hasUnseenReflection) {
+                  setState(() => _hasUnseenReflection = false);
+                  SharedPreferences.getInstance().then(
+                    (prefs) => prefs.setBool('has_unseen_reflection', false),
+                  );
+                }
               },
             ),
           ),
@@ -1102,10 +1288,12 @@ class _WelcomeBackOverlayState extends State<WelcomeBackOverlay>
 
 class _CustomTabBar extends StatelessWidget {
   final int currentIndex;
+  final bool hasUnseenReflection;
   final ValueChanged<int> onTap;
 
   const _CustomTabBar({
     required this.currentIndex,
+    this.hasUnseenReflection = false,
     required this.onTap,
   });
 
@@ -1147,18 +1335,22 @@ class _CustomTabBar extends StatelessWidget {
                   iconSelected: CupertinoIcons.checkmark_circle_fill,
                   index: 0,
                   currentIndex: currentIndex,
+                  semanticLabel: AppLocalizations.of(context).a11yTabHabits,
                   onTap: onTap),
               _TabItem(
                   icon: CupertinoIcons.chart_bar,
                   iconSelected: CupertinoIcons.chart_bar_fill,
                   index: 1,
                   currentIndex: currentIndex,
+                  showBadge: hasUnseenReflection,
+                  semanticLabel: AppLocalizations.of(context).a11yTabProgress,
                   onTap: onTap),
               _TabItem(
                   icon: CupertinoIcons.person_circle,
                   iconSelected: CupertinoIcons.person_circle_fill,
                   index: 2,
                   currentIndex: currentIndex,
+                  semanticLabel: AppLocalizations.of(context).a11yTabProfile,
                   onTap: onTap),
             ],
           ),
@@ -1173,6 +1365,8 @@ class _TabItem extends StatelessWidget {
   final IconData iconSelected;
   final int index;
   final int currentIndex;
+  final bool showBadge;
+  final String? semanticLabel;
   final ValueChanged<int> onTap;
 
   const _TabItem({
@@ -1180,6 +1374,8 @@ class _TabItem extends StatelessWidget {
     required this.iconSelected,
     required this.index,
     required this.currentIndex,
+    this.showBadge = false,
+    this.semanticLabel,
     required this.onTap,
   });
 
@@ -1188,21 +1384,44 @@ class _TabItem extends StatelessWidget {
     final isSelected = index == currentIndex;
     final colors = context.watch<ThemeProvider>().colors;
 
-    return GestureDetector(
+    return Semantics(
+      label: semanticLabel,
+      button: true,
+      selected: isSelected,
+      child: GestureDetector(
       onTap: () => onTap(index),
       behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: Icon(
-            isSelected ? iconSelected : icon,
-            key: ValueKey(isSelected),
-            size: 24,
-            color: isSelected ? colors.ctaPrimary : colors.textDisabled,
-          ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                isSelected ? iconSelected : icon,
+                key: ValueKey(isSelected),
+                size: 24,
+                color: isSelected ? colors.ctaPrimary : colors.textDisabled,
+              ),
+            ),
+            if (showBadge)
+              Positioned(
+                top: -2,
+                right: -4,
+                child: Container(
+                  width: 7,
+                  height: 7,
+                  decoration: BoxDecoration(
+                    color: colors.ctaPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
+    ),
     );
   }
 }
@@ -1224,8 +1443,8 @@ class _HabitsScreenState extends State<HabitsScreen>
   // Day-change detection — forces all habit cards to rebuild on new day
   String _currentDateStr = DateTime.now().toIso8601String().substring(0, 10);
 
-  // Tips system
-  int? _currentTipIndex;
+  // Coach mark target for home-screen-level marks (widget, smart notifications)
+  final _homeTopKey = GlobalKey();
 
   // Unified entrance animation (staggered, like welcome screen)
   late AnimationController _entranceController;
@@ -1291,8 +1510,53 @@ class _HabitsScreenState extends State<HabitsScreen>
       Future.delayed(const Duration(milliseconds: 300), () {
         if (mounted) _entranceController.forward();
       });
+      // Increment days_active and check daily coach marks
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _checkDailyCoachMarks(context);
+      });
     }
     // Otherwise controller stays at 1.0 (already visible, no flash)
+  }
+
+  Future<void> _checkDailyCoachMarks(BuildContext ctx) async {
+    // Capture l10n before any await — ctx may be stale after gaps
+    final l10n = AppLocalizations.of(ctx);
+    final service = CoachMarkService.instance;
+    final daysActive = await AppUsageService.incrementDaysActiveOnce();
+    if (!mounted) return;
+
+    // Moment 3 — widget coach mark after 3 days active
+    if (daysActive >= 3) {
+      // TODO: add widget detection to skip this coach mark if widget already added
+      await service.enqueue(
+        key: CoachMarkKeys.widget,
+        targetKey: _homeTopKey,
+        title: l10n.coachMarkWidgetTitle,
+        body: l10n.coachMarkWidgetBody,
+      );
+    }
+
+    // Moment 5 — smart notifications after 3 notification taps
+    final notifTapped = await AppUsageService.getNotificationsTapped();
+    if (!mounted) return;
+    if (notifTapped >= 3) {
+      final prefs = await SharedPreferences.getInstance();
+      if (!mounted) return;
+      final alreadyVisited =
+          prefs.getBool('has_visited_notification_settings') ?? false;
+      if (alreadyVisited) {
+        await service.markAsSeen(CoachMarkKeys.smartNotifications);
+      } else {
+        await service.enqueue(
+          key: CoachMarkKeys.smartNotifications,
+          targetKey: _homeTopKey,
+          title: l10n.coachMarkSmartNotificationsTitle,
+          body: l10n.coachMarkSmartNotificationsBody,
+        );
+      }
+    }
+
+    if (mounted) service.showNext(context);
   }
 
   @override
@@ -1300,8 +1564,6 @@ class _HabitsScreenState extends State<HabitsScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     AnalyticsService.logScreenView('habits');
-    _loadCurrentTip();
-
     _entranceController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
@@ -1371,12 +1633,6 @@ class _HabitsScreenState extends State<HabitsScreen>
     );
   }
 
-  Future<void> _loadCurrentTip() async {
-    final index = await TipsService.getCurrentTipIndex();
-    if (mounted && index != _currentTipIndex) {
-      setState(() => _currentTipIndex = index);
-    }
-  }
 
   void _createCustomHabit(BuildContext context) {
     final onboardingState = context.read<OnboardingState>();
@@ -1392,7 +1648,7 @@ class _HabitsScreenState extends State<HabitsScreen>
         showBoostOption: false,
         source: 'custom_habit_limit',
       ).then((result) {
-        if (result == 'paywall') openPaywallFromContext(context, source: 'custom_habit_limit');
+        if (result == 'paywall') openPaywallFromContext(context, source: 'custom_habit_limit', triggeredByCeiling: true);
       });
       return;
     }
@@ -1470,6 +1726,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                   FadeTransition(
                     opacity: _fadeHeader,
                     child: Padding(
+                      key: _homeTopKey,
                       padding: EdgeInsets.fromLTRB(
                           24, MediaQuery.of(context).padding.top + 24, 24, 32),
                       child: Column(
@@ -1478,7 +1735,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                           Text(
                             _getTodaysMessage(l10n),
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: Responsive.sp(22),
                               fontWeight: FontWeight.w600,
                               color: colors.textPrimary,
                               fontFamily: 'Sora',
@@ -1488,7 +1745,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                           Text(
                             dateStr,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: Responsive.sp(14),
                               fontWeight: FontWeight.w500,
                               color: colors.checkmarkFill,
                               fontFamily: AppTextStyles.bodyFont(context),
@@ -1513,19 +1770,6 @@ class _HabitsScreenState extends State<HabitsScreen>
                       ),
                     )
                   else ...[
-                    // Tip banner (above pinned section)
-                    if (_currentTipIndex != null)
-                      FadeTransition(
-                        opacity: _fadeMiddle,
-                        child: TipBanner(
-                          key: ValueKey('tip_$_currentTipIndex'),
-                          tipIndex: _currentTipIndex!,
-                          onDismissed: (nextIndex) {
-                            setState(() => _currentTipIndex = nextIndex);
-                          },
-                        ),
-                      ),
-
                     // Pinned section (stagger 2: fades in second)
                     if (pinned.isNotEmpty)
                       FadeTransition(
@@ -1556,6 +1800,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                   habitTitle: habit,
                                   isPinned: true,
                                   accentColor: colors.accentPinned,
+                                  onAllDone: () => QuietBloomOverlay.show(context),
                                 );
                                 if (!isNewPin) return habitCard;
                                 // Arrival animation: slide up + scale + fade in
@@ -1627,6 +1872,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                       habitTitle: habit,
                                       accentColor:
                                           colors.accentRegular, // Warm taupe
+                                      onAllDone: () => QuietBloomOverlay.show(context),
                                     );
                                     if (habit != unpinnedHabit) {
                                       return habitCard;
@@ -1758,7 +2004,8 @@ class _HabitsScreenState extends State<HabitsScreen>
                                               sigmaX: 5, sigmaY: 5),
                                           builder: (context) =>
                                               const PaywallScreen(
-                                                  source: 'browse_habits'),
+                                                  source: 'browse_habits',
+                                                  triggeredByCeiling: true),
                                         );
                                       },
                                       child: Container(
@@ -1898,7 +2145,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                 GestureDetector(
                                     onTap: () => _showBrowseHabits(context),
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(24),
                                       child: BackdropFilter(
                                         filter: ImageFilter.blur(
                                             sigmaX: 22, sigmaY: 22),
@@ -1909,7 +2156,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                                 .withOpacity(
                                                     colors.cardBrowseOpacity),
                                             borderRadius:
-                                                BorderRadius.circular(16),
+                                                BorderRadius.circular(24),
                                             border: Border.all(
                                               color: isDark
                                                   ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -1972,6 +2219,9 @@ class _HabitsScreenState extends State<HabitsScreen>
                                       ),
                                     ),
                                   ),
+
+                                // Upgrade nudge banner (one-shot, free users only)
+                                const UpgradeNudgeBanner(),
                               ],
                             ),
                           ),
@@ -2223,7 +2473,7 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                           color: isDark
                               ? colors.cardBackground.withOpacity(colors.cardBackgroundOpacity)
                               : const Color(0xFFFFFFFF).withOpacity(0.7),
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(24),
                           border: Border.all(
                             color: isDark
                                 ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -2302,7 +2552,7 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                                                   catColor, 0.10)!
                                                   .withOpacity(0.5),
                                       borderRadius:
-                                          BorderRadius.circular(20),
+                                          BorderRadius.circular(24),
                                       border: Border.all(
                                         color: isSelected
                                             ? catColor.withOpacity(0.5)
@@ -2364,7 +2614,7 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                       // SUBMIT BUTTON
                       // ============================================================
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(24),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: SizedBox(
@@ -2377,7 +2627,7 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                                   : isDark
                                       ? colors.cardBackground.withOpacity(0.6)
                                       : const Color(0xFFFFFFFF).withOpacity(0.4),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(24),
                               child: Text(
                                 l10n.customHabitSubmit,
                                 style: TextStyle(
@@ -2409,12 +2659,14 @@ class _HabitCard extends StatefulWidget {
   final String habitTitle;
   final bool isPinned;
   final Color? accentColor;
+  final VoidCallback? onAllDone;
 
   const _HabitCard({
     super.key,
     required this.habitTitle,
     this.isPinned = false,
     this.accentColor, // Default resolved from theme in build
+    this.onAllDone,
   });
 
   @override
@@ -2425,6 +2677,8 @@ class _HabitCardState extends State<_HabitCard>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
   @override
   bool get wantKeepAlive => true;
+
+  final _cardKey = GlobalKey();
 
   bool _isDoneToday = false;
   bool _isAnimating = false;
@@ -2553,24 +2807,101 @@ class _HabitCardState extends State<_HabitCard>
       // Update home screen widget with new completion state
       refreshHomeWidget(context);
 
-      // Premium "all done" haptic — heavy thud when last habit is completed
-      if (isPremium) {
-        _checkAllDoneHaptic();
-      }
+      // Check if all habits are now done — triggers Quiet Bloom for all users
+      _checkAllDoneAndBloom();
+
+      // Coach marks — Moment 1 (first completion) & Moment 2 (pinning)
+      if (mounted) _checkCompletionCoachMarks();
     }
   }
 
-  /// Checks if all habits are now complete; if so, fires a heavy haptic.
-  Future<void> _checkAllDoneHaptic() async {
+  Future<void> _checkCompletionCoachMarks() async {
+    // Wait for the completion animation to finish before overlaying coach mark.
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+
+    final l10n = AppLocalizations.of(context);
+    final service = CoachMarkService.instance;
+    final count = await AppUsageService.incrementHabitsCompleted();
+    if (!mounted) return;
+
+    // Moment 1 — first habit ever completed
+    if (count == 1) {
+      final ctaColor = context.read<ThemeProvider>().colors.ctaPrimary;
+      await service.enqueue(
+        key: CoachMarkKeys.firstCompletion,
+        targetKey: _cardKey,
+        title: l10n.coachMarkFirstCompletionTitle,
+        body: l10n.coachMarkFirstCompletionBody,
+        titleIcon: Icon(
+          CupertinoIcons.checkmark_circle_fill,
+          size: 18,
+          color: ctaColor,
+        ),
+      );
+    }
+
+    // Moment 2 — third completion; only if user hasn't already pinned
+    if (count == 3) {
+      final prefs = await SharedPreferences.getInstance();
+      final alreadyPinned = (prefs.getString('pinned_habit') ?? '').isNotEmpty;
+      if (alreadyPinned) {
+        await service.markAsSeen(CoachMarkKeys.pinning);
+      } else {
+        await service.enqueue(
+          key: CoachMarkKeys.pinning,
+          targetKey: _cardKey,
+          title: l10n.coachMarkPinningTitle,
+          body: l10n.coachMarkPinningBody,
+        );
+      }
+    }
+
+    if (mounted) service.showNext(context);
+
+    // ── Review request ────────────────────────────────────────────
+    // Check after coach marks so they get priority.
+    // Delay to avoid colliding with a coach mark overlay.
+    await Future.delayed(const Duration(milliseconds: 600));
+    if (!mounted) return;
+    final allDone = await _areAllHabitsDone();
+    if (mounted) {
+      ReviewRequestService.checkAndPrompt(
+        context,
+        totalCompletions: count,
+        allDoneToday: allDone,
+      );
+    }
+  }
+
+  /// Helper: checks if every active habit has been completed today.
+  Future<bool> _areAllHabitsDone() async {
     final onboarding = context.read<OnboardingState>();
     final habits = onboarding.userHabits;
-    if (habits.isEmpty) return;
+    if (habits.isEmpty) return false;
     final completedIds = await HabitTracker.allCompletedIdsForDate(DateTime.now());
+    return habits.every((h) => completedIds.contains(HabitTracker.habitId(h)));
+  }
+
+  /// Checks if all habits are now complete; if so, triggers Quiet Bloom.
+  Future<void> _checkAllDoneAndBloom() async {
+    final onboarding = context.read<OnboardingState>();
+    final habits = onboarding.userHabits;
+    debugPrint('[QuietBloom] _checkAllDoneAndBloom — ${habits.length} habits');
+    if (habits.isEmpty) {
+      debugPrint('[QuietBloom] ❌ No habits found, returning');
+      return;
+    }
+    final completedIds = await HabitTracker.allCompletedIdsForDate(DateTime.now());
+    final expectedIds = habits.map((h) => HabitTracker.habitId(h)).toList();
+    debugPrint('[QuietBloom] Expected IDs: $expectedIds');
+    debugPrint('[QuietBloom] Completed IDs: ${completedIds.toList()}');
     final allDone = habits.every(
       (h) => completedIds.contains(HabitTracker.habitId(h)),
     );
-    if (allDone) {
-      HapticFeedback.heavyImpact();
+    debugPrint('[QuietBloom] All done: $allDone | mounted: $mounted');
+    if (allDone && mounted) {
+      widget.onAllDone?.call();
     }
   }
 
@@ -2612,7 +2943,7 @@ class _HabitCardState extends State<_HabitCard>
                   margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                   constraints: const BoxConstraints(maxWidth: 420),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(24),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
                       child: Container(
@@ -2627,7 +2958,7 @@ class _HabitCardState extends State<_HabitCard>
                             ],
                             stops: const [0.0, 0.5, 1.0],
                           ),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(24),
                           border: Border.all(
                             color: isDark
                                 ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -2702,7 +3033,7 @@ class _HabitCardState extends State<_HabitCard>
                       16, 8, 16, MediaQuery.of(context).padding.bottom + 12),
                   constraints: const BoxConstraints(maxWidth: 420),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(24),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
                       child: Container(
@@ -2716,7 +3047,7 @@ class _HabitCardState extends State<_HabitCard>
                               colors.modalBg2.withOpacity(isDark ? 0.70 : 0.95),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(24),
                           border: Border.all(
                             color: isDark
                                 ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -2782,10 +3113,7 @@ class _HabitCardState extends State<_HabitCard>
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: AppTextStyles.bodyFont(context),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                  style: AppTextStyles.bodyLarge(context).copyWith(
                     color: textColor,
                   ),
                 ),
@@ -2845,6 +3173,8 @@ class _HabitCardState extends State<_HabitCard>
     // Pin the habit — triggers parent rebuild, this widget may be disposed
     await onboardingState.pinHabit(widget.habitTitle);
     AnalyticsService.logHabitPinned();
+    // Silent discovery: user pinned manually — dismiss coach mark without showing it
+    CoachMarkService.instance.markAsSeen(CoachMarkKeys.pinning);
     // Widget likely disposed after this — don't access state
   }
 
@@ -2960,7 +3290,7 @@ class _HabitCardState extends State<_HabitCard>
                                 localizeHabitName(widget.habitTitle, l10n)),
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'DM Sans',
+                              fontFamily: 'Sora',
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                               color: colors.ctaPrimary,
@@ -2983,7 +3313,7 @@ class _HabitCardState extends State<_HabitCard>
                                   colors.ctaSecondary.withOpacity(0.88),
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
                                   color: colors.textPrimary.withOpacity(0.25),
@@ -3176,13 +3506,13 @@ class _HabitCardState extends State<_HabitCard>
                           ),
                           const SizedBox(height: 16),
 
-                          // Description (REVERTED to DM Sans)
+                          // Description
                           Text(
                             l10n.swapCategoryHabits(
                                 localizeCategoryName(category, l10n)),
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'DM Sans',
+                              fontFamily: 'Sora',
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                               color: colors.ctaPrimary,
@@ -3273,7 +3603,7 @@ class _HabitCardState extends State<_HabitCard>
                             Text(
                               l10n.swapFreeRemaining(remaining),
                               style: TextStyle(
-                                fontFamily: 'DM Sans',
+                                fontFamily: 'Sora',
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
                                 color: colors.textSecondary,
@@ -3426,7 +3756,7 @@ class _HabitCardState extends State<_HabitCard>
                                     colors.ctaSecondary.withOpacity(0.88),
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(24),
                                 boxShadow: [
                                   BoxShadow(
                                     color: colors.textPrimary.withOpacity(0.25),
@@ -3474,7 +3804,7 @@ class _HabitCardState extends State<_HabitCard>
       showBoostOption: false,
       source: 'swap_limit',
     ).then((result) {
-      if (result == 'paywall') openPaywallFromContext(context, source: 'swap_limit');
+      if (result == 'paywall') openPaywallFromContext(context, source: 'swap_limit', triggeredByCeiling: true);
     });
   }
 
@@ -3603,7 +3933,7 @@ class _HabitCardState extends State<_HabitCard>
                                     color: isDark
                                         ? colors.cardBackground.withOpacity(colors.cardBackgroundOpacity)
                                         : const Color(0xFFFFFFFF).withOpacity(0.7),
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(24),
                                     border: Border.all(
                                       color: isDark
                                           ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -3639,7 +3969,7 @@ class _HabitCardState extends State<_HabitCard>
                                               colors.textDisabled.withOpacity(0.2),
                                             ],
                                     ),
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: CupertinoButton(
                                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -3798,7 +4128,7 @@ class _HabitCardState extends State<_HabitCard>
                                   colors.destructiveDark.withOpacity(0.88),
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
                                   color:
@@ -3891,11 +4221,21 @@ class _HabitCardState extends State<_HabitCard>
           widget.accentColor ?? colors.accentRegular; // Warm taupe
     }
 
+    final cardSemanticLabel = _isDoneToday
+        ? l10n.a11yHabitCardDone(widget.habitTitle)
+        : widget.isPinned
+            ? l10n.a11yHabitCardPinned(widget.habitTitle)
+            : l10n.a11yHabitCardTodo(widget.habitTitle);
+
     Widget card = FadeTransition(
       opacity: _departureFade,
       child: ScaleTransition(
         scale: _departureScale,
-        child: GestureDetector(
+        child: Semantics(
+          label: cardSemanticLabel,
+          button: !_isDoneToday,
+          enabled: !_isDoneToday,
+          child: GestureDetector(
           onTap: _handleTap,
           onLongPress: _handleLongPress,
           child: ScaleTransition(
@@ -3908,15 +4248,17 @@ class _HabitCardState extends State<_HabitCard>
                   children: [
                   // LEFT ACCENT BAR (only show if not completed)
                   if (!_isDoneToday)
-                    Container(
+                    ExcludeSemantics(
+                    child: Container(
                       width: 4,
                       decoration: BoxDecoration(
                         color: effectiveAccentColor,
                         borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          bottomLeft: Radius.circular(16),
+                          topLeft: Radius.circular(24),
+                          bottomLeft: Radius.circular(24),
                         ),
                       ),
+                    ),
                     ),
 
                   // Spacing between accent bar and card
@@ -3925,7 +4267,7 @@ class _HabitCardState extends State<_HabitCard>
                   // CARD
                   Expanded(
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(24),
                       child: BackdropFilter(
                         filter: ImageFilter.blur(
                           sigmaX: _isDoneToday ? 20 : 25,
@@ -3945,7 +4287,7 @@ class _HabitCardState extends State<_HabitCard>
                                 : widget.isPinned
                                     ? colors.cardPinned.withOpacity(colors.cardPinnedOpacity)
                                     : colors.cardBackground.withOpacity(colors.cardBackgroundOpacity),
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(24),
                             border: Border.all(
                               color: _isDoneToday
                                   ? colors.borderCard.withOpacity(0.10)
@@ -4029,7 +4371,7 @@ class _HabitCardState extends State<_HabitCard>
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                          fontSize: _isDoneToday ? 15 : 16,
+                                          fontSize: Responsive.sp(_isDoneToday ? 15 : 16),
                                           fontWeight: FontWeight.w500,
                                           color: _isDoneToday
                                               ? colors.textSecondary
@@ -4058,6 +4400,7 @@ class _HabitCardState extends State<_HabitCard>
             ),
           ),
         ),
+        ),
       ),
     );
 
@@ -4079,10 +4422,13 @@ class _HabitCardState extends State<_HabitCard>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          GestureDetector(
+                          Semantics(
+                            label: l10n.a11yEditHabit,
+                            button: true,
+                            child: GestureDetector(
                             onTap: _showEditDialog,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(14),
                               child: BackdropFilter(
                                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                                 child: Container(
@@ -4090,7 +4436,7 @@ class _HabitCardState extends State<_HabitCard>
                                   height: 44,
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(14),
                                     border: Border.all(
                                       color: Colors.white.withOpacity(0.4),
                                       width: 1,
@@ -4101,11 +4447,15 @@ class _HabitCardState extends State<_HabitCard>
                               ),
                             ),
                           ),
+                          ),
                           const SizedBox(width: 8),
-                          GestureDetector(
+                          Semantics(
+                            label: l10n.a11yDeleteHabit,
+                            button: true,
+                            child: GestureDetector(
                             onTap: _showDeleteConfirmation,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(14),
                               child: BackdropFilter(
                                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                                 child: Container(
@@ -4113,16 +4463,17 @@ class _HabitCardState extends State<_HabitCard>
                                   height: 44,
                                   decoration: BoxDecoration(
                                     color: colors.destructive.withOpacity(0.08),
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(14),
                                     border: Border.all(
                                       color: colors.destructive.withOpacity(0.15),
                                       width: 1,
                                     ),
                                   ),
-                                  child: Icon(CupertinoIcons.trash, size: 20, color: colors.destructive.withOpacity(0.7)),
+                                  child: Icon(CupertinoIcons.trash, size: 20, color: colors.destructive.withOpacity(0.85)),
                                 ),
                               ),
                             ),
+                          ),
                           ),
                         ],
                       ),
@@ -4135,7 +4486,7 @@ class _HabitCardState extends State<_HabitCard>
           : card,
     );
 
-    return wrappedCard;
+    return KeyedSubtree(key: _cardKey, child: wrappedCard);
   }
 }
 
@@ -4225,7 +4576,7 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
         showBoostOption: false,
         source: 'browse_swap_limit',
       ).then((result) {
-        if (result == 'paywall') openPaywallFromContext(context, source: 'browse_swap_limit');
+        if (result == 'paywall') openPaywallFromContext(context, source: 'browse_swap_limit', triggeredByCeiling: true);
       });
       return;
     }
@@ -4323,7 +4674,7 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
                       color: isDark
                           ? colors.cardBackground.withOpacity(colors.cardBackgroundOpacity)
                           : const Color(0xFFFFFFFF).withOpacity(0.45),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(24),
                       border: Border.all(
                         color: isDark
                             ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -4463,7 +4814,7 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
                           SizedBox(
                             width: double.infinity,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(24),
                               child: BackdropFilter(
                                 filter:
                                     ImageFilter.blur(sigmaX: 15, sigmaY: 15),
@@ -4477,7 +4828,7 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
                                         colors.ctaSecondary.withOpacity(0.88),
                                       ],
                                     ),
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(24),
                                     border: Border.all(
                                       color: colors.ctaPrimary.withOpacity(0.4),
                                       width: 1,
@@ -4503,7 +4854,7 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
                                     onPressed: () => Navigator.pop(context),
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 16),
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(24),
                                     child: Text(
                                       l10n.commonGreat,
                                       style: TextStyle(
@@ -4706,7 +5057,7 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                         color: colors.textSecondary,
-                        fontFamily: 'DMSans',
+                        fontFamily: 'Sora',
                       ),
                     ),
                   ],
@@ -4720,7 +5071,7 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: colors.textSecondary,
-                      fontFamily: 'DMSans',
+                      fontFamily: 'Sora',
                     ),
                   ),
                 ),
@@ -4739,7 +5090,7 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
                 color: isDark
                     ? colors.cardBackground.withOpacity(colors.cardBackgroundOpacity)
                     : const Color(0xFFFFFFFF).withOpacity(0.7),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(24),
                 border: Border.all(
                   color: isDark
                       ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -4774,13 +5125,13 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                         color: colors.textPrimary,
-                        fontFamily: 'DMSans',
+                        fontFamily: 'Sora',
                       ),
                       placeholderStyle: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                         color: colors.textSecondary.withOpacity(0.6),
-                        fontFamily: 'DMSans',
+                        fontFamily: 'Sora',
                       ),
                       onChanged: (value) {
                         setState(() {
@@ -4962,7 +5313,7 @@ class _BrowseHabitCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: isDark
               ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -4978,7 +5329,7 @@ class _BrowseHabitCard extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         child: IntrinsicHeight(
           child: Row(
             children: [
@@ -5018,7 +5369,7 @@ class _BrowseHabitCard extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             color: colors.textPrimary,
                             height: 1.5,
-                            fontFamily: 'DMSans',
+                            fontFamily: 'Sora',
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -5066,7 +5417,7 @@ class _BrowseHabitCard extends StatelessWidget {
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: accentColor,
-                              fontFamily: 'DMSans',
+                              fontFamily: 'Sora',
                             ),
                           ),
                         ),
@@ -5151,7 +5502,7 @@ class _CuratedPackCard extends StatelessWidget {
       child: Container(
         width: 180,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: isActive
                 ? colors.ctaPrimary.withOpacity(0.5)
@@ -5169,7 +5520,7 @@ class _CuratedPackCard extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(24),
           child: Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
@@ -5235,7 +5586,7 @@ class _CuratedPackCard extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                     color: colors.textSecondary,
-                    fontFamily: 'DMSans',
+                    fontFamily: 'Sora',
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -5244,7 +5595,7 @@ class _CuratedPackCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11,
                     color: colors.textSecondary.withOpacity(0.7),
-                    fontFamily: 'DMSans',
+                    fontFamily: 'Sora',
                     height: 1.3,
                   ),
                   maxLines: 1,
@@ -5294,7 +5645,7 @@ class _PackTierBadge extends StatelessWidget {
             fontSize: 11,
             fontWeight: FontWeight.w600,
             color: colors.ctaPrimary,
-            fontFamily: 'DMSans',
+            fontFamily: 'Sora',
             letterSpacing: 0.1,
           ),
         ),
@@ -5321,7 +5672,7 @@ class _PackTierBadge extends StatelessWidget {
           fontSize: 11,
           fontWeight: FontWeight.w600,
           color: colors.ctaPrimary,
-          fontFamily: 'DMSans',
+          fontFamily: 'Sora',
           letterSpacing: 0.1,
         ),
       ),
@@ -5437,7 +5788,7 @@ class _PackDetailSheet extends StatelessWidget {
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                     color: colors.textSecondary,
-                    fontFamily: 'DMSans',
+                    fontFamily: 'Sora',
                     height: 1.4,
                   ),
                 ),
@@ -5449,7 +5800,7 @@ class _PackDetailSheet extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     color: colors.textSecondary.withOpacity(0.8),
-                    fontFamily: 'DMSans',
+                    fontFamily: 'Sora',
                     height: 1.5,
                   ),
                 ),
@@ -5539,7 +5890,7 @@ class _PackDetailSheet extends StatelessWidget {
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500,
                                             color: colors.textPrimary,
-                                            fontFamily: 'DMSans',
+                                            fontFamily: 'Sora',
                                             height: 1.4,
                                           ),
                                         ),
@@ -5560,7 +5911,7 @@ class _PackDetailSheet extends StatelessWidget {
                                               fontSize: 11,
                                               fontWeight: FontWeight.w600,
                                               color: colors.ctaPrimary,
-                                              fontFamily: 'DMSans',
+                                              fontFamily: 'Sora',
                                             ),
                                           ),
                                         ),
@@ -5618,7 +5969,7 @@ class _PackStartButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
           color: colors.ctaPrimary.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: colors.ctaPrimary.withOpacity(0.15),
             width: 1,
@@ -5640,7 +5991,7 @@ class _PackStartButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: Container(
@@ -5653,7 +6004,7 @@ class _PackStartButton extends StatelessWidget {
                   colors.ctaSecondary.withOpacity(0.88),
                 ],
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: colors.ctaPrimary.withOpacity(0.4),
                 width: 1,
@@ -5676,7 +6027,7 @@ class _PackStartButton extends StatelessWidget {
             child: CupertinoButton(
               onPressed: () => _startPack(context),
               padding: const EdgeInsets.symmetric(vertical: 16),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(24),
               child: Text(
                 AppLocalizations.of(context).packStartButton(_localizedPack(AppLocalizations.of(context), pack).name),
                 style: TextStyle(
@@ -5882,7 +6233,7 @@ class _PackSwapSheetState extends State<_PackSwapSheet> {
                     l10n.packSwapSubtitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: 'DM Sans',
+                      fontFamily: 'Sora',
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       color: colors.textSecondary,
@@ -5912,7 +6263,7 @@ class _PackSwapSheetState extends State<_PackSwapSheet> {
                 SizedBox(
                   width: double.infinity,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(24),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                       child: Container(
@@ -5927,14 +6278,14 @@ class _PackSwapSheetState extends State<_PackSwapSheet> {
                                   _selected.isNotEmpty ? 0.88 : 0.3),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                         child: CupertinoButton(
                           onPressed: _selected.isNotEmpty
                               ? _confirm
                               : null,
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(24),
                           child: Text(
                             l10n.packSwapConfirm(
                                 _selected.length, _localizedPack(l10n, widget.pack).name),
@@ -6014,7 +6365,7 @@ class _PackSwapSheetState extends State<_PackSwapSheet> {
               child: Text(
                 localizeHabitName(habit, l10n),
                 style: TextStyle(
-                  fontFamily: 'DM Sans',
+                  fontFamily: 'Sora',
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
                   color: isChecked

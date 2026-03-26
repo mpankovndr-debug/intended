@@ -1,8 +1,10 @@
 import '../l10n/app_localizations.dart';
+import '../models/intention_path.dart';
 
 class NotificationMessages {
   NotificationMessages._();
 
+  /// Generic daily messages (path-agnostic fallback pool).
   static List<String> daily(AppLocalizations l10n) => [
     l10n.notifMsg1,
     l10n.notifMsg2,
@@ -55,4 +57,75 @@ class NotificationMessages {
     l10n.notifMsg58,
     l10n.notifMsg60,
   ];
+
+  /// Path-specific notification messages (6 per path).
+  /// Mixed with generic pool for variety: path messages appear ~40% of the time.
+  static List<String> forPath(AppLocalizations l10n, IntentionPathId pathId) {
+    return switch (pathId) {
+      IntentionPathId.gentleMornings => [
+        l10n.notifPathGentleMornings1,
+        l10n.notifPathGentleMornings2,
+        l10n.notifPathGentleMornings3,
+        l10n.notifPathGentleMornings4,
+        l10n.notifPathGentleMornings5,
+        l10n.notifPathGentleMornings6,
+      ],
+      IntentionPathId.findingCalm => [
+        l10n.notifPathFindingCalm1,
+        l10n.notifPathFindingCalm2,
+        l10n.notifPathFindingCalm3,
+        l10n.notifPathFindingCalm4,
+        l10n.notifPathFindingCalm5,
+        l10n.notifPathFindingCalm6,
+      ],
+      IntentionPathId.gratitudeSelfLove => [
+        l10n.notifPathGratitudeSelfLove1,
+        l10n.notifPathGratitudeSelfLove2,
+        l10n.notifPathGratitudeSelfLove3,
+        l10n.notifPathGratitudeSelfLove4,
+        l10n.notifPathGratitudeSelfLove5,
+        l10n.notifPathGratitudeSelfLove6,
+      ],
+      IntentionPathId.windingDown => [
+        l10n.notifPathWindingDown1,
+        l10n.notifPathWindingDown2,
+        l10n.notifPathWindingDown3,
+        l10n.notifPathWindingDown4,
+        l10n.notifPathWindingDown5,
+        l10n.notifPathWindingDown6,
+      ],
+      IntentionPathId.yourOwnWay => [
+        l10n.notifPathYourOwnWay1,
+        l10n.notifPathYourOwnWay2,
+        l10n.notifPathYourOwnWay3,
+        l10n.notifPathYourOwnWay4,
+        l10n.notifPathYourOwnWay5,
+        l10n.notifPathYourOwnWay6,
+      ],
+    };
+  }
+
+  /// Returns a merged pool: path-specific messages first, then generic.
+  /// This ensures path messages appear more frequently at the start of rotation.
+  static List<String> dailyForPath(AppLocalizations l10n, IntentionPathId pathId) {
+    final pathMessages = forPath(l10n, pathId);
+    final genericMessages = daily(l10n);
+    return [...pathMessages, ...genericMessages];
+  }
+
+  /// Path-specific weekly reflection notification message.
+  /// Falls back to generic notifWeeklyBody if no path is set.
+  static String weeklyForPath(AppLocalizations l10n, IntentionPathId pathId) {
+    return switch (pathId) {
+      IntentionPathId.gentleMornings => l10n.notifWeeklyPathGentleMornings,
+      IntentionPathId.findingCalm => l10n.notifWeeklyPathFindingCalm,
+      IntentionPathId.gratitudeSelfLove => l10n.notifWeeklyPathGratitudeSelfLove,
+      IntentionPathId.windingDown => l10n.notifWeeklyPathWindingDown,
+      IntentionPathId.yourOwnWay => l10n.notifWeeklyPathYourOwnWay,
+    };
+  }
+
+  /// Adaptive notification messages for re-engagement.
+  static String reengageMessage(AppLocalizations l10n) => l10n.adaptiveNotifReengageBody;
+  static String silentMessage(AppLocalizations l10n) => l10n.adaptiveNotifSilentBody;
 }

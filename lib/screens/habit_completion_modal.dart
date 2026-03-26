@@ -378,7 +378,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
                                       .withOpacity(0.88),
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(24),
                               border: Border.all(
                                 color: (_buttonColorAnimation.value ?? colors.ctaPrimary)
                                     .withOpacity(0.4),
@@ -450,7 +450,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
       margin: const EdgeInsets.symmetric(horizontal: 24),
       constraints: const BoxConstraints(maxWidth: 384),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: colors.modalShadow.withOpacity(0.2),
@@ -460,7 +460,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
           child: Container(
@@ -476,7 +476,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
                 ],
                 stops: const [0.0, 0.5, 1.0],
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: isDark
                     ? colors.borderCard.withOpacity(colors.borderCardOpacity)
@@ -540,7 +540,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
               _celebrationMessage,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontFamily: 'DM Sans',
+                fontFamily: 'Sora',
                 fontSize: 17,
                 fontWeight: FontWeight.w400,
                 color: colors.textTertiary,

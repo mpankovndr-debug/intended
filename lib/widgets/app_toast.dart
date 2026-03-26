@@ -113,7 +113,7 @@ class _AppToastWidgetState extends State<_AppToastWidget>
           child: SlideTransition(
             position: _slide,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(24),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                 child: Container(
@@ -124,7 +124,7 @@ class _AppToastWidgetState extends State<_AppToastWidget>
                   decoration: BoxDecoration(
                     color: colors.cardBackground
                         .withOpacity(colors.cardBackgroundOpacity),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(24),
                     border: Border.all(
                       color: colors.borderCard
                           .withOpacity(colors.borderCardOpacity),

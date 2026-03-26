@@ -82,6 +82,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingNamePrompt => 'Как тебя зовут?';
 
   @override
+  String get onboardingLetsGetStarted => 'Начнём';
+
+  @override
   String get onboardingSkipForNow => 'Пропустить';
 
   @override
@@ -242,11 +245,28 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String habitRevealSubtitlePath(String pathTitle) {
+    return 'Вот как выглядит твоя практика «$pathTitle».';
+  }
+
+  @override
+  String get habitRevealSubtitleOwnWay => 'Вот как выглядит твоя практика.';
+
+  @override
   String get habitRevealDescription =>
       'Выбирай то, что подходит. Пропускай то, что нет. Не нужно делать всё — достаточно одного.';
 
   @override
   String get habitRevealBegin => 'Давай начнём';
+
+  @override
+  String get focusAreasStartingPointsTitle =>
+      'Мы выбрали несколько стартовых точек для тебя';
+
+  @override
+  String focusAreasStartingPointsSubtext(String pathTitle) {
+    return 'На основе пути «$pathTitle». Добавляй или убирай направления в любое время.';
+  }
 
   @override
   String get habitsHoldForOptions => 'Удерживай привычку для опций';
@@ -1070,6 +1090,26 @@ class AppLocalizationsRu extends AppLocalizations {
       'Оглянись на свою неделю. Твои привычки были рядом.';
 
   @override
+  String get notifWeeklyPathGentleMornings =>
+      'Ваша неделя мягких утренних ритуалов готова к обзору.';
+
+  @override
+  String get notifWeeklyPathFindingCalm =>
+      'Неделя в поисках покоя. Посмотрите, как она прошла.';
+
+  @override
+  String get notifWeeklyPathGratitudeSelfLove =>
+      'Ваша неделя благодарности ждёт вашего внимания.';
+
+  @override
+  String get notifWeeklyPathWindingDown =>
+      'Неделя спокойных вечеров. Найдите момент оглянуться.';
+
+  @override
+  String get notifWeeklyPathYourOwnWay =>
+      'Ваша неделя готова к обзору. Посмотрите, что было.';
+
+  @override
   String get notifDailyChannelName => 'Ежедневные напоминания';
 
   @override
@@ -1324,24 +1364,31 @@ class AppLocalizationsRu extends AppLocalizations {
       'Intended+ превращает ежедневную практику в настоящее понимание себя.';
 
   @override
+  String get paywallCeilingTitle => 'Вы строите что-то хорошее';
+
+  @override
+  String get paywallCeilingDescription =>
+      'Intended+ даёт пространство для роста. Но бесплатная версия всегда содержит всё необходимое.';
+
+  @override
   String get paywallFeature1 =>
-      'Еженедельные инсайты, которые раскрывают твои привычки со временем';
+      'Месячные и еженедельные рефлексии — посмотри, как далеко ты зашёл';
 
   @override
   String get paywallFeature2 =>
-      'Виджет на главном экране — мягкое напоминание о себе';
+      'Виджет на главном экране, который держит намерения рядом';
 
   @override
   String get paywallFeature3 =>
-      'Готовые наборы привычек: ритуалы, созданные под твой ритм жизни';
+      '10 красивых тем и премиум-иконки — сделай приложение своим';
 
   @override
   String get paywallFeature4 =>
-      '10 тем на любое настроение — включая тёмный режим';
+      'Карточки для шеринга и готовые ритуалы для настоящей жизни';
 
   @override
   String get paywallFeature5 =>
-      'Безлимитные привычки, замены и фокусы — расти без ограничений';
+      'Безлимитные привычки, замены и фокусы — без потолка для роста';
 
   @override
   String get paywallMonthly => 'Ежемесячно';
@@ -1487,6 +1534,9 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get profileYourPath => 'Ваш путь';
 
   @override
   String get profileSettings => 'НАСТРОЙКИ';
@@ -2588,4 +2638,848 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get legalDisclaimerSuffix => '.';
+
+  @override
+  String get pathGentleMorningsTitle => 'Мягкое утро';
+
+  @override
+  String get pathGentleMorningsSubtitle => 'Начните день спокойно, без хаоса';
+
+  @override
+  String get pathFindingCalmTitle => 'В поисках покоя';
+
+  @override
+  String get pathFindingCalmSubtitle =>
+      'Маленькие ежедневные якоря при стрессе и тревоге';
+
+  @override
+  String get pathGratitudeSelfLoveTitle => 'Благодарность и забота о себе';
+
+  @override
+  String get pathGratitudeSelfLoveSubtitle =>
+      'Выстройте более добрые отношения с собой';
+
+  @override
+  String get pathWindingDownTitle => 'Спокойный вечер';
+
+  @override
+  String get pathWindingDownSubtitle => 'Завершите день умиротворённо';
+
+  @override
+  String get pathYourOwnWayTitle => 'Свой путь';
+
+  @override
+  String get pathYourOwnWaySubtitle =>
+      'Я знаю, что мне нужно — просто дайте инструменты';
+
+  @override
+  String get intentionPathHeadline => 'Что привело вас сюда?';
+
+  @override
+  String get intentionPathSubtext =>
+      'Это поможет нам настроить ваш опыт. Вы всегда сможете изменить это позже.';
+
+  @override
+  String intentionPathUpdateFocusAreas(String pathName) {
+    return 'Обновить направления в соответствии с «$pathName»?';
+  }
+
+  @override
+  String get intentionPathUpdateYes => 'Да, обновить направления';
+
+  @override
+  String get intentionPathUpdateNo => 'Нет, оставить как есть';
+
+  @override
+  String get coachMarkFirstCompletionTitle => 'Ваша первая отметка';
+
+  @override
+  String get coachMarkFirstCompletionBody =>
+      'Вот и всё. Вся практика. Приходите, когда можете, пропускайте, когда не получается.';
+
+  @override
+  String get coachMarkPinningTitle => 'Уже входит в привычку';
+
+  @override
+  String get coachMarkPinningBody =>
+      'Долгое нажатие на привычку закрепит её наверху. Ваши якоря заслуживают внимания.';
+
+  @override
+  String get coachMarkWidgetTitle => 'Ваши намерения — без открытия приложения';
+
+  @override
+  String get coachMarkWidgetBody =>
+      'Добавьте виджет Intended на экран. Тихое напоминание о том, что важно сегодня.';
+
+  @override
+  String get coachMarkWeeklyReflectionTitle => 'Ваше первое отражение готово';
+
+  @override
+  String get coachMarkWeeklyReflectionBody =>
+      'Каждую неделю Intended оглядывается на ваши шаблоны — мягко, без критики. Нажмите, чтобы увидеть вашу неделю.';
+
+  @override
+  String get coachMarkSmartNotificationsTitle => 'Напоминания учатся у вас';
+
+  @override
+  String get coachMarkSmartNotificationsBody =>
+      'Intended подстраивает частоту напоминаний под ваш ритм. Часто заходите? Мы отступаем. Давно не были? Одно мягкое сообщение.';
+
+  @override
+  String get coachMarkMonthlyReflectionTitle => 'Месяц вашего присутствия';
+
+  @override
+  String get coachMarkMonthlyReflectionBody =>
+      'Месячное отражение находит закономерности между неделями, которые сложно заметить день за днём.';
+
+  @override
+  String get coachMarkReflectionShareTitle => 'Поделиться?';
+
+  @override
+  String get coachMarkReflectionShareBody =>
+      'Нажмите кнопку «Поделиться», чтобы превратить это в карточку для друзей или публикации. Ваши данные остаются приватными — передаётся только итог.';
+
+  @override
+  String get reviewPromptMessage =>
+      'Нравится Intended? Быстрая оценка поможет другим найти мягкий подход к привычкам.';
+
+  @override
+  String get reviewPromptRate => 'Оценить';
+
+  @override
+  String get reviewPromptNotYet => 'Не сейчас';
+
+  @override
+  String get upgradeNudgeBody =>
+      'Ваша практика растёт. Intended+ даёт пространство расти вместе с ней.';
+
+  @override
+  String get upgradeNudgeLearnMore => 'Узнать больше';
+
+  @override
+  String get notifWeeklyDynamic0 =>
+      'Ваша недельная рефлексия готова. Каждая неделя — новый старт.';
+
+  @override
+  String get notifWeeklyDynamic1 =>
+      'Ваша недельная рефлексия готова — вы позаботились о себе на этой неделе.';
+
+  @override
+  String notifWeeklyDynamicN(int count) {
+    return 'Ваша недельная рефлексия готова — вы позаботились о себе $count раз на этой неделе.';
+  }
+
+  @override
+  String get faqSectionGettingStarted => 'Начало работы';
+
+  @override
+  String get faqWhatIsIntended => 'Что такое Intended?';
+
+  @override
+  String get faqWhatIsIntendedAnswer =>
+      'Intended — это мягкое приложение для привычек на iOS. Оно помогает выстраивать ежедневные привычки без стриков, чувства вины или давления. Нет счётчика, который сбрасывается — только спокойное пространство для ваших намерений.';
+
+  @override
+  String get faqWhatIsIntentionPath => 'Что такое путь намерений?';
+
+  @override
+  String get faqWhatIsIntentionPathAnswer =>
+      'При первом открытии вы выбираете путь — например, В поисках покоя или Мягкое утро. Путь определяет привычки, тон напоминаний и вопросы для рефлексии. Изменить можно в любой момент в профиле.';
+
+  @override
+  String get faqChangeIntentionPath => 'Можно ли изменить путь намерений?';
+
+  @override
+  String get faqChangeIntentionPathAnswer =>
+      'Да, в любое время. Зайдите в Профиль, нажмите на карточку пути и выберите новый. Ваша история и отметки сохраняются.';
+
+  @override
+  String get faqWhatAreFocusAreas => 'Что такое области фокуса?';
+
+  @override
+  String get faqWhatAreFocusAreasAnswer =>
+      'Области фокуса — это категории привычек: Здоровье, Настроение, Забота о себе и другие. Путь предварительно выбирает пару областей, но вы можете менять их в любое время.';
+
+  @override
+  String get faqHowIsDifferent => 'Чем Intended отличается от других?';
+
+  @override
+  String get faqHowIsDifferentAnswer =>
+      'Большинство приложений используют стрики и геймификацию. Intended — наоборот. Нет стриков, нет рейтингов, нет вины. Ваш прогресс никогда не сбрасывается.';
+
+  @override
+  String get faqSectionDailyHabits => 'Ежедневные привычки';
+
+  @override
+  String get faqHowToCheckIn => 'Как отмечать привычку?';
+
+  @override
+  String get faqHowToCheckInAnswer =>
+      'Нажмите на любую карточку привычки на главном экране. Одно нажатие — и готово.';
+
+  @override
+  String get faqMissedDay => 'Что если я пропущу день?';
+
+  @override
+  String get faqMissedDayAnswer =>
+      'Ничего не произойдёт. Никакие стрики не сломаются. Завтра — просто новый день.';
+
+  @override
+  String get faqHowToPin => 'Как закрепить привычку?';
+
+  @override
+  String get faqHowToPinAnswer =>
+      'Долгое нажатие на карточку закрепит её наверху. Можно закрепить одну привычку.';
+
+  @override
+  String get faqCustomHabits => 'Можно добавить свои привычки?';
+
+  @override
+  String get faqCustomHabitsAnswer =>
+      'Да! Нажмите +. Бесплатно — до 2 своих привычек. С Intended+ — без ограничений.';
+
+  @override
+  String get faqSwapHabit => 'Как заменить привычку?';
+
+  @override
+  String get faqSwapHabitAnswer =>
+      'Нажмите иконку замены на карточке. Бесплатно — 2 замены в месяц.';
+
+  @override
+  String get faqRefreshes => 'Что такое обновления привычек?';
+
+  @override
+  String get faqRefreshesAnswer =>
+      'Обновление даёт новые случайные привычки из ваших областей фокуса. 3 в день на бесплатном плане.';
+
+  @override
+  String get faqSectionReflections => 'Рефлексия';
+
+  @override
+  String get faqWeeklyReflection => 'Что такое недельная рефлексия?';
+
+  @override
+  String get faqWeeklyReflectionAnswer =>
+      'Каждую неделю Intended создаёт карточку рефлексии на основе ваших отметок — какие привычки прижились, самые активные дни и мягкие наблюдения. Без оценок.';
+
+  @override
+  String get faqMonthlyReflection => 'Что такое месячная рефлексия?';
+
+  @override
+  String get faqMonthlyReflectionAnswer =>
+      'Через 30 дней месячная рефлексия находит закономерности между неделями. Доступно с Intended+.';
+
+  @override
+  String get faqShareReflection => 'Можно поделиться рефлексией?';
+
+  @override
+  String get faqShareReflectionAnswer =>
+      'Да! Нажмите кнопку «Поделиться» — рефлексия превратится в красивую карточку.';
+
+  @override
+  String get faqNoReflection => 'Почему я не вижу рефлексию?';
+
+  @override
+  String get faqNoReflectionAnswer =>
+      'Недельная рефлексия появляется через 7 дней. Месячная — через 30. Чем чаще отмечаетесь, тем богаче рефлексия.';
+
+  @override
+  String get faqSectionNotifications => 'Уведомления';
+
+  @override
+  String get faqHowNotifications => 'Как работают уведомления?';
+
+  @override
+  String get faqHowNotificationsAnswer =>
+      'Напоминания подстраиваются под ваш ритм. Регулярно заходите? Они отступают. Давно не были? Одно мягкое сообщение — не семь.';
+
+  @override
+  String get faqChangeTime => 'Можно изменить время?';
+
+  @override
+  String get faqChangeTimeAnswer => 'Да. Профиль → Настройки уведомлений.';
+
+  @override
+  String get faqPathNotifications => 'Уведомления зависят от пути?';
+
+  @override
+  String get faqPathNotificationsAnswer =>
+      'Да. На пути В поисках покоя будут другие формулировки, чем на Мягком утре.';
+
+  @override
+  String get faqSectionWidgets => 'Виджеты';
+
+  @override
+  String get faqAddWidget => 'Как добавить виджет?';
+
+  @override
+  String get faqAddWidgetAnswer =>
+      'Долгое нажатие на главный экран, нажмите +, найдите Intended. Виджеты на экран блокировки — через Настройки iOS.';
+
+  @override
+  String get faqWidgetNotUpdating => 'Почему виджет не обновляется?';
+
+  @override
+  String get faqWidgetNotUpdatingAnswer =>
+      'iOS управляет частотой обновления. Откройте приложение ненадолго. Проверьте, что Обновление контента включено для Intended.';
+
+  @override
+  String get faqSectionPricing => 'Intended+ и цены';
+
+  @override
+  String get faqWhatIsPlus => 'Что такое Intended+?';
+
+  @override
+  String get faqWhatIsPlusAnswer =>
+      'Безлимитные свои привычки, замены, обновления, доступ к библиотеке, все темы, месячная рефлексия и глубокие наблюдения.';
+
+  @override
+  String get faqPricing => 'Сколько стоит?';
+
+  @override
+  String get faqPricingAnswer =>
+      'Ежемесячно: €6.99. Годовой: €49.99 (5 месяцев бесплатно). Навсегда: €89.99. Все включают 7 дней пробного периода.';
+
+  @override
+  String get faqBoost => 'Что такое Intended Boost?';
+
+  @override
+  String get faqBoostAnswer =>
+      'Разовая покупка за €0.99. Дополнительные темы, +1 своя привычка, карточки достижений, +1 область фокуса, 5 замен в месяц.';
+
+  @override
+  String get faqFreeVersion => 'Можно пользоваться бесплатно?';
+
+  @override
+  String get faqFreeVersionAnswer =>
+      'Да. Бесплатно: пути намерений, 2 свои привычки, 2 области фокуса, недельная рефлексия, умные уведомления и виджеты.';
+
+  @override
+  String get faqRestore => 'Как восстановить покупку?';
+
+  @override
+  String get faqRestoreAnswer => 'Профиль → Восстановить покупки.';
+
+  @override
+  String get faqCancel => 'Как отменить подписку?';
+
+  @override
+  String get faqCancelAnswer =>
+      'Настройки iPhone → ваше имя → Подписки → Intended → Отменить.';
+
+  @override
+  String get faqSectionPrivacy => 'Конфиденциальность';
+
+  @override
+  String get faqDataStorage => 'Где хранятся мои данные?';
+
+  @override
+  String get faqDataStorageAnswer =>
+      'Все данные хранятся локально на вашем устройстве. Ничего не загружается на сервер.';
+
+  @override
+  String get faqDataSelling => 'Intended продаёт мои данные?';
+
+  @override
+  String get faqDataSellingAnswer =>
+      'Нет. Мы используем анонимные отчёты об ошибках. Никогда — ваши данные о привычках.';
+
+  @override
+  String get faqDeleteApp => 'Что будет если удалить приложение?';
+
+  @override
+  String get faqDeleteAppAnswer =>
+      'Данные локальные, поэтому удаление стирает всё. Подписки можно восстановить через App Store.';
+
+  @override
+  String get faqSectionTroubleshooting => 'Устранение неполадок';
+
+  @override
+  String get faqCrash => 'Приложение вылетело.';
+
+  @override
+  String get faqCrashAnswer =>
+      'Закройте и откройте снова. Убедитесь, что установлена последняя версия.';
+
+  @override
+  String get faqHabitsGone => 'Мои привычки пропали.';
+
+  @override
+  String get faqHabitsGoneAnswer =>
+      'Перезапустите приложение. Если не вернулись — напишите на support@intendedapp.com.';
+
+  @override
+  String get faqAppleName => 'Apple Sign-In не показывает имя.';
+
+  @override
+  String get faqAppleNameAnswer =>
+      'Apple передаёт имя только при первом входе. Настройки iPhone → Apple ID → Пароль и безопасность → Приложения с Apple ID → Intended → Перестать использовать, затем войдите снова.';
+
+  @override
+  String get faqStillHaveQuestion => 'Остались вопросы?';
+
+  @override
+  String get faqContactButton => 'Написать нам';
+
+  @override
+  String get faqWidgetCompletion => 'Можно отмечать привычки через виджет?';
+
+  @override
+  String get faqWidgetCompletionAnswer =>
+      'Да! Нажмите на привычку прямо в виджете на домашнем экране. Данные синхронизируются при следующем открытии Intended.';
+
+  @override
+  String get bloomGentleMornings1 => 'Полное утро. Это кое-что значит.';
+
+  @override
+  String get bloomGentleMornings2 => 'Каждое — мягко сделано.';
+
+  @override
+  String get bloomGentleMornings3 => 'Утро завершено. Ты пришёл(а) тихо.';
+
+  @override
+  String get bloomGentleMornings4 => 'Всё здесь. Утро было твоим.';
+
+  @override
+  String get bloomGentleMornings5 => 'Нежно и готово. Этого достаточно.';
+
+  @override
+  String get bloomFindingCalm1 => 'Всё здесь. Всё сделано. Дыши.';
+
+  @override
+  String get bloomFindingCalm2 => 'Покой найден — привычка за привычкой.';
+
+  @override
+  String get bloomFindingCalm3 => 'Обо всём позаботились. Побудь в тишине.';
+
+  @override
+  String get bloomFindingCalm4 => 'Сделано с заботой. Остальное — твоё.';
+
+  @override
+  String get bloomFindingCalm5 => 'Ты нашёл(а) свои якоря сегодня.';
+
+  @override
+  String get bloomGratitudeSelfLove1 => 'Каждое — маленький акт любви.';
+
+  @override
+  String get bloomGratitudeSelfLove2 => 'Всё сделано. Ты пришёл(а) ради себя.';
+
+  @override
+  String get bloomGratitudeSelfLove3 => 'Это был ты — заботящийся о себе.';
+
+  @override
+  String get bloomGratitudeSelfLove4 => 'Завершено с добротой. Молодец.';
+
+  @override
+  String get bloomGratitudeSelfLove5 => 'Всё это — для тебя. Это важно.';
+
+  @override
+  String get bloomWindingDown1 => 'Вечер теперь твой. Отдыхай.';
+
+  @override
+  String get bloomWindingDown2 => 'Всё улеглось. Пусть ночь придёт.';
+
+  @override
+  String get bloomWindingDown3 => 'Мягко завершено. Завтра подождёт.';
+
+  @override
+  String get bloomWindingDown4 => 'Всё на месте. Ты сделал(а) достаточно.';
+
+  @override
+  String get bloomWindingDown5 => 'Нежно закрыто. Спи спокойно.';
+
+  @override
+  String get bloomYourOwnWay1 => 'Ты пришёл(а) ко всему сегодня.';
+
+  @override
+  String get bloomYourOwnWay2 => 'Всё готово, по-твоему. Вот что важно.';
+
+  @override
+  String get bloomYourOwnWay3 => 'Каждое — на твоих условиях.';
+
+  @override
+  String get bloomYourOwnWay4 =>
+      'Готово. Никому больше не нужно было это видеть.';
+
+  @override
+  String get bloomYourOwnWay5 => 'Тихо завершено. Это твоё.';
+
+  @override
+  String get notifPathGentleMornings1 =>
+      'Доброе утро. Не спеши — что сегодня по душе?';
+
+  @override
+  String get notifPathGentleMornings2 =>
+      'Новое утро, мягкое начало. У тебя всё получится.';
+
+  @override
+  String get notifPathGentleMornings3 => 'Утро — твоё. Начни так, как хочется.';
+
+  @override
+  String get notifPathGentleMornings4 =>
+      'Утро не обязано быть идеальным. Просто будь здесь.';
+
+  @override
+  String get notifPathGentleMornings5 =>
+      'Проснись мягко. Одного маленького шага достаточно.';
+
+  @override
+  String get notifPathGentleMornings6 =>
+      'Твой утренний ритуал ждёт. Без давления, только возможности.';
+
+  @override
+  String get notifPathFindingCalm1 => 'Как ты? Правда. Найди минутку для себя.';
+
+  @override
+  String get notifPathFindingCalm2 =>
+      'Один спокойный вдох может изменить весь день.';
+
+  @override
+  String get notifPathFindingCalm3 =>
+      'Твои якоря здесь, когда шум становится громким.';
+
+  @override
+  String get notifPathFindingCalm4 =>
+      'Тишину не нужно заслуживать. Она уже твоя.';
+
+  @override
+  String get notifPathFindingCalm5 =>
+      'Мягкая пауза. Это всё, что сегодня нужно.';
+
+  @override
+  String get notifPathFindingCalm6 =>
+      'Не нужно ничего исправлять прямо сейчас. Просто будь.';
+
+  @override
+  String get notifPathGratitudeSelfLove1 =>
+      'Ты заслуживаешь доброты сегодня — особенно от себя.';
+
+  @override
+  String get notifPathGratitudeSelfLove2 =>
+      'За что ты благодарен(на) прямо сейчас?';
+
+  @override
+  String get notifPathGratitudeSelfLove3 =>
+      'Ты уже достаточно сделал(а), чтобы заслужить нежность.';
+
+  @override
+  String get notifPathGratitudeSelfLove4 =>
+      'Добрая мысль о себе — привычка, которая стоит сохранения.';
+
+  @override
+  String get notifPathGratitudeSelfLove5 =>
+      'Заметь что-то хорошее в сегодняшнем дне. Даже маленькое.';
+
+  @override
+  String get notifPathGratitudeSelfLove6 =>
+      'Ты достоин(на) той заботы, которую даришь другим.';
+
+  @override
+  String get notifPathWindingDown1 =>
+      'День почти закончился. Отпусти его мягко.';
+
+  @override
+  String get notifPathWindingDown2 =>
+      'Пора расслабиться. Ты достаточно нёс(ла) сегодня.';
+
+  @override
+  String get notifPathWindingDown3 =>
+      'Вечер — для отпускания, не для догоняния.';
+
+  @override
+  String get notifPathWindingDown4 =>
+      'Ты был(а) здесь сегодня. Это стоит того, чтобы отдохнуть.';
+
+  @override
+  String get notifPathWindingDown5 => 'Ночь твоя. Отдыхай без вины.';
+
+  @override
+  String get notifPathWindingDown6 => 'Замедлись. Завтра подождёт.';
+
+  @override
+  String get notifPathYourOwnWay1 =>
+      'Твоя практика, твой темп. Что сегодня по душе?';
+
+  @override
+  String get notifPathYourOwnWay2 =>
+      'Ты знаешь, что тебе нужно. Мы просто напоминаем.';
+
+  @override
+  String get notifPathYourOwnWay3 =>
+      'Отметься, когда будешь готов(а). Без расписания, без давления.';
+
+  @override
+  String get notifPathYourOwnWay4 =>
+      'Твой путь — твой собственный. Приходи как хочешь.';
+
+  @override
+  String get notifPathYourOwnWay5 =>
+      'Одно намерение. Это всё. Остальное — за тобой.';
+
+  @override
+  String get notifPathYourOwnWay6 =>
+      'Ты создал(а) эту практику. Доверяй, куда она ведёт.';
+
+  @override
+  String get warmthPathGentleMornings1 =>
+      'Не каждое утро должно быть новым началом. Иногда — просто тишина.';
+
+  @override
+  String get warmthPathGentleMornings2 =>
+      'Даже у утра бывают медленные дни. Это нормально.';
+
+  @override
+  String get warmthPathGentleMornings3 =>
+      'Твоё утро по-прежнему твоё, даже когда пропускаешь.';
+
+  @override
+  String get warmthPathGentleMornings4 =>
+      'Завтрашнее утро придёт мягко. Оно всегда так.';
+
+  @override
+  String get warmthPathGentleMornings5 => 'Отдыхай. Рассвет не ведёт счёт.';
+
+  @override
+  String get warmthPathGentleMornings6 =>
+      'Тихое утро — это тоже хорошо проведённое утро.';
+
+  @override
+  String get warmthPathFindingCalm1 =>
+      'Пропуск — это тоже вид покоя. Пусть так и будет.';
+
+  @override
+  String get warmthPathFindingCalm2 =>
+      'Не нужно искать покой сегодня. Он найдёт тебя сам.';
+
+  @override
+  String get warmthPathFindingCalm3 =>
+      'Иногда самое спокойное — просто отпустить себя.';
+
+  @override
+  String get warmthPathFindingCalm4 =>
+      'Тишина считается, даже когда ничего не отмечено.';
+
+  @override
+  String get warmthPathFindingCalm5 =>
+      'Покой не нужно заслуживать. Он всегда доступен.';
+
+  @override
+  String get warmthPathFindingCalm6 => 'Не делать — тоже форма присутствия.';
+
+  @override
+  String get warmthPathGratitudeSelfLove1 =>
+      'Быть добрым к себе — это и значит сказать «не сегодня».';
+
+  @override
+  String get warmthPathGratitudeSelfLove2 =>
+      'Любовь к себе выглядит и так — без вины, только мягкость.';
+
+  @override
+  String get warmthPathGratitudeSelfLove3 =>
+      'Не нужно демонстрировать заботу, чтобы практиковать её.';
+
+  @override
+  String get warmthPathGratitudeSelfLove4 =>
+      'Простить себя за пропуск — самая важная привычка.';
+
+  @override
+  String get warmthPathGratitudeSelfLove5 =>
+      'Нежность не только для хороших дней. Для таких тоже.';
+
+  @override
+  String get warmthPathGratitudeSelfLove6 =>
+      'Ты всё ещё достоин(на) тепла, даже когда отдыхаешь.';
+
+  @override
+  String get warmthPathWindingDown1 =>
+      'Сегодня вечером просто отдыхай. Вот и весь план.';
+
+  @override
+  String get warmthPathWindingDown2 =>
+      'Не нужно идеально завершать день. Просто остановись.';
+
+  @override
+  String get warmthPathWindingDown3 => 'Отпусти день. Ты нёс(ла) достаточно.';
+
+  @override
+  String get warmthPathWindingDown4 =>
+      'Некоторые вечера просто для существования. Этот — один из них.';
+
+  @override
+  String get warmthPathWindingDown5 =>
+      'Ночи не нужен ритуал. Ей нужно, чтобы ты просто отпустил(а).';
+
+  @override
+  String get warmthPathWindingDown6 =>
+      'Спи спокойно. Завтра уже мягче, чем ты думаешь.';
+
+  @override
+  String get warmthPathYourOwnWay1 =>
+      'Твой путь включает отдых. Всегда включал.';
+
+  @override
+  String get warmthPathYourOwnWay2 =>
+      'Пропуск — часть ритма, который ты строишь.';
+
+  @override
+  String get warmthPathYourOwnWay3 =>
+      'Ты выбрал(а) этот путь. Ты можешь и остановиться на нём.';
+
+  @override
+  String get warmthPathYourOwnWay4 => 'Никто не ведёт счёт. Тем более мы.';
+
+  @override
+  String get warmthPathYourOwnWay5 =>
+      'Доверяй себе. Ты вернёшься, когда будет время.';
+
+  @override
+  String get warmthPathYourOwnWay6 => 'Твой темп. Твои правила. Всегда.';
+
+  @override
+  String get reflectionPathGentleMorningsIntro =>
+      'Ещё одна неделя мягких утр — или хотя бы попыток.';
+
+  @override
+  String get reflectionPathFindingCalmIntro =>
+      'Ещё одна неделя в поиске своих якорей.';
+
+  @override
+  String get reflectionPathGratitudeSelfLoveIntro =>
+      'Ещё одна неделя выстраивания тепла к себе.';
+
+  @override
+  String get reflectionPathWindingDownIntro =>
+      'Ещё одна неделя вечернего расслабления, по-своему.';
+
+  @override
+  String get reflectionPathYourOwnWayIntro =>
+      'Ещё одна неделя на своих условиях.';
+
+  @override
+  String get reflectionPathGentleMorningsQuiet =>
+      'Тихая неделя для утр. Некоторые недели — чтобы поспать подольше.';
+
+  @override
+  String get reflectionPathFindingCalmQuiet =>
+      'Тихая неделя. Может, покой нашёл тебя другими путями.';
+
+  @override
+  String get reflectionPathGratitudeSelfLoveQuiet =>
+      'Тихая неделя. Отдых — это тоже проявление любви к себе.';
+
+  @override
+  String get reflectionPathWindingDownQuiet =>
+      'Тихая неделя. Иногда лучший вечерний ритуал — ничего не делать.';
+
+  @override
+  String get reflectionPathYourOwnWayQuiet =>
+      'Тихая неделя. Твой путь включает паузы.';
+
+  @override
+  String get monthlyReflectionTitle => 'Твой месяц';
+
+  @override
+  String get monthlyReflectionSectionOverview => 'ЭТОТ МЕСЯЦ';
+
+  @override
+  String get monthlyReflectionSectionTrends => 'ТЕНДЕНЦИИ';
+
+  @override
+  String get monthlyReflectionSectionGrowth => 'РОСТ';
+
+  @override
+  String monthlyReflectionMonthRange(String month, int year) {
+    return '$month $year';
+  }
+
+  @override
+  String monthlyReflectionOverview(int days, int total) {
+    return 'Ты отмечался(лась) $days дней из $total в этом месяце.';
+  }
+
+  @override
+  String monthlyReflectionBestWeek(String weekRange, int days) {
+    return 'Самая активная неделя — $weekRange, $days активных дней.';
+  }
+
+  @override
+  String monthlyReflectionConsistentHabit(String habit) {
+    return '$habit — твоя самая стабильная привычка в этом месяце.';
+  }
+
+  @override
+  String get monthlyReflectionGrowthUp =>
+      'Этот месяц активнее предыдущего. Ты находишь свой ритм.';
+
+  @override
+  String get monthlyReflectionGrowthSteady =>
+      'Стабильный месяц. Ты поддерживаешь то, что важно.';
+
+  @override
+  String get monthlyReflectionGrowthDown =>
+      'Тише, чем в прошлом месяце. Это нормально — некоторые сезоны для отдыха.';
+
+  @override
+  String get monthlyReflectionFirstMonth =>
+      'Твой первый полный месяц. Всё здесь — начало.';
+
+  @override
+  String get monthlyReflectionNoData =>
+      'Пока недостаточно данных. Продолжай — твой месячный обзор скоро появится.';
+
+  @override
+  String get monthlyReflectionUnlock => 'Увидеть месячные инсайты';
+
+  @override
+  String get monthlyReflectionSectionNotice => 'ОБРАТИТЬ ВНИМАНИЕ';
+
+  @override
+  String monthlyReflectionTopArea(String area) {
+    return 'Тебя тянуло к $area в этом месяце. Похоже, это сейчас важно.';
+  }
+
+  @override
+  String get adaptiveNotifReducedTitle => 'Мы отступаем';
+
+  @override
+  String get adaptiveNotifReducedBody =>
+      'Ты регулярно отмечаешься — мы будем напоминать реже.';
+
+  @override
+  String get adaptiveNotifReengageBody =>
+      'Прошло немного времени. Просто мягкий привет.';
+
+  @override
+  String get adaptiveNotifSilentBody =>
+      'Мы заметили, что тебя давно не было. Без давления — мы будем здесь.';
+
+  @override
+  String get a11yTabHabits => 'Привычки';
+
+  @override
+  String get a11yTabProgress => 'Прогресс';
+
+  @override
+  String get a11yTabProfile => 'Профиль';
+
+  @override
+  String a11yHabitCardDone(String habit) {
+    return '$habit, выполнено';
+  }
+
+  @override
+  String a11yHabitCardTodo(String habit) {
+    return '$habit, нажмите для выполнения';
+  }
+
+  @override
+  String a11yHabitCardPinned(String habit) {
+    return '$habit, закреплено, нажмите для выполнения';
+  }
+
+  @override
+  String get a11yEditHabit => 'Редактировать привычку';
+
+  @override
+  String get a11yDeleteHabit => 'Удалить привычку';
 }

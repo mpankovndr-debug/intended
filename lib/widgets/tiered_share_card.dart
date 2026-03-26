@@ -31,15 +31,20 @@ class TieredShareCard extends StatelessWidget {
   final WeekStats stats;
   final ReflectionData? reflection;
 
+  /// When set, overrides [determineTier] and forces this tier.
+  /// Used to lock free users to Tier 1 ("The Number").
+  final ShareCardTier? forceTier;
+
   const TieredShareCard({
     super.key,
     required this.stats,
     this.reflection,
+    this.forceTier,
   });
 
   @override
   Widget build(BuildContext context) {
-    final tier = determineTier(stats, reflection);
+    final tier = forceTier ?? determineTier(stats, reflection);
     final themeProvider = context.watch<ThemeProvider>();
     final theme = themeProvider.theme;
     final colors = themeProvider.colors;
@@ -173,7 +178,7 @@ class TieredShareCard extends StatelessWidget {
         Text(
           weekRange,
           style: TextStyle(
-            fontFamily: 'DM Sans',
+            fontFamily: 'Sora',
             fontSize: 38,
             fontWeight: FontWeight.w500,
             color: t2,
@@ -246,7 +251,7 @@ class TieredShareCard extends StatelessWidget {
                 Text(
                   subtitleText,
                   style: TextStyle(
-                    fontFamily: 'DM Sans',
+                    fontFamily: 'Sora',
                     fontSize: 48,
                     fontWeight: FontWeight.w400,
                     color: t2,
@@ -284,7 +289,7 @@ class TieredShareCard extends StatelessWidget {
         Text(
           l10n.shareCardSubtitleDays,
           style: TextStyle(
-            fontFamily: 'DM Sans',
+            fontFamily: 'Sora',
             fontSize: 42,
             fontWeight: FontWeight.w400,
             color: t2,
@@ -323,7 +328,7 @@ class TieredShareCard extends StatelessWidget {
         Text(
           l10n.shareCardSubtitleDays,
           style: TextStyle(
-            fontFamily: 'DM Sans',
+            fontFamily: 'Sora',
             fontSize: 42,
             fontWeight: FontWeight.w400,
             color: t2,
@@ -349,7 +354,7 @@ class TieredShareCard extends StatelessWidget {
           Text(
             '"$insightLine"',
             style: TextStyle(
-              fontFamily: 'DM Sans',
+              fontFamily: 'Sora',
               fontSize: 48,
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.italic,
@@ -409,7 +414,7 @@ class TieredShareCard extends StatelessWidget {
               Text(
                 labels[i],
                 style: TextStyle(
-                  fontFamily: 'DM Sans',
+                  fontFamily: 'Sora',
                   fontSize: 28,
                   fontWeight: FontWeight.w600,
                   color: isActive ? accent : t3.withValues(alpha:0.5),
@@ -488,7 +493,7 @@ class TieredShareCard extends StatelessWidget {
                     child: Text(
                       localizeHabitName(habit, l10n),
                       style: TextStyle(
-                        fontFamily: 'DM Sans',
+                        fontFamily: 'Sora',
                         fontSize: textSize,
                         fontWeight: FontWeight.w500,
                         color: t1,
@@ -505,7 +510,7 @@ class TieredShareCard extends StatelessWidget {
               child: Text(
                 l10n.progressMore(hiddenCount),
                 style: TextStyle(
-                  fontFamily: 'DM Sans',
+                  fontFamily: 'Sora',
                   fontSize: textSize - 4,
                   fontWeight: FontWeight.w400,
                   color: t1.withValues(alpha:0.5),
@@ -526,7 +531,7 @@ class TieredShareCard extends StatelessWidget {
           Text(
             'P.S. $userName',
             style: TextStyle(
-              fontFamily: 'DM Sans',
+              fontFamily: 'Sora',
               fontSize: 36,
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.italic,
@@ -562,7 +567,7 @@ class TieredShareCard extends StatelessWidget {
         Text(
           'intention, not perfection',
           style: TextStyle(
-            fontFamily: 'DM Sans',
+            fontFamily: 'Sora',
             fontSize: 32,
             fontWeight: FontWeight.w400,
             letterSpacing: 0.02 * 32,

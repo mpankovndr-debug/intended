@@ -132,7 +132,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		7DF5F2822F609AB200A8C0F8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		7DF5F2822F609AB200A8C0F8 /* Exceptions for "IntendedWidget" folder in "IntendedWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -145,7 +145,7 @@
 		7DF5F2712F609AAF00A8C0F8 /* IntendedWidget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				7DF5F2822F609AB200A8C0F8 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
+				7DF5F2822F609AB200A8C0F8 /* Exceptions for "IntendedWidget" folder in "IntendedWidgetExtension" target */,
 			);
 			explicitFileTypes = {
 			};
