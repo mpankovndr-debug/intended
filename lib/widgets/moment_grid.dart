@@ -57,14 +57,13 @@ class MomentGrid extends StatelessWidget {
             size: tileSize,
             // A ring marks the first moment after a quiet stretch: "you came
             // back here." It is the only decoration the grid carries.
-            ringColor: returnIndices.contains(i)
-                ? colors.textPrimary.withValues(alpha: 0.35)
-                : null,
+            isReturn: returnIndices.contains(i),
           ),
         if (showGhost && moments.isNotEmpty)
           _Tile(
             color: colors.textPrimary.withValues(alpha: 0.06),
             size: tileSize,
+            flat: true,
           ),
       ],
     );
@@ -95,23 +94,60 @@ class MomentGrid extends StatelessWidget {
 }
 
 class _Tile extends StatelessWidget {
-  const _Tile({required this.color, required this.size, this.ringColor});
+  const _Tile({
+    required this.color,
+    required this.size,
+    this.isReturn = false,
+    this.flat = false,
+  });
 
   final Color color;
   final double size;
-  final Color? ringColor;
+
+  /// First moment after a quiet stretch. Marked with a light halo rather than
+  /// an outline: an outline draws a boundary around the tile, which reads as
+  /// something singled out. A glow reads as something lit — the difference
+  /// between marking a gap and celebrating a return (§4.2).
+  final bool isReturn;
+
+  /// The ghost tile is a hint, not a moment, so it takes no dimension.
+  final bool flat;
 
   @override
   Widget build(BuildContext context) {
+    final hsl = HSLColor.fromColor(color);
+    // A slight lift toward the top-left gives the tile body rather than
+    // leaving it a flat chip.
+    final lit = hsl
+        .withLightness((hsl.lightness + 0.07).clamp(0.0, 1.0))
+        .toColor();
+    final shade = hsl
+        .withLightness((hsl.lightness - 0.05).clamp(0.0, 1.0))
+        .toColor();
+
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(size * 0.28),
-        border: ringColor == null
+        color: flat ? color : null,
+        gradient: flat
             ? null
-            : Border.all(color: ringColor!, width: 2),
+            : LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [lit, color, shade],
+                stops: const [0.0, 0.55, 1.0],
+              ),
+        borderRadius: BorderRadius.circular(size * 0.28),
+        boxShadow: isReturn
+            ? [
+                BoxShadow(
+                  color: const Color(0xFFFFFFFF).withValues(alpha: 0.95),
+                  blurRadius: size * 0.30,
+                  spreadRadius: size * 0.06,
+                ),
+              ]
+            : null,
       ),
     );
   }
