@@ -106,6 +106,45 @@ class _InsightsScreenState extends State<InsightsScreen> {
     );
   }
 
+
+  // One type scale for the whole page. Every card draws from these three and
+  // nothing overrides them locally — the previous version set sizes and
+  // colours per card, which left the season word level with the page title
+  // and two different headline colours on one screen.
+  //
+  // Page title (h1, 34) > season word (30) > card headline (20) > body (15)
+  // > meta (13). Header font for the first three, body font for the rest.
+
+  /// Small caps label at the top of every card: THIS MONTH, YOUR SEASON.
+  Widget _eyebrow(String text, AppColorScheme colors) => Text(
+        text,
+        style: AppTextStyles.body(context).copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.0,
+          color: colors.ctaPrimary,
+        ),
+      );
+
+  TextStyle _cardTitle(AppColorScheme colors) =>
+      AppTextStyles.h2(context).copyWith(
+        fontSize: 20,
+        height: 1.3,
+        color: colors.textPrimary,
+      );
+
+  TextStyle _cardBody(AppColorScheme colors) =>
+      AppTextStyles.body(context).copyWith(
+        height: 1.45,
+        color: colors.textSecondary,
+      );
+
+  TextStyle _cardMeta(AppColorScheme colors) =>
+      AppTextStyles.body(context).copyWith(
+        fontSize: 13,
+        color: colors.textSecondary,
+      );
+
   Widget _card({required AppColorScheme colors, required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -137,12 +176,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            monthLabel,
-            style: AppTextStyles.body(context)
-                .copyWith(color: colors.textSecondary),
-          ),
-          const SizedBox(height: 10),
+          Text(monthLabel, style: _cardMeta(colors)),
+          const SizedBox(height: 12),
+          _eyebrow(l10n.insightsThisMonth, colors),
+          const SizedBox(height: 8),
           Text(
             empty
                 ? l10n.insightsEmptyTitle
@@ -152,20 +189,18 @@ class _InsightsScreenState extends State<InsightsScreen> {
                       Localizations.localeOf(context).toString(),
                     ).format(now),
                   ),
-            style: AppTextStyles.h2(context).copyWith(fontSize: 19),
+            style: _cardTitle(colors),
           ),
           const SizedBox(height: 6),
           if (!empty && _dominantPeriod(l10n) != null)
             Text(
               l10n.insightsMostlyAt(_dominantPeriod(l10n)!),
-              style: AppTextStyles.body(context)
-                  .copyWith(color: colors.textSecondary),
+              style: _cardBody(colors),
             ),
           if (empty)
             Text(
               l10n.insightsEmptyBody,
-              style: AppTextStyles.body(context)
-                  .copyWith(color: colors.textSecondary),
+              style: _cardBody(colors),
             ),
           const SizedBox(height: 18),
           // On day one a short row of outlines teaches what will fill. That is
@@ -179,10 +214,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           const SizedBox(height: 12),
           Text(
             l10n.insightsGridCaption,
-            style: AppTextStyles.body(context).copyWith(
-              fontSize: 13,
-              color: colors.textSecondary,
-            ),
+            style: _cardMeta(colors),
           ),
           if (!empty) ...[
             const SizedBox(height: 14),
@@ -213,10 +245,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                           ? '${l10n.insightsReturnsLine(_returnCount)} '
                               '${l10n.insightsGapsShortening}'
                           : l10n.insightsReturnsLine(_returnCount),
-                      style: AppTextStyles.body(context).copyWith(
-                        fontSize: 13,
-                        color: colors.textSecondary,
-                      ),
+                      style: _cardMeta(colors),
                     ),
                   ),
                 ],
@@ -286,10 +315,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
               const SizedBox(width: 7),
               Text(
                 '${e.key} ${e.value}',
-                style: AppTextStyles.body(context).copyWith(
-                  fontSize: 13,
-                  color: colors.textPrimary,
-                ),
+                style: _cardMeta(colors),
               ),
             ],
           ),
@@ -361,15 +387,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l10n.insightsStartingWith,
-            style: AppTextStyles.body(context).copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.0,
-              color: colors.ctaPrimary,
-            ),
-          ),
+          _eyebrow(l10n.insightsStartingWith, colors),
           const SizedBox(height: 12),
           for (final habit in habits) ...[
             Row(
@@ -386,7 +404,11 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(habit, style: AppTextStyles.body(context)),
+                  child: Text(
+                    habit,
+                    style: AppTextStyles.body(context)
+                        .copyWith(color: colors.textPrimary),
+                  ),
                 ),
               ],
             ),
@@ -395,10 +417,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           const SizedBox(height: 4),
           Text(
             l10n.insightsStartingMeta(areas, _reminderTime),
-            style: AppTextStyles.body(context).copyWith(
-              fontSize: 13,
-              color: colors.textSecondary,
-            ),
+            style: _cardMeta(colors),
           ),
         ],
       ),
@@ -416,7 +435,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
         children: [
           Text(
             l10n.insightsTeaserBody,
-            style: AppTextStyles.body(context).copyWith(height: 1.5),
+            style: _cardBody(colors),
           ),
           const SizedBox(height: 18),
           Align(
@@ -510,24 +529,18 @@ class _InsightsScreenState extends State<InsightsScreen> {
             const SizedBox(height: 16),
             Text(
               l10n.insightsExampleSummary,
-              style: AppTextStyles.body(context)
-                  .copyWith(color: colors.textSecondary),
+              style: _cardBody(colors),
             ),
             Text(
               l10n.insightsExampleReturns,
-              style: AppTextStyles.body(context)
-                  .copyWith(color: colors.textSecondary),
+              style: _cardBody(colors),
             ),
             const SizedBox(height: 14),
             Container(height: 1, color: colors.textDisabled.withValues(alpha: 0.25)),
             const SizedBox(height: 14),
             Text(
               l10n.insightsUnlockNote,
-              style: AppTextStyles.body(context).copyWith(
-                fontSize: 13,
-                height: 1.45,
-                color: colors.textSecondary,
-              ),
+              style: _cardMeta(colors).copyWith(height: 1.45),
             ),
           ],
         ),
@@ -566,32 +579,27 @@ class _InsightsScreenState extends State<InsightsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _eyebrow(l10n.seasonLabel, colors),
+          const SizedBox(height: 10),
+          // Below the page title on purpose: the season is the biggest thing
+          // *in* a card, never bigger than the screen it sits on.
           Text(
-            l10n.seasonLabel,
-            style: AppTextStyles.body(context).copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.0,
-              color: colors.ctaPrimary,
+            word,
+            style: AppTextStyles.h1(context).copyWith(
+              fontSize: 30,
+              color: colors.textPrimary,
             ),
           ),
-          const SizedBox(height: 10),
-          Text(word, style: AppTextStyles.h1(context).copyWith(fontSize: 34)),
           const SizedBox(height: 8),
           if (!forming)
             Text(
               l10n.seasonPatternThisMonth,
-              style: AppTextStyles.body(context)
-                  .copyWith(color: colors.ctaPrimary),
+              style: _cardMeta(colors).copyWith(color: colors.ctaPrimary),
             ),
           const SizedBox(height: 4),
           Text(
             line,
-            style: AppTextStyles.body(context).copyWith(
-              fontStyle: FontStyle.italic,
-              color: colors.textSecondary,
-              height: 1.45,
-            ),
+            style: _cardBody(colors).copyWith(fontStyle: FontStyle.italic),
           ),
         ],
       ),
