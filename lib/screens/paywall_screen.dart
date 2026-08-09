@@ -220,7 +220,6 @@ class _PaywallScreenState extends State<PaywallScreen>
                               const SizedBox(height: 10),
                               _buildAnimatedBullet(3, CupertinoIcons.heart_fill, l10n.paywallFeature4),
                               const SizedBox(height: 10),
-                              _buildAnimatedBullet(4, CupertinoIcons.infinite, l10n.paywallFeature5),
                             ],
                           ),
                         ),
@@ -414,6 +413,11 @@ class _PaywallScreenState extends State<PaywallScreen>
           label: l10n.paywallYearly,
           price: yearlyPrice,
           pricePerPeriod: l10n.paywallYearlyPeriod,
+          // Anchor the yearly plan against the monthly one — the per-month
+          // figure is what makes €44.99 read as cheap next to €5.99.
+          subtitle: l10n.paywallYearlyAnchor(
+            rc.yearlyPerMonthString ?? l10n.paywallYearlyPerMonth,
+          ),
           badge: _PricingBadge(
             text: saveBadgeText,
             primaryColor: colors.ctaPrimary,
@@ -452,6 +456,7 @@ class _PaywallScreenState extends State<PaywallScreen>
     required String label,
     required String price,
     required String pricePerPeriod,
+    String? subtitle,
     required _PricingBadge? badge,
     required bool isSelected,
     required bool isDark,
@@ -563,6 +568,18 @@ class _PaywallScreenState extends State<PaywallScreen>
                           ),
                         ],
                       ),
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            fontFamily: AppTextStyles.bodyFont(context),
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w400,
+                            color: suffixColor,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

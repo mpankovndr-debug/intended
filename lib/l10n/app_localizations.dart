@@ -2504,12 +2504,6 @@ abstract class AppLocalizations {
   /// **'Shareable moment cards & curated routines designed for real life'**
   String get paywallFeature4;
 
-  /// No description provided for @paywallFeature5.
-  ///
-  /// In en, this message translates to:
-  /// **'Unlimited everything — no caps on habits or swaps'**
-  String get paywallFeature5;
-
   /// No description provided for @paywallGroupRoom.
   ///
   /// In en, this message translates to:
@@ -2618,6 +2612,18 @@ abstract class AppLocalizations {
   /// **'per year'**
   String get paywallYearlyPeriod;
 
+  /// No description provided for @paywallYearlyPerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'€3.75'**
+  String get paywallYearlyPerMonth;
+
+  /// No description provided for @paywallYearlyAnchor.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/month, billed yearly'**
+  String paywallYearlyAnchor(String price);
+
   /// No description provided for @paywallYearlySave.
   ///
   /// In en, this message translates to:
@@ -2639,7 +2645,7 @@ abstract class AppLocalizations {
   /// No description provided for @paywallLifetimePrice.
   ///
   /// In en, this message translates to:
-  /// **'€69.99'**
+  /// **'€49.99'**
   String get paywallLifetimePrice;
 
   /// No description provided for @paywallLifetimePeriod.

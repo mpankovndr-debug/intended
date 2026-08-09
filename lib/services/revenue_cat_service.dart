@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../state/user_state.dart';
@@ -41,6 +42,17 @@ class RevenueCatService extends ChangeNotifier {
       _findProduct('com.intendedapp.plus.monthly')?.price;
   double? get _yearlyPrice =>
       _findProduct('com.intendedapp.plus.yearly')?.price;
+
+  /// The yearly price expressed per month (e.g. "€3.75"), for anchoring the
+  /// yearly plan against the monthly one. Derived from the live App Store
+  /// price so it stays correct if pricing changes. Null until products load.
+  String? get yearlyPerMonthString {
+    final product = _findProduct('com.intendedapp.plus.yearly');
+    final yearly = product?.price;
+    if (product == null || yearly == null || yearly <= 0) return null;
+    return NumberFormat.simpleCurrency(name: product.currencyCode)
+        .format(yearly / 12);
+  }
 
   /// Savings percentage for yearly vs 12×monthly (e.g. 40), or null.
   int? get yearlySavingsPercent {

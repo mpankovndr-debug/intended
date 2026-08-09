@@ -459,7 +459,6 @@
   "paywallFeature2": "A home screen widget that keeps your intentions close",
   "paywallFeature3": "10 beautiful themes & premium app icons — make it yours",
   "paywallFeature4": "Shareable moment cards & curated routines designed for real life",
-  "paywallFeature5": "Unlimited everything — no caps on habits or swaps",
 
   "paywallGroupRoom": "More room",
   "paywallGroupRoomA": "Unlimited habits & focus areas",
@@ -480,11 +479,18 @@
   "paywallYearly": "Yearly",
   "paywallYearlyPrice": "€44.99",
   "paywallYearlyPeriod": "per year",
+  "paywallYearlyPerMonth": "€3.75",
+  "paywallYearlyAnchor": "{price}/month, billed yearly",
+  "@paywallYearlyAnchor": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
   "paywallYearlySave": "Save 37%",
   "paywallSavePercent": "Save {percent}%",
   "@paywallSavePercent": { "placeholders": { "percent": { "type": "int" } } },
   "paywallLifetime": "Lifetime",
-  "paywallLifetimePrice": "€69.99",
+  "paywallLifetimePrice": "€49.99",
   "paywallLifetimePeriod": "one-time",
   "paywallLifetimeBadge": "Launch price",
   "paywallCtaTrial": "Start 7-day free trial",

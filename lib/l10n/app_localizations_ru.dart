@@ -1399,10 +1399,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Карточки для шеринга и готовые ритуалы для настоящей жизни';
 
   @override
-  String get paywallFeature5 =>
-      'Без ограничений — никаких лимитов на привычки и замены';
-
-  @override
   String get paywallGroupRoom => 'Больше пространства';
 
   @override
@@ -1457,6 +1453,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paywallYearlyPeriod => 'в год';
 
   @override
+  String get paywallYearlyPerMonth => '€3,75';
+
+  @override
+  String paywallYearlyAnchor(String price) {
+    return '$price в месяц при оплате за год';
+  }
+
+  @override
   String get paywallYearlySave => 'Экономия 37%';
 
   @override
@@ -1468,7 +1472,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paywallLifetime => 'Навсегда';
 
   @override
-  String get paywallLifetimePrice => '€69,99';
+  String get paywallLifetimePrice => '€49,99';
 
   @override
   String get paywallLifetimePeriod => 'один раз';

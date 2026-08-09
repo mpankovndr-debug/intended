@@ -1406,10 +1406,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Shareable moment cards & curated routines designed for real life';
 
   @override
-  String get paywallFeature5 =>
-      'Unlimited everything — no caps on habits or swaps';
-
-  @override
   String get paywallGroupRoom => 'More room';
 
   @override
@@ -1464,6 +1460,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallYearlyPeriod => 'per year';
 
   @override
+  String get paywallYearlyPerMonth => '€3.75';
+
+  @override
+  String paywallYearlyAnchor(String price) {
+    return '$price/month, billed yearly';
+  }
+
+  @override
   String get paywallYearlySave => 'Save 37%';
 
   @override
@@ -1475,7 +1479,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallLifetime => 'Lifetime';
 
   @override
-  String get paywallLifetimePrice => '€69.99';
+  String get paywallLifetimePrice => '€49.99';
 
   @override
   String get paywallLifetimePeriod => 'one-time';
