@@ -1142,6 +1142,60 @@ abstract class AppLocalizations {
   /// **'Did you do this today?'**
   String get completionQuestion;
 
+  /// No description provided for @completionHowDidItLand.
+  ///
+  /// In en, this message translates to:
+  /// **'How did that land?'**
+  String get completionHowDidItLand;
+
+  /// No description provided for @completionMoodGlad.
+  ///
+  /// In en, this message translates to:
+  /// **'Glad I did'**
+  String get completionMoodGlad;
+
+  /// No description provided for @completionMoodNeutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral'**
+  String get completionMoodNeutral;
+
+  /// No description provided for @completionMoodTookEffort.
+  ///
+  /// In en, this message translates to:
+  /// **'Took effort'**
+  String get completionMoodTookEffort;
+
+  /// No description provided for @completionAddNote.
+  ///
+  /// In en, this message translates to:
+  /// **'+ add a note'**
+  String get completionAddNote;
+
+  /// No description provided for @completionNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything you want to remember?'**
+  String get completionNoteHint;
+
+  /// No description provided for @completionSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'skip'**
+  String get completionSkip;
+
+  /// No description provided for @completionKept.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept — {count} moments this month.'**
+  String completionKept(int count);
+
+  /// No description provided for @completionKeptOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept — your first moment this month.'**
+  String get completionKeptOne;
+
   /// No description provided for @completionConfirm.
   ///
   /// In en, this message translates to:

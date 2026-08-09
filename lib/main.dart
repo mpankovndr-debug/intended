@@ -2801,22 +2801,42 @@ class _HabitCardState extends State<_HabitCard>
   void _handleTap() async {
     if (_isDoneToday) return; // Don't open modal if already done
 
-    HapticFeedback.lightImpact();
+    HapticFeedback.mediumImpact();
 
-    final isPremium = context.read<RevenueCatService>().isPremium;
+    // No confirmation step (§5.2) — the tap *is* the completion. Record it
+    // first so the sheet only has to ask how it landed, and so a dismissed
+    // sheet still leaves the moment safely stored.
+    await HabitTracker.markDone(widget.habitTitle);
+    AnalyticsService.logHabitCompleted(widget.habitTitle);
 
-    // Show modal dialog
-    final completed = await showCupertinoDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => HabitCompletionModal(
-        habitTitle: widget.habitTitle,
-        isPremium: isPremium,
-      ),
+    final category = ReflectionService.categoryForHabit(widget.habitTitle);
+    final moment = Moment.create(
+      habitName: widget.habitTitle,
+      category: category,
+    );
+    await MomentsService.record(moment);
+    MilestoneService.invalidate();
+    if (mounted) context.read<BackupService>().backup();
+
+    final monthCategories = await MomentsService.categoriesForMonth(
+      moment.completedAt,
     );
 
-    // If completed, animate checkmark and refresh widget
-    if (completed == true && mounted) {
+    if (mounted) {
+      await showCupertinoDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => HabitCompletionModal(
+          habitTitle: widget.habitTitle,
+          momentId: moment.id,
+          category: category,
+          monthCategories: monthCategories,
+          completedAt: moment.completedAt,
+        ),
+      );
+    }
+
+    if (mounted) {
       setState(() {
         _isDoneToday = true;
       });
@@ -2850,21 +2870,11 @@ class _HabitCardState extends State<_HabitCard>
     final count = await AppUsageService.incrementHabitsCompleted();
     if (!mounted) return;
 
-    // Moment 1 — first habit ever completed
-    if (count == 1) {
-      final ctaColor = context.read<ThemeProvider>().colors.ctaPrimary;
-      await service.enqueue(
-        key: CoachMarkKeys.firstCompletion,
-        targetKey: _cardKey,
-        title: l10n.coachMarkFirstCompletionTitle,
-        body: l10n.coachMarkFirstCompletionBody,
-        titleIcon: Icon(
-          CupertinoIcons.checkmark_circle_fill,
-          size: 18,
-          color: ctaColor,
-        ),
-      );
-    }
+    // The first-completion coach mark used to fire here (§5.6). Removed: the
+    // completion sheet's step 2 already teaches this — the tile lands in the
+    // row and the copy says "Kept". A dimmed overlay repeating the lesson a
+    // beat later was the same thing twice, and needed a
+    // just_completed_onboarding guard to stop it appearing at the wrong time.
 
     // Moment 2 — third completion; only if user hasn't already pinned
     if (count == 3) {

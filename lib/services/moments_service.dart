@@ -45,6 +45,22 @@ class MomentsService {
     await _writeRollup(prefs, all);
   }
 
+  /// Categories of every moment in [anchor]'s calendar month, oldest first.
+  ///
+  /// Drives the tile row in the completion sheet, where the newest entry is
+  /// the tile that animates in. Bucketed by the offset each moment recorded,
+  /// not the device's current zone.
+  static Future<List<String?>> categoriesForMonth(DateTime anchor) async {
+    final all = await getAll();
+    final target = anchor.add(Duration(minutes: anchor.timeZoneOffset.inMinutes));
+    final inMonth = all.where((m) {
+      final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
+      return local.year == target.year && local.month == target.month;
+    }).toList()
+      ..sort((a, b) => a.completedAt.compareTo(b.completedAt));
+    return inMonth.map((m) => m.category).toList();
+  }
+
   /// Pre-aggregated counts, gaps and returns. Falls back to computing from
   /// the collection when no rollup has been written yet (existing installs).
   static Future<MomentRollup> getRollup() async {

@@ -583,6 +583,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completionQuestion => 'Did you do this today?';
 
   @override
+  String get completionHowDidItLand => 'How did that land?';
+
+  @override
+  String get completionMoodGlad => 'Glad I did';
+
+  @override
+  String get completionMoodNeutral => 'Neutral';
+
+  @override
+  String get completionMoodTookEffort => 'Took effort';
+
+  @override
+  String get completionAddNote => '+ add a note';
+
+  @override
+  String get completionNoteHint => 'Anything you want to remember?';
+
+  @override
+  String get completionSkip => 'skip';
+
+  @override
+  String completionKept(int count) {
+    return 'Kept — $count moments this month.';
+  }
+
+  @override
+  String get completionKeptOne => 'Kept — your first moment this month.';
+
+  @override
   String get completionConfirm => 'I did it';
 
   @override

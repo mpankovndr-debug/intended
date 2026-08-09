@@ -584,6 +584,36 @@ class AppLocalizationsRu extends AppLocalizations {
   String get completionQuestion => 'Ты выполнил это сегодня?';
 
   @override
+  String get completionHowDidItLand => 'Как это отозвалось?';
+
+  @override
+  String get completionMoodGlad => 'Рад, что сделал';
+
+  @override
+  String get completionMoodNeutral => 'Нейтрально';
+
+  @override
+  String get completionMoodTookEffort => 'Было непросто';
+
+  @override
+  String get completionAddNote => '+ добавить заметку';
+
+  @override
+  String get completionNoteHint => 'Хотите что-то запомнить?';
+
+  @override
+  String get completionSkip => 'пропустить';
+
+  @override
+  String completionKept(int count) {
+    return 'Сохранено — $count моментов в этом месяце.';
+  }
+
+  @override
+  String get completionKeptOne =>
+      'Сохранено — ваш первый момент в этом месяце.';
+
+  @override
   String get completionConfirm => 'Да, у меня получилось!';
 
   @override

@@ -214,6 +214,20 @@
   "@deleteHabitMessage": { "placeholders": { "title": { "type": "String" } } },
 
   "completionQuestion": "Did you do this today?",
+  "completionHowDidItLand": "How did that land?",
+  "completionMoodGlad": "Glad I did",
+  "completionMoodNeutral": "Neutral",
+  "completionMoodTookEffort": "Took effort",
+  "completionAddNote": "+ add a note",
+  "completionNoteHint": "Anything you want to remember?",
+  "completionSkip": "skip",
+  "completionKept": "Kept — {count} moments this month.",
+  "@completionKept": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "completionKeptOne": "Kept — your first moment this month.",
   "completionConfirm": "I did it",
   "completionDecline": "No, not today",
 

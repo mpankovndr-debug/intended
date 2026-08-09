@@ -28,7 +28,8 @@ Things I cannot verify from here — each needs you, a real device, or an extern
 2. **The review prompt → App Store redirect.** Rewritten to open the write-review page directly, but neither in-app review nor App Store links function in the Simulator. Needs a tap on your iPhone.
 3. **The category palette on all 10 themes.** Automated tests guarantee every swatch clears 3:1 contrast, but *legible* is not the same as *beautiful*. Worth eyeballing the grid on `warmClay`, `goldenHour`, and both dark themes (`deepFocus`, `nightBloom`) once tiles render in step 3.
 4. **Widget completion sync** — moments recorded from the iOS widget now capture category and local-clock fields. The widget extension can't be exercised properly in the Simulator.
-5. **Russian copy** for the new paywall anchor string (`paywallYearlyAnchor`). I wrote "€3,75 в месяц при оплате за год"; a native read would be better.
+5. **Russian copy** for the new paywall anchor string (`paywallYearlyAnchor`) and the completion sheet strings (mood pills, note hint, "Kept —"). A native read would be better than mine.
+6. **The step-2 tile-landing animation.** The sheet auto-dismisses ~2.3s after the mood tap, which is faster than a scripted screenshot round-trip, so I confirmed the code and the stored data but never caught the animation on camera. Complete a habit and watch it once — §5.2 warns that if the landing doesn't read, the tile row should be dropped for words.
 
 ### Known issues, not yet fixed
 
