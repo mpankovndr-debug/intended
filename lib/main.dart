@@ -20,6 +20,7 @@ import 'l10n/app_localizations.dart';
 
 import 'utils/habit_l10n.dart';
 import 'theme/app_colors.dart';
+import 'theme/category_colors.dart';
 import 'theme/theme_provider.dart';
 import 'onboarding_v2/onboarding_state.dart';
 import 'onboarding_v2/focus_areas_screen.dart';
@@ -2712,7 +2713,6 @@ class _HabitCardState extends State<_HabitCard>
   late AnimationController _checkmarkController;
   late Animation<double> _checkmarkScaleAnimation;
   late Animation<double> _checkmarkFadeAnimation;
-  late Animation<double> _textFadeAnimation;
 
   @override
   void initState() {
@@ -2753,10 +2753,6 @@ class _HabitCardState extends State<_HabitCard>
     );
 
     _checkmarkFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _checkmarkController, curve: Curves.easeOut),
-    );
-
-    _textFadeAnimation = Tween<double>(begin: 1.0, end: 0.6).animate(
       CurvedAnimation(parent: _checkmarkController, curve: Curves.easeOut),
     );
   }
@@ -4293,6 +4289,11 @@ class _HabitCardState extends State<_HabitCard>
           widget.accentColor ?? colors.accentRegular; // Warm taupe
     }
 
+    // Focus area of this action, used to tint the completed state.
+    final _completedCategory =
+        context.read<OnboardingState>().customHabitFocusAreas[widget.habitTitle] ??
+            ReflectionService.categoryForHabit(widget.habitTitle);
+
     final cardSemanticLabel = _isDoneToday
         ? l10n.a11yHabitCardDone(widget.habitTitle)
         : widget.isPinned
@@ -4334,7 +4335,12 @@ class _HabitCardState extends State<_HabitCard>
                     ),
 
                   // Spacing between accent bar and card
-                  SizedBox(width: _isDoneToday ? 20 : 16),
+                  // The bar sits flush against the card rather than in its own
+                  // gutter. A gutter pushed every card 20pt further from the
+                  // left edge than the right, which read as uneven margins.
+                  // Completed cards reserve the bar's width so the card body
+                  // doesn't shift sideways at the moment of completion.
+                  SizedBox(width: _isDoneToday ? 4 : 0),
 
                   // CARD
                   Expanded(
@@ -4353,19 +4359,31 @@ class _HabitCardState extends State<_HabitCard>
                           ),
                           decoration: BoxDecoration(
                             // Glassmorphism background (pinned = lighter/cooler + accent tint, regular = warmer)
+                            // A completed card gains a wash and an outline in
+                            // its focus-area colour (§5.1) — it becomes a
+                            // large version of the tile that just landed in
+                            // the month. The outline is the structural cue,
+                            // so the state doesn't rest on colour alone.
                             color: _isDoneToday
-                                ? colors.cardDone
-                                    .withOpacity(colors.cardDoneOpacity)
+                                ? CategoryColors.wash(
+                                    _completedCategory,
+                                    themeProvider.theme,
+                                    isDark: isDark,
+                                  )
                                 : widget.isPinned
                                     ? colors.cardPinned.withOpacity(colors.cardPinnedOpacity)
                                     : colors.cardBackground.withOpacity(colors.cardBackgroundOpacity),
                             borderRadius: BorderRadius.circular(24),
                             border: Border.all(
                               color: _isDoneToday
-                                  ? colors.borderCard.withOpacity(0.10)
+                                  ? CategoryColors.outline(
+                                      _completedCategory,
+                                      themeProvider.theme,
+                                      isDark: isDark,
+                                    )
                                   : colors.borderCard
                                       .withOpacity(colors.borderCardOpacity),
-                              width: 0.5,
+                              width: _isDoneToday ? 1.5 : 0.5,
                             ),
                             boxShadow: [
                               // Outer shadow for depth
@@ -4428,36 +4446,25 @@ class _HabitCardState extends State<_HabitCard>
                                 const SizedBox(width: 12),
                               ],
 
-                              // Habit title with animated fade
+                              // Habit title.
+                              //
+                              // Completion adds rather than subtracts (§5.1):
+                              // full-opacity text, no strikethrough, no fade.
+                              // Fading reads as *disabled* and strikethrough
+                              // reads as *cancelled* — both contradict the
+                              // "collected" this is meant to signal. The wash
+                              // and outline on the card carry the state.
                               Expanded(
-                                child: AnimatedBuilder(
-                                  animation: _textFadeAnimation,
-                                  builder: (context, child) {
-                                    return Opacity(
-                                      opacity: _isDoneToday
-                                          ? _textFadeAnimation.value
-                                          : 1.0,
-                                      child: Text(
-                                        localizeHabitName(
-                                            widget.habitTitle, l10n),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: Responsive.sp(_isDoneToday ? 15 : 16),
-                                          fontWeight: FontWeight.w500,
-                                          color: _isDoneToday
-                                              ? colors.textSecondary
-                                              : colors.textPrimary,
-                                          fontFamily:
-                                              AppTextStyles.bodyFont(context),
-                                          decoration: _isDoneToday
-                                              ? TextDecoration.lineThrough
-                                              : TextDecoration.none,
-                                          decorationColor: colors.textSecondary,
-                                        ),
-                                      ),
-                                    );
-                                  },
+                                child: Text(
+                                  localizeHabitName(widget.habitTitle, l10n),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: Responsive.sp(16),
+                                    fontWeight: FontWeight.w500,
+                                    color: colors.textPrimary,
+                                    fontFamily: AppTextStyles.bodyFont(context),
+                                  ),
                                 ),
                               ),
                             ],

@@ -23,17 +23,6 @@ double _contrast(Color a, Color b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-/// Flattens a translucent colour over an opaque background.
-Color _flatten(Color fg, Color bg) {
-  final a = fg.a;
-  return Color.from(
-    alpha: 1,
-    red: fg.r * a + bg.r * (1 - a),
-    green: fg.g * a + bg.g * (1 - a),
-    blue: fg.b * a + bg.b * (1 - a),
-  );
-}
-
 void main() {
   // Non-text UI components need 3:1 against their background (WCAG 1.4.11).
   // Grid tiles and legend dots carry meaning through colour, so they are held
@@ -70,16 +59,20 @@ void main() {
     for (final theme in AppTheme.values) {
       final surface = AppColors.of(theme).cardBackground;
       for (final category in CategoryColors.categories) {
-        final wash = _flatten(
-          CategoryColors.wash(category, theme, isDark: theme.isDark),
-          surface,
-        );
+        final wash = CategoryColors.wash(category, theme, isDark: theme.isDark);
         final ratio = _contrast(wash, surface);
         expect(
           ratio,
           lessThan(1.5),
           reason: '${theme.name} / $category wash is too strong '
               '(${ratio.toStringAsFixed(2)}:1)',
+        );
+        // Lightness alone does not make a tint quiet — chroma does. A vivid
+        // wash reads as "selected"; §5.1 wants "kept".
+        expect(
+          HSLColor.fromColor(wash).saturation,
+          lessThan(0.25),
+          reason: '${theme.name} / $category wash carries too much chroma',
         );
       }
     }

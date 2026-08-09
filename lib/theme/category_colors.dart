@@ -135,11 +135,39 @@ class CategoryColors {
         0.0722 * channel(c.b);
   }
 
-  /// The very pale fill behind a completed card (§5.1). Kept far below the
-  /// swatch strength — a saturated fill reads as "selected" or "alert", which
-  /// is the opposite of the quiet "kept" this is meant to signal.
+  /// Contrast the completed-card wash aims for. Just enough to register as a
+  /// tint, nowhere near the swatch — §5.1 warns a saturated fill reads as
+  /// "selected" or "alert" rather than the quiet "kept" intended here.
+  static const double _washContrast = 1.14;
+
+  /// The wash carries far less chroma than the swatch. Lightness alone is not
+  /// enough: at the same luminance a sage at full tuning saturation is much
+  /// more vivid than a violet, and reads as "selected" rather than "kept".
+  /// Pulling saturation back makes the tint whisper on every hue.
+  static const double _washSaturationFactor = 0.34;
+
+  /// The very pale fill behind a completed card (§5.1).
+  ///
+  /// Solved as its own light tint rather than the swatch at low alpha. Fading
+  /// a colour chosen for 3.4:1 contrast pulls it toward the background *grey*,
+  /// not toward a paler version of itself — sage in particular came out muddy
+  /// and read as disabled, which is the one thing this state must not do.
   static Color wash(String? category, AppTheme theme, {required bool isDark}) {
-    return of(category, theme).withValues(alpha: isDark ? 0.16 : 0.10);
+    final hue = _hues[category] ?? _neutralHue;
+    final base =
+        _hues.containsKey(category) ? (_saturation[theme] ?? 0.40) : _neutralTuning.saturation;
+
+    final background = AppColors.of(theme).cardBackground;
+    final backgroundLuminance = _relativeLuminance(background);
+    final target = isDark
+        ? (backgroundLuminance + 0.05) * _washContrast - 0.05
+        : (backgroundLuminance + 0.05) / _washContrast - 0.05;
+
+    return _solveForLuminance(
+      hue: hue,
+      saturation: base * _washSaturationFactor,
+      targetLuminance: target.clamp(0.0, 1.0),
+    );
   }
 
   /// Outline for a completed card. This is the state's *structural* cue, so
