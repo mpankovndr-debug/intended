@@ -4262,7 +4262,10 @@ class _HabitCardState extends State<_HabitCard>
                   // left edge than the right, which read as uneven margins.
                   // Completed cards reserve the bar's width so the card body
                   // doesn't shift sideways at the moment of completion.
-                  SizedBox(width: _isDoneToday ? 4 : 0),
+                  // Gap between the accent bar and the card. Completed cards
+                  // have no bar, so they reserve the bar's width plus the gap
+                  // and the card body stays put at the moment of completion.
+                  SizedBox(width: _isDoneToday ? 12 : 8),
 
                   // CARD
                   Expanded(
