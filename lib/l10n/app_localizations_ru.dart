@@ -311,6 +311,72 @@ class AppLocalizationsRu extends AppLocalizations {
   String get insightsGridCaption => 'один квадрат — одно сделанное дело';
 
   @override
+  String get seasonLabel => 'ВАШ СЕЗОН';
+
+  @override
+  String get seasonPatternThisMonth => 'Ваш узор в этом месяце';
+
+  @override
+  String get seasonBeginning => 'Начало';
+
+  @override
+  String seasonBeginningLine(int count) {
+    return '$count из 10 моментов. Сезон появится, когда будет что читать.';
+  }
+
+  @override
+  String get seasonMorning => 'Раннее';
+
+  @override
+  String get seasonMorningLine =>
+      'Вы приходите сюда рано. День начинается с вас.';
+
+  @override
+  String get seasonEvening => 'Вечернее';
+
+  @override
+  String get seasonEveningLine => 'Вы приходите сюда, когда день затих.';
+
+  @override
+  String get seasonSteady => 'Ровное';
+
+  @override
+  String get seasonSteadyLine =>
+      'Понемногу, почти каждый день. Вот и весь узор.';
+
+  @override
+  String get seasonBursts => 'Всплески';
+
+  @override
+  String get seasonBurstsLine => 'Вы приходите волнами, и волны возвращаются.';
+
+  @override
+  String get seasonReturning => 'Возвращение';
+
+  @override
+  String get seasonReturningLine => 'Вы затихаете и находите дорогу обратно.';
+
+  @override
+  String get seasonContinuous => 'Непрерывное';
+
+  @override
+  String get seasonContinuousLine => 'Вы держали нить весь месяц.';
+
+  @override
+  String get seasonFocused => 'Сосредоточенное';
+
+  @override
+  String get seasonFocusedLine =>
+      'Одно занимало большую часть вашего внимания.';
+
+  @override
+  String get seasonWandering => 'Блуждание';
+
+  @override
+  String get seasonWanderingLine =>
+      'Вы двигались между делами, следуя за тем, что нужно.';
+
+  @override
   String get insightsGapsShortening => 'И они становятся короче.';
 
   @override

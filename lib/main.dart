@@ -34,6 +34,7 @@ import 'models/moment.dart';
 import 'services/moments_service.dart';
 import 'services/milestone_service.dart';
 import 'services/reflection_service.dart';
+import 'services/season_service.dart';
 import 'utils/profanity_filter.dart'; // Add this
 import 'utils/responsive_utils.dart';
 import 'utils/text_styles.dart';
@@ -716,6 +717,10 @@ void main() {
       // launch, so anything reading it off OnboardingState (Profile, the
       // path-specific paywall titles) sees the wrong path.
       await onboardingState.loadSelectedIntentionPath();
+      // Freeze last month's season if it hasn't been stored yet. Seasons are
+      // immutable once a month closes — that permanence is what makes the
+      // archive worth anything (§10).
+      await SeasonService.closeIfNeeded();
       await ReflectionService.loadCustomHabitFocusAreas();
 
       // Sync the saved name to OnboardingState

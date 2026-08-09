@@ -312,6 +312,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightsGridCaption => 'one square = one thing you did';
 
   @override
+  String get seasonLabel => 'YOUR SEASON';
+
+  @override
+  String get seasonPatternThisMonth => 'Your pattern this month';
+
+  @override
+  String get seasonBeginning => 'Beginning';
+
+  @override
+  String seasonBeginningLine(int count) {
+    return '$count of 10 moments. Your season appears once there\'s enough to read.';
+  }
+
+  @override
+  String get seasonMorning => 'Early';
+
+  @override
+  String get seasonMorningLine =>
+      'You come to this early. The day starts with you.';
+
+  @override
+  String get seasonEvening => 'Evening';
+
+  @override
+  String get seasonEveningLine => 'You come to this once the day has quieted.';
+
+  @override
+  String get seasonSteady => 'Steady';
+
+  @override
+  String get seasonSteadyLine => 'A little, most days. That\'s the pattern.';
+
+  @override
+  String get seasonBursts => 'Bursts';
+
+  @override
+  String get seasonBurstsLine =>
+      'You arrive in waves, and the waves come back.';
+
+  @override
+  String get seasonReturning => 'Returning';
+
+  @override
+  String get seasonReturningLine => 'You go quiet, and you find your way back.';
+
+  @override
+  String get seasonContinuous => 'Continuous';
+
+  @override
+  String get seasonContinuousLine => 'You\'ve kept a thread running all month.';
+
+  @override
+  String get seasonFocused => 'Focused';
+
+  @override
+  String get seasonFocusedLine => 'One thing had most of your attention.';
+
+  @override
+  String get seasonWandering => 'Wandering';
+
+  @override
+  String get seasonWanderingLine =>
+      'You moved between things, following what you needed.';
+
+  @override
   String get insightsGapsShortening => 'And they\'re getting shorter.';
 
   @override

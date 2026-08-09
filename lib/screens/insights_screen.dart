@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/moment.dart';
+import '../models/season.dart';
+import '../services/season_service.dart';
 import '../onboarding_v2/onboarding_state.dart';
 import '../services/moments_service.dart';
 import '../services/notification_preferences_service.dart';
@@ -32,6 +34,7 @@ class InsightsScreen extends StatefulWidget {
 class _InsightsScreenState extends State<InsightsScreen> {
   List<Moment> _moments = const [];
   String _reminderTime = '';
+  Season? _season;
   bool _loaded = false;
 
   @override
@@ -50,11 +53,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Future<void> _load() async {
     final now = DateTime.now();
     final moments = await MomentsService.momentsForMonth(now);
+    final season = await SeasonService.currentSeason();
     final hour = await NotificationPreferencesService.getHour();
     final minute = await NotificationPreferencesService.getMinute();
     if (!mounted) return;
     setState(() {
       _moments = moments;
+      _season = season;
       _reminderTime =
           '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
       _loaded = true;
@@ -89,6 +94,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
               _exampleCard(l10n, colors, themeProvider),
               const SizedBox(height: 16),
             ] else ...[
+              _seasonCard(l10n, colors),
+              const SizedBox(height: 16),
               _teaserCard(l10n, colors),
               const SizedBox(height: 16),
             ],
@@ -524,6 +531,69 @@ class _InsightsScreenState extends State<InsightsScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// The season word (§4.4). Free tier gets the word and one line; the
+  /// explanation and the archive are paid.
+  ///
+  /// Always phrased as "this month you've been", never "you are" — a reading
+  /// that changes each month is an observation, while a permanent label is a
+  /// personality test, which is the failure mode this has to avoid.
+  Widget _seasonCard(AppLocalizations l10n, AppColorScheme colors) {
+    final season = _season;
+    if (season == null) return const SizedBox.shrink();
+
+    final forming = season.pole == Season.beginning;
+    final (word, line) = switch (season.pole) {
+      Season.morning => (l10n.seasonMorning, l10n.seasonMorningLine),
+      Season.evening => (l10n.seasonEvening, l10n.seasonEveningLine),
+      Season.steady => (l10n.seasonSteady, l10n.seasonSteadyLine),
+      Season.bursts => (l10n.seasonBursts, l10n.seasonBurstsLine),
+      Season.returning => (l10n.seasonReturning, l10n.seasonReturningLine),
+      Season.continuous => (l10n.seasonContinuous, l10n.seasonContinuousLine),
+      Season.focused => (l10n.seasonFocused, l10n.seasonFocusedLine),
+      Season.wandering => (l10n.seasonWandering, l10n.seasonWanderingLine),
+      _ => (
+          l10n.seasonBeginning,
+          l10n.seasonBeginningLine(season.sampleSize),
+        ),
+    };
+
+    return _card(
+      colors: colors,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.seasonLabel,
+            style: AppTextStyles.body(context).copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.0,
+              color: colors.ctaPrimary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(word, style: AppTextStyles.h1(context).copyWith(fontSize: 34)),
+          const SizedBox(height: 8),
+          if (!forming)
+            Text(
+              l10n.seasonPatternThisMonth,
+              style: AppTextStyles.body(context)
+                  .copyWith(color: colors.ctaPrimary),
+            ),
+          const SizedBox(height: 4),
+          Text(
+            line,
+            style: AppTextStyles.body(context).copyWith(
+              fontStyle: FontStyle.italic,
+              color: colors.textSecondary,
+              height: 1.45,
+            ),
+          ),
+        ],
       ),
     );
   }

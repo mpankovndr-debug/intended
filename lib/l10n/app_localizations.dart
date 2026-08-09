@@ -644,6 +644,126 @@ abstract class AppLocalizations {
   /// **'one square = one thing you did'**
   String get insightsGridCaption;
 
+  /// No description provided for @seasonLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR SEASON'**
+  String get seasonLabel;
+
+  /// No description provided for @seasonPatternThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Your pattern this month'**
+  String get seasonPatternThisMonth;
+
+  /// No description provided for @seasonBeginning.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginning'**
+  String get seasonBeginning;
+
+  /// No description provided for @seasonBeginningLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of 10 moments. Your season appears once there\'s enough to read.'**
+  String seasonBeginningLine(int count);
+
+  /// No description provided for @seasonMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Early'**
+  String get seasonMorning;
+
+  /// No description provided for @seasonMorningLine.
+  ///
+  /// In en, this message translates to:
+  /// **'You come to this early. The day starts with you.'**
+  String get seasonMorningLine;
+
+  /// No description provided for @seasonEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get seasonEvening;
+
+  /// No description provided for @seasonEveningLine.
+  ///
+  /// In en, this message translates to:
+  /// **'You come to this once the day has quieted.'**
+  String get seasonEveningLine;
+
+  /// No description provided for @seasonSteady.
+  ///
+  /// In en, this message translates to:
+  /// **'Steady'**
+  String get seasonSteady;
+
+  /// No description provided for @seasonSteadyLine.
+  ///
+  /// In en, this message translates to:
+  /// **'A little, most days. That\'s the pattern.'**
+  String get seasonSteadyLine;
+
+  /// No description provided for @seasonBursts.
+  ///
+  /// In en, this message translates to:
+  /// **'Bursts'**
+  String get seasonBursts;
+
+  /// No description provided for @seasonBurstsLine.
+  ///
+  /// In en, this message translates to:
+  /// **'You arrive in waves, and the waves come back.'**
+  String get seasonBurstsLine;
+
+  /// No description provided for @seasonReturning.
+  ///
+  /// In en, this message translates to:
+  /// **'Returning'**
+  String get seasonReturning;
+
+  /// No description provided for @seasonReturningLine.
+  ///
+  /// In en, this message translates to:
+  /// **'You go quiet, and you find your way back.'**
+  String get seasonReturningLine;
+
+  /// No description provided for @seasonContinuous.
+  ///
+  /// In en, this message translates to:
+  /// **'Continuous'**
+  String get seasonContinuous;
+
+  /// No description provided for @seasonContinuousLine.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve kept a thread running all month.'**
+  String get seasonContinuousLine;
+
+  /// No description provided for @seasonFocused.
+  ///
+  /// In en, this message translates to:
+  /// **'Focused'**
+  String get seasonFocused;
+
+  /// No description provided for @seasonFocusedLine.
+  ///
+  /// In en, this message translates to:
+  /// **'One thing had most of your attention.'**
+  String get seasonFocusedLine;
+
+  /// No description provided for @seasonWandering.
+  ///
+  /// In en, this message translates to:
+  /// **'Wandering'**
+  String get seasonWandering;
+
+  /// No description provided for @seasonWanderingLine.
+  ///
+  /// In en, this message translates to:
+  /// **'You moved between things, following what you needed.'**
+  String get seasonWanderingLine;
+
   /// No description provided for @insightsGapsShortening.
   ///
   /// In en, this message translates to:
