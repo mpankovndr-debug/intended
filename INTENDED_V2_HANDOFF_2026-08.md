@@ -6,8 +6,8 @@ Working brief from a full audit + redesign session (Aug 2026). Everything below 
 
 ## 0. Status — what's built, and what needs your eyes
 
-Branch: `restore-point/v2-onboarding-paths`, 21 commits. `main` is untouched until you merge.
-`flutter analyze`: 0 errors, 0 warnings. `flutter test`: 21 passing.
+Branch: **`main`**, 24 commits ahead of `origin/main` and unpushed. `restore-point/v2-onboarding-paths` is the pre-v2 restore point, not the work — an earlier version of this section had that the wrong way round.
+`flutter analyze`: 0 errors, 0 warnings. `flutter test`: 59 passing.
 
 ### Build order progress
 
@@ -20,10 +20,16 @@ Branch: `restore-point/v2-onboarding-paths`, 21 commits. `main` is untouched unt
 | 3 Grid + Insights page | ✅ |
 | 4 Returns | ✅ |
 | 5 Seasons | ✅ |
-| 6 Paid month page | ⏳ drift warning done; **letter and monthly plan remain** |
+| 6 Paid month page | ✅ drift, letter, monthly plan, did-it-work |
 | 7–11 Share cards, paywall move, packs, free rescue | not started |
 
-**Next up.** The letter (§5.3) is a generation function plus a card — comparable to the drift warning. The monthly plan (§6.2) is not a card but a subsystem: nudge generation, persistence of accepted nudges, an accept/adjust flow that actually writes settings (reminder time, retiring habits), and §6.3's before/after measurement, which needs the date a change was made stored so the effect can be measured across it. It is the largest single feature left and deserves its own session.
+**Next up.** Step 7, the share cards — but read §5.5's warning first: build them once, cheaply, and stop tuning. Before that, §12's "week one (~day 5)" is still the highest-priority *undesigned* gap, and it is where people decide whether to keep the app.
+
+**What step 6 turned out to need.** The page now splits by tier, which it didn't before: paid gets drift, season, letter and plan; free gets season and the teaser; day one belongs to neither (§5.4). The drift card had shipped ungated.
+
+The plan's four nudges each write a real setting — move the reminder, set aside an action, pin the anchor, adopt a lived focus area. §6.2's "lighter on Wednesdays" is deliberately absent: there is no setting behind it, so accepting would change nothing, and §4.5 makes that disqualifying. `OnboardingState.adoptFocusArea` is new for the same reason — `toggleFocusArea` holds the free tier's cap of two and never writes to disk, so the accept button would have silently done nothing.
+
+§6.3 compares equal windows, four weeks either side, and reports a fall as plainly as a rise. The proof line does not appear until a full four weeks have passed since the change.
 
 ### ⚠️ Needs you — cannot be done or seen from a dev machine
 
@@ -34,9 +40,13 @@ Branch: `restore-point/v2-onboarding-paths`, 21 commits. `main` is untouched unt
 5. **Real season words and the return glow** — need ≥10 moments and gaps between them. Only "Beginning" and gapless months have been seen.
 6. **The archive and month-freezing** — need a month boundary to cross.
 7. **The category palette on all 10 themes.** Tests guarantee 3:1 contrast everywhere, but legible is not the same as beautiful. Check `warmClay`, `goldenHour`, and both dark themes.
-8. **Russian copy** across the new strings — completion sheet, seasons, drift, insights. Mine is serviceable, not native.
+8. **Russian copy** across the new strings — completion sheet, seasons, drift, insights, and now the letter and the plan. Mine is serviceable, not native. The plural forms are done properly (one/few/many), but the phrasing wants a native ear.
+9. **The plan card's prominence.** §5.3 calls it the most prominent card on screen; it currently gets a denser glass and a brighter edge and nothing else, which on the simulator is *subtle*. If it doesn't read as the anchor of the page, it needs more than opacity.
+10. **The §6.3 proof line after a real four weeks.** Seen with seeded data, never with a change actually made four weeks earlier.
 
 Items 3–6 are covered by tests for *behaviour*, not appearance.
+
+**Verified on an iPhone 17 Pro Max simulator** (Aug 2026 data, both tiers): the letter reads *"You came back on Friday, after 3 quiet days. / Most of the month was Take 3 slow breaths — 7 times. / 7 of them you were glad you did. 2 took effort. / What brought you back that day?"* The plan opened with its proof line, offered one decision, held three behind "3 more when you're ready", and accepting wrote the reminder to 22:00 and recorded the baseline. Free tier showed season and teaser only.
 
 ### Known issues, not yet fixed
 
@@ -383,7 +393,7 @@ The original list sequenced only part of §4–§10. This is the full order, wit
 | 3 | Grid + day-one Insights (replaces `progress_screen.dart`) | §4.2, §5.4 |
 | 4 | Returns — "four times you went quiet, four times you came back" | §4.3 |
 | 5 | **Seasons** — four axes, ≥10-moment threshold, monthly compute, archive | §4.4 |
-| 6 | Paid Month page — drift warning, letter, monthly plan; absorb the `weeklyReflection` coach mark | §5.3, §6.1–6.3 |
+| 6 | Paid Month page — drift warning, letter, monthly plan; absorb the `weeklyReflection` coach mark ✅ *(the coach mark itself is still to remove)* | §5.3, §6.1–6.3 |
 | 7 | Share cards — weekly workhorse + monthly season card, both with the "one square =" caption | §5.5 |
 | 8 | Paywall moved to after the first completed action + copy rewrite | §8 |
 | 9 | Packs → adoptable intentions; kill "Browse all habits"; long-press becomes swap + inline hint | §7, §5.6 |
