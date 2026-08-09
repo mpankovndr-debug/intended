@@ -1,0 +1,101 @@
+import 'dart:math' as math;
+
+import 'package:flutter/painting.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:intended/theme/app_colors.dart';
+import 'package:intended/theme/category_colors.dart';
+import 'package:intended/onboarding_v2/onboarding_state.dart';
+
+/// WCAG relative luminance.
+double _luminance(Color c) {
+  double channel(double v) =>
+      v <= 0.03928 ? v / 12.92 : math.pow((v + 0.055) / 1.055, 2.4).toDouble();
+  return 0.2126 * channel(c.r) +
+      0.7152 * channel(c.g) +
+      0.0722 * channel(c.b);
+}
+
+double _contrast(Color a, Color b) {
+  final la = _luminance(a);
+  final lb = _luminance(b);
+  final hi = math.max(la, lb);
+  final lo = math.min(la, lb);
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+/// Flattens a translucent colour over an opaque background.
+Color _flatten(Color fg, Color bg) {
+  final a = fg.a;
+  return Color.from(
+    alpha: 1,
+    red: fg.r * a + bg.r * (1 - a),
+    green: fg.g * a + bg.g * (1 - a),
+    blue: fg.b * a + bg.b * (1 - a),
+  );
+}
+
+void main() {
+  // Non-text UI components need 3:1 against their background (WCAG 1.4.11).
+  // Grid tiles and legend dots carry meaning through colour, so they are held
+  // to that bar on every theme rather than only on the ones we looked at.
+  const minContrast = 3.0;
+
+  test('every category swatch is legible on every theme', () {
+    final failures = <String>[];
+
+    for (final theme in AppTheme.values) {
+      final surface = AppColors.of(theme).cardBackground;
+      for (final category in CategoryColors.categories) {
+        final swatch = CategoryColors.of(category, theme);
+        final ratio = _contrast(swatch, surface);
+        if (ratio < minContrast) {
+          failures.add(
+            '${theme.name} / $category: ${ratio.toStringAsFixed(2)}:1',
+          );
+        }
+      }
+    }
+
+    expect(
+      failures,
+      isEmpty,
+      reason: 'Swatches below $minContrast:1 on their card background:\n'
+          '${failures.join('\n')}',
+    );
+  });
+
+  test('completed-card wash stays subtle enough to read as quiet', () {
+    // The wash must be visible but must never approach the swatch itself —
+    // §5.1 warns a saturated fill reads as "selected" or "alert".
+    for (final theme in AppTheme.values) {
+      final surface = AppColors.of(theme).cardBackground;
+      for (final category in CategoryColors.categories) {
+        final wash = _flatten(
+          CategoryColors.wash(category, theme, isDark: theme.isDark),
+          surface,
+        );
+        final ratio = _contrast(wash, surface);
+        expect(
+          ratio,
+          lessThan(1.5),
+          reason: '${theme.name} / $category wash is too strong '
+              '(${ratio.toStringAsFixed(2)}:1)',
+        );
+      }
+    }
+  });
+
+  test('every focus area the app can assign has a hue', () {
+    // A category key that stops matching fails silently to the neutral
+    // swatch, so the two lists are pinned together here.
+    expect(
+      CategoryColors.categories.toSet(),
+      OnboardingState.habitsByCategory.keys.toSet(),
+    );
+  });
+
+  test('unknown and null categories fall back to the neutral swatch', () {
+    final neutral = CategoryColors.of(null, AppTheme.iris);
+    expect(CategoryColors.of('Not A Category', AppTheme.iris), neutral);
+  });
+}
