@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 import '../models/moment.dart';
 import 'moments_service.dart';
+import 'reflection_service.dart';
 import 'app_usage_service.dart';
 
 /// Syncs habit completions made from the iOS widget into Flutter's
@@ -70,11 +71,11 @@ class WidgetCompletionService {
           } else {
             completedAt = (DateTime.tryParse('${dateKey}T12:00:00') ?? DateTime.now()).toUtc();
           }
-          await MomentsService.record(Moment(
+          await MomentsService.record(Moment.create(
             id: '${completedAt.toIso8601String()}_$habitId',
             habitName: habitName,
-            habitEmoji: '✦',
-            completedAt: completedAt,
+            category: ReflectionService.categoryForHabit(habitName),
+            at: completedAt,
           ));
 
           // Keep total-completed counter in sync for coach marks

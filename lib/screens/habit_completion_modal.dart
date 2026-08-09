@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../models/moment.dart';
 import '../services/moments_service.dart';
+import '../services/reflection_service.dart';
 import '../services/milestone_service.dart';
 import '../services/analytics_service.dart';
 import '../services/backup_service.dart';
@@ -190,11 +191,9 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
 
     // Record the moment
     await MomentsService.record(
-      Moment(
-        id: DateTime.now().toUtc().toIso8601String(),
+      Moment.create(
         habitName: widget.habitTitle,
-        habitEmoji: '✦',
-        completedAt: DateTime.now().toUtc(),
+        category: ReflectionService.categoryForHabit(widget.habitTitle),
       ),
     );
     MilestoneService.invalidate();

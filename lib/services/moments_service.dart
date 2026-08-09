@@ -2,12 +2,17 @@ import 'dart:convert';
 import '../l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/moment.dart';
+import '../models/moment_rollup.dart';
 
 class MomentsService {
   static const String _key = 'moments_collection';
+  static const String _rollupKey = 'moments_rollup';
   static const int _maxMoments = 1000;
 
   /// Records a new moment. Call this every time a habit is completed.
+  ///
+  /// The rollup is rewritten in the same call so it can never lag behind the
+  /// collection it summarises (§10).
   static Future<void> record(Moment moment) async {
     final prefs = await SharedPreferences.getInstance();
     final all = await getAll();
@@ -17,6 +22,57 @@ class MomentsService {
     }
     final encoded = jsonEncode(all.map((m) => m.toJson()).toList());
     await prefs.setString(_key, encoded);
+    await _writeRollup(prefs, all);
+  }
+
+  /// Attaches mood and note to an already-recorded moment — the two-step
+  /// completion modal writes the moment first, then the mood tap lands.
+  static Future<void> annotate(
+    String momentId, {
+    MomentMood? mood,
+    String? note,
+  }) async {
+    if (mood == null && note == null) return;
+    final prefs = await SharedPreferences.getInstance();
+    final all = await getAll();
+    final index = all.indexWhere((m) => m.id == momentId);
+    if (index == -1) return;
+    all[index] = all[index].copyWith(mood: mood, note: note);
+    await prefs.setString(
+      _key,
+      jsonEncode(all.map((m) => m.toJson()).toList()),
+    );
+    await _writeRollup(prefs, all);
+  }
+
+  /// Pre-aggregated counts, gaps and returns. Falls back to computing from
+  /// the collection when no rollup has been written yet (existing installs).
+  static Future<MomentRollup> getRollup() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_rollupKey);
+    if (raw != null) {
+      try {
+        return MomentRollup.fromJson(
+          jsonDecode(raw) as Map<String, dynamic>,
+        );
+      } catch (_) {
+        // Malformed or from an older shape — rebuild below.
+      }
+    }
+    final all = await getAll();
+    final rollup = MomentRollup.from(all);
+    await _writeRollup(prefs, all);
+    return rollup;
+  }
+
+  static Future<void> _writeRollup(
+    SharedPreferences prefs,
+    List<Moment> all,
+  ) async {
+    await prefs.setString(
+      _rollupKey,
+      jsonEncode(MomentRollup.from(all).toJson()),
+    );
   }
 
   /// Returns all moments, newest first.

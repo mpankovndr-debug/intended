@@ -6451,11 +6451,9 @@ class _HabitActionScreenState extends State<HabitActionScreen> {
 
     // Record the moment
     await MomentsService.record(
-      Moment(
-        id: DateTime.now().toUtc().toIso8601String(),
+      Moment.create(
         habitName: widget.habitTitle,
-        habitEmoji: '✦',
-        completedAt: DateTime.now().toUtc(),
+        category: ReflectionService.categoryForHabit(widget.habitTitle),
       ),
     );
     MilestoneService.invalidate();

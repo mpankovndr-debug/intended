@@ -347,6 +347,11 @@ class ReflectionService {
 
   static Map<String, String> _customHabitFocusAreas = {};
 
+  /// Public accessor for the habit → focus-area mapping. Used when recording
+  /// a moment, so its category is captured at completion time rather than
+  /// re-derived later from a habit that may since have been swapped away.
+  static String? categoryForHabit(String habit) => _categoryForHabit(habit);
+
   /// Public accessor for other services (e.g. MilestoneService).
   static String? customHabitFocusAreaFor(String habit) =>
       _customHabitFocusAreas[habit];
