@@ -1,0 +1,325 @@
+# Intended v2 — Design & Product Handoff
+
+Working brief from a full audit + redesign session (Aug 2026). Everything below is a decision already made, with the reasoning attached so it can be challenged rather than blindly followed.
+
+---
+
+## 1. The core diagnosis
+
+**The app is called Intended, onboarding asks for an intention — and then every screen says "habits" and shows a checklist.** The brand promise and the product were two different things.
+
+Three consequences that shaped everything else:
+
+1. **Streaks were removed without replacing the return mechanic.** Every competitor has a unit that pulls you back (Finch's pet needs feeding, Habitica's character levels, Streaks' unbroken chain). Intended removed the punishment and left the checklist bare.
+2. **Premium was mostly cosmetic.** Themes, widget sizes, and "unlimited habits/swaps/focus areas" are removed restrictions, not features. Only weekly reflections was a real capability — and it ran on completion counts alone, so it could only ever say "you did 4 things."
+3. **The free tier sat below market bar** while the paid tier delivered a promise it couldn't keep inside a 7-day trial.
+
+Marketing failure was separate but related: prior content (API key leaks, RevenueCat, App Store approval, founder story) reached builders, who don't download habit trackers.
+
+---
+
+## 2. Competitive position
+
+| App | Scale / price | What it owns |
+|---|---|---|
+| **Finch** | 10M+ downloads, 4.9 from 700k+ ratings, free | Gentle self-care + emotional attachment (pet). Already owns "forgiving." |
+| **Daylio** | 4.7 from 500k+ ratings | Two-tap mood logging, Year in Pixels. Criticised for paywalling core utility. |
+| **Streaks** | $5.99 one-time | Apple Health + Shortcuts integration |
+| **Way of Life** | $79.99 lifetime | Charts, data export |
+| **Keelify** | — | Grace days, strength score, milestones explicitly mapped to Lally |
+
+**Critical finding: "gentle / no streaks" is no longer a differentiator.** It was a wedge in 2025; by 2026 it's a category norm. Intended cannot win on tone — only on what it *does* with the tone.
+
+**Missing table stakes:** Apple Health, Apple Watch, iCloud sync, data export, retroactive logging.
+
+---
+
+## 3. Evidence base
+
+**Philosophy (defensible):**
+- Lally et al. 2010: missing one opportunity **did not materially affect habit formation**. Median 66 days to automaticity, range 18–254. Overall consistency matters, not an unbroken clock.
+
+**Friction:**
+- Daylio's success rests on: the barrier to journaling isn't lack of things to say, it's the friction of having to write. Hence two-tap entry.
+- Daylio's stated ceiling: it captures *what* you felt and did, but not *why*. ← Intended's opening.
+
+**Conversion:**
+- 90% of trial starts and 44.5% of all purchases happen on Day 0. Users who don't convert during onboarding mostly never return to the paywall.
+- Onboarding and paywall are **one funnel** — what happens before the paywall determines conversion more than paywall design.
+- Paywalls triggered after a measurable value moment see **2.1x higher trial start rates**. One documented restructure: 8.2% → 19.7% in six weeks.
+- Health & Fitness benchmarks: median trial start 5–7% of installs (top 5%: 12–15%); trial-to-paid ~62%.
+
+**Pricing:**
+- High-priced apps earn **3x the LTV** of low-priced ones. In Health & Fitness, expensive annual plans earn **4.5x more per user**. Annual = 60.6% of H&F revenue.
+- Discount-acquired users churn faster at renewal.
+
+---
+
+## 4. Conceptual changes (the spine)
+
+### 4.1 Intention is the primary object
+
+Habits become **actions** underneath an intention. Moments become **evidence** you're living it. Today's header is the user's intention ("Being more present"), not a generic affirmation.
+
+⚠️ **This is the least evidence-backed decision in the doc.** No competitor does it — either an opening or something already tried and abandoned. **Test cheaply first:** rename the Today header to the intention and add the intention line to the completion sheet. One day of work. If Day-7 retention doesn't move, don't build the rest.
+
+### 4.2 Moments = tiles indexed by moment, not date
+
+**The single most important structural decision.**
+
+- GitHub's contribution graph and Daylio's Year in Pixels both index by **date** — so an empty cell means "you failed." That's a streak with better manners.
+- Intended indexes by **moment**. Cell 1 is your first moment, cell 47 your forty-seventh. There is no cell for a skipped Tuesday because days aren't the unit.
+- **The grid only ever grows. Absence is structurally unrepresentable.**
+- Colour = focus area (coral Health / violet Self-care / sage Mood). Brightness or size = mood.
+- Never outline empty cells — a bounded grid of 300 empty slots is "look how much you haven't done." Tiles fill and stop, with one faint ghost tile after the last.
+- **Gaps are shown as returns, not absences.** The first tile after a gap gets a soft glowing ring. Tap it: *"You came back here, after 6 quiet days."*
+
+**Failed approaches (don't revisit):** lights scattered on a landscape painting (unreadable — decoration, not data); dark landscape revealed by lights (still unreadable). The grid works; the painting doesn't. Data displays and aesthetic artifacts can't be the same object.
+
+### 4.3 Returns replace streaks
+
+Count **returns** — how many times someone came back after a gap, and whether gaps are shortening. `"You came back 4 times — 9, 6, 4, 2 days apart."` A streak says *you broke it*. This says *you're getting better at coming back.*
+
+### 4.4 Seasons, not personalities
+
+Monthly, recomputed, **never fixed identity**. "This month you've been ___" not "You are ___."
+
+- Four axes, none with a bad end: Morning↔Evening, Steady↔Bursts, Returning↔Continuous, Focused↔Wandering.
+- Threshold: don't show until ~10 moments; show forming state with a count before that.
+- Copy is observation, never assessment: *"you came back most often in the evenings"* not *"you are an evening person."*
+- Season **word** is free; the **explanation and archive** are paid.
+- Precedent: Spotify's listening personality was assigned automatically from behaviour, drove a 21% download increase in Wrapped week, and its removal in 2024 drew complaints. Risk to avoid: reading as "zodiac signs for music."
+
+### 4.5 Free = what happened. Paid = what to do about it.
+
+**Every paid insight must end in a button that changes something.** A mirror doesn't justify a subscription. Diagnostic that caught this: the paid screen was all observations ("you've been reaching for rest") and the one forward-looking element (reminder nudge) had been put in the free tier.
+
+### 4.6 Never paywall the rescue
+
+Gap detection, the gentle notification after silence, and the reduced home screen are **free forever**. Someone who's disappeared for nine days is the person who most needs help and is least likely to be a subscriber. Free catches you when you fall; paid helps you fall less often.
+
+---
+
+## 5. Screens
+
+### 5.1 Today
+
+- Header: **the intention** + date. Not "SUGGESTIONS" (wrong word — these are what the user chose, calling them suggestions makes them feel algorithmic and lowers commitment).
+- Four action cards, thin coloured left bar = pending.
+- **Completed card:** no left bar, very pale coral wash at low opacity, text in soft violet, small row of tiny tiles at the right edge. **Not grey** (means disabled/deleted), **not saturated** (reads as selected/alert), **no strikethrough** (reads as cancelled — contradicts "collected").
+- Bottom: one quiet line with a small plus icon, "Add something of your own." No large dashed CTA — over-collecting in week one is the documented abandonment path.
+- Swap lives on long-press + tutorial. ⚠️ Long-press is undiscoverable; back it with **just-in-time hints** — when an action sits untouched ~2 weeks, show inline on that card: *"Not landing? Hold to swap."*
+- **Screen should know what week it is.** After a gap: single card, *"Eight days. That's allowed. Just this one today?"*
+
+### 5.2 Completion — two steps, one modal
+
+**Delete the "Did you do this today?" confirmation entirely.** Nobody taps a habit card by accident; it's friction phrased as an interrogation.
+
+**Step 1:** action name, timestamp, "How did that land?", three pills, small "skip". No tile, no Done button.
+
+**Step 2 (after tap):** row of this month's tiles with the new one **animating in** at the end with a glow. Then action name, "1:12 AM · Glad I did", and *"Kept — 13 moments this month."* Auto-dismisses.
+
+⚠️ **The animation is not optional.** A static row of 13 tiles is just a row; the tile landing is what explains the system. Without animation, drop the row and use words only.
+
+**Mood scale: "Glad I did · Neutral · Took effort."**
+Rejected "heavy / okay / light" — it's a *sensation* scale that breaks on non-somatic actions, and it carries a hidden judgement (light=good, heavy=bad), so hard valuable work gets labelled negatively. The chosen scale works across all categories, has no bad end, and captures *worth* rather than pleasantness — which is the more useful correlation later.
+
+**Mood tap, not a text field.** Optional note behind a small "+". This is what makes weekly/monthly insights real rather than counts.
+
+### 5.3 Month (insights)
+
+Free and paid share the same cards and quality; paid has more of them.
+
+**Free:**
+1. The grid + legend + "You came back 4 times"
+2. Season **word** only + Share
+3. One softer card: real content **fading out mid-sentence** (not padlocks) + "✦ Unlock Intended+"
+
+**Paid:**
+1. Grid + legend + returns *with gap intervals*
+2. **Right now** — drift warning (see 6.1)
+3. **Your season** — word + explanation + past seasons + Share
+4. **Your letter** — 4 lines, ending in a **question** not a comfort
+5. **Your September plan** (see 6.2) — most prominent card on screen
+
+**Fade, not padlocks.** A lock is a hard metal object in a world of mist and glass — the only element that looks borrowed from another app. It says *blocked*; a sentence dissolving says *there's more here*. Show real content fading, not grey placeholders.
+
+**One decision per month, not three.** Earlier version had three nudges and six buttons — a dashboard demanding optimisation. Rank them, show the top one, hold the rest behind "2 more when you're ready."
+
+**Never ship an empty paid state.** The original bug: free showed a lock reading "See which days work best"; paid showed "After a few weeks, we'll show you..." — the user bought a promise and received a reworded promise. Either a section has real content or it isn't on the screen. Partial data with honest confidence instead: *"So far: Monday, Friday, Saturday. Too early to call it a pattern — ask me again in two weeks."*
+
+### 5.4 Day one
+
+Not zero data — they just finished onboarding. Three cards:
+
+1. *"Nothing here yet — and that's exactly right."* + one row of 8 empty outlines + caption *"one square = one thing you did"*
+2. **"WHAT YOU'RE STARTING WITH"** — their intention, their three actions, focus areas + reminder time. ⚠️ **This card tested as the strongest thing on the page** — it's the only place the intention is visible and it explains the app to a stranger in one glance. Use it as the lead App Store screenshot; consider echoing it on Today.
+3. An **EXAMPLE** card showing what the page looks like in a month + one line: *"✦ Intended+ reads your month and suggests what to change. It unlocks once you have something to read."*
+
+**No paywall on day one.** There's genuinely nothing behind a lock yet — upgrading would unlock three empty cards. The Day-0 conversion window belongs to the onboarding paywall (moved to just after the first completed action), not to this tab.
+
+⚠️ Mark the EXAMPLE card unmistakably (dashed border / clearly reduced opacity). At current styling someone could screenshot it thinking it's their data.
+
+### 5.5 Share cards — two, with different jobs
+
+**Weekly card** — the workhorse. Humble, frequent, personal. 52 chances a year. Includes habit names (they're aspirational, not embarrassing) with an **opt-in toggle: "Include my habit names," off by default.**
+
+**Monthly season card** — rare, event-like. Season word as hero (not the number — "3" invites comparison and looks small), grid, "37 moments · I came back 4 times", logo, and **"intention, not perfection" promoted to legible size** (it's the strongest line and was the smallest text).
+
+⚠️ **Honest expectation:** user-generated sharing cannot bootstrap from zero. Wrapped works because millions post simultaneously. One user posting to 200 followers gets a couple of likes. **The card's real near-term job is as *your* marketing asset** — you post it. Build it once, cheaply, and stop tuning it.
+
+---
+
+## 6. New paid capabilities
+
+### 6.1 Drift warning (build first — cheapest, most on-brand)
+
+Warn **before** the gap, using existing data:
+
+> You've collected 2 moments this week. You usually collect 6.
+> The last two times this happened, a quiet stretch followed.
+> **Just one action for a few days** · **I'm fine**
+
+Only forward-looking feature in the app. Finch, Streaks and Daylio all *react* to absence; none anticipate it. Low cost: rolling average vs. baseline.
+
+### 6.2 Your [Month] Plan
+
+On the 1st, propose next month from last month's evidence, as one accept-or-adjust flow. **Absorbs the scattered nudges** so they stop being loose buttons.
+
+Grouped under two sub-headers (test whether these help at 4 items or just add overhead):
+- **YOUR ACTIONS** — Keep (your anchor) / Retire (only 3 times)
+- **YOUR RHYTHM** — Lighter Wed & Thu / Reminder at 10pm + add Self-care to focus
+
+Opens with proof: *"In July you moved your reminder to 10pm. 22 moments since, up from 14."*
+
+Changes the subscription from *reviewing the past* to *planning the next month* — which is what makes someone open it in month seven.
+
+### 6.3 Did it work (the renewal mechanic)
+
+Every accepted nudge becomes a measurable before/after. Month one the app tells you things about yourself; month eight it tells you whether what you changed is working. **This is what stops insights running out of novelty around month four.** Now folded into the plan card's opening line.
+
+### 6.4 What actually lifts you (later — needs mood tap + ~8 weeks data)
+
+Rank actions by how they land: *"Body scan — glad I did it 8 times out of 10. Drink water — 2 out of 10."* → **Swap the water one**. The only feature that tells someone which habits are worth keeping.
+
+### 6.5 Deferred
+
+- **Apple Health** — real value, but it's Streaks' moat and doesn't answer "why pay." Not this year.
+- **Retroactive check-in** — ship it (its absence is embarrassing for a self-compassion app), but it's a papercut fix, not a growth lever.
+- **Year in Moments** — annual artifact has zero value in week one. The rolling grid replaces it.
+
+---
+
+## 7. Packs & the library
+
+**Packs and onboarding intentions are the same feature under two names.** "Winding Down — an evening decompression set" *is* an intention. Merge them: packs become **intentions you can adopt**, reachable at onboarding and later.
+
+**All intentions free.** "Gentle Mornings free / Winding Down premium" is the weakest possible paywall — content is the easiest thing for a competitor to give away, and users resent locked lists more than locked analytics (exactly Daylio's criticism). Charge for seasons, the why, and the archive.
+
+**Kill the global "Browse all habits" entry.** It's a store; the implied verb is *acquire*, and the only action available is making your list longer. Replace with two contextual doors:
+- **Swap** — from an action card, filtered to the same focus area. Verb: *refine*.
+- **Adopt an intention** — from the Today header. Verb: *redirect*.
+
+Same content, same sheet, opposite psychology. Neither door grows the list.
+
+Also: drop the search bar (pointless at 20 items, earns its place ~50+), and fix the count inconsistency (home said "8 more," sheet said "20 available").
+
+**Keep custom creation deliberately constrained.** 50-char limit, category chips, no frequency/targets/scheduling — that's the productivity-app trap and it imports the pressure the app exists to remove. Way of Life and Strides already own numeric target tracking. Change: create the action *inside an intention* ("What small action serves being more present?") — a constrained prompt beats a blank field.
+
+---
+
+## 8. Pricing
+
+| Plan | Price | Notes |
+|---|---|---|
+| Monthly | €5.99 | |
+| **Yearly** | **€44.99** | **Hero.** Anchor as "€3.75/month, billed yearly" against the €5.99 monthly |
+| Lifetime | €49.99 | Down from €69.99. An option, not the hero |
+
+**Do not discount to acquire.** Discount-acquired users churn faster at renewal.
+
+⚠️ **Correction on record:** an earlier recommendation to cut Lifetime to €29.99 was wrong and contradicted by the data (high-priced apps earn 3x LTV; H&F annual plans 4.5x per user). €49.99 is the revised position.
+
+**Move the onboarding paywall to immediately after the first completed action**, with the moment card on screen. Currently it asks people to buy pattern-insights before they have a single data point — an unverifiable promise.
+
+**Paywall copy:** cut "Unlimited habits, swaps, and focus areas" entirely — it contradicts the entire brand. Lead with what's deliverable inside 7 days (themes/dark mode, widgets, packs), with weekly reflections lower.
+
+---
+
+## 9. Language rules
+
+**Plain language beats clever design.** A cold reader ("I've no idea what this all means" after 3 seconds) failed on invented vocabulary. Fixes:
+
+| Instead of | Write |
+|---|---|
+| "37 moments. Most of them after 11pm." | "**You did 37 small things for yourself in August.** Most of them late at night." |
+| *(no caption)* | "one square = one thing you did" — under the grid |
+| "You came back 4 times — 9, 6, 4, 2 days apart" | "Four times you went quiet for a few days. Four times you came back." |
+| "You showed up 3 days. That's 3 days you chose to try." | "You showed up 3 days this week." ("chose to try" reads apologetic) |
+| "SUGGESTIONS" | The user's intention |
+| Stock quote ("Consistency is important, but so is self-compassion") | The weekly letter |
+
+**Voice:** observation, never assessment. Warm without being congratulatory. The letter can name intimate things ("you came back on Friday after three quiet days"); the share card cannot.
+
+**Kept copy that works:** "Nothing here yet — and that's exactly right." · "Kept." · "2 more when you're ready" · "It unlocks once you have something to read." · "intention, not perfection."
+
+---
+
+## 10. Data architecture
+
+Compute everything **on device**. At ~4 completions/week this is a tiny dataset. No Cloud Functions, works offline, costs nothing.
+
+```
+users/{uid}
+  ├─ profile      → name, intention, focusAreas, theme
+  ├─ moments/{id} → title, category, source,
+  │                 completedAtUtc, tzOffsetMin,
+  │                 localHour, localWeekday, mood
+  ├─ seasons/{yyyy-MM} → code, axes, sampleSize, computedAt
+  └─ rollup/current    → counts by hour/weekday/category,
+                         gap stats, lastMomentAt
+```
+
+1. **Store `localHour` and `localWeekday` as fields**, not just UTC. Morning↔Evening and Steady↔Bursts are computed from them; deriving at read time breaks silently the moment someone travels.
+2. **Keep `rollup/current`.** The widget can't run a month-wide query cheaply. Update it in the same write as the moment.
+3. **Seasons are immutable once the month closes.** A season that changes retroactively destroys "this was who I was in September" — and that permanence is what makes the archive worth paying for.
+4. **Compute trigger:** on app open, if current month has ≥10 moments and no season doc exists, compute and write. Otherwise show the forming state.
+
+### Auth — highest-risk area
+
+- **Use `linkWithCredential`, NOT `signInWithCredential`** when an anonymous user signs in with Apple/Google. Link preserves the UID and all their moments. Sign-in creates a new UID and **silently orphans everything**. Invisible in testing unless you explicitly check the old data survived.
+- Handle `credential-already-in-use`: sign into the existing account, and if the anonymous one had moments, batch-copy them over.
+- **Apple returns the full name only on the very first authorization, ever.** Persist it in that callback — there is no second chance, and re-authorizing won't return it.
+- **In-app account deletion is required by Apple** for any app with account creation. Currently missing → rejection risk on next submission.
+- Mood data reads as health-adjacent. State plainly in the FAQ what's stored and where.
+
+---
+
+## 11. Build order
+
+1. **Mood tap + merged completion modal** (delete the confirm dialog) — feeds everything
+2. **Grid on the Moments screen** + tile-landing animation
+3. **Plain-language rewrite** across Today and Month (copy only, cheap)
+4. **Paywall moved to after first completed action** + rewritten copy
+5. **Intention surfaced on Today** (the one-day test)
+6. **Drift warning**
+7. **Monthly plan card**
+8. Retroactive logging, share cards
+9. Later: what-actually-lifts-you, Apple Health
+
+---
+
+## 12. Still undesigned
+
+- **Week one (~day 5).** 4 moments, no season, no plan, nothing to say. **This is where people decide whether to keep the app** — day one and month one are both easy by comparison. Highest-priority gap.
+- **App Store page.** Subtitle, keyword field, screenshots, preview video — almost certainly still launch-day defaults. Only channel that compounds while you're not working on it. Lead screenshot: the widget in situ, or the "What you're starting with" card.
+- **Gap-aware Today screen** — designed in principle, not drawn.
+- **FAQ** — answer objections not features: Is it free? What if I miss a day? Why no streaks? Do I lose anything if I stop paying? Is my data private? What's actually in Intended+?
+
+---
+
+## 13. Reality check
+
+The product was never the binding constraint. **~25–30 paying customers ≈ 700–1,000 installs** at realistic conversion. Distribution is the problem; prior content aimed at builders produced nothing.
+
+At 3–5 hours a week, everything above is more than the rest of 2026. Sequence ruthlessly, and get a version in front of real people before designing further — three insights-page redesigns happened before a single stranger saw any of them.

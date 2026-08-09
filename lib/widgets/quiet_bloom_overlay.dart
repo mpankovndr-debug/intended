@@ -192,8 +192,17 @@ class _QuietBloomOverlayState extends State<QuietBloomOverlay>
     final l10n = AppLocalizations.of(context);
     final prefs = await SharedPreferences.getInstance();
     final pathKey = prefs.getString('selected_intention_path') ?? 'your_own_way';
-    final pathId = IntentionPathId.fromKey(pathKey);
+    var pathId = IntentionPathId.fromKey(pathKey);
     final index = Random().nextInt(5) + 1;
+
+    // Time-aware fallback: don't show "morning" messages in the afternoon
+    // or "winding down" messages in the morning.
+    final hour = DateTime.now().hour;
+    if (pathId == IntentionPathId.gentleMornings && hour >= 14) {
+      pathId = IntentionPathId.yourOwnWay;
+    } else if (pathId == IntentionPathId.windingDown && hour < 16) {
+      pathId = IntentionPathId.yourOwnWay;
+    }
 
     setState(() {
       _bloomMessage = _getBloomMessage(l10n, pathId, index);
@@ -219,19 +228,19 @@ class _QuietBloomOverlayState extends State<QuietBloomOverlay>
         4 => l10n.bloomGentleMornings4,
         _ => l10n.bloomGentleMornings5,
       },
-      IntentionPathId.findingCalm => switch (index) {
-        1 => l10n.bloomFindingCalm1,
-        2 => l10n.bloomFindingCalm2,
-        3 => l10n.bloomFindingCalm3,
-        4 => l10n.bloomFindingCalm4,
-        _ => l10n.bloomFindingCalm5,
+      IntentionPathId.anchorsForHardDays => switch (index) {
+        1 => l10n.bloomAnchorsForHardDays1,
+        2 => l10n.bloomAnchorsForHardDays2,
+        3 => l10n.bloomAnchorsForHardDays3,
+        4 => l10n.bloomAnchorsForHardDays4,
+        _ => l10n.bloomAnchorsForHardDays5,
       },
-      IntentionPathId.gratitudeSelfLove => switch (index) {
-        1 => l10n.bloomGratitudeSelfLove1,
-        2 => l10n.bloomGratitudeSelfLove2,
-        3 => l10n.bloomGratitudeSelfLove3,
-        4 => l10n.bloomGratitudeSelfLove4,
-        _ => l10n.bloomGratitudeSelfLove5,
+      IntentionPathId.quietFocus => switch (index) {
+        1 => l10n.bloomQuietFocus1,
+        2 => l10n.bloomQuietFocus2,
+        3 => l10n.bloomQuietFocus3,
+        4 => l10n.bloomQuietFocus4,
+        _ => l10n.bloomQuietFocus5,
       },
       IntentionPathId.windingDown => switch (index) {
         1 => l10n.bloomWindingDown1,

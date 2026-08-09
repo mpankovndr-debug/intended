@@ -84,23 +84,18 @@ class NotificationScheduler {
   // Adaptive timing
   // ---------------------------------------------------------------------------
 
-  /// Determines the notification frequency tier based on recent check-in
-  /// behavior. Uses the last 2 weeks of daily activity data.
+  /// Determines the notification frequency tier from check-in behavior: the
+  /// average of `days_active` per week since first launch, plus a recency
+  /// override for users who have gone quiet.
+  ///
+  /// Reads `days_active` rather than `reflection_weekly_history` on purpose —
+  /// the latter is only written when the Progress tab renders a reflection, so
+  /// it tracks whether the user browses their stats, not whether they show up.
+  /// Falls back to [_AdaptiveTier.normal] whenever there isn't enough data.
   static Future<_AdaptiveTier> _getAdaptiveTier() async {
     final prefs = await SharedPreferences.getInstance();
-    final rawHistory = prefs.getString('reflection_weekly_history');
-    if (rawHistory == null) return _AdaptiveTier.normal;
 
     try {
-      // Parse weekly history: each entry is [weekKey, bool, bool, ...]
-      final entries = (rawHistory.split('[')
-          .where((s) => s.contains('true') || s.contains('false'))
-          .toList());
-
-      // Count active days from the last 2 weeks
-      int recentActiveDays = 0;
-      int weeksAnalyzed = 0;
-      // Simple heuristic: check days_active for recent behavior
       final daysActive = prefs.getInt('days_active') ?? 0;
       final firstLaunch = prefs.getString('first_launch_date');
       if (firstLaunch == null) return _AdaptiveTier.normal;
@@ -110,6 +105,16 @@ class NotificationScheduler {
           .inDays;
 
       if (daysSinceFirst < 7) return _AdaptiveTier.normal; // Too early to adapt
+
+      // The lifetime average decays too slowly to notice a long-tenured user
+      // who stopped showing up, so a full week of silence goes straight to
+      // re-engage. Reverts on their next open, when days_active_last_date moves.
+      final lastActive = prefs.getString('days_active_last_date');
+      if (lastActive != null) {
+        final daysSinceActive =
+            DateTime.now().difference(DateTime.parse(lastActive)).inDays;
+        if (daysSinceActive >= 7) return _AdaptiveTier.reengage;
+      }
 
       // Calculate weekly activity rate
       final totalWeeks = daysSinceFirst / 7;

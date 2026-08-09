@@ -260,13 +260,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitRevealBegin => 'Давай начнём';
 
   @override
-  String get focusAreasStartingPointsTitle =>
-      'Мы выбрали несколько стартовых точек для тебя';
+  String focusAreasStartingPointsTitle(String pathTitle) {
+    return 'Твоя практика «$pathTitle» начинается здесь';
+  }
 
   @override
-  String focusAreasStartingPointsSubtext(String pathTitle) {
-    return 'На основе пути «$pathTitle». Добавляй или убирай направления в любое время.';
-  }
+  String get focusAreasStartingPointsSubtext =>
+      'Мы выбрали несколько стартовых точек. Добавляй или убирай направления в любое время.';
 
   @override
   String get habitsHoldForOptions => 'Удерживай привычку для опций';
@@ -1094,12 +1094,12 @@ class AppLocalizationsRu extends AppLocalizations {
       'Ваша неделя мягких утренних ритуалов готова к обзору.';
 
   @override
-  String get notifWeeklyPathFindingCalm =>
-      'Неделя в поисках покоя. Посмотрите, как она прошла.';
+  String get notifWeeklyPathAnchorsForHardDays =>
+      'Неделя, в которую ты держалась. Посмотри, как опиралась на себя.';
 
   @override
-  String get notifWeeklyPathGratitudeSelfLove =>
-      'Ваша неделя благодарности ждёт вашего внимания.';
+  String get notifWeeklyPathQuietFocus =>
+      'Неделя тихого фокуса. Посмотри, что получилось.';
 
   @override
   String get notifWeeklyPathWindingDown =>
@@ -1357,7 +1357,19 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get paywallTitle => 'Узнай себя лучше';
+  String get paywallTitle => 'Открой полный Intended';
+
+  @override
+  String get paywallTitleGentleMornings => 'Ещё мягче по утрам';
+
+  @override
+  String get paywallTitleAnchorsForHardDays => 'Больше опор в трудные дни';
+
+  @override
+  String get paywallTitleQuietFocus => 'Фокус, который остаётся';
+
+  @override
+  String get paywallTitleWindingDown => 'Ещё спокойнее перед сном';
 
   @override
   String get paywallDescription =>
@@ -1388,7 +1400,43 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get paywallFeature5 =>
-      'Безлимитные привычки, замены и фокусы — без потолка для роста';
+      'Без ограничений — никаких лимитов на привычки и замены';
+
+  @override
+  String get paywallGroupRoom => 'Больше пространства';
+
+  @override
+  String get paywallGroupRoomA => 'Безлимитные привычки и области фокуса';
+
+  @override
+  String get paywallGroupRoomB => 'Без ограничений на свои привычки';
+
+  @override
+  String get paywallGroupDiscovery => 'Больше открытий';
+
+  @override
+  String get paywallGroupDiscoveryA => 'Вся библиотека привычек и подборки';
+
+  @override
+  String get paywallGroupDiscoveryB => 'Безлимитные замены и обновления';
+
+  @override
+  String get paywallGroupReflection => 'Больше рефлексии';
+
+  @override
+  String get paywallGroupReflectionA => 'Месячные и недельные наблюдения';
+
+  @override
+  String get paywallGroupReflectionB => 'Карточки для публикации';
+
+  @override
+  String get paywallGroupYou => 'Больше тебя';
+
+  @override
+  String get paywallGroupYouA => '10 красивых тем и иконки';
+
+  @override
+  String get paywallGroupYouB => 'Премиум-виджеты для домашнего экрана';
 
   @override
   String get paywallMonthly => 'Ежемесячно';
@@ -1466,6 +1514,24 @@ class AppLocalizationsRu extends AppLocalizations {
       'Новые функции добавляются регулярно. Подписка поддерживает независимую разработку.\nСоздано одним человеком, которому это так же важно, как и тебе.';
 
   @override
+  String get onboardingPaywallTitle => 'Попробуй Intended+ бесплатно';
+
+  @override
+  String get onboardingPaywallBody =>
+      'Начни 7-дневный пробный период Intended+ — откроются еженедельные размышления и безлимитные ритуалы. Если пока хочешь остаться с Core, он останется с тобой навсегда.';
+
+  @override
+  String get onboardingPaywallPrimaryCta => 'Начать пробный период';
+
+  @override
+  String get onboardingPaywallSecondaryCta => 'Продолжить с Core';
+
+  @override
+  String onboardingPaywallDisclaimer(String price) {
+    return '7 дней бесплатно, затем $price. Отмена в любой момент.';
+  }
+
+  @override
   String get subscriptionTitle => 'Intended+';
 
   @override
@@ -1512,7 +1578,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileManage => 'Управлять';
 
   @override
-  String get profileUnlockPlus => 'ПЕРЕЙТИ НА INTENDED+';
+  String get profileUnlockPlus => 'Попробовать Intended+';
 
   @override
   String get profileFocusAreas => 'Направления';
@@ -2643,27 +2709,28 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pathGentleMorningsTitle => 'Мягкое утро';
 
   @override
-  String get pathGentleMorningsSubtitle => 'Начните день спокойно, без хаоса';
+  String get pathGentleMorningsSubtitle =>
+      'Мягкий, осознанный способ начать день';
 
   @override
-  String get pathFindingCalmTitle => 'В поисках покоя';
+  String get pathAnchorsForHardDaysTitle => 'Опоры в трудные дни';
 
   @override
-  String get pathFindingCalmSubtitle =>
-      'Маленькие ежедневные якоря при стрессе и тревоге';
+  String get pathAnchorsForHardDaysSubtitle =>
+      'Маленькие действия, которые держат, когда вокруг шумно';
 
   @override
-  String get pathGratitudeSelfLoveTitle => 'Благодарность и забота о себе';
+  String get pathQuietFocusTitle => 'Тихий фокус';
 
   @override
-  String get pathGratitudeSelfLoveSubtitle =>
-      'Выстройте более добрые отношения с собой';
+  String get pathQuietFocusSubtitle => 'Делай дело без выгорания';
 
   @override
   String get pathWindingDownTitle => 'Спокойный вечер';
 
   @override
-  String get pathWindingDownSubtitle => 'Завершите день умиротворённо';
+  String get pathWindingDownSubtitle =>
+      'Маленький ритуал, чтобы отпустить день';
 
   @override
   String get pathYourOwnWayTitle => 'Свой путь';
@@ -2677,7 +2744,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get intentionPathSubtext =>
-      'Это поможет нам настроить ваш опыт. Вы всегда сможете изменить это позже.';
+      'Это задаст тон ближайшим 30 дням. Выбери то, что подходит сегодня — будущая ты скажет спасибо.';
 
   @override
   String intentionPathUpdateFocusAreas(String pathName) {
@@ -2689,6 +2756,38 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get intentionPathUpdateNo => 'Нет, оставить как есть';
+
+  @override
+  String get tellUsAboutPathHeadline => 'Что тебя сюда привело?';
+
+  @override
+  String get tellUsAboutPathSubtext =>
+      'Это задаст тон ближайшим 30 дням. Выбери то, что подходит сегодня — будущая ты скажет спасибо.';
+
+  @override
+  String get tellUsAboutFocusHeadline => 'Что сейчас важно?';
+
+  @override
+  String get tellUsAboutFocusSubtext => 'Выбери до 2. Начнём с них.';
+
+  @override
+  String get commitmentTitle => 'Маленькое обещание.';
+
+  @override
+  String get commitmentBody => 'Это займёт всего 2 минуты в день.';
+
+  @override
+  String commitmentEchoFull(String path, String areas) {
+    return 'Твой путь: $path  ·  Фокус: $areas';
+  }
+
+  @override
+  String commitmentEchoAreasOnly(String areas) {
+    return 'Фокус: $areas';
+  }
+
+  @override
+  String get commitmentCta => 'Быть с собой';
 
   @override
   String get coachMarkFirstCompletionTitle => 'Ваша первая отметка';
@@ -2808,6 +2907,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Большинство приложений используют стрики и геймификацию. Intended — наоборот. Нет стриков, нет рейтингов, нет вины. Ваш прогресс никогда не сбрасывается.';
 
   @override
+  String get faqNeedAccount => 'Нужен ли аккаунт?';
+
+  @override
+  String get faqNeedAccountAnswer =>
+      'Нет, чтобы начать. Можно использовать Intended без входа. Аккаунт (через Apple или Google) позволяет сделать резервную копию данных и восстановить их при смене устройства.';
+
+  @override
   String get faqSectionDailyHabits => 'Ежедневные привычки';
 
   @override
@@ -2853,6 +2959,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Обновление даёт новые случайные привычки из ваших областей фокуса. 3 в день на бесплатном плане.';
 
   @override
+  String get faqAllDone => 'Что будет, когда все привычки выполнены?';
+
+  @override
+  String get faqAllDoneAnswer =>
+      'Появится тихий момент — мягкая анимация расцветания. Небольшое напоминание, что ваше присутствие имеет значение, сколько бы привычек вы ни отметили.';
+
+  @override
   String get faqSectionReflections => 'Рефлексия';
 
   @override
@@ -2884,6 +2997,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Недельная рефлексия появляется через 7 дней. Месячная — через 30. Чем чаще отмечаетесь, тем богаче рефлексия.';
 
   @override
+  String get faqHowReflectionsGenerated => 'Как создаются рефлексии?';
+
+  @override
+  String get faqHowReflectionsGeneratedAnswer =>
+      'Рефлексии создаются полностью на вашем устройстве из данных отметок. Без ИИ, без облака. Приложение анализирует ваши закономерности — активные дни, любимые привычки, постоянство — и превращает их в мягкие наблюдения.';
+
+  @override
   String get faqSectionNotifications => 'Уведомления';
 
   @override
@@ -2905,6 +3025,13 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get faqPathNotificationsAnswer =>
       'Да. На пути В поисках покоя будут другие формулировки, чем на Мягком утре.';
+
+  @override
+  String get faqTurnOffNotifications => 'Можно отключить уведомления?';
+
+  @override
+  String get faqTurnOffNotificationsAnswer =>
+      'Да. Профиль → Настройки уведомлений — выключите их. Можно отключить только недельное напоминание, оставив ежедневные.';
 
   @override
   String get faqSectionWidgets => 'Виджеты';
@@ -3016,6 +3143,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Apple передаёт имя только при первом входе. Настройки iPhone → Apple ID → Пароль и безопасность → Приложения с Apple ID → Intended → Перестать использовать, затем войдите снова.';
 
   @override
+  String get faqNotificationsNotArriving => 'Уведомления не приходят.';
+
+  @override
+  String get faqNotificationsNotArrivingAnswer =>
+      'Проверьте, что уведомления включены для Intended в Настройках iPhone → Уведомления. Убедитесь, что Обновление контента активно. После переустановки откройте приложение, чтобы перепланировать напоминания.';
+
+  @override
   String get faqStillHaveQuestion => 'Остались вопросы?';
 
   @override
@@ -3044,34 +3178,35 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bloomGentleMornings5 => 'Нежно и готово. Этого достаточно.';
 
   @override
-  String get bloomFindingCalm1 => 'Всё здесь. Всё сделано. Дыши.';
+  String get bloomAnchorsForHardDays1 => 'Опора удержала.';
 
   @override
-  String get bloomFindingCalm2 => 'Покой найден — привычка за привычкой.';
+  String get bloomAnchorsForHardDays2 => 'Сегодня ты осталась.';
 
   @override
-  String get bloomFindingCalm3 => 'Обо всём позаботились. Побудь в тишине.';
+  String get bloomAnchorsForHardDays3 => 'Даже в шуме ты вернулась.';
 
   @override
-  String get bloomFindingCalm4 => 'Сделано с заботой. Остальное — твоё.';
+  String get bloomAnchorsForHardDays4 =>
+      'Маленькая устойчивая победа в трудный день.';
 
   @override
-  String get bloomFindingCalm5 => 'Ты нашёл(а) свои якоря сегодня.';
+  String get bloomAnchorsForHardDays5 => 'Ты не пропала. Ты здесь.';
 
   @override
-  String get bloomGratitudeSelfLove1 => 'Каждое — маленький акт любви.';
+  String get bloomQuietFocus1 => 'Сфокусировалась. Закончила.';
 
   @override
-  String get bloomGratitudeSelfLove2 => 'Всё сделано. Ты пришёл(а) ради себя.';
+  String get bloomQuietFocus2 => 'Тихая работа сделана.';
 
   @override
-  String get bloomGratitudeSelfLove3 => 'Это был ты — заботящийся о себе.';
+  String get bloomQuietFocus3 => 'Одно дело — целиком.';
 
   @override
-  String get bloomGratitudeSelfLove4 => 'Завершено с добротой. Молодец.';
+  String get bloomQuietFocus4 => 'Устойчивый фокус, реальный прогресс.';
 
   @override
-  String get bloomGratitudeSelfLove5 => 'Всё это — для тебя. Это важно.';
+  String get bloomQuietFocus5 => 'Ты пришла к работе.';
 
   @override
   String get bloomWindingDown1 => 'Вечер теперь твой. Отдыхай.';
@@ -3128,51 +3263,47 @@ class AppLocalizationsRu extends AppLocalizations {
       'Твой утренний ритуал ждёт. Без давления, только возможности.';
 
   @override
-  String get notifPathFindingCalm1 => 'Как ты? Правда. Найди минутку для себя.';
+  String get notifPathAnchorsForHardDays1 =>
+      'Одна опора на сегодня. Этого хватит.';
 
   @override
-  String get notifPathFindingCalm2 =>
-      'Один спокойный вдох может изменить весь день.';
+  String get notifPathAnchorsForHardDays2 =>
+      'День может быть тяжёлым. Покажись — мягко.';
 
   @override
-  String get notifPathFindingCalm3 =>
-      'Твои якоря здесь, когда шум становится громким.';
+  String get notifPathAnchorsForHardDays3 =>
+      'Опора не убирает бурю. Она держит тебя.';
 
   @override
-  String get notifPathFindingCalm4 =>
-      'Тишину не нужно заслуживать. Она уже твоя.';
+  String get notifPathAnchorsForHardDays4 =>
+      'Даже маленькое возвращение — это возвращение.';
 
   @override
-  String get notifPathFindingCalm5 =>
-      'Мягкая пауза. Это всё, что сегодня нужно.';
+  String get notifPathAnchorsForHardDays5 => 'Пауза. Замечание. Одно действие.';
 
   @override
-  String get notifPathFindingCalm6 =>
-      'Не нужно ничего исправлять прямо сейчас. Просто будь.';
+  String get notifPathAnchorsForHardDays6 =>
+      'Тяжёлые дни — тоже дни, которые проходят.';
 
   @override
-  String get notifPathGratitudeSelfLove1 =>
-      'Ты заслуживаешь доброты сегодня — особенно от себя.';
+  String get notifPathQuietFocus1 => 'Маленький блок фокуса. Потом отдых.';
 
   @override
-  String get notifPathGratitudeSelfLove2 =>
-      'За что ты благодарен(на) прямо сейчас?';
+  String get notifPathQuietFocus2 => 'Какая одна вещь сегодня?';
 
   @override
-  String get notifPathGratitudeSelfLove3 =>
-      'Ты уже достаточно сделал(а), чтобы заслужить нежность.';
+  String get notifPathQuietFocus3 =>
+      'Сфокусируйся на меньшем — успеешь больше.';
 
   @override
-  String get notifPathGratitudeSelfLove4 =>
-      'Добрая мысль о себе — привычка, которая стоит сохранения.';
+  String get notifPathQuietFocus4 => 'Выбери одно. Начни.';
 
   @override
-  String get notifPathGratitudeSelfLove5 =>
-      'Заметь что-то хорошее в сегодняшнем дне. Даже маленькое.';
+  String get notifPathQuietFocus5 => 'Тихая работа, настоящий прогресс.';
 
   @override
-  String get notifPathGratitudeSelfLove6 =>
-      'Ты достоин(на) той заботы, которую даришь другим.';
+  String get notifPathQuietFocus6 =>
+      'Покажись к работе. Это и есть весь секрет.';
 
   @override
   String get notifPathWindingDown1 =>
@@ -3244,51 +3375,44 @@ class AppLocalizationsRu extends AppLocalizations {
       'Тихое утро — это тоже хорошо проведённое утро.';
 
   @override
-  String get warmthPathFindingCalm1 =>
-      'Пропуск — это тоже вид покоя. Пусть так и будет.';
+  String get warmthPathAnchorsForHardDays1 =>
+      'Когда день шумный, хватит одной маленькой вещи.';
 
   @override
-  String get warmthPathFindingCalm2 =>
-      'Не нужно искать покой сегодня. Он найдёт тебя сам.';
+  String get warmthPathAnchorsForHardDays2 => 'Ты не опаздываешь. Ты здесь.';
 
   @override
-  String get warmthPathFindingCalm3 =>
-      'Иногда самое спокойное — просто отпустить себя.';
+  String get warmthPathAnchorsForHardDays3 =>
+      'Тяжёлый момент не портит весь день.';
 
   @override
-  String get warmthPathFindingCalm4 =>
-      'Тишина считается, даже когда ничего не отмечено.';
+  String get warmthPathAnchorsForHardDays4 =>
+      'Маленькое и устойчивое сильнее большого и хрупкого.';
 
   @override
-  String get warmthPathFindingCalm5 =>
-      'Покой не нужно заслуживать. Он всегда доступен.';
+  String get warmthPathAnchorsForHardDays5 => 'Ты пришла. Это и есть практика.';
 
   @override
-  String get warmthPathFindingCalm6 => 'Не делать — тоже форма присутствия.';
+  String get warmthPathAnchorsForHardDays6 =>
+      'Мягкое восстановление — тоже восстановление.';
 
   @override
-  String get warmthPathGratitudeSelfLove1 =>
-      'Быть добрым к себе — это и значит сказать «не сегодня».';
+  String get warmthPathQuietFocus1 => 'Медленно — значит надолго.';
 
   @override
-  String get warmthPathGratitudeSelfLove2 =>
-      'Любовь к себе выглядит и так — без вины, только мягкость.';
+  String get warmthPathQuietFocus2 => 'Одно маленькое дело — это уже движение.';
 
   @override
-  String get warmthPathGratitudeSelfLove3 =>
-      'Не нужно демонстрировать заботу, чтобы практиковать её.';
+  String get warmthPathQuietFocus3 => 'Не обязательно сегодня сделать всё.';
 
   @override
-  String get warmthPathGratitudeSelfLove4 =>
-      'Простить себя за пропуск — самая важная привычка.';
+  String get warmthPathQuietFocus4 => 'Фокус — это доброта к себе.';
 
   @override
-  String get warmthPathGratitudeSelfLove5 =>
-      'Нежность не только для хороших дней. Для таких тоже.';
+  String get warmthPathQuietFocus5 => 'Работа подождёт. Паузы разрешены.';
 
   @override
-  String get warmthPathGratitudeSelfLove6 =>
-      'Ты всё ещё достоин(на) тепла, даже когда отдыхаешь.';
+  String get warmthPathQuietFocus6 => 'Тихие усилия тоже считаются.';
 
   @override
   String get warmthPathWindingDown1 =>
@@ -3340,12 +3464,12 @@ class AppLocalizationsRu extends AppLocalizations {
       'Ещё одна неделя мягких утр — или хотя бы попыток.';
 
   @override
-  String get reflectionPathFindingCalmIntro =>
-      'Ещё одна неделя в поиске своих якорей.';
+  String get reflectionPathAnchorsForHardDaysIntro =>
+      'На этой неделе ты держалась за опоры.';
 
   @override
-  String get reflectionPathGratitudeSelfLoveIntro =>
-      'Ещё одна неделя выстраивания тепла к себе.';
+  String get reflectionPathQuietFocusIntro =>
+      'На этой неделе ты держала фокус — мягко.';
 
   @override
   String get reflectionPathWindingDownIntro =>
@@ -3360,12 +3484,12 @@ class AppLocalizationsRu extends AppLocalizations {
       'Тихая неделя для утр. Некоторые недели — чтобы поспать подольше.';
 
   @override
-  String get reflectionPathFindingCalmQuiet =>
-      'Тихая неделя. Может, покой нашёл тебя другими путями.';
+  String get reflectionPathAnchorsForHardDaysQuiet =>
+      'Тихая неделя. Опоры остаются, даже маленькие.';
 
   @override
-  String get reflectionPathGratitudeSelfLoveQuiet =>
-      'Тихая неделя. Отдых — это тоже проявление любви к себе.';
+  String get reflectionPathQuietFocusQuiet =>
+      'Тихая неделя. Фокусу тоже нужен отдых.';
 
   @override
   String get reflectionPathWindingDownQuiet =>

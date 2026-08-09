@@ -6,7 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../l10n/app_localizations.dart';
+import '../models/intention_path.dart';
+import '../onboarding_v2/onboarding_state.dart';
 import '../services/analytics_service.dart';
+import '../services/review_request_service.dart';
 import '../services/revenue_cat_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
@@ -44,15 +47,18 @@ class _PaywallScreenState extends State<PaywallScreen>
     });
     AnalyticsService.logScreenView('paywall');
     AnalyticsService.logPaywallShown(widget.source);
+    // Stand down the review prompt for the rest of this session — we don't
+    // want to pile "rate Intended" on top of someone mid-purchase decision.
+    ReviewRequestService.markPaywallShown();
     _bulletController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
     _bulletAnimations = [
-      CurvedAnimation(parent: _bulletController, curve: const Interval(0.0, 0.50, curve: Curves.easeOut)),
-      CurvedAnimation(parent: _bulletController, curve: const Interval(0.12, 0.62, curve: Curves.easeOut)),
-      CurvedAnimation(parent: _bulletController, curve: const Interval(0.24, 0.74, curve: Curves.easeOut)),
-      CurvedAnimation(parent: _bulletController, curve: const Interval(0.36, 0.86, curve: Curves.easeOut)),
+      CurvedAnimation(parent: _bulletController, curve: const Interval(0.0, 0.45, curve: Curves.easeOut)),
+      CurvedAnimation(parent: _bulletController, curve: const Interval(0.12, 0.55, curve: Curves.easeOut)),
+      CurvedAnimation(parent: _bulletController, curve: const Interval(0.24, 0.65, curve: Curves.easeOut)),
+      CurvedAnimation(parent: _bulletController, curve: const Interval(0.36, 0.80, curve: Curves.easeOut)),
       CurvedAnimation(parent: _bulletController, curve: const Interval(0.48, 1.0, curve: Curves.easeOut)),
     ];
     _bulletController.forward();
@@ -176,9 +182,7 @@ class _PaywallScreenState extends State<PaywallScreen>
                         _buildTulipIcon(colors, isDark: isDark),
                         const SizedBox(height: 16),
                         Text(
-                          widget.triggeredByCeiling
-                              ? l10n.paywallCeilingTitle
-                              : l10n.paywallTitle,
+                          _resolveTitle(context, l10n),
                           style: TextStyle(
                             fontFamily: 'Sora',
                             fontSize: 30,
@@ -203,19 +207,20 @@ class _PaywallScreenState extends State<PaywallScreen>
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 20),
+                        // Feature bullets
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: Column(
                             children: [
-                              _buildAnimatedBullet(0, CupertinoIcons.lightbulb, l10n.paywallFeature1),
-                              const SizedBox(height: 12),
-                              _buildAnimatedBullet(1, CupertinoIcons.rectangle_on_rectangle, l10n.paywallFeature2),
-                              const SizedBox(height: 12),
-                              _buildAnimatedBullet(2, CupertinoIcons.cube, l10n.paywallFeature3),
-                              const SizedBox(height: 12),
-                              _buildAnimatedBullet(3, CupertinoIcons.paintbrush, l10n.paywallFeature4),
-                              const SizedBox(height: 12),
-                              _buildAnimatedBullet(4, CupertinoIcons.star, l10n.paywallFeature5),
+                              _buildAnimatedBullet(0, CupertinoIcons.chart_bar_alt_fill, l10n.paywallFeature1),
+                              const SizedBox(height: 10),
+                              _buildAnimatedBullet(1, CupertinoIcons.square_grid_2x2_fill, l10n.paywallFeature2),
+                              const SizedBox(height: 10),
+                              _buildAnimatedBullet(2, CupertinoIcons.paintbrush_fill, l10n.paywallFeature3),
+                              const SizedBox(height: 10),
+                              _buildAnimatedBullet(3, CupertinoIcons.heart_fill, l10n.paywallFeature4),
+                              const SizedBox(height: 10),
+                              _buildAnimatedBullet(4, CupertinoIcons.infinite, l10n.paywallFeature5),
                             ],
                           ),
                         ),
@@ -251,7 +256,38 @@ class _PaywallScreenState extends State<PaywallScreen>
     );
   }
 
+  /// Resolves the paywall title based on context and the user's intention path.
+  ///
+  /// Order of precedence:
+  ///   1. Ceiling-triggered paywalls always use the "You're building something
+  ///      good" framing, regardless of path — that moment is about the user's
+  ///      growth hitting a cap, not about a path-specific benefit.
+  ///   2. If the user has a recognized active path, use the path-specific
+  ///      headline (e.g. "Make your mornings even gentler" for Gentle Mornings).
+  ///      Path-specific titles convert noticeably better than generic ones.
+  ///   3. Fall back to the generic [paywallTitle] for the legacy "Your Own Way"
+  ///      path or any unknown / unset path key.
+  String _resolveTitle(BuildContext context, AppLocalizations l10n) {
+    if (widget.triggeredByCeiling) {
+      return l10n.paywallCeilingTitle;
+    }
+    final pathKey = context.read<OnboardingState>().selectedIntentionPath;
+    return switch (IntentionPathId.fromKey(pathKey)) {
+      IntentionPathId.gentleMornings => l10n.paywallTitleGentleMornings,
+      IntentionPathId.anchorsForHardDays => l10n.paywallTitleAnchorsForHardDays,
+      IntentionPathId.quietFocus => l10n.paywallTitleQuietFocus,
+      IntentionPathId.windingDown => l10n.paywallTitleWindingDown,
+      IntentionPathId.yourOwnWay => l10n.paywallTitle,
+    };
+  }
+
+  /// Legacy flat-bullet builder. Retained for easy revert of P5.
+  /// NOTE: _bulletAnimations currently has 4 items (indices 0-3).
+  /// If reverting to the old 5-bullet layout, add a 5th animation interval.
   Widget _buildAnimatedBullet(int index, IconData icon, String text) {
+    if (index >= _bulletAnimations.length) {
+      return _FeatureItem(icon: icon, text: text);
+    }
     return AnimatedBuilder(
       animation: _bulletAnimations[index],
       builder: (context, child) {

@@ -55,3 +55,6 @@ lib/firebase_options.dart
 ios/Runner/GoogleService-Info.plist
 ios/Runner/GoogleService-Info 2.plist
 ios/firebase_app_id_file.json
+
+# Exported Cowork session transcripts (local reference, not source)
+cowork-transcripts/

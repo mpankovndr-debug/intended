@@ -70,21 +70,21 @@ class NotificationMessages {
         l10n.notifPathGentleMornings5,
         l10n.notifPathGentleMornings6,
       ],
-      IntentionPathId.findingCalm => [
-        l10n.notifPathFindingCalm1,
-        l10n.notifPathFindingCalm2,
-        l10n.notifPathFindingCalm3,
-        l10n.notifPathFindingCalm4,
-        l10n.notifPathFindingCalm5,
-        l10n.notifPathFindingCalm6,
+      IntentionPathId.anchorsForHardDays => [
+        l10n.notifPathAnchorsForHardDays1,
+        l10n.notifPathAnchorsForHardDays2,
+        l10n.notifPathAnchorsForHardDays3,
+        l10n.notifPathAnchorsForHardDays4,
+        l10n.notifPathAnchorsForHardDays5,
+        l10n.notifPathAnchorsForHardDays6,
       ],
-      IntentionPathId.gratitudeSelfLove => [
-        l10n.notifPathGratitudeSelfLove1,
-        l10n.notifPathGratitudeSelfLove2,
-        l10n.notifPathGratitudeSelfLove3,
-        l10n.notifPathGratitudeSelfLove4,
-        l10n.notifPathGratitudeSelfLove5,
-        l10n.notifPathGratitudeSelfLove6,
+      IntentionPathId.quietFocus => [
+        l10n.notifPathQuietFocus1,
+        l10n.notifPathQuietFocus2,
+        l10n.notifPathQuietFocus3,
+        l10n.notifPathQuietFocus4,
+        l10n.notifPathQuietFocus5,
+        l10n.notifPathQuietFocus6,
       ],
       IntentionPathId.windingDown => [
         l10n.notifPathWindingDown1,
@@ -118,8 +118,9 @@ class NotificationMessages {
   static String weeklyForPath(AppLocalizations l10n, IntentionPathId pathId) {
     return switch (pathId) {
       IntentionPathId.gentleMornings => l10n.notifWeeklyPathGentleMornings,
-      IntentionPathId.findingCalm => l10n.notifWeeklyPathFindingCalm,
-      IntentionPathId.gratitudeSelfLove => l10n.notifWeeklyPathGratitudeSelfLove,
+      IntentionPathId.anchorsForHardDays =>
+        l10n.notifWeeklyPathAnchorsForHardDays,
+      IntentionPathId.quietFocus => l10n.notifWeeklyPathQuietFocus,
       IntentionPathId.windingDown => l10n.notifWeeklyPathWindingDown,
       IntentionPathId.yourOwnWay => l10n.notifWeeklyPathYourOwnWay,
     };

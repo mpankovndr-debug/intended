@@ -82,6 +82,13 @@ class AnalyticsService {
     );
   }
 
+  static void logPaywallDismissed(String source) {
+    _analytics.logEvent(
+      name: 'paywall_dismissed',
+      parameters: {'source': source},
+    );
+  }
+
   static void logPurchaseStarted(String plan) {
     _analytics.logEvent(
       name: 'purchase_started',

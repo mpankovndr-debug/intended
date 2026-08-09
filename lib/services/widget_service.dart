@@ -53,6 +53,7 @@ class WidgetService {
       final displayName = l10n != null ? localizeHabitName(habit, l10n) : habit;
       habitDataList.add({
         'name': displayName,
+        'rawName': habit, // English key for HabitTracker ID resolution
         'done': done,
         'colorHex': color != null ? _colorToHex(color) : null,
       });

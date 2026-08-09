@@ -95,12 +95,14 @@ class FocusAreasScreen extends StatelessWidget {
     switch (path.titleKey) {
       case 'pathGentleMorningsTitle':
         return l10n.pathGentleMorningsTitle;
-      case 'pathFindingCalmTitle':
-        return l10n.pathFindingCalmTitle;
-      case 'pathGratitudeSelfLoveTitle':
-        return l10n.pathGratitudeSelfLoveTitle;
+      case 'pathAnchorsForHardDaysTitle':
+        return l10n.pathAnchorsForHardDaysTitle;
+      case 'pathQuietFocusTitle':
+        return l10n.pathQuietFocusTitle;
       case 'pathWindingDownTitle':
         return l10n.pathWindingDownTitle;
+      case 'pathYourOwnWayTitle':
+        return l10n.pathYourOwnWayTitle;
       default:
         return path.titleKey;
     }
@@ -340,7 +342,8 @@ class FocusAreasScreen extends StatelessWidget {
                                 ? (hasName
                                     ? l10n.focusAreasPromptWithName(userName)
                                     : l10n.focusAreasPrompt)
-                                : l10n.focusAreasStartingPointsTitle,
+                                : l10n.focusAreasStartingPointsTitle(
+                                    _resolvePathTitle(l10n, selectedPath!)),
                             style: TextStyle(
                               fontFamily: 'Sora',
                               fontSize: 26,
@@ -354,8 +357,7 @@ class FocusAreasScreen extends StatelessWidget {
                           Text(
                             isOwnWay
                                 ? l10n.focusAreasChooseCount(selectedCount, maxSelections)
-                                : l10n.focusAreasStartingPointsSubtext(
-                                    _resolvePathTitle(l10n, selectedPath!)),
+                                : l10n.focusAreasStartingPointsSubtext,
                             style: TextStyle(
                               fontFamily: AppTextStyles.bodyFont(context),
                               fontSize: 15,

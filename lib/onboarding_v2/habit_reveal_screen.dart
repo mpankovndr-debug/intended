@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart';
 import '../models/intention_path.dart';
+import '../screens/onboarding_paywall_screen.dart';
 import '../services/analytics_service.dart';
 import '../services/backup_service.dart';
 import '../services/revenue_cat_service.dart';
@@ -16,7 +17,6 @@ import 'onboarding_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
-import '../widgets/onboarding_progress_bar.dart';
 
 class HabitRevealScreen extends StatefulWidget {
   const HabitRevealScreen({super.key});
@@ -151,22 +151,42 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
     final deviceId = await getOrCreateDeviceId();
     await revenueCat.logIn(deviceId);
 
-    if (mounted) {
-      context.read<BackupService>().backup();
-      Navigator.pushReplacement(
-        context,
+    if (!mounted) return;
+    context.read<BackupService>().backup();
+
+    // Soft paywall at peak intent — the user has just finished onboarding.
+    // Skip if RevenueCat has already activated Intended+ (e.g. an existing
+    // subscription was restored on first launch via Apple ID); we shouldn't
+    // pitch a trial they've already paid for.
+    if (!revenueCat.isPremium) {
+      // reverseTransitionDuration: Duration.zero means the paywall pops
+      // instantly (no exit fade), so the MainTabs fade-in below covers the
+      // transition without a visible HabitReveal flash in between.
+      await Navigator.of(context).push(
         PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => const MainTabs(),
-          transitionDuration: const Duration(milliseconds: 350),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
-          },
+          pageBuilder: (_, animation, __) => const OnboardingPaywallScreen(),
+          transitionDuration: const Duration(milliseconds: 400),
+          reverseTransitionDuration: Duration.zero,
+          transitionsBuilder: (_, animation, __, child) =>
+              FadeTransition(opacity: animation, child: child),
         ),
       );
+      if (!mounted) return;
     }
+
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => const MainTabs(),
+        transitionDuration: const Duration(milliseconds: 350),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -211,19 +231,13 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
             bottom: false,
             child: Stack(
               children: [
-                // Progress bar
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                  child: OnboardingProgressBar(
-                    currentStep: 4,
-                    totalSteps: 4,
-                    onBack: () => Navigator.pop(context),
-                  ),
-                ),
+                // No progress bar on the reveal screen — this is the arrival
+                // moment, not another step. The user has already committed;
+                // there is no "back" they should take from here.
 
                 // Scrollable content
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(28, 68, 28, 0),
+                  padding: const EdgeInsets.fromLTRB(28, 24, 28, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -460,12 +474,14 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
     switch (path.titleKey) {
       case 'pathGentleMorningsTitle':
         return l10n.pathGentleMorningsTitle;
-      case 'pathFindingCalmTitle':
-        return l10n.pathFindingCalmTitle;
-      case 'pathGratitudeSelfLoveTitle':
-        return l10n.pathGratitudeSelfLoveTitle;
+      case 'pathAnchorsForHardDaysTitle':
+        return l10n.pathAnchorsForHardDaysTitle;
+      case 'pathQuietFocusTitle':
+        return l10n.pathQuietFocusTitle;
       case 'pathWindingDownTitle':
         return l10n.pathWindingDownTitle;
+      case 'pathYourOwnWayTitle':
+        return l10n.pathYourOwnWayTitle;
       default:
         return path.titleKey;
     }

@@ -129,13 +129,15 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                   // Column with Header + Expanded ScrollView
                   Column(
                     children: [
-                      // Progress bar
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                      // Progress bar — final step in the conversation arc.
+                      // No back arrow: the previous screen was the one-way
+                      // commitment moment, and we don't want to let the user
+                      // un-commit by tapping back.
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
                         child: OnboardingProgressBar(
                           currentStep: 3,
-                          totalSteps: 4,
-                          onBack: () => Navigator.pop(context),
+                          totalSteps: 3,
                         ),
                       ),
 

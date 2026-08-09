@@ -41,7 +41,6 @@ import '../services/backup_service.dart';
 import '../services/coach_mark_service.dart';
 import '../features/profile/faq_screen.dart';
 import '../features/profile/change_path_screen.dart';
-import '../models/intention_path.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -66,7 +65,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int _notifMinute = 0;
   bool _weeklyEnabled = false;
   bool _notifPermissionDenied = false;
-  bool _notifPrefsLoaded = false;
 
   @override
   void initState() {
@@ -94,18 +92,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _notifHour = hour;
         _notifMinute = minute;
         _weeklyEnabled = weeklyEnabled;
-        _notifPrefsLoaded = true;
       });
     }
   }
 
   String _pathTitle(AppLocalizations l10n, String key) {
     switch (key) {
-      case 'gentle_mornings': return l10n.pathGentleMorningsTitle;
-      case 'finding_calm': return l10n.pathFindingCalmTitle;
-      case 'gratitude_self_love': return l10n.pathGratitudeSelfLoveTitle;
-      case 'winding_down': return l10n.pathWindingDownTitle;
-      default: return l10n.pathYourOwnWayTitle;
+      case 'gentle_mornings':
+        return l10n.pathGentleMorningsTitle;
+      case 'anchors_for_hard_days':
+        return l10n.pathAnchorsForHardDaysTitle;
+      case 'quiet_focus':
+        return l10n.pathQuietFocusTitle;
+      case 'winding_down':
+        return l10n.pathWindingDownTitle;
+      default:
+        return l10n.pathYourOwnWayTitle;
     }
   }
 
@@ -681,99 +683,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _showRefreshConfirmation() {
-    final l10n = AppLocalizations.of(context);
-    showStyledPopup(
-      context: context,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            l10n.profileRefreshTitle,
-            style: AppTextStyles.h2(context),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 12),
-          Text(
-            l10n.profileRefreshMessage,
-            style: AppTextStyles.body(context),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 32),
-          styledPrimaryButton(
-            label: l10n.commonRefresh,
-            onPressed: () async {
-              Navigator.pop(context);
-              final onboardingState = context.read<OnboardingState>();
-              await onboardingState.refreshHabits();
-              AnalyticsService.logHabitRefreshed();
-              if (mounted) {
-                _showRefreshSuccess();
-              }
-            },
-          ),
-          const SizedBox(height: 14),
-          styledSecondaryButton(
-            label: l10n.commonCancel,
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showRefreshSuccess() {
-    final l10n = AppLocalizations.of(context);
-    showStyledPopup(
-      context: context,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            l10n.profileRefreshSuccessTitle,
-            style: AppTextStyles.h2(context),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 12),
-          Text(
-            l10n.profileRefreshSuccessMessage,
-            style: AppTextStyles.body(context),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 32),
-          styledPrimaryButton(
-            label: l10n.commonGreat,
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _refreshHabits() async {
-    final onboardingState = context.read<OnboardingState>();
-    final userState = context.read<UserState>();
-
-    if (!userState.hasSubscription && !onboardingState.canRefreshHabits()) {
-      AnalyticsService.logHabitRefreshLimitReached();
-      final l10n = AppLocalizations.of(context);
-      showIntendedDialog(
-        context: context,
-        title: l10n.profileDailyLimitTitle,
-        subtitle: l10n.profileDailyLimitMessage,
-        actions: [
-          CupertinoDialogAction(
-            child: Text(l10n.commonOk),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
-      );
-      return;
-    }
-
-    _showRefreshConfirmation();
-  }
-
   void _openPrivacyPolicy() async {
     final Uri url = Uri.parse('https://intendedapp.com/privacy');
 
@@ -1067,7 +976,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final onboardingState = context.watch<OnboardingState>();
-    final hasHabits = onboardingState.userHabits.isNotEmpty;
     final focusAreas = onboardingState.focusAreas;
     final themeProvider = context.watch<ThemeProvider>();
     final colors = themeProvider.colors;
@@ -1289,7 +1197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     );
                                   } else {
-                                    // Show "UNLOCK INTENDED+" button for free users
+                                    // Show "Try Intended+" button for free users
                                     return CupertinoButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: _showUpgradeScreen,
@@ -1314,10 +1222,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           style: TextStyle(
                                             fontFamily:
                                                 AppTextStyles.bodyFont(context),
-                                            fontSize: 11,
+                                            fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: colors.ctaPrimary,
-                                            letterSpacing: 0.5,
+                                            letterSpacing: -0.1,
                                           ),
                                         ),
                                       ),
@@ -1401,7 +1309,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  _pathTitle(l10n, onboardingState.selectedIntentionPath),
+                                  _pathTitle(l10n,
+                                      onboardingState.selectedIntentionPath),
                                   style: TextStyle(
                                     fontFamily: AppTextStyles.bodyFont(context),
                                     fontSize: 17,
@@ -1557,9 +1466,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 onChanged: (value) async {
                                   final l10n = AppLocalizations.of(context);
                                   // User engaged with notification settings — silent coach mark dismiss
-                                  CoachMarkService.instance.markAsSeen(CoachMarkKeys.smartNotifications);
-                                  final prefs = await SharedPreferences.getInstance();
-                                  await prefs.setBool('has_visited_notification_settings', true);
+                                  CoachMarkService.instance.markAsSeen(
+                                      CoachMarkKeys.smartNotifications);
+                                  final prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs.setBool(
+                                      'has_visited_notification_settings',
+                                      true);
                                   if (value) {
                                     final granted = await NotificationScheduler
                                         .requestPermission();
@@ -2700,13 +2613,11 @@ class _GlassCard extends StatelessWidget {
 class _ProfileButton extends StatelessWidget {
   final Widget iconContainer;
   final String title;
-  final String? subtitle;
   final VoidCallback onTap;
 
   const _ProfileButton({
     required this.iconContainer,
     required this.title,
-    this.subtitle,
     required this.onTap,
   });
 
@@ -2735,19 +2646,6 @@ class _ProfileButton extends StatelessWidget {
                     color: colors.textPrimary,
                   ),
                 ),
-                if (subtitle != null) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle!,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontFamily: AppTextStyles.bodyFont(context),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: colors.textSecondary,
-                    ),
-                  ),
-                ],
               ],
             ),
           ),
@@ -2845,8 +2743,8 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
                       context: context,
                       barrierColor: Colors.black.withOpacity(0.5),
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                      builder: (_) =>
-                          const PaywallScreen(source: 'focus_area_limit', triggeredByCeiling: true),
+                      builder: (_) => const PaywallScreen(
+                          source: 'focus_area_limit', triggeredByCeiling: true),
                     );
                   },
                   padding: const EdgeInsets.symmetric(vertical: 16),

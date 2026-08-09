@@ -26,10 +26,10 @@ class _IntentionPathScreenState extends State<IntentionPathScreen> {
     switch (titleKey) {
       case 'pathGentleMorningsTitle':
         return l10n.pathGentleMorningsTitle;
-      case 'pathFindingCalmTitle':
-        return l10n.pathFindingCalmTitle;
-      case 'pathGratitudeSelfLoveTitle':
-        return l10n.pathGratitudeSelfLoveTitle;
+      case 'pathAnchorsForHardDaysTitle':
+        return l10n.pathAnchorsForHardDaysTitle;
+      case 'pathQuietFocusTitle':
+        return l10n.pathQuietFocusTitle;
       case 'pathWindingDownTitle':
         return l10n.pathWindingDownTitle;
       case 'pathYourOwnWayTitle':
@@ -43,10 +43,10 @@ class _IntentionPathScreenState extends State<IntentionPathScreen> {
     switch (subtitleKey) {
       case 'pathGentleMorningsSubtitle':
         return l10n.pathGentleMorningsSubtitle;
-      case 'pathFindingCalmSubtitle':
-        return l10n.pathFindingCalmSubtitle;
-      case 'pathGratitudeSelfLoveSubtitle':
-        return l10n.pathGratitudeSelfLoveSubtitle;
+      case 'pathAnchorsForHardDaysSubtitle':
+        return l10n.pathAnchorsForHardDaysSubtitle;
+      case 'pathQuietFocusSubtitle':
+        return l10n.pathQuietFocusSubtitle;
       case 'pathWindingDownSubtitle':
         return l10n.pathWindingDownSubtitle;
       case 'pathYourOwnWaySubtitle':

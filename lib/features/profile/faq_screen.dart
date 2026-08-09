@@ -34,80 +34,156 @@ List<_FaqCategory> _buildCategories() => [
         title: (l) => l.faqSectionGettingStarted,
         icon: CupertinoIcons.lightbulb_fill,
         items: [
-          _FaqItem(question: (l) => l.faqWhatIsIntended,      answer: (l) => l.faqWhatIsIntendedAnswer),
-          _FaqItem(question: (l) => l.faqWhatIsIntentionPath,  answer: (l) => l.faqWhatIsIntentionPathAnswer),
-          _FaqItem(question: (l) => l.faqChangeIntentionPath,  answer: (l) => l.faqChangeIntentionPathAnswer),
-          _FaqItem(question: (l) => l.faqWhatAreFocusAreas,   answer: (l) => l.faqWhatAreFocusAreasAnswer),
-          _FaqItem(question: (l) => l.faqHowIsDifferent,      answer: (l) => l.faqHowIsDifferentAnswer),
+          _FaqItem(
+              question: (l) => l.faqWhatIsIntended,
+              answer: (l) => l.faqWhatIsIntendedAnswer),
+          _FaqItem(
+              question: (l) => l.faqWhatIsIntentionPath,
+              answer: (l) => l.faqWhatIsIntentionPathAnswer),
+          _FaqItem(
+              question: (l) => l.faqChangeIntentionPath,
+              answer: (l) => l.faqChangeIntentionPathAnswer),
+          _FaqItem(
+              question: (l) => l.faqWhatAreFocusAreas,
+              answer: (l) => l.faqWhatAreFocusAreasAnswer),
+          _FaqItem(
+              question: (l) => l.faqHowIsDifferent,
+              answer: (l) => l.faqHowIsDifferentAnswer),
+          _FaqItem(
+              question: (l) => l.faqNeedAccount,
+              answer: (l) => l.faqNeedAccountAnswer),
         ],
       ),
       _FaqCategory(
         title: (l) => l.faqSectionDailyHabits,
         icon: CupertinoIcons.checkmark_circle_fill,
         items: [
-          _FaqItem(question: (l) => l.faqHowToCheckIn,  answer: (l) => l.faqHowToCheckInAnswer),
-          _FaqItem(question: (l) => l.faqMissedDay,     answer: (l) => l.faqMissedDayAnswer),
-          _FaqItem(question: (l) => l.faqHowToPin,      answer: (l) => l.faqHowToPinAnswer),
-          _FaqItem(question: (l) => l.faqCustomHabits,  answer: (l) => l.faqCustomHabitsAnswer),
-          _FaqItem(question: (l) => l.faqSwapHabit,     answer: (l) => l.faqSwapHabitAnswer),
-          _FaqItem(question: (l) => l.faqRefreshes,     answer: (l) => l.faqRefreshesAnswer),
+          _FaqItem(
+              question: (l) => l.faqHowToCheckIn,
+              answer: (l) => l.faqHowToCheckInAnswer),
+          _FaqItem(
+              question: (l) => l.faqMissedDay,
+              answer: (l) => l.faqMissedDayAnswer),
+          _FaqItem(
+              question: (l) => l.faqHowToPin,
+              answer: (l) => l.faqHowToPinAnswer),
+          _FaqItem(
+              question: (l) => l.faqCustomHabits,
+              answer: (l) => l.faqCustomHabitsAnswer),
+          _FaqItem(
+              question: (l) => l.faqSwapHabit,
+              answer: (l) => l.faqSwapHabitAnswer),
+          _FaqItem(
+              question: (l) => l.faqRefreshes,
+              answer: (l) => l.faqRefreshesAnswer),
+          _FaqItem(
+              question: (l) => l.faqAllDone, answer: (l) => l.faqAllDoneAnswer),
         ],
       ),
       _FaqCategory(
         title: (l) => l.faqSectionReflections,
         icon: CupertinoIcons.waveform,
         items: [
-          _FaqItem(question: (l) => l.faqWeeklyReflection,  answer: (l) => l.faqWeeklyReflectionAnswer),
-          _FaqItem(question: (l) => l.faqMonthlyReflection, answer: (l) => l.faqMonthlyReflectionAnswer),
-          _FaqItem(question: (l) => l.faqShareReflection,   answer: (l) => l.faqShareReflectionAnswer),
-          _FaqItem(question: (l) => l.faqNoReflection,      answer: (l) => l.faqNoReflectionAnswer),
+          _FaqItem(
+              question: (l) => l.faqWeeklyReflection,
+              answer: (l) => l.faqWeeklyReflectionAnswer),
+          _FaqItem(
+              question: (l) => l.faqMonthlyReflection,
+              answer: (l) => l.faqMonthlyReflectionAnswer),
+          _FaqItem(
+              question: (l) => l.faqShareReflection,
+              answer: (l) => l.faqShareReflectionAnswer),
+          _FaqItem(
+              question: (l) => l.faqNoReflection,
+              answer: (l) => l.faqNoReflectionAnswer),
+          _FaqItem(
+              question: (l) => l.faqHowReflectionsGenerated,
+              answer: (l) => l.faqHowReflectionsGeneratedAnswer),
         ],
       ),
       _FaqCategory(
         title: (l) => l.faqSectionNotifications,
         icon: CupertinoIcons.bell_fill,
         items: [
-          _FaqItem(question: (l) => l.faqHowNotifications,   answer: (l) => l.faqHowNotificationsAnswer),
-          _FaqItem(question: (l) => l.faqChangeTime,         answer: (l) => l.faqChangeTimeAnswer),
-          _FaqItem(question: (l) => l.faqPathNotifications,  answer: (l) => l.faqPathNotificationsAnswer),
+          _FaqItem(
+              question: (l) => l.faqHowNotifications,
+              answer: (l) => l.faqHowNotificationsAnswer),
+          _FaqItem(
+              question: (l) => l.faqChangeTime,
+              answer: (l) => l.faqChangeTimeAnswer),
+          _FaqItem(
+              question: (l) => l.faqPathNotifications,
+              answer: (l) => l.faqPathNotificationsAnswer),
+          _FaqItem(
+              question: (l) => l.faqTurnOffNotifications,
+              answer: (l) => l.faqTurnOffNotificationsAnswer),
         ],
       ),
       _FaqCategory(
         title: (l) => l.faqSectionWidgets,
         icon: CupertinoIcons.rectangle_on_rectangle,
         items: [
-          _FaqItem(question: (l) => l.faqAddWidget,          answer: (l) => l.faqAddWidgetAnswer),
-          _FaqItem(question: (l) => l.faqWidgetNotUpdating,  answer: (l) => l.faqWidgetNotUpdatingAnswer),
+          _FaqItem(
+              question: (l) => l.faqAddWidget,
+              answer: (l) => l.faqAddWidgetAnswer),
+          _FaqItem(
+              question: (l) => l.faqWidgetNotUpdating,
+              answer: (l) => l.faqWidgetNotUpdatingAnswer),
+          _FaqItem(
+              question: (l) => l.faqWidgetCompletion,
+              answer: (l) => l.faqWidgetCompletionAnswer),
         ],
       ),
       _FaqCategory(
         title: (l) => l.faqSectionPricing,
         icon: CupertinoIcons.star_fill,
         items: [
-          _FaqItem(question: (l) => l.faqWhatIsPlus,    answer: (l) => l.faqWhatIsPlusAnswer),
-          _FaqItem(question: (l) => l.faqPricing,       answer: (l) => l.faqPricingAnswer),
-          _FaqItem(question: (l) => l.faqBoost,         answer: (l) => l.faqBoostAnswer),
-          _FaqItem(question: (l) => l.faqFreeVersion,   answer: (l) => l.faqFreeVersionAnswer),
-          _FaqItem(question: (l) => l.faqRestore,       answer: (l) => l.faqRestoreAnswer),
-          _FaqItem(question: (l) => l.faqCancel,        answer: (l) => l.faqCancelAnswer),
+          _FaqItem(
+              question: (l) => l.faqWhatIsPlus,
+              answer: (l) => l.faqWhatIsPlusAnswer),
+          _FaqItem(
+              question: (l) => l.faqPricing, answer: (l) => l.faqPricingAnswer),
+          _FaqItem(
+              question: (l) => l.faqBoost, answer: (l) => l.faqBoostAnswer),
+          _FaqItem(
+              question: (l) => l.faqFreeVersion,
+              answer: (l) => l.faqFreeVersionAnswer),
+          _FaqItem(
+              question: (l) => l.faqRestore, answer: (l) => l.faqRestoreAnswer),
+          _FaqItem(
+              question: (l) => l.faqCancel, answer: (l) => l.faqCancelAnswer),
         ],
       ),
       _FaqCategory(
         title: (l) => l.faqSectionPrivacy,
         icon: CupertinoIcons.lock_fill,
         items: [
-          _FaqItem(question: (l) => l.faqDataStorage,  answer: (l) => l.faqDataStorageAnswer),
-          _FaqItem(question: (l) => l.faqDataSelling,  answer: (l) => l.faqDataSellingAnswer),
-          _FaqItem(question: (l) => l.faqDeleteApp,    answer: (l) => l.faqDeleteAppAnswer),
+          _FaqItem(
+              question: (l) => l.faqDataStorage,
+              answer: (l) => l.faqDataStorageAnswer),
+          _FaqItem(
+              question: (l) => l.faqDataSelling,
+              answer: (l) => l.faqDataSellingAnswer),
+          _FaqItem(
+              question: (l) => l.faqDeleteApp,
+              answer: (l) => l.faqDeleteAppAnswer),
         ],
       ),
       _FaqCategory(
         title: (l) => l.faqSectionTroubleshooting,
         icon: CupertinoIcons.wrench_fill,
         items: [
-          _FaqItem(question: (l) => l.faqCrash,       answer: (l) => l.faqCrashAnswer),
-          _FaqItem(question: (l) => l.faqHabitsGone,  answer: (l) => l.faqHabitsGoneAnswer),
-          _FaqItem(question: (l) => l.faqAppleName,   answer: (l) => l.faqAppleNameAnswer),
+          _FaqItem(
+              question: (l) => l.faqCrash, answer: (l) => l.faqCrashAnswer),
+          _FaqItem(
+              question: (l) => l.faqHabitsGone,
+              answer: (l) => l.faqHabitsGoneAnswer),
+          _FaqItem(
+              question: (l) => l.faqAppleName,
+              answer: (l) => l.faqAppleNameAnswer),
+          _FaqItem(
+              question: (l) => l.faqNotificationsNotArriving,
+              answer: (l) => l.faqNotificationsNotArrivingAnswer),
         ],
       ),
     ];
@@ -129,7 +205,8 @@ class FaqScreen extends StatelessWidget {
     } else {
       if (context.mounted) {
         final l10n = AppLocalizations.of(context);
-        final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
+        final colors =
+            Provider.of<ThemeProvider>(context, listen: false).colors;
         showIntendedModal(
           context: context,
           title: l10n.profileCannotOpenEmail,
@@ -367,8 +444,8 @@ class _CategoryCardState extends State<_CategoryCard>
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: colors.profileCard
-                      .withOpacity(colors.profileCardOpacity),
+                  color:
+                      colors.profileCard.withOpacity(colors.profileCardOpacity),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
                     color: widget.isDark
@@ -436,7 +513,7 @@ class _CategoryCardState extends State<_CategoryCard>
 class _FaqCategoryScreen extends StatefulWidget {
   final _FaqCategory category;
 
-  const _FaqCategoryScreen({super.key, required this.category});
+  const _FaqCategoryScreen({required this.category});
 
   @override
   State<_FaqCategoryScreen> createState() => _FaqCategoryScreenState();

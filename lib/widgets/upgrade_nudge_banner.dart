@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Colors;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../screens/paywall_screen.dart';
 import '../services/app_usage_service.dart';
 import '../state/user_state.dart';
+import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
 
@@ -81,12 +81,20 @@ class _UpgradeNudgeBannerState extends State<UpgradeNudgeBanner>
     if (mounted) setState(() => _visible = false);
   }
 
-  void _openPaywall() {
-    _dismiss();
+  Future<void> _openPaywall() async {
+    // Persist dismissal immediately so banner never returns,
+    // even if the widget is disposed during the animation.
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_shownKey, true);
+    if (!mounted) return;
+    // Show paywall first, then animate out behind it.
     showCupertinoModalPopup(
       context: context,
       builder: (_) => const PaywallScreen(source: 'upgrade_nudge'),
     );
+    _animController.reverse().then((_) {
+      if (mounted) setState(() => _visible = false);
+    });
   }
 
   @override
@@ -118,51 +126,81 @@ class _UpgradeNudgeBannerState extends State<UpgradeNudgeBanner>
                 padding: const EdgeInsets.fromLTRB(16, 14, 8, 14),
                 decoration: BoxDecoration(
                   color: isDark
-                      ? colors.cardBackground.withOpacity(colors.cardBackgroundOpacity)
+                      ? colors.cardBackground
+                          .withOpacity(colors.cardBackgroundOpacity)
                       : CupertinoColors.white.withOpacity(0.85),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: colors.ctaPrimary.withOpacity(0.15),
                   ),
                 ),
-                child: Row(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Body text
-                    Expanded(
-                      child: Text(
-                        l10n.upgradeNudgeBody,
-                        style: AppTextStyles.body(context).copyWith(
-                          color: colors.textPrimary,
-                          fontSize: 14,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Warm accent icon
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: colors.ctaPrimary.withOpacity(0.12),
+                          ),
+                          child: Icon(
+                            CupertinoIcons.sparkles,
+                            size: 16,
+                            color: colors.ctaPrimary,
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // "Learn more" link
-                    CupertinoButton(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      minSize: 0,
-                      onPressed: _openPaywall,
-                      child: Text(
-                        l10n.upgradeNudgeLearnMore,
-                        style: AppTextStyles.caption(context).copyWith(
-                          color: colors.ctaPrimary,
-                          fontWeight: FontWeight.w600,
+                        const SizedBox(width: 12),
+                        // Body text
+                        Expanded(
+                          child: Text(
+                            l10n.upgradeNudgeBody,
+                            style: AppTextStyles.body(context).copyWith(
+                              color: colors.textPrimary,
+                              fontSize: 14,
+                              height: 1.4,
+                            ),
+                          ),
                         ),
-                      ),
+                        // Close button
+                        CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: _dismiss,
+                          child: Icon(
+                            CupertinoIcons.xmark,
+                            size: 14,
+                            color: colors.textSecondary.withOpacity(0.5),
+                          ),
+                          minimumSize: const Size(28, 28),
+                        ),
+                      ],
                     ),
-                    // Close button
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minSize: 28,
-                      onPressed: _dismiss,
-                      child: Icon(
-                        CupertinoIcons.xmark,
-                        size: 16,
-                        color: colors.textSecondary,
+                    const SizedBox(height: 10),
+                    // Full-width CTA button
+                    GestureDetector(
+                      onTap: _openPaywall,
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: colors.ctaPrimary.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            l10n.upgradeNudgeLearnMore,
+                            style: TextStyle(
+                              fontFamily: 'Sora',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: colors.ctaPrimary,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],

@@ -5,6 +5,9 @@ import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
+import '../models/moment.dart';
+import 'moments_service.dart';
+import 'app_usage_service.dart';
 
 /// Syncs habit completions made from the iOS widget into Flutter's
 /// SharedPreferences on app launch.
@@ -55,6 +58,28 @@ class WidgetCompletionService {
         // Only set if not already completed
         if (!(prefs.getBool(prefsKey) ?? false)) {
           await prefs.setBool(prefsKey, true);
+
+          // Record a moment so it appears on the Moments screen.
+          // dateKey is "yyyy-MM-dd" — use current time for today's
+          // completions so the timestamp is meaningful; for past dates
+          // fall back to noon on that day.
+          final today = DateTime.now().toIso8601String().substring(0, 10);
+          final DateTime completedAt;
+          if (dateKey == today) {
+            completedAt = DateTime.now().toUtc();
+          } else {
+            completedAt = (DateTime.tryParse('${dateKey}T12:00:00') ?? DateTime.now()).toUtc();
+          }
+          await MomentsService.record(Moment(
+            id: '${completedAt.toIso8601String()}_$habitId',
+            habitName: habitName,
+            habitEmoji: '✦',
+            completedAt: completedAt,
+          ));
+
+          // Keep total-completed counter in sync for coach marks
+          await AppUsageService.incrementHabitsCompleted();
+
           synced++;
           debugPrint('Widget sync: completed "$habitName" for $dateKey');
         }

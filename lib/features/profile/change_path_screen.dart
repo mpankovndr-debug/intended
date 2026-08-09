@@ -15,10 +15,10 @@ String _resolvePathTitle(AppLocalizations l10n, String titleKey) {
   switch (titleKey) {
     case 'pathGentleMorningsTitle':
       return l10n.pathGentleMorningsTitle;
-    case 'pathFindingCalmTitle':
-      return l10n.pathFindingCalmTitle;
-    case 'pathGratitudeSelfLoveTitle':
-      return l10n.pathGratitudeSelfLoveTitle;
+    case 'pathAnchorsForHardDaysTitle':
+      return l10n.pathAnchorsForHardDaysTitle;
+    case 'pathQuietFocusTitle':
+      return l10n.pathQuietFocusTitle;
     case 'pathWindingDownTitle':
       return l10n.pathWindingDownTitle;
     case 'pathYourOwnWayTitle':
@@ -32,10 +32,10 @@ String _resolvePathSubtitle(AppLocalizations l10n, String subtitleKey) {
   switch (subtitleKey) {
     case 'pathGentleMorningsSubtitle':
       return l10n.pathGentleMorningsSubtitle;
-    case 'pathFindingCalmSubtitle':
-      return l10n.pathFindingCalmSubtitle;
-    case 'pathGratitudeSelfLoveSubtitle':
-      return l10n.pathGratitudeSelfLoveSubtitle;
+    case 'pathAnchorsForHardDaysSubtitle':
+      return l10n.pathAnchorsForHardDaysSubtitle;
+    case 'pathQuietFocusSubtitle':
+      return l10n.pathQuietFocusSubtitle;
     case 'pathWindingDownSubtitle':
       return l10n.pathWindingDownSubtitle;
     case 'pathYourOwnWaySubtitle':
@@ -160,7 +160,7 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          final path = IntentionPath.all[index];
+                          final path = IntentionPath.pickerOptions[index];
                           final isSelected = _selected == path.id;
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 14),
@@ -178,7 +178,7 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                             ),
                           );
                         },
-                        childCount: IntentionPath.all.length,
+                        childCount: IntentionPath.pickerOptions.length,
                       ),
                     ),
                   ),

@@ -708,6 +708,10 @@ void main() {
       // Create OnboardingState instance and load saved habits
       final onboardingState = OnboardingState();
       await onboardingState.loadUserHabits();
+      // Without this the path falls back to 'your_own_way' on every cold
+      // launch, so anything reading it off OnboardingState (Profile, the
+      // path-specific paywall titles) sees the wrong path.
+      await onboardingState.loadSelectedIntentionPath();
       await ReflectionService.loadCustomHabitFocusAreas();
 
       // Sync the saved name to OnboardingState
@@ -1054,9 +1058,14 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && mounted) {
+      // Sync widget completions FIRST, then refresh everything
+      WidgetCompletionService.syncPendingCompletions().then((synced) {
+        if (!mounted) return;
+        if (synced > 0) setState(() {}); // Rebuild to reflect synced completions
+        refreshHomeWidget(context); // Refresh widget AFTER sync
+      });
       NotificationScheduler.refreshTimezone(AppLocalizations.of(context));
       context.read<RevenueCatService>().refreshPurchaseStatus();
-      refreshHomeWidget(context);
       _loadUnseenReflection();
     }
     if (state == AppLifecycleState.paused && mounted) {
@@ -1519,6 +1528,11 @@ class _HabitsScreenState extends State<HabitsScreen>
   }
 
   Future<void> _checkDailyCoachMarks(BuildContext ctx) async {
+    // Skip coach marks right after onboarding — let the user explore first.
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    if (prefs.getBool('just_completed_onboarding') == true) return;
+
     // Capture l10n before any await — ctx may be stale after gaps
     final l10n = AppLocalizations.of(ctx);
     final service = CoachMarkService.instance;
@@ -1609,7 +1623,10 @@ class _HabitsScreenState extends State<HabitsScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _checkDayChange();
+      // Small delay to let MainTabs sync widget completions first
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) _checkDayChange();
+      });
     }
   }
 
@@ -2756,7 +2773,10 @@ class _HabitCardState extends State<_HabitCard>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _checkIfDone();
+      // Small delay to let MainTabs sync widget completions first
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) _checkIfDone();
+      });
     }
   }
 
@@ -2820,6 +2840,11 @@ class _HabitCardState extends State<_HabitCard>
     await Future.delayed(const Duration(milliseconds: 300));
     if (!mounted) return;
 
+    // Skip coach marks right after onboarding — let the user explore first.
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('just_completed_onboarding') == true) return;
+    if (!mounted) return;
+
     final l10n = AppLocalizations.of(context);
     final service = CoachMarkService.instance;
     final count = await AppUsageService.incrementHabitsCompleted();
@@ -2865,13 +2890,19 @@ class _HabitCardState extends State<_HabitCard>
     await Future.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
     final allDone = await _areAllHabitsDone();
-    if (mounted) {
-      ReviewRequestService.checkAndPrompt(
-        context,
-        totalCompletions: count,
-        allDoneToday: allDone,
-      );
-    }
+    if (!mounted) return;
+    await ReviewRequestService.checkAndPrompt(
+      context,
+      totalCompletions: count,
+      allDoneToday: allDone,
+    );
+
+    // Curated-pack peak moment: if today's completion just closed out every
+    // habit in any active pack, fire a separate trigger. The review service
+    // de-dupes per pack ID and applies the shared 30-day cooldown, so this
+    // is safe to call alongside the habit-completion check above.
+    if (!mounted) return;
+    await _maybeAskAfterPackCompletion();
   }
 
   /// Helper: checks if every active habit has been completed today.
@@ -2881,6 +2912,37 @@ class _HabitCardState extends State<_HabitCard>
     if (habits.isEmpty) return false;
     final completedIds = await HabitTracker.allCompletedIdsForDate(DateTime.now());
     return habits.every((h) => completedIds.contains(HabitTracker.habitId(h)));
+  }
+
+  /// Helper: scans curated packs and triggers the review prompt the first
+  /// time the user closes one out (every habit in a pack done today).
+  Future<void> _maybeAskAfterPackCompletion() async {
+    final onboarding = context.read<OnboardingState>();
+    final userHabits = onboarding.userHabits;
+    if (userHabits.isEmpty) return;
+
+    final completedIds =
+        await HabitTracker.allCompletedIdsForDate(DateTime.now());
+
+    for (final pack in CuratedPacks.all) {
+      // A pack is "active" only if every one of its habits is in the user's
+      // active list — otherwise we'd fire on packs the user never adopted.
+      final isActive = pack.habitIds.every(userHabits.contains);
+      if (!isActive) continue;
+
+      final allDoneToday = pack.habitIds.every(
+        (h) => completedIds.contains(HabitTracker.habitId(h)),
+      );
+      if (!allDoneToday) continue;
+
+      if (!mounted) return;
+      await ReviewRequestService.onCuratedPackCompleted(
+        context,
+        packId: pack.id,
+      );
+      // Only fire for the first matching pack — review service handles dedupe.
+      break;
+    }
   }
 
   /// Checks if all habits are now complete; if so, triggers Quiet Bloom.
@@ -4917,44 +4979,6 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
       filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
       builder: (context) => _PackDetailSheet(pack: pack),
     );
-  }
-
-  void _performDirectAdd(String habit) {
-    final onboardingState = context.read<OnboardingState>();
-    onboardingState.addHabitFromBrowse(habit);
-    HapticFeedback.mediumImpact();
-
-    // Close sheet and show confirmation
-    Navigator.pop(context);
-
-    Future.delayed(const Duration(milliseconds: 100), () {
-      if (!mounted) return;
-      final l10n = AppLocalizations.of(context);
-      showStyledPopup(
-        context: context,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              l10n.browseHabitAddedTitle,
-              style: AppTextStyles.h2(context),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              l10n.browseHabitAddedMessage(localizeHabitName(habit, l10n)),
-              style: AppTextStyles.body(context),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            styledPrimaryButton(
-              label: l10n.browseHabitAddedConfirm,
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        ),
-      );
-    });
   }
 
   @override

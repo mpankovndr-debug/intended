@@ -5,8 +5,22 @@ import SwiftUI
 
 struct HabitEntry: Codable {
     let name: String
+    /// English habit title used for HabitTracker ID resolution on the Flutter side.
+    /// Falls back to `name` when absent (pre-update data).
+    let rawName: String?
     let done: Bool
     let colorHex: String?
+
+    /// The key to use when recording completions — always the raw English name.
+    var trackingName: String { rawName ?? name }
+
+    /// Convenience init that defaults rawName to nil (for placeholders / backwards compat).
+    init(name: String, rawName: String? = nil, done: Bool, colorHex: String?) {
+        self.name = name
+        self.rawName = rawName
+        self.done = done
+        self.colorHex = colorHex
+    }
 }
 
 struct ThemeData: Codable {

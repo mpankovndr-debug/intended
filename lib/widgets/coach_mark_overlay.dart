@@ -32,6 +32,7 @@ class _CoachMarkOverlayState extends State<CoachMarkOverlay>
   late AnimationController _controller;
   late Animation<double> _fade;
   late Animation<double> _scale;
+  bool _dismissing = false;
 
   @override
   void initState() {
@@ -54,9 +55,9 @@ class _CoachMarkOverlayState extends State<CoachMarkOverlay>
   }
 
   Future<void> _dismiss() async {
-    await _controller.reverse(
-      from: _controller.value,
-    );
+    if (_dismissing) return;
+    _dismissing = true;
+    await _controller.reverse(from: _controller.value);
     widget.onDismiss();
   }
 
@@ -75,6 +76,13 @@ class _CoachMarkOverlayState extends State<CoachMarkOverlay>
     final colors = context.watch<ThemeProvider>().colors;
     final screenSize = MediaQuery.of(context).size;
     final targetRect = _targetRect();
+
+    // If target widget isn't rendered, dismiss silently instead of showing
+    // a blank dark screen.
+    if (targetRect == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _dismiss());
+      return const SizedBox.shrink();
+    }
 
     return FadeTransition(
       opacity: _fade,
@@ -98,8 +106,7 @@ class _CoachMarkOverlayState extends State<CoachMarkOverlay>
               painter: _CutoutPainter(targetRect: targetRect),
             ),
             // Tooltip card
-            if (targetRect != null)
-              _buildCard(context, colors, screenSize, targetRect),
+            _buildCard(context, colors, screenSize, targetRect),
           ],
         ),
       ),

@@ -31,21 +31,21 @@ class WarmthMessageService {
         l10n.warmthPathGentleMornings5,
         l10n.warmthPathGentleMornings6,
       ],
-      IntentionPathId.findingCalm => [
-        l10n.warmthPathFindingCalm1,
-        l10n.warmthPathFindingCalm2,
-        l10n.warmthPathFindingCalm3,
-        l10n.warmthPathFindingCalm4,
-        l10n.warmthPathFindingCalm5,
-        l10n.warmthPathFindingCalm6,
+      IntentionPathId.anchorsForHardDays => [
+        l10n.warmthPathAnchorsForHardDays1,
+        l10n.warmthPathAnchorsForHardDays2,
+        l10n.warmthPathAnchorsForHardDays3,
+        l10n.warmthPathAnchorsForHardDays4,
+        l10n.warmthPathAnchorsForHardDays5,
+        l10n.warmthPathAnchorsForHardDays6,
       ],
-      IntentionPathId.gratitudeSelfLove => [
-        l10n.warmthPathGratitudeSelfLove1,
-        l10n.warmthPathGratitudeSelfLove2,
-        l10n.warmthPathGratitudeSelfLove3,
-        l10n.warmthPathGratitudeSelfLove4,
-        l10n.warmthPathGratitudeSelfLove5,
-        l10n.warmthPathGratitudeSelfLove6,
+      IntentionPathId.quietFocus => [
+        l10n.warmthPathQuietFocus1,
+        l10n.warmthPathQuietFocus2,
+        l10n.warmthPathQuietFocus3,
+        l10n.warmthPathQuietFocus4,
+        l10n.warmthPathQuietFocus5,
+        l10n.warmthPathQuietFocus6,
       ],
       IntentionPathId.windingDown => [
         l10n.warmthPathWindingDown1,
@@ -73,7 +73,7 @@ class WarmthMessageService {
     final current = prefs.getInt(_indexKey) ?? 0;
 
     // Load user's intention path
-    final pathKey = prefs.getString('selected_intention_path') ?? 'your_own_way';
+    final pathKey = prefs.getString('selected_intention_path') ?? 'gentle_mornings';
     final pathId = IntentionPathId.fromKey(pathKey);
 
     // Merge: path-specific first, then generic

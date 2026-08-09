@@ -14,6 +14,7 @@ import '../screens/paywall_screen.dart';
 import '../screens/share_card_reveal_screen.dart';
 import 'tiered_share_card.dart';
 import '../services/reflection_service.dart';
+import '../services/review_request_service.dart';
 import '../services/week_stats_service.dart';
 import '../state/user_state.dart';
 import '../theme/app_colors.dart';
@@ -84,6 +85,19 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
     // Moment 4b: "Worth sharing?" coach mark on the share button.
     // Fires once, the first time the weekly reflection card becomes visible.
     _checkShareCoachMark();
+    // First weekly reflection peak moment: ask for a review the first time
+    // the user lands on a reflection with at least 3 completions in the
+    // week. Service de-dupes so this fires once ever; threshold avoids
+    // wasting the trigger on an empty/near-empty week.
+    _maybeAskForReview();
+  }
+
+  Future<void> _maybeAskForReview() async {
+    if (widget.stats.completionCount < 3) return;
+    // Wait for the entrance animation to settle before stacking a dialog.
+    await Future.delayed(const Duration(milliseconds: 1200));
+    if (!mounted) return;
+    await ReviewRequestService.onFirstWeeklyReflection(context);
   }
 
   Future<void> _checkShareCoachMark() async {
@@ -668,17 +682,20 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
   String _pathIntro(AppLocalizations l10n, ReflectionData data) {
     if (data.daysActive == 0) {
       return switch (_pathId) {
-        IntentionPathId.gentleMornings => l10n.reflectionPathGentleMorningsQuiet,
-        IntentionPathId.findingCalm => l10n.reflectionPathFindingCalmQuiet,
-        IntentionPathId.gratitudeSelfLove => l10n.reflectionPathGratitudeSelfLoveQuiet,
+        IntentionPathId.gentleMornings =>
+          l10n.reflectionPathGentleMorningsQuiet,
+        IntentionPathId.anchorsForHardDays =>
+          l10n.reflectionPathAnchorsForHardDaysQuiet,
+        IntentionPathId.quietFocus => l10n.reflectionPathQuietFocusQuiet,
         IntentionPathId.windingDown => l10n.reflectionPathWindingDownQuiet,
         IntentionPathId.yourOwnWay => l10n.reflectionPathYourOwnWayQuiet,
       };
     }
     return switch (_pathId) {
       IntentionPathId.gentleMornings => l10n.reflectionPathGentleMorningsIntro,
-      IntentionPathId.findingCalm => l10n.reflectionPathFindingCalmIntro,
-      IntentionPathId.gratitudeSelfLove => l10n.reflectionPathGratitudeSelfLoveIntro,
+      IntentionPathId.anchorsForHardDays =>
+        l10n.reflectionPathAnchorsForHardDaysIntro,
+      IntentionPathId.quietFocus => l10n.reflectionPathQuietFocusIntro,
       IntentionPathId.windingDown => l10n.reflectionPathWindingDownIntro,
       IntentionPathId.yourOwnWay => l10n.reflectionPathYourOwnWayIntro,
     };

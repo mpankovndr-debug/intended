@@ -13,7 +13,7 @@ import '../services/auth_service.dart';
 import '../services/backup_service.dart';
 import '../utils/profanity_filter.dart';
 import 'onboarding_state.dart';
-import '../features/onboarding/screens/intention_path_screen.dart';
+import 'tell_us_about_you_screen.dart';
 import '../state/user_state.dart';
 import '../services/analytics_service.dart';
 import '../theme/app_colors.dart';
@@ -249,7 +249,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const IntentionPathScreen(),
+        pageBuilder: (_, __, ___) => const TellUsAboutYouScreen(),
         transitionDuration: const Duration(milliseconds: 400),
         transitionsBuilder: (_, animation, __, child) {
           return FadeTransition(opacity: animation, child: child);
@@ -275,7 +275,9 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // Use the full physical screen size so decorative layers stay fixed
+    // even when the keyboard resizes the scaffold.
+    final fullSize = MediaQuery.of(context).size;
     final colors = context.watch<ThemeProvider>().colors;
     final l10n = AppLocalizations.of(context);
 
@@ -283,6 +285,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
       onTap: () => FocusScope.of(context).unfocus(),
       child: CupertinoPageScaffold(
         backgroundColor: colors.onboardingBg3,
+        resizeToAvoidBottomInset: false,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -305,53 +308,43 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
             ),
 
             // Background orbs
-            _buildBackgroundOrbs(size, colors),
+            _buildBackgroundOrbs(fullSize, colors),
 
             // Floating glass cards
-            _FloatingCards(size: size),
+            _FloatingCards(size: fullSize),
 
-            // Gradient overlay above keyboard
-            if (MediaQuery.of(context).viewInsets.bottom > 0)
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-                child: IgnorePointer(
-                  child: Container(
-                    height: 36,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          colors.onboardingBg3,
-                          colors.onboardingBg3.withValues(alpha: 0),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-            // Main content
+            // Main content — uses viewInsets padding so the text field
+            // stays above the keyboard while decorative layers stay fixed.
             SafeArea(
+              bottom: false,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
-                child: Column(
+                padding: EdgeInsets.only(
+                  left: 28,
+                  right: 28,
+                  bottom: MediaQuery.of(context).viewInsets.bottom +
+                      MediaQuery.of(context).padding.bottom,
+                ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+                    return Column(
                   children: [
-                          // Top spacer — shrinks when name block appears
+                          // Top spacer — shrinks when keyboard or name block appears
                           AnimatedContainer(
                             duration: const Duration(milliseconds: 350),
                             curve: Curves.easeInOut,
-                            height: _showNameBlock ? 80 : 160,
+                            height: keyboardOpen ? 20 : (_showNameBlock ? 80 : 160),
                           ),
 
-                          // Brand group (icon + title)
-                          FadeTransition(
+                          // Brand group (icon + title) — collapses when keyboard opens
+                          AnimatedSize(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            child: FadeTransition(
                             opacity: _fadeBrand,
                             child: Column(
                               children: [
-                                ClipRRect(
+                                if (!keyboardOpen) ClipRRect(
                                   borderRadius: BorderRadius.circular(32),
                                   child: BackdropFilter(
                                     filter: ImageFilter.blur(
@@ -390,7 +383,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                                   ),
                                 ),
 
-                                const SizedBox(height: 40),
+                                if (!keyboardOpen) const SizedBox(height: 40),
 
                                 Text(
                                   l10n.appNameIntended,
@@ -407,11 +400,12 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                               ],
                             ),
                           ),
+                          ), // AnimatedSize
 
                           const SizedBox(height: 12),
 
-                          // Tagline
-                          FadeTransition(
+                          // Tagline — hidden when keyboard is open to save space
+                          if (!keyboardOpen) FadeTransition(
                             opacity: _fadeTagline,
                             child: Column(
                               children: [
@@ -476,11 +470,13 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                             child: _buildTerms(colors, l10n),
                           ),
 
-                          const SizedBox(height: 32),
+                          SizedBox(height: keyboardOpen ? 8 : 32),
                         ],
-                      ),
+                      );
+                    }, // LayoutBuilder builder
                   ),
                 ),
+              ),
           ],
         ),
       ),

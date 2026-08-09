@@ -67,7 +67,7 @@ struct HabitRow: View {
                     .foregroundColor(checkmarkColor)
             } else {
                 if #available(iOS 17.0, *) {
-                    Button(intent: CompleteHabitIntent(habitName: habit.name)) {
+                    Button(intent: CompleteHabitIntent(habitName: habit.trackingName)) {
                         Circle()
                             .stroke(textSecondary.opacity(0.3), lineWidth: 1.5)
                             .frame(width: 16, height: 16)

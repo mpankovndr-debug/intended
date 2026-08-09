@@ -80,9 +80,9 @@ struct CompleteHabitIntent: AppIntent {
             return
         }
 
-        // Mark matching habit as done
+        // Mark matching habit as done (match on trackingName = raw English key)
         for i in habits.indices {
-            if habits[i].name == habitName {
+            if habits[i].trackingName == habitName {
                 habits[i].done = true
                 break
             }
@@ -109,6 +109,9 @@ struct WidgetCompletion: Codable, Equatable {
 /// Mutable version of HabitEntry for in-place updates.
 private struct MutableHabitEntry: Codable {
     let name: String
+    let rawName: String?
     var done: Bool
     let colorHex: String?
+
+    var trackingName: String { rawName ?? name }
 }
