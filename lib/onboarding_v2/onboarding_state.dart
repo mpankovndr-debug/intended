@@ -313,6 +313,22 @@ class OnboardingState extends ChangeNotifier {
     return added;
   }
 
+  /// Adds a focus area from the monthly plan, and writes it down.
+  ///
+  /// Separate from [toggleFocusArea] on both counts. That one is the
+  /// onboarding picker: it holds the free tier's cap, and it leaves the choice
+  /// in memory for the screen that saves it afterwards. Neither is right here
+  /// — the plan is a paid surface, and its accept button has to change
+  /// something that survives the app closing (§4.5), not silently do nothing
+  /// because two areas were already chosen.
+  Future<void> adoptFocusArea(String area) async {
+    if (_focusAreas.contains(area)) return;
+    _focusAreas.add(area);
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('focus_areas', _focusAreas);
+  }
+
   /// Updates focus areas to match a curated pack without regenerating habits.
   Future<void> applyPackFocusAreas(List<String> packFocusAreas) async {
     _focusAreas.clear();

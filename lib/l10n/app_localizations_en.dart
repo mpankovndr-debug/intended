@@ -497,6 +497,133 @@ class AppLocalizationsEn extends AppLocalizations {
       'Which of these would you miss if it stopped?';
 
   @override
+  String planLabel(String month) {
+    return 'YOUR $month PLAN';
+  }
+
+  @override
+  String planNudgeMoveReminder(String time) {
+    return 'Move your reminder to $time. That\'s when most of last month\'s moments landed.';
+  }
+
+  @override
+  String planNudgeSetAside(String habit, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You reached for it $count times last month',
+      one: 'You reached for it once last month',
+      zero: 'You didn\'t reach for it once last month',
+    );
+    return 'Set aside $habit. $_temp0.';
+  }
+
+  @override
+  String planNudgeKeepAnchor(String habit, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You reached for it $count times',
+      one: 'You reached for it once',
+    );
+    return 'Keep $habit at the top. $_temp0 — more than anything else.';
+  }
+
+  @override
+  String planNudgeAddFocus(String area, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count of last month\'s moments were',
+      one: 'One of last month\'s moments was',
+    );
+    return 'Add $area to your focus. $_temp0 already there.';
+  }
+
+  @override
+  String get planAcceptMoveReminder => 'Move it';
+
+  @override
+  String get planAcceptSetAside => 'Set it aside';
+
+  @override
+  String get planAcceptKeepAnchor => 'Pin it';
+
+  @override
+  String get planAcceptAddFocus => 'Add it';
+
+  @override
+  String get planDecline => 'Not this month';
+
+  @override
+  String planMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more when you\'re ready',
+      one: 'One more when you\'re ready',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get planDone =>
+      'Done. In four weeks this page will tell you whether it changed anything.';
+
+  @override
+  String planProofMovedReminder(String date, String time) {
+    return 'On $date you moved your reminder to $time.';
+  }
+
+  @override
+  String planProofSetAside(String date, String habit) {
+    return 'On $date you set aside $habit.';
+  }
+
+  @override
+  String planProofPinned(String date, String habit) {
+    return 'On $date you pinned $habit.';
+  }
+
+  @override
+  String planProofAddedFocus(String date, String area) {
+    return 'On $date you added $area to your focus.';
+  }
+
+  @override
+  String planProofUp(int after, int before) {
+    String _temp0 = intl.Intl.pluralLogic(
+      after,
+      locale: localeName,
+      other: '$after moments',
+      one: '1 moment',
+    );
+    return '$_temp0 in the four weeks after, up from $before.';
+  }
+
+  @override
+  String planProofDown(int after, int before) {
+    String _temp0 = intl.Intl.pluralLogic(
+      after,
+      locale: localeName,
+      other: '$after moments',
+      one: '1 moment',
+    );
+    return '$_temp0 in the four weeks after, down from $before.';
+  }
+
+  @override
+  String planProofSame(int after) {
+    String _temp0 = intl.Intl.pluralLogic(
+      after,
+      locale: localeName,
+      other: '$after moments',
+      one: '1 moment',
+    );
+    return '$_temp0 in the four weeks after — the same as the four weeks before.';
+  }
+
+  @override
   String get insightsGapsShortening => 'And they\'re getting shorter.';
 
   @override

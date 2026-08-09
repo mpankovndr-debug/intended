@@ -518,6 +518,139 @@ class AppLocalizationsRu extends AppLocalizations {
       'Чего бы вам не хватало, если бы это прекратилось?';
 
   @override
+  String planLabel(String month) {
+    return 'ВАШ ПЛАН НА $month';
+  }
+
+  @override
+  String planNudgeMoveReminder(String time) {
+    return 'Перенесите напоминание на $time. Именно тогда приходило большинство моментов прошлого месяца.';
+  }
+
+  @override
+  String planNudgeSetAside(String habit, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count раза',
+      many: '$count раз',
+      few: '$count раза',
+      one: '$count раз',
+      zero: 'ни разу',
+    );
+    return 'Отложите «$habit». В прошлом месяце — $_temp0.';
+  }
+
+  @override
+  String planNudgeKeepAnchor(String habit, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count раза',
+      many: '$count раз',
+      few: '$count раза',
+      one: '$count раз',
+    );
+    return 'Закрепите «$habit» наверху. В прошлом месяце — $_temp0, чаще всего остального.';
+  }
+
+  @override
+  String planNudgeAddFocus(String area, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count момента прошлого месяца уже были',
+      many: '$count моментов прошлого месяца уже были',
+      few: '$count момента прошлого месяца уже были',
+      one: '$count момент прошлого месяца уже был',
+    );
+    return 'Добавьте «$area» в свой фокус. $_temp0 там.';
+  }
+
+  @override
+  String get planAcceptMoveReminder => 'Перенести';
+
+  @override
+  String get planAcceptSetAside => 'Отложить';
+
+  @override
+  String get planAcceptKeepAnchor => 'Закрепить';
+
+  @override
+  String get planAcceptAddFocus => 'Добавить';
+
+  @override
+  String get planDecline => 'Не в этом месяце';
+
+  @override
+  String planMore(int count) {
+    return 'Ещё $count — когда будете готовы';
+  }
+
+  @override
+  String get planDone =>
+      'Готово. Через четыре недели эта страница скажет, изменилось ли что-нибудь.';
+
+  @override
+  String planProofMovedReminder(String date, String time) {
+    return '$date вы перенесли напоминание на $time.';
+  }
+
+  @override
+  String planProofSetAside(String date, String habit) {
+    return '$date вы отложили «$habit».';
+  }
+
+  @override
+  String planProofPinned(String date, String habit) {
+    return '$date вы закрепили «$habit».';
+  }
+
+  @override
+  String planProofAddedFocus(String date, String area) {
+    return '$date вы добавили «$area» в свой фокус.';
+  }
+
+  @override
+  String planProofUp(int after, int before) {
+    String _temp0 = intl.Intl.pluralLogic(
+      after,
+      locale: localeName,
+      other: '$after момента',
+      many: '$after моментов',
+      few: '$after момента',
+      one: '$after момент',
+    );
+    return '$_temp0 за четыре недели после — больше, чем $before до.';
+  }
+
+  @override
+  String planProofDown(int after, int before) {
+    String _temp0 = intl.Intl.pluralLogic(
+      after,
+      locale: localeName,
+      other: '$after момента',
+      many: '$after моментов',
+      few: '$after момента',
+      one: '$after момент',
+    );
+    return '$_temp0 за четыре недели после — меньше, чем $before до.';
+  }
+
+  @override
+  String planProofSame(int after) {
+    String _temp0 = intl.Intl.pluralLogic(
+      after,
+      locale: localeName,
+      other: '$after момента',
+      many: '$after моментов',
+      few: '$after момента',
+      one: '$after момент',
+    );
+    return '$_temp0 за четыре недели после — столько же, сколько за четыре недели до.';
+  }
+
+  @override
   String get insightsGapsShortening => 'И они становятся короче.';
 
   @override

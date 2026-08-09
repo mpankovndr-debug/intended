@@ -202,6 +202,92 @@
       "count": { "type": "int" }
     }
   },
+  "planLabel": "YOUR {month} PLAN",
+  "planNudgeMoveReminder": "Move your reminder to {time}. That's when most of last month's moments landed.",
+  "planNudgeSetAside": "Set aside {habit}. {count, plural, =0{You didn't reach for it once last month} =1{You reached for it once last month} other{You reached for it {count} times last month}}.",
+  "planNudgeKeepAnchor": "Keep {habit} at the top. {count, plural, =1{You reached for it once} other{You reached for it {count} times}} — more than anything else.",
+  "planNudgeAddFocus": "Add {area} to your focus. {count, plural, =1{One of last month's moments was} other{{count} of last month's moments were}} already there.",
+  "planAcceptMoveReminder": "Move it",
+  "planAcceptSetAside": "Set it aside",
+  "planAcceptKeepAnchor": "Pin it",
+  "planAcceptAddFocus": "Add it",
+  "planDecline": "Not this month",
+  "planMore": "{count, plural, =1{One more when you're ready} other{{count} more when you're ready}}",
+  "planDone": "Done. In four weeks this page will tell you whether it changed anything.",
+  "planProofMovedReminder": "On {date} you moved your reminder to {time}.",
+  "planProofSetAside": "On {date} you set aside {habit}.",
+  "planProofPinned": "On {date} you pinned {habit}.",
+  "planProofAddedFocus": "On {date} you added {area} to your focus.",
+  "planProofUp": "{after, plural, =1{1 moment} other{{after} moments}} in the four weeks after, up from {before}.",
+  "planProofDown": "{after, plural, =1{1 moment} other{{after} moments}} in the four weeks after, down from {before}.",
+  "planProofSame": "{after, plural, =1{1 moment} other{{after} moments}} in the four weeks after — the same as the four weeks before.",
+  "@planLabel": {
+    "description": "Month name arrives already uppercased by the caller, so the label matches the other all-caps card eyebrows without a locale-specific casing rule here.",
+    "placeholders": { "month": { "type": "String" } }
+  },
+  "@planNudgeMoveReminder": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "@planNudgeSetAside": {
+    "placeholders": {
+      "habit": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "@planNudgeKeepAnchor": {
+    "placeholders": {
+      "habit": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "@planNudgeAddFocus": {
+    "placeholders": {
+      "area": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "@planMore": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@planProofMovedReminder": {
+    "placeholders": {
+      "date": { "type": "String" },
+      "time": { "type": "String" }
+    }
+  },
+  "@planProofSetAside": {
+    "placeholders": {
+      "date": { "type": "String" },
+      "habit": { "type": "String" }
+    }
+  },
+  "@planProofPinned": {
+    "placeholders": {
+      "date": { "type": "String" },
+      "habit": { "type": "String" }
+    }
+  },
+  "@planProofAddedFocus": {
+    "placeholders": {
+      "date": { "type": "String" },
+      "area": { "type": "String" }
+    }
+  },
+  "@planProofUp": {
+    "placeholders": {
+      "after": { "type": "int" },
+      "before": { "type": "int" }
+    }
+  },
+  "@planProofDown": {
+    "placeholders": {
+      "after": { "type": "int" },
+      "before": { "type": "int" }
+    }
+  },
+  "@planProofSame": {
+    "placeholders": { "after": { "type": "int" } }
+  },
   "insightsGapsShortening": "And they're getting shorter.",
   "insightsTeaserBody": "There's a pattern in this month you can't see yet — the gap between the focus you chose and the one you actually lived.",
   "insightsTeaserCta": "See what Intended+ noticed",

@@ -6,11 +6,14 @@ import '../l10n/app_localizations.dart';
 import '../models/moment.dart';
 import '../models/drift.dart';
 import '../models/letter.dart';
+import '../models/month_plan.dart';
 import '../models/season.dart';
 import '../services/season_service.dart';
 import '../onboarding_v2/onboarding_state.dart';
 import '../services/moments_service.dart';
 import '../services/notification_preferences_service.dart';
+import '../services/notification_scheduler.dart';
+import '../services/plan_service.dart';
 import '../state/user_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
@@ -37,10 +40,23 @@ class InsightsScreen extends StatefulWidget {
 
 class _InsightsScreenState extends State<InsightsScreen> {
   List<Moment> _moments = const [];
+
+  /// Last month's moments — the evidence the plan is read from (§6.2). The
+  /// plan itself is derived in build, so accepting a nudge that changes the
+  /// habit list or the pin is reflected without another round trip to disk.
+  List<Moment> _lastMonth = const [];
+
   String _reminderTime = '';
+  int _reminderHour = 9;
+  bool _remindersEnabled = false;
   Season? _season;
   Drift? _drift;
   Letter? _letter;
+  Set<String> _declinedNudges = const {};
+  AcceptedNudge? _acceptedThisMonth;
+  PlanProof? _proof;
+  bool _showAllNudges = false;
+  bool _accepting = false;
   bool _loaded = false;
 
   @override
@@ -58,16 +74,31 @@ class _InsightsScreenState extends State<InsightsScreen> {
 
   Future<void> _load() async {
     final now = DateTime.now();
+    final monthKey = SeasonService.monthKeyFor(now);
     final moments = await MomentsService.momentsForMonth(now);
+    // DateTime normalises month 0 to December of the previous year, so this
+    // holds across a January boundary.
+    final lastMonth =
+        await MomentsService.momentsForMonth(DateTime(now.year, now.month - 1, 1));
     final season = await SeasonService.currentSeason();
     final hour = await NotificationPreferencesService.getHour();
     final minute = await NotificationPreferencesService.getMinute();
+    final remindersEnabled = await NotificationPreferencesService.isEnabled();
+    final declined = await PlanService.declinedFor(monthKey);
+    final accepted = await PlanService.acceptedFor(monthKey);
+    final proof = await PlanService.proof();
     if (!mounted) return;
     setState(() {
       _moments = moments;
+      _lastMonth = lastMonth;
       _season = season;
       _drift = Drift.read(moments);
       _letter = Letter.read(moments);
+      _reminderHour = hour;
+      _remindersEnabled = remindersEnabled;
+      _declinedNudges = declined;
+      _acceptedThisMonth = accepted;
+      _proof = proof;
       _reminderTime =
           '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
       _loaded = true;
@@ -81,6 +112,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final colors = themeProvider.colors;
     final onboarding = context.watch<OnboardingState>();
     final paid = context.watch<UserState>().hasSubscription;
+    final plan = _plan(onboarding);
 
     // Every screen draws the shared background itself; without it this one
     // rendered on bare black.
@@ -123,6 +155,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
               const SizedBox(height: 16),
               if (_letter != null) ...[
                 _letterCard(l10n, colors, _letter!),
+                const SizedBox(height: 16),
+              ],
+              if (!plan.isEmpty || _acceptedThisMonth != null) ...[
+                _planCard(l10n, colors, plan),
                 const SizedBox(height: 16),
               ],
             ] else ...[
@@ -177,15 +213,23 @@ class _InsightsScreenState extends State<InsightsScreen> {
         color: colors.textSecondary,
       );
 
-  Widget _card({required AppColorScheme colors, required Widget child}) {
+  /// [emphasis] is the plan card's only distinction (§5.3 calls it the most
+  /// prominent card on the screen): a denser glass and a brighter edge. It buys
+  /// prominence without a fourth text size, which is what the last redesign
+  /// spent it on and had to take back.
+  Widget _card({
+    required AppColorScheme colors,
+    required Widget child,
+    bool emphasis = false,
+  }) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: colors.cardBackground.withValues(alpha: 0.55),
+        color: colors.cardBackground.withValues(alpha: emphasis ? 0.78 : 0.55),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: colors.borderCard.withValues(alpha: 0.4),
-          width: 0.5,
+          color: colors.borderCard.withValues(alpha: emphasis ? 0.75 : 0.4),
+          width: emphasis ? 1.0 : 0.5,
         ),
       ),
       child: child,
@@ -741,6 +785,258 @@ class _InsightsScreenState extends State<InsightsScreen> {
       LetterQuestion.whatWasDifferent => l10n.letterQuestionDifferent,
       LetterQuestion.whatWouldYouMiss => l10n.letterQuestionMiss,
     };
+  }
+
+  /// This month's plan, read from last month (§6.2).
+  ///
+  /// Derived in build rather than stored, so the moment a nudge is accepted —
+  /// a habit set aside, an action pinned, a focus area adopted — the card
+  /// re-reads the state that just changed and the suggestion disappears
+  /// because it is no longer true, not because it was crossed off a list.
+  MonthPlan _plan(OnboardingState onboarding) {
+    return MonthPlan.read(
+      monthKey: SeasonService.monthKeyFor(DateTime.now()),
+      lastMonth: _lastMonth,
+      activeHabits: onboarding.userHabits,
+      customHabits: onboarding.customHabits,
+      focusAreas: onboarding.focusAreas,
+      reminderHour: _reminderHour,
+      remindersEnabled: _remindersEnabled,
+      hasPinnedHabit: onboarding.pinnedHabit != null,
+      declinedIds: _declinedNudges,
+    );
+  }
+
+  /// The plan (§6.2) — the card that changes the subscription from reviewing
+  /// the past to planning the next month.
+  ///
+  /// It opens with proof, when there is any: whatever the user changed last
+  /// time, and what happened over the four weeks that followed (§6.3). That is
+  /// the thing that still has something to say in month eight, once the
+  /// observations have stopped being novel.
+  ///
+  /// One decision, not three. The top-ranked suggestion is the whole card;
+  /// the others wait behind a line the user has to ask for. Three nudges and
+  /// six buttons read as a dashboard demanding optimisation, which is the
+  /// pressure this app exists to remove.
+  Widget _planCard(
+    AppLocalizations l10n,
+    AppColorScheme colors,
+    MonthPlan plan,
+  ) {
+    final locale = Localizations.localeOf(context).toString();
+    final month = DateFormat.LLLL(locale).format(DateTime.now());
+    final accepted = _acceptedThisMonth;
+    final remaining = accepted == null && plan.nudges.isNotEmpty
+        ? plan.nudges.length - 1
+        : plan.nudges.length;
+
+    return _card(
+      colors: colors,
+      emphasis: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _eyebrow(l10n.planLabel(month.toUpperCase()), colors),
+          const SizedBox(height: 12),
+          if (_proof != null) ...[
+            Text(_proofLines(l10n, _proof!), style: _cardBody(colors)),
+            const SizedBox(height: 16),
+            Container(
+              height: 1,
+              color: colors.textDisabled.withValues(alpha: 0.25),
+            ),
+            const SizedBox(height: 16),
+          ],
+          if (accepted != null)
+            // One decision a month. Something has already been changed, so the
+            // card stops asking and waits to see what it did.
+            Text(
+              l10n.planDone,
+              style: _cardBody(colors).copyWith(color: colors.textPrimary),
+            )
+          else
+            _nudge(l10n, colors, plan.nudges.first),
+          if (remaining > 0) ...[
+            const SizedBox(height: 16),
+            GestureDetector(
+              onTap: () => setState(() => _showAllNudges = !_showAllNudges),
+              child: Text(
+                l10n.planMore(remaining),
+                style: _cardMeta(colors).copyWith(color: colors.ctaPrimary),
+              ),
+            ),
+            if (_showAllNudges)
+              for (final nudge
+                  in plan.nudges.skip(accepted == null ? 1 : 0)) ...[
+                const SizedBox(height: 18),
+                _nudge(l10n, colors, nudge),
+              ],
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _nudge(
+    AppLocalizations l10n,
+    AppColorScheme colors,
+    PlanNudge nudge,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(_nudgeText(l10n, nudge), style: _cardTitle(colors)),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            _planAction(
+              _acceptLabel(l10n, nudge.kind),
+              colors,
+              filled: true,
+              onPressed: () => _accept(nudge, l10n),
+            ),
+            _planAction(
+              l10n.planDecline,
+              colors,
+              filled: false,
+              onPressed: () => _decline(nudge),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _planAction(
+    String label,
+    AppColorScheme colors, {
+    required bool filled,
+    required VoidCallback onPressed,
+  }) {
+    return CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      minimumSize: Size.zero,
+      borderRadius: BorderRadius.circular(18),
+      color: filled ? colors.ctaPrimary : null,
+      onPressed: _accepting ? null : onPressed,
+      child: Text(
+        label,
+        style: AppTextStyles.body(context).copyWith(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: filled ? const Color(0xFFFFFFFF) : colors.textPrimary,
+        ),
+      ),
+    );
+  }
+
+  String _nudgeText(AppLocalizations l10n, PlanNudge nudge) {
+    final locale = Localizations.localeOf(context).toString();
+    return switch (nudge.kind) {
+      NudgeKind.moveReminder => l10n.planNudgeMoveReminder(
+          DateFormat.jm(locale).format(DateTime(2000, 1, 1, nudge.hour!)),
+        ),
+      NudgeKind.setAside => l10n.planNudgeSetAside(
+          localizeHabitName(nudge.habitName!, l10n),
+          nudge.count,
+        ),
+      NudgeKind.keepAnchor => l10n.planNudgeKeepAnchor(
+          localizeHabitName(nudge.habitName!, l10n),
+          nudge.count,
+        ),
+      NudgeKind.addFocusArea => l10n.planNudgeAddFocus(
+          localizeCategoryName(nudge.focusArea!, l10n),
+          nudge.count,
+        ),
+    };
+  }
+
+  String _acceptLabel(AppLocalizations l10n, NudgeKind kind) {
+    return switch (kind) {
+      NudgeKind.moveReminder => l10n.planAcceptMoveReminder,
+      NudgeKind.setAside => l10n.planAcceptSetAside,
+      NudgeKind.keepAnchor => l10n.planAcceptKeepAnchor,
+      NudgeKind.addFocusArea => l10n.planAcceptAddFocus,
+    };
+  }
+
+  /// "In July you moved your reminder to 10pm. 22 moments since, up from 14."
+  ///
+  /// Reports a fall as plainly as a rise. A measurement that only ever
+  /// confirms the change was good is not a measurement, and the user would
+  /// work that out by month three.
+  String _proofLines(AppLocalizations l10n, PlanProof proof) {
+    final locale = Localizations.localeOf(context).toString();
+    final date = DateFormat.MMMMd(locale).format(proof.acceptedOn);
+    final what = switch (proof.kind) {
+      NudgeKind.moveReminder => l10n.planProofMovedReminder(
+          date,
+          DateFormat.jm(locale).format(
+            DateTime(2000, 1, 1, int.tryParse(proof.subject) ?? 0),
+          ),
+        ),
+      NudgeKind.setAside =>
+        l10n.planProofSetAside(date, localizeHabitName(proof.subject, l10n)),
+      NudgeKind.keepAnchor =>
+        l10n.planProofPinned(date, localizeHabitName(proof.subject, l10n)),
+      NudgeKind.addFocusArea => l10n.planProofAddedFocus(
+          date,
+          localizeCategoryName(proof.subject, l10n),
+        ),
+    };
+
+    final result = proof.after > proof.before
+        ? l10n.planProofUp(proof.after, proof.before)
+        : proof.after < proof.before
+            ? l10n.planProofDown(proof.after, proof.before)
+            : l10n.planProofSame(proof.after);
+
+    return '$what $result';
+  }
+
+  /// Accepting writes the setting, then records the change and the count it
+  /// will be measured against (§6.3).
+  Future<void> _accept(PlanNudge nudge, AppLocalizations l10n) async {
+    if (_accepting) return;
+    setState(() => _accepting = true);
+
+    final onboarding = context.read<OnboardingState>();
+    final monthKey = SeasonService.monthKeyFor(DateTime.now());
+
+    switch (nudge.kind) {
+      case NudgeKind.moveReminder:
+        await NotificationPreferencesService.setHour(nudge.hour!);
+        await NotificationPreferencesService.setMinute(0);
+        await NotificationScheduler.rescheduleAll(l10n);
+      case NudgeKind.setAside:
+        await onboarding.setAsideHabits([nudge.habitName!]);
+      case NudgeKind.keepAnchor:
+        await onboarding.pinHabit(nudge.habitName!);
+      case NudgeKind.addFocusArea:
+        await onboarding.adoptFocusArea(nudge.focusArea!);
+    }
+
+    // Recorded after the write, so a failure to change the setting can never
+    // leave a measurement running against a change that didn't happen.
+    await PlanService.accept(nudge, monthKey);
+    if (!mounted) return;
+    setState(() {
+      _accepting = false;
+      _showAllNudges = false;
+    });
+    await _load();
+  }
+
+  Future<void> _decline(PlanNudge nudge) async {
+    await PlanService.decline(
+      nudge,
+      SeasonService.monthKeyFor(DateTime.now()),
+    );
+    if (!mounted) return;
+    await _load();
   }
 
   /// The drift warning (§6.1) — the only forward-looking thing in the app.

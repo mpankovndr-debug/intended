@@ -878,6 +878,120 @@ abstract class AppLocalizations {
   /// **'Which of these would you miss if it stopped?'**
   String get letterQuestionMiss;
 
+  /// Month name arrives already uppercased by the caller, so the label matches the other all-caps card eyebrows without a locale-specific casing rule here.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR {month} PLAN'**
+  String planLabel(String month);
+
+  /// No description provided for @planNudgeMoveReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Move your reminder to {time}. That\'s when most of last month\'s moments landed.'**
+  String planNudgeMoveReminder(String time);
+
+  /// No description provided for @planNudgeSetAside.
+  ///
+  /// In en, this message translates to:
+  /// **'Set aside {habit}. {count, plural, =0{You didn\'t reach for it once last month} =1{You reached for it once last month} other{You reached for it {count} times last month}}.'**
+  String planNudgeSetAside(String habit, int count);
+
+  /// No description provided for @planNudgeKeepAnchor.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep {habit} at the top. {count, plural, =1{You reached for it once} other{You reached for it {count} times}} — more than anything else.'**
+  String planNudgeKeepAnchor(String habit, int count);
+
+  /// No description provided for @planNudgeAddFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {area} to your focus. {count, plural, =1{One of last month\'s moments was} other{{count} of last month\'s moments were}} already there.'**
+  String planNudgeAddFocus(String area, int count);
+
+  /// No description provided for @planAcceptMoveReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Move it'**
+  String get planAcceptMoveReminder;
+
+  /// No description provided for @planAcceptSetAside.
+  ///
+  /// In en, this message translates to:
+  /// **'Set it aside'**
+  String get planAcceptSetAside;
+
+  /// No description provided for @planAcceptKeepAnchor.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin it'**
+  String get planAcceptKeepAnchor;
+
+  /// No description provided for @planAcceptAddFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Add it'**
+  String get planAcceptAddFocus;
+
+  /// No description provided for @planDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Not this month'**
+  String get planDecline;
+
+  /// No description provided for @planMore.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One more when you\'re ready} other{{count} more when you\'re ready}}'**
+  String planMore(int count);
+
+  /// No description provided for @planDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done. In four weeks this page will tell you whether it changed anything.'**
+  String get planDone;
+
+  /// No description provided for @planProofMovedReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'On {date} you moved your reminder to {time}.'**
+  String planProofMovedReminder(String date, String time);
+
+  /// No description provided for @planProofSetAside.
+  ///
+  /// In en, this message translates to:
+  /// **'On {date} you set aside {habit}.'**
+  String planProofSetAside(String date, String habit);
+
+  /// No description provided for @planProofPinned.
+  ///
+  /// In en, this message translates to:
+  /// **'On {date} you pinned {habit}.'**
+  String planProofPinned(String date, String habit);
+
+  /// No description provided for @planProofAddedFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'On {date} you added {area} to your focus.'**
+  String planProofAddedFocus(String date, String area);
+
+  /// No description provided for @planProofUp.
+  ///
+  /// In en, this message translates to:
+  /// **'{after, plural, =1{1 moment} other{{after} moments}} in the four weeks after, up from {before}.'**
+  String planProofUp(int after, int before);
+
+  /// No description provided for @planProofDown.
+  ///
+  /// In en, this message translates to:
+  /// **'{after, plural, =1{1 moment} other{{after} moments}} in the four weeks after, down from {before}.'**
+  String planProofDown(int after, int before);
+
+  /// No description provided for @planProofSame.
+  ///
+  /// In en, this message translates to:
+  /// **'{after, plural, =1{1 moment} other{{after} moments}} in the four weeks after — the same as the four weeks before.'**
+  String planProofSame(int after);
+
   /// No description provided for @insightsGapsShortening.
   ///
   /// In en, this message translates to:
