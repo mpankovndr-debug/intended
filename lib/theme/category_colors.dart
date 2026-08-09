@@ -144,7 +144,7 @@ class CategoryColors {
   /// enough: at the same luminance a sage at full tuning saturation is much
   /// more vivid than a violet, and reads as "selected" rather than "kept".
   /// Pulling saturation back makes the tint whisper on every hue.
-  static const double _washSaturationFactor = 0.34;
+  static const double _washSaturationFactor = 0.28;
 
   /// The very pale fill behind a completed card (§5.1).
   ///
@@ -167,8 +167,16 @@ class CategoryColors {
       hue: hue,
       saturation: base * _washSaturationFactor,
       targetLuminance: target.clamp(0.0, 1.0),
-    );
+    ).withValues(alpha: _washAlpha);
   }
+
+  /// The wash stays translucent so the card keeps its frosted-glass depth —
+  /// an opaque fill flattens a completed card into a solid slab beside its
+  /// still-glassy neighbours. Alpha is safe here in a way it was not for the
+  /// full-strength swatch: this tint is already light, so blending it toward
+  /// the background keeps it a paler version of itself rather than pulling it
+  /// toward grey.
+  static const double _washAlpha = 0.62;
 
   /// Outline for a completed card. This is the state's *structural* cue, so
   /// it must not be the only carrier of meaning — colour alone fails for

@@ -281,6 +281,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitsSuggestions => 'ПРЕДЛОЖЕНИЯ';
 
   @override
+  String get intentionGentleMornings => 'Спокойное начало дня';
+
+  @override
+  String get intentionAnchorsForHardDays => 'Устойчивее в трудные дни';
+
+  @override
+  String get intentionQuietFocus => 'Сосредоточенность без выгорания';
+
+  @override
+  String get intentionWindingDown => 'Отпускать день';
+
+  @override
+  String get intentionYourOwnWay => 'Свой путь';
+
+  @override
+  String get habitsAddYourOwn => 'Добавить своё';
+
+  @override
   String get habitsCreateCustom => 'Создать свою привычку';
 
   @override

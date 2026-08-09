@@ -59,7 +59,15 @@ void main() {
     for (final theme in AppTheme.values) {
       final surface = AppColors.of(theme).cardBackground;
       for (final category in CategoryColors.categories) {
-        final wash = CategoryColors.wash(category, theme, isDark: theme.isDark);
+        final raw = CategoryColors.wash(category, theme, isDark: theme.isDark);
+        // Translucent by design (keeps the frosted look), so flatten it over
+        // the card before judging how strongly it reads.
+        final wash = Color.from(
+          alpha: 1,
+          red: raw.r * raw.a + surface.r * (1 - raw.a),
+          green: raw.g * raw.a + surface.g * (1 - raw.a),
+          blue: raw.b * raw.a + surface.b * (1 - raw.a),
+        );
         final ratio = _contrast(wash, surface);
         expect(
           ratio,
@@ -68,11 +76,16 @@ void main() {
               '(${ratio.toStringAsFixed(2)}:1)',
         );
         // Lightness alone does not make a tint quiet — chroma does. A vivid
-        // wash reads as "selected"; §5.1 wants "kept".
+        // wash reads as "selected"; §5.1 wants "kept". Measured as how much
+        // chroma the wash *adds*: some themes have a saturated card colour of
+        // their own, and absolute saturation would penalise them for it.
+        final added = HSLColor.fromColor(wash).saturation -
+            HSLColor.fromColor(surface).saturation;
         expect(
-          HSLColor.fromColor(wash).saturation,
-          lessThan(0.25),
-          reason: '${theme.name} / $category wash carries too much chroma',
+          added,
+          lessThan(0.18),
+          reason: '${theme.name} / $category wash adds too much chroma '
+              '(+${added.toStringAsFixed(2)})',
         );
       }
     }

@@ -1,3 +1,5 @@
+import '../l10n/app_localizations.dart';
+
 import 'package:flutter/material.dart';
 
 enum IntentionPathId {
@@ -104,5 +106,23 @@ class IntentionPath {
 
   static IntentionPath getById(IntentionPathId id) {
     return _all.firstWhere((p) => p.id == id);
+  }
+
+  /// The user's intention, phrased as something they're doing — this is what
+  /// heads the Today screen (§4.1).
+  ///
+  /// Deliberately not the path's own title: "Anchors for Hard Days" reads as a
+  /// product category, while "Steadier on hard days" reads as an aim someone
+  /// holds. §4.1's claim is that seeing your *own* intention creates
+  /// attachment, so testing it with a feature name would test a weaker thing
+  /// and tell us nothing when it doesn't move.
+  static String phraseFor(IntentionPathId id, AppLocalizations l10n) {
+    return switch (id) {
+      IntentionPathId.gentleMornings => l10n.intentionGentleMornings,
+      IntentionPathId.anchorsForHardDays => l10n.intentionAnchorsForHardDays,
+      IntentionPathId.quietFocus => l10n.intentionQuietFocus,
+      IntentionPathId.windingDown => l10n.intentionWindingDown,
+      IntentionPathId.yourOwnWay => l10n.intentionYourOwnWay,
+    };
   }
 }

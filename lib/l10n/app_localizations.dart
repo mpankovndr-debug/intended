@@ -584,6 +584,42 @@ abstract class AppLocalizations {
   /// **'SUGGESTIONS'**
   String get habitsSuggestions;
 
+  /// No description provided for @intentionGentleMornings.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting the day gently'**
+  String get intentionGentleMornings;
+
+  /// No description provided for @intentionAnchorsForHardDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Steadier on hard days'**
+  String get intentionAnchorsForHardDays;
+
+  /// No description provided for @intentionQuietFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Focused, without the burnout'**
+  String get intentionQuietFocus;
+
+  /// No description provided for @intentionWindingDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Letting the day go'**
+  String get intentionWindingDown;
+
+  /// No description provided for @intentionYourOwnWay.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own way'**
+  String get intentionYourOwnWay;
+
+  /// No description provided for @habitsAddYourOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'Add something of your own'**
+  String get habitsAddYourOwn;
+
   /// No description provided for @habitsCreateCustom.
   ///
   /// In en, this message translates to:

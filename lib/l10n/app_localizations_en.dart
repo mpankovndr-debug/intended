@@ -281,6 +281,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitsSuggestions => 'SUGGESTIONS';
 
   @override
+  String get intentionGentleMornings => 'Starting the day gently';
+
+  @override
+  String get intentionAnchorsForHardDays => 'Steadier on hard days';
+
+  @override
+  String get intentionQuietFocus => 'Focused, without the burnout';
+
+  @override
+  String get intentionWindingDown => 'Letting the day go';
+
+  @override
+  String get intentionYourOwnWay => 'Your own way';
+
+  @override
+  String get habitsAddYourOwn => 'Add something of your own';
+
+  @override
   String get habitsCreateCustom => 'Create custom habit';
 
   @override

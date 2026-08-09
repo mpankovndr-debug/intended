@@ -21,6 +21,7 @@ import 'l10n/app_localizations.dart';
 import 'utils/habit_l10n.dart';
 import 'theme/app_colors.dart';
 import 'theme/category_colors.dart';
+import 'models/intention_path.dart';
 import 'theme/theme_provider.dart';
 import 'onboarding_v2/onboarding_state.dart';
 import 'onboarding_v2/focus_areas_screen.dart';
@@ -1463,39 +1464,6 @@ class _HabitsScreenState extends State<HabitsScreen>
   late Animation<double> _fadeContent;
   late Animation<Offset> _slideContent;
 
-  static List<String> _getDailyMessages(AppLocalizations l10n) => [
-        l10n.dailyMessage1,
-        l10n.dailyMessage2,
-        l10n.dailyMessage3,
-        l10n.dailyMessage4,
-        l10n.dailyMessage5,
-        l10n.dailyMessage6,
-        l10n.dailyMessage7,
-        l10n.dailyMessage8,
-        l10n.dailyMessage9,
-        l10n.dailyMessage10,
-        l10n.dailyMessage11,
-        l10n.dailyMessage12,
-        l10n.dailyMessage13,
-        l10n.dailyMessage14,
-        l10n.dailyMessage15,
-        l10n.dailyMessage16,
-        l10n.dailyMessage17,
-        l10n.dailyMessage18,
-        l10n.dailyMessage19,
-        l10n.dailyMessage20,
-        l10n.dailyMessage21,
-        l10n.dailyMessage22,
-        l10n.dailyMessage23,
-      ];
-
-  String _getTodaysMessage(AppLocalizations l10n) {
-    final messages = _getDailyMessages(l10n);
-    final now = DateTime.now();
-    final dayOfYear = now.difference(DateTime(now.year, 1, 1)).inDays;
-    return messages[dayOfYear % messages.length];
-  }
-
   Future<void> _checkAndTriggerEntrance() async {
     final prefs = await SharedPreferences.getInstance();
     if (!mounted) return;
@@ -1751,7 +1719,14 @@ class _HabitsScreenState extends State<HabitsScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _getTodaysMessage(l10n),
+                            IntentionPath.phraseFor(
+                              IntentionPathId.fromKey(
+                                context
+                                    .watch<OnboardingState>()
+                                    .selectedIntentionPath,
+                              ),
+                              l10n,
+                            ),
                             style: TextStyle(
                               fontSize: Responsive.sp(22),
                               fontWeight: FontWeight.w600,
@@ -1868,21 +1843,6 @@ class _HabitsScreenState extends State<HabitsScreen>
                               children: [
                                 // Today's Suggestions section
                                 if (unpinned.isNotEmpty) ...[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 16),
-                                    child: Text(
-                                      l10n.habitsSuggestions,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: colors.ctaPrimary,
-                                        letterSpacing: 1.0,
-                                        fontFamily:
-                                            AppTextStyles.bodyFont(context),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 12),
                                   ...unpinned.asMap().entries.map((entry) {
                                     final habit = entry.value;
                                     final habitCard = _HabitCard(
