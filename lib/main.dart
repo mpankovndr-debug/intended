@@ -6,7 +6,6 @@ import 'dart:ui' show ImageFilter;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
-import 'package:dotted_border/dotted_border.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -1893,80 +1892,43 @@ class _HabitsScreenState extends State<HabitsScreen>
 
                                   if (customCount < maxCustom ||
                                       userSt.hasSubscription) {
+                                    // A quiet line, not a dashed box (§5.1).
+                                    // A large empty container reads as a slot
+                                    // waiting to be filled, and over-collecting
+                                    // in week one is the documented abandonment
+                                    // path. Low visual weight, but the tap
+                                    // target stays full-width and generous so
+                                    // it is never hard to find — this becomes
+                                    // the only way to add once §7 removes
+                                    // "Browse all habits".
                                     return GestureDetector(
-                                        onTap: () =>
-                                            _createCustomHabit(context),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(24),
-                                          child: BackdropFilter(
-                                            filter: ImageFilter.blur(
-                                                sigmaX: 12, sigmaY: 12),
-                                            child: DottedBorder(
-                                              borderType: BorderType.RRect,
-                                              radius: const Radius.circular(24),
-                                              dashPattern: const [8, 4],
-                                              color: colors.ctaPrimary
-                                                  .withOpacity(0.20),
-                                              strokeWidth: 2,
-                                              child: Container(
-                                                width: double.infinity,
-                                                height: 96,
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
-                                                    colors: [
-                                                      colors.modalBg1
-                                                          .withOpacity(0.40),
-                                                      colors.modalBg1
-                                                          .withOpacity(0.20),
-                                                    ],
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(24),
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                      width: 36,
-                                                      height: 36,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: isDark
-                                                            ? colors.ctaPrimary.withOpacity(0.15)
-                                                            : const Color(0xFFFFFFFF).withOpacity(0.50),
-                                                      ),
-                                                      child: Icon(
-                                                        CupertinoIcons.add,
-                                                        size: 18,
-                                                        color:
-                                                            colors.ctaPrimary,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    Text(
-                                                      l10n.habitsCreateCustom,
-                                                      style: TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        color:
-                                                            colors.ctaPrimary,
-                                                        fontFamily:
-                                                            AppTextStyles
-                                                                .bodyFont(
-                                                                    context),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () => _createCustomHabit(context),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 14),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              CupertinoIcons.add,
+                                              size: 16,
+                                              color: colors.textSecondary,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              l10n.habitsAddYourOwn,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                                color: colors.textSecondary,
+                                                fontFamily:
+                                                    AppTextStyles.bodyFont(
+                                                        context),
                                               ),
                                             ),
-                                          ),
+                                          ],
                                         ),
+                                      ),
                                     );
                                   }
 
