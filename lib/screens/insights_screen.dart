@@ -5,13 +5,16 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../models/moment.dart';
 import '../models/drift.dart';
+import '../models/letter.dart';
 import '../models/season.dart';
 import '../services/season_service.dart';
 import '../onboarding_v2/onboarding_state.dart';
 import '../services/moments_service.dart';
 import '../services/notification_preferences_service.dart';
+import '../state/user_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
+import '../utils/habit_l10n.dart';
 import '../utils/text_styles.dart';
 import '../main.dart' show AppBackground;
 import '../theme/category_colors.dart';
@@ -37,6 +40,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
   String _reminderTime = '';
   Season? _season;
   Drift? _drift;
+  Letter? _letter;
   bool _loaded = false;
 
   @override
@@ -63,6 +67,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       _moments = moments;
       _season = season;
       _drift = Drift.read(moments);
+      _letter = Letter.read(moments);
       _reminderTime =
           '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
       _loaded = true;
@@ -75,6 +80,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final themeProvider = context.watch<ThemeProvider>();
     final colors = themeProvider.colors;
     final onboarding = context.watch<OnboardingState>();
+    final paid = context.watch<UserState>().hasSubscription;
 
     // Every screen draws the shared background itself; without it this one
     // rendered on bare black.
@@ -91,17 +97,35 @@ class _InsightsScreenState extends State<InsightsScreen> {
           else ...[
             _monthCard(l10n, colors, themeProvider),
             const SizedBox(height: 16),
+            // Day one belongs to neither tier. There is genuinely nothing
+            // behind a lock yet, so upgrading here would unlock three empty
+            // cards — the Day-0 conversion window belongs to the onboarding
+            // paywall instead (§5.4).
             if (_moments.isEmpty) ...[
               _startingWithCard(l10n, colors, onboarding),
               const SizedBox(height: 16),
               _exampleCard(l10n, colors, themeProvider),
               const SizedBox(height: 16),
-            ] else ...[
-              // Only when there is something honest to say (§6.1).
+            ] else if (paid) ...[
+              // Free and paid share the same cards and the same quality; paid
+              // has more of them (§5.3). Nothing here is a degraded copy of
+              // something better.
+              //
+              // Each of these returns null when it has nothing true to say, and
+              // then simply isn't on the screen. A section that appears with a
+              // reworded promise inside it is the failure §5.3 names: the user
+              // bought a promise and received a promise.
               if (_drift != null) ...[
                 _driftCard(l10n, colors, _drift!),
                 const SizedBox(height: 16),
               ],
+              _seasonCard(l10n, colors),
+              const SizedBox(height: 16),
+              if (_letter != null) ...[
+                _letterCard(l10n, colors, _letter!),
+                const SizedBox(height: 16),
+              ],
+            ] else ...[
               _seasonCard(l10n, colors),
               const SizedBox(height: 16),
               _teaserCard(l10n, colors, onboarding),
@@ -636,6 +660,87 @@ class _InsightsScreenState extends State<InsightsScreen> {
         ],
       ),
     );
+  }
+
+  /// The letter (§5.3) — three observations and a question.
+  ///
+  /// This slot used to hold a stock quote ("Consistency is important, but so is
+  /// self-compassion"), which was true of everyone and therefore about no one.
+  /// Every line here comes from the user's own month, and any line whose data
+  /// isn't there is simply absent rather than softened into a generality.
+  ///
+  /// All four lines are one size. The question carries in full-strength text
+  /// against the observations' secondary, so it lands as the point of the card
+  /// without being a headline — it is a line of a letter, not a banner.
+  Widget _letterCard(
+    AppLocalizations l10n,
+    AppColorScheme colors,
+    Letter letter,
+  ) {
+    return _card(
+      colors: colors,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _eyebrow(l10n.letterLabel, colors),
+          const SizedBox(height: 14),
+          for (final line in letter.lines) ...[
+            Text(
+              _letterLine(l10n, line),
+              style: _cardBody(colors).copyWith(height: 1.5),
+            ),
+            const SizedBox(height: 10),
+          ],
+          const SizedBox(height: 8),
+          Text(
+            _letterQuestion(l10n, letter.question),
+            style: _cardBody(colors).copyWith(
+              height: 1.5,
+              color: colors.textPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _letterLine(AppLocalizations l10n, LetterLine line) {
+    final locale = Localizations.localeOf(context).toString();
+    return switch (line.kind) {
+      // Two forms of the same day, because the languages need different ones:
+      // English can say "on Friday", Russian cannot put a nominative weekday
+      // there, so it names the date. Each locale's string uses one and ignores
+      // the other.
+      LetterLineKind.cameBack => l10n.letterCameBack(
+          DateFormat.EEEE(locale).format(line.day!),
+          DateFormat.MMMMd(locale).format(line.day!),
+          line.count,
+        ),
+      LetterLineKind.anchor => l10n.letterAnchor(
+          localizeHabitName(line.habitName!, l10n),
+          line.count,
+        ),
+      LetterLineKind.mood => line.secondCount == 0
+          ? l10n.letterMoodGladOnly(line.count)
+          : line.count == 0
+              ? l10n.letterMoodEffortOnly(line.secondCount)
+              : l10n.letterMood(line.count, line.secondCount),
+      LetterLineKind.oneBigDay => l10n.letterOneBigDay(
+          DateFormat.MMMMd(locale).format(line.day!),
+          line.count,
+        ),
+      LetterLineKind.showedUp => l10n.letterShowedUp(line.count),
+    };
+  }
+
+  String _letterQuestion(AppLocalizations l10n, LetterQuestion question) {
+    return switch (question) {
+      LetterQuestion.whatBroughtYouBack => l10n.letterQuestionBroughtBack,
+      LetterQuestion.whatMakesItEasier => l10n.letterQuestionEasier,
+      LetterQuestion.whatDoTheyShare => l10n.letterQuestionShare,
+      LetterQuestion.whatWasDifferent => l10n.letterQuestionDifferent,
+      LetterQuestion.whatWouldYouMiss => l10n.letterQuestionMiss,
+    };
   }
 
   /// The drift warning (§6.1) — the only forward-looking thing in the app.

@@ -399,6 +399,125 @@ class AppLocalizationsRu extends AppLocalizations {
       'Вы двигались между делами, следуя за тем, что нужно.';
 
   @override
+  String get letterLabel => 'ВАШЕ ПИСЬМО';
+
+  @override
+  String letterCameBack(String day, String date, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count тихих дней',
+      many: '$count тихих дней',
+      few: '$count тихих дней',
+      one: '$count тихого дня',
+    );
+    return 'Вы вернулись $date, после $_temp0.';
+  }
+
+  @override
+  String letterAnchor(String habit, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count раза',
+      many: '$count раз',
+      few: '$count раза',
+      one: '$count раз',
+    );
+    return 'Больше всего в этом месяце было «$habit» — $_temp0.';
+  }
+
+  @override
+  String letterMood(int glad, int effort) {
+    String _temp0 = intl.Intl.pluralLogic(
+      glad,
+      locale: localeName,
+      other: '$glad момента были',
+      many: '$glad моментов были',
+      few: '$glad момента были',
+      one: '$glad момент был',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      effort,
+      locale: localeName,
+      other: '$effort дались',
+      many: '$effort дались',
+      few: '$effort дались',
+      one: '$effort дался',
+    );
+    return '$_temp0 в радость, $_temp1 непросто.';
+  }
+
+  @override
+  String letterMoodGladOnly(int glad) {
+    String _temp0 = intl.Intl.pluralLogic(
+      glad,
+      locale: localeName,
+      other: '$glad момента были',
+      many: '$glad моментов были',
+      few: '$glad момента были',
+      one: '$glad момент был',
+    );
+    return '$_temp0 в радость.';
+  }
+
+  @override
+  String letterMoodEffortOnly(int effort) {
+    String _temp0 = intl.Intl.pluralLogic(
+      effort,
+      locale: localeName,
+      other: '$effort момента дались',
+      many: '$effort моментов дались',
+      few: '$effort момента дались',
+      one: '$effort момент дался',
+    );
+    return '$_temp0 непросто.';
+  }
+
+  @override
+  String letterOneBigDay(String date, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count дела',
+      many: '$count дел',
+      few: '$count дела',
+      one: '$count дело',
+    );
+    return '$date вы сделали $_temp0 за один день.';
+  }
+
+  @override
+  String letterShowedUp(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count разных дня',
+      many: '$count разных дней',
+      few: '$count разных дня',
+      one: '$count день',
+    );
+    return 'Вы были здесь $_temp0.';
+  }
+
+  @override
+  String get letterQuestionBroughtBack => 'Что вернуло вас в тот день?';
+
+  @override
+  String get letterQuestionEasier =>
+      'Почему именно к этому легче потянуться, чем к остальному?';
+
+  @override
+  String get letterQuestionShare => 'Что общего у тех, которым вы были рады?';
+
+  @override
+  String get letterQuestionDifferent => 'Чем тот день отличался от других?';
+
+  @override
+  String get letterQuestionMiss =>
+      'Чего бы вам не хватало, если бы это прекратилось?';
+
+  @override
   String get insightsGapsShortening => 'И они становятся короче.';
 
   @override

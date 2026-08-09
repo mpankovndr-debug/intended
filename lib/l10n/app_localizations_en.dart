@@ -399,6 +399,104 @@ class AppLocalizationsEn extends AppLocalizations {
       'You moved between things, following what you needed.';
 
   @override
+  String get letterLabel => 'YOUR LETTER';
+
+  @override
+  String letterCameBack(String day, String date, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count quiet days',
+      one: 'one quiet day',
+    );
+    return 'You came back on $day, after $_temp0.';
+  }
+
+  @override
+  String letterAnchor(String habit, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times',
+      one: 'once',
+    );
+    return 'Most of the month was $habit — $_temp0.';
+  }
+
+  @override
+  String letterMood(int glad, int effort) {
+    String _temp0 = intl.Intl.pluralLogic(
+      effort,
+      locale: localeName,
+      other: '$effort took effort',
+      one: 'One took effort',
+    );
+    return '$glad of them you were glad you did. $_temp0.';
+  }
+
+  @override
+  String letterMoodGladOnly(int glad) {
+    String _temp0 = intl.Intl.pluralLogic(
+      glad,
+      locale: localeName,
+      other: '$glad of them you were glad you did',
+      one: 'One of them you were glad you did',
+    );
+    return '$_temp0.';
+  }
+
+  @override
+  String letterMoodEffortOnly(int effort) {
+    String _temp0 = intl.Intl.pluralLogic(
+      effort,
+      locale: localeName,
+      other: '$effort of them took effort',
+      one: 'One of them took effort',
+    );
+    return '$_temp0.';
+  }
+
+  @override
+  String letterOneBigDay(String date, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things',
+      one: 'one thing',
+    );
+    return 'On $date you did $_temp0 in a single day.';
+  }
+
+  @override
+  String letterShowedUp(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count different days',
+      one: 'one day',
+    );
+    return 'You showed up on $_temp0.';
+  }
+
+  @override
+  String get letterQuestionBroughtBack => 'What brought you back that day?';
+
+  @override
+  String get letterQuestionEasier =>
+      'What makes that one easier to reach for than the rest?';
+
+  @override
+  String get letterQuestionShare =>
+      'What do the ones you were glad about have in common?';
+
+  @override
+  String get letterQuestionDifferent => 'What was different about that day?';
+
+  @override
+  String get letterQuestionMiss =>
+      'Which of these would you miss if it stopped?';
+
+  @override
   String get insightsGapsShortening => 'And they\'re getting shorter.';
 
   @override

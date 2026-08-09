@@ -148,6 +148,60 @@
       "count": { "type": "int" }
     }
   },
+  "letterLabel": "YOUR LETTER",
+  "letterCameBack": "You came back on {day}, after {count, plural, =1{one quiet day} other{{count} quiet days}}.",
+  "letterAnchor": "Most of the month was {habit} — {count, plural, =1{once} other{{count} times}}.",
+  "letterMood": "{glad} of them you were glad you did. {effort, plural, =1{One took effort} other{{effort} took effort}}.",
+  "letterMoodGladOnly": "{glad, plural, =1{One of them you were glad you did} other{{glad} of them you were glad you did}}.",
+  "letterMoodEffortOnly": "{effort, plural, =1{One of them took effort} other{{effort} of them took effort}}.",
+  "letterOneBigDay": "On {date} you did {count, plural, =1{one thing} other{{count} things}} in a single day.",
+  "letterShowedUp": "You showed up on {count, plural, =1{one day} other{{count} different days}}.",
+  "letterQuestionBroughtBack": "What brought you back that day?",
+  "letterQuestionEasier": "What makes that one easier to reach for than the rest?",
+  "letterQuestionShare": "What do the ones you were glad about have in common?",
+  "letterQuestionDifferent": "What was different about that day?",
+  "letterQuestionMiss": "Which of these would you miss if it stopped?",
+  "@letterCameBack": {
+    "description": "Both a weekday and a date are supplied. English names the weekday — a reader can still place 'Friday' a month later. Russian names the date instead: its weekday names decline and gender the verb, so 'you came back on Friday' cannot be built from a nominative weekday. Each locale uses the one it needs.",
+    "placeholders": {
+      "day": { "type": "String" },
+      "date": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "@letterAnchor": {
+    "placeholders": {
+      "habit": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "@letterMood": {
+    "placeholders": {
+      "glad": { "type": "int" },
+      "effort": { "type": "int" }
+    }
+  },
+  "@letterMoodGladOnly": {
+    "placeholders": {
+      "glad": { "type": "int" }
+    }
+  },
+  "@letterMoodEffortOnly": {
+    "placeholders": {
+      "effort": { "type": "int" }
+    }
+  },
+  "@letterOneBigDay": {
+    "placeholders": {
+      "date": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "@letterShowedUp": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "insightsGapsShortening": "And they're getting shorter.",
   "insightsTeaserBody": "There's a pattern in this month you can't see yet — the gap between the focus you chose and the one you actually lived.",
   "insightsTeaserCta": "See what Intended+ noticed",
