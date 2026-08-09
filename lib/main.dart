@@ -1715,7 +1715,10 @@ class _HabitsScreenState extends State<HabitsScreen>
                       padding: EdgeInsets.fromLTRB(
                           24, MediaQuery.of(context).padding.top + 24, 24, 32),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        // Full width, otherwise the parent Column centres this
+                        // block and the start-alignment below does nothing.
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
                             IntentionPath.phraseFor(
@@ -1911,8 +1914,8 @@ class _HabitsScreenState extends State<HabitsScreen>
                                           children: [
                                             Icon(
                                               CupertinoIcons.add,
-                                              size: 16,
-                                              color: colors.textSecondary,
+                                              size: 18,
+                                              color: colors.ctaPrimary,
                                             ),
                                             const SizedBox(width: 8),
                                             Text(
@@ -1920,7 +1923,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w500,
-                                                color: colors.textSecondary,
+                                                color: colors.ctaPrimary,
                                                 fontFamily:
                                                     AppTextStyles.bodyFont(
                                                         context),
@@ -2633,8 +2636,6 @@ class _HabitCardState extends State<_HabitCard>
 
   // Checkmark animation controllers
   late AnimationController _checkmarkController;
-  late Animation<double> _checkmarkScaleAnimation;
-  late Animation<double> _checkmarkFadeAnimation;
 
   @override
   void initState() {
@@ -2668,14 +2669,6 @@ class _HabitCardState extends State<_HabitCard>
     _checkmarkController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 250),
-    );
-
-    _checkmarkScaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _checkmarkController, curve: Curves.easeOutBack),
-    );
-
-    _checkmarkFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _checkmarkController, curve: Curves.easeOut),
     );
   }
 
@@ -4237,36 +4230,10 @@ class _HabitCardState extends State<_HabitCard>
             scale: _scaleAnimation,
             child: IntrinsicHeight(
               child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: _isDoneToday ? 64 : 72),
+                constraints: const BoxConstraints(minHeight: 64),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                  // LEFT ACCENT BAR (only show if not completed)
-                  if (!_isDoneToday)
-                    ExcludeSemantics(
-                    child: Container(
-                      width: 4,
-                      decoration: BoxDecoration(
-                        color: effectiveAccentColor,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          bottomLeft: Radius.circular(24),
-                        ),
-                      ),
-                    ),
-                    ),
-
-                  // Spacing between accent bar and card
-                  // The bar sits flush against the card rather than in its own
-                  // gutter. A gutter pushed every card 20pt further from the
-                  // left edge than the right, which read as uneven margins.
-                  // Completed cards reserve the bar's width so the card body
-                  // doesn't shift sideways at the moment of completion.
-                  // Gap between the accent bar and the card. Completed cards
-                  // have no bar, so they reserve the bar's width plus the gap
-                  // and the card body stays put at the moment of completion.
-                  SizedBox(width: _isDoneToday ? 12 : 8),
-
                   // CARD
                   Expanded(
                     child: ClipRRect(
@@ -4279,8 +4246,8 @@ class _HabitCardState extends State<_HabitCard>
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           padding: EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: _isDoneToday ? 20 : 24,
+                            horizontal: 18,
+                            vertical: 18,
                           ),
                           decoration: BoxDecoration(
                             // Glassmorphism background (pinned = lighter/cooler + accent tint, regular = warmer)
@@ -4299,16 +4266,14 @@ class _HabitCardState extends State<_HabitCard>
                                     ? colors.cardPinned.withOpacity(colors.cardPinnedOpacity)
                                     : colors.cardBackground.withOpacity(colors.cardBackgroundOpacity),
                             borderRadius: BorderRadius.circular(24),
+                            // No outline on completed cards: the wash and the
+                            // tile carry the state. The tile's *presence* is a
+                            // non-colour cue in its own right, so dropping the
+                            // outline doesn't make completion colour-dependent.
                             border: Border.all(
-                              color: _isDoneToday
-                                  ? CategoryColors.outline(
-                                      _completedCategory,
-                                      themeProvider.theme,
-                                      isDark: isDark,
-                                    )
-                                  : colors.borderCard
-                                      .withOpacity(colors.borderCardOpacity),
-                              width: _isDoneToday ? 1.5 : 0.5,
+                              color: colors.borderCard
+                                  .withOpacity(colors.borderCardOpacity),
+                              width: 0.5,
                             ),
                             boxShadow: [
                               // Outer shadow for depth
@@ -4346,30 +4311,29 @@ class _HabitCardState extends State<_HabitCard>
                           ),
                           child: Row(
                             children: [
-                              // Checkmark (only when completed) with animation
-                              if (_isDoneToday) ...[
-                                FadeTransition(
-                                  opacity: _checkmarkFadeAnimation,
-                                  child: ScaleTransition(
-                                    scale: _checkmarkScaleAnimation,
-                                    child: Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: colors.checkmarkBackground
-                                            .withOpacity(0.40),
-                                      ),
-                                      child: Icon(
-                                        CupertinoIcons.checkmark,
-                                        size: 12,
-                                        color: colors.checkmarkFill,
-                                      ),
-                                    ),
+                              // Accent bar, inset inside the card rather
+                              // than hung off its left edge. Completed cards
+                              // keep the same slot so nothing shifts.
+                              ExcludeSemantics(
+                                child: Container(
+                                  width: 4,
+                                  height: 26,
+                                  decoration: BoxDecoration(
+                                    color: _isDoneToday
+                                        ? const Color(0x00000000)
+                                        : effectiveAccentColor,
+                                    borderRadius: BorderRadius.circular(2),
                                   ),
                                 ),
-                                const SizedBox(width: 12),
-                              ],
+                              ),
+                              const SizedBox(width: 14),
+
+                              // No checkmark: a generic tick says only "done".
+                              // The tile below says which focus area this was
+                              // and is literally the square that landed in the
+                              // month, so the card and the grid show the same
+                              // object. It also sits on the right, so the title
+                              // starts at the same x whether pending or done.
 
                               // Habit title.
                               //
@@ -4392,6 +4356,34 @@ class _HabitCardState extends State<_HabitCard>
                                   ),
                                 ),
                               ),
+                              if (_isDoneToday) ...[
+                                const SizedBox(width: 12),
+                                ExcludeSemantics(
+                                  child: Container(
+                                    width: 26,
+                                    height: 26,
+                                    decoration: BoxDecoration(
+                                      color: CategoryColors.of(
+                                        _completedCategory,
+                                        themeProvider.theme,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                      // Soft halo so the tile reads as lit
+                                      // rather than stuck on.
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: CategoryColors.of(
+                                            _completedCategory,
+                                            themeProvider.theme,
+                                          ).withValues(alpha: 0.45),
+                                          blurRadius: 14,
+                                          spreadRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         ),

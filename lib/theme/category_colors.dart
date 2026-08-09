@@ -43,17 +43,21 @@ class CategoryColors {
   /// Per-theme saturation. This is the tuning knob: how vivid the palette
   /// feels on that theme. Lightness is *not* set here — see [of].
   ///
+  /// Kept low. Contrast is already guaranteed by the luminance solve, so
+  /// saturation only controls how loud a swatch feels — and at full strength
+  /// the tiles shouted next to the pale cards they sit on.
+  ///
   /// Dark themes carry less saturation, because a vivid swatch on a dark
   /// field vibrates and pulls the eye off the text beside it.
   static const Map<AppTheme, double> _saturation = {
-    AppTheme.warmClay: 0.42,
-    AppTheme.iris: 0.58,
-    AppTheme.clearSky: 0.52,
+    AppTheme.warmClay: 0.36,
+    AppTheme.iris: 0.34,
+    AppTheme.clearSky: 0.38,
     AppTheme.morningSlate: 0.38,
-    AppTheme.softDusk: 0.44,
+    AppTheme.softDusk: 0.36,
     AppTheme.deepFocus: 0.34,
     AppTheme.forestFloor: 0.40,
-    AppTheme.goldenHour: 0.54,
+    AppTheme.goldenHour: 0.40,
     AppTheme.nightBloom: 0.36,
     AppTheme.sandDune: 0.40,
   };
