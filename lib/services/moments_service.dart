@@ -45,6 +45,19 @@ class MomentsService {
     await _writeRollup(prefs, all);
   }
 
+  /// Every moment in [anchor]'s calendar month, oldest first. Bucketed by the
+  /// offset each moment recorded, not the device's current zone.
+  static Future<List<Moment>> momentsForMonth(DateTime anchor) async {
+    final all = await getAll();
+    final target =
+        anchor.add(Duration(minutes: anchor.timeZoneOffset.inMinutes));
+    return all.where((m) {
+      final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
+      return local.year == target.year && local.month == target.month;
+    }).toList()
+      ..sort((a, b) => a.completedAt.compareTo(b.completedAt));
+  }
+
   /// Categories of every moment in [anchor]'s calendar month, oldest first.
   ///
   /// Drives the tile row in the completion sheet, where the newest entry is

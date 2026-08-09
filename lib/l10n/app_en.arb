@@ -107,6 +107,35 @@
   "intentionWindingDown": "Letting the day go",
   "intentionYourOwnWay": "Your own way",
   "habitsAddYourOwn": "Add something of your own",
+  "insightsTitle": "Your month",
+  "insightsEmptyTitle": "Nothing here yet — and that's exactly right.",
+  "insightsEmptyBody": "Every small thing you do gets saved here.",
+  "insightsGridCaption": "one square = one thing you did",
+  "insightsStartingWith": "WHAT YOU'RE STARTING WITH",
+  "insightsStartingMeta": "{areas} · a reminder at {time}",
+  "insightsThisMonth": "THIS MONTH",
+  "insightsDidThings": "You did {count} small things for yourself in {month}.",
+  "insightsReturns": "{count} times you went quiet for a few days. {count} times you came back.",
+  "insightsExampleLabel": "EXAMPLE",
+  "insightsExampleHeader": "IN A MONTH, THIS PAGE LOOKS LIKE THIS",
+  "insightsUnlockNote": "✦ Intended+ reads your month and suggests what to change. It unlocks once you have something to read.",
+  "@insightsStartingMeta": {
+    "placeholders": {
+      "areas": { "type": "String" },
+      "time": { "type": "String" }
+    }
+  },
+  "@insightsDidThings": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "month": { "type": "String" }
+    }
+  },
+  "@insightsReturns": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "habitsCreateCustom": "Create custom habit",
   "habitsBrowseAll": "Browse all habits",
   "habitsMoreAvailable": "{count} more available",

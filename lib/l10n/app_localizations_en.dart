@@ -299,6 +299,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitsAddYourOwn => 'Add something of your own';
 
   @override
+  String get insightsTitle => 'Your month';
+
+  @override
+  String get insightsEmptyTitle =>
+      'Nothing here yet — and that\'s exactly right.';
+
+  @override
+  String get insightsEmptyBody => 'Every small thing you do gets saved here.';
+
+  @override
+  String get insightsGridCaption => 'one square = one thing you did';
+
+  @override
+  String get insightsStartingWith => 'WHAT YOU\'RE STARTING WITH';
+
+  @override
+  String insightsStartingMeta(String areas, String time) {
+    return '$areas · a reminder at $time';
+  }
+
+  @override
+  String get insightsThisMonth => 'THIS MONTH';
+
+  @override
+  String insightsDidThings(int count, String month) {
+    return 'You did $count small things for yourself in $month.';
+  }
+
+  @override
+  String insightsReturns(int count) {
+    return '$count times you went quiet for a few days. $count times you came back.';
+  }
+
+  @override
+  String get insightsExampleLabel => 'EXAMPLE';
+
+  @override
+  String get insightsExampleHeader => 'IN A MONTH, THIS PAGE LOOKS LIKE THIS';
+
+  @override
+  String get insightsUnlockNote =>
+      '✦ Intended+ reads your month and suggests what to change. It unlocks once you have something to read.';
+
+  @override
   String get habitsCreateCustom => 'Create custom habit';
 
   @override

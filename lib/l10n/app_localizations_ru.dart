@@ -299,6 +299,49 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitsAddYourOwn => 'Добавить своё';
 
   @override
+  String get insightsTitle => 'Ваш месяц';
+
+  @override
+  String get insightsEmptyTitle => 'Здесь пока пусто — и это правильно.';
+
+  @override
+  String get insightsEmptyBody => 'Каждое маленькое дело сохранится здесь.';
+
+  @override
+  String get insightsGridCaption => 'один квадрат — одно сделанное дело';
+
+  @override
+  String get insightsStartingWith => 'С ЧЕГО ВЫ НАЧИНАЕТЕ';
+
+  @override
+  String insightsStartingMeta(String areas, String time) {
+    return '$areas · напоминание в $time';
+  }
+
+  @override
+  String get insightsThisMonth => 'В ЭТОМ МЕСЯЦЕ';
+
+  @override
+  String insightsDidThings(int count, String month) {
+    return 'Вы сделали $count маленьких дел для себя в $month.';
+  }
+
+  @override
+  String insightsReturns(int count) {
+    return '$count раза вы затихали на несколько дней. $count раза возвращались.';
+  }
+
+  @override
+  String get insightsExampleLabel => 'ПРИМЕР';
+
+  @override
+  String get insightsExampleHeader => 'ЧЕРЕЗ МЕСЯЦ ЭТА СТРАНИЦА БУДЕТ ТАКОЙ';
+
+  @override
+  String get insightsUnlockNote =>
+      '✦ Intended+ читает ваш месяц и подсказывает, что изменить. Откроется, когда будет что читать.';
+
+  @override
   String get habitsCreateCustom => 'Создать свою привычку';
 
   @override

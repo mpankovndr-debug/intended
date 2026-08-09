@@ -27,7 +27,7 @@ import 'onboarding_v2/focus_areas_screen.dart';
 import 'onboarding_v2/welcome_v2_screen.dart';
 import 'state/user_state.dart';
 import 'screens/paywall_screen.dart';
-import 'screens/progress_screen.dart';
+import 'screens/insights_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/habit_completion_modal.dart';
 import 'models/moment.dart';
@@ -1090,7 +1090,7 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
             index: _currentIndex,
             children: [
               const HabitsScreen(),
-              ProgressScreen(isActive: _currentIndex == 1),
+              InsightsScreen(isActive: _currentIndex == 1),
               const ProfileScreen(),
             ],
           ),

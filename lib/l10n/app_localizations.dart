@@ -620,6 +620,78 @@ abstract class AppLocalizations {
   /// **'Add something of your own'**
   String get habitsAddYourOwn;
 
+  /// No description provided for @insightsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your month'**
+  String get insightsTitle;
+
+  /// No description provided for @insightsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet — and that\'s exactly right.'**
+  String get insightsEmptyTitle;
+
+  /// No description provided for @insightsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every small thing you do gets saved here.'**
+  String get insightsEmptyBody;
+
+  /// No description provided for @insightsGridCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'one square = one thing you did'**
+  String get insightsGridCaption;
+
+  /// No description provided for @insightsStartingWith.
+  ///
+  /// In en, this message translates to:
+  /// **'WHAT YOU\'RE STARTING WITH'**
+  String get insightsStartingWith;
+
+  /// No description provided for @insightsStartingMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{areas} · a reminder at {time}'**
+  String insightsStartingMeta(String areas, String time);
+
+  /// No description provided for @insightsThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'THIS MONTH'**
+  String get insightsThisMonth;
+
+  /// No description provided for @insightsDidThings.
+  ///
+  /// In en, this message translates to:
+  /// **'You did {count} small things for yourself in {month}.'**
+  String insightsDidThings(int count, String month);
+
+  /// No description provided for @insightsReturns.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} times you went quiet for a few days. {count} times you came back.'**
+  String insightsReturns(int count);
+
+  /// No description provided for @insightsExampleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'EXAMPLE'**
+  String get insightsExampleLabel;
+
+  /// No description provided for @insightsExampleHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'IN A MONTH, THIS PAGE LOOKS LIKE THIS'**
+  String get insightsExampleHeader;
+
+  /// No description provided for @insightsUnlockNote.
+  ///
+  /// In en, this message translates to:
+  /// **'✦ Intended+ reads your month and suggests what to change. It unlocks once you have something to read.'**
+  String get insightsUnlockNote;
+
   /// No description provided for @habitsCreateCustom.
   ///
   /// In en, this message translates to:
