@@ -11,6 +11,7 @@ import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
 import '../main.dart' show AppBackground;
+import '../theme/category_colors.dart';
 import '../widgets/moment_grid.dart';
 
 /// The month view (§5.3, §5.4). Replaces the old progress screen.
@@ -142,6 +143,12 @@ class _InsightsScreenState extends State<InsightsScreen> {
             style: AppTextStyles.h2(context).copyWith(fontSize: 19),
           ),
           const SizedBox(height: 6),
+          if (!empty && _dominantPeriod(l10n) != null)
+            Text(
+              l10n.insightsMostlyAt(_dominantPeriod(l10n)!),
+              style: AppTextStyles.body(context)
+                  .copyWith(color: colors.textSecondary),
+            ),
           if (empty)
             Text(
               l10n.insightsEmptyBody,
@@ -165,9 +172,117 @@ class _InsightsScreenState extends State<InsightsScreen> {
               color: colors.textSecondary,
             ),
           ),
+          if (!empty) ...[
+            const SizedBox(height: 14),
+            _legend(colors, themeProvider),
+            if (_returnCount > 0) ...[
+              const SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: colors.textSecondary.withValues(alpha: 0.5),
+                        width: 1.4,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      // Never "you missed 4 stretches" — the same fact, told
+                      // as a return rather than an absence (§4.3).
+                      l10n.insightsReturnsLine(_returnCount),
+                      style: AppTextStyles.body(context).copyWith(
+                        fontSize: 13,
+                        color: colors.textSecondary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
         ],
       ),
     );
+  }
+
+  int get _returnCount => MomentGrid.returnIndicesFor(_moments).length;
+
+  /// Counts per focus area, largest first — the legend under the grid.
+  Widget _legend(AppColorScheme colors, ThemeProvider themeProvider) {
+    final counts = <String, int>{};
+    for (final m in _moments) {
+      final key = m.category;
+      if (key == null) continue;
+      counts[key] = (counts[key] ?? 0) + 1;
+    }
+    final entries = counts.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return Wrap(
+      spacing: 16,
+      runSpacing: 8,
+      children: [
+        for (final e in entries)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: CategoryColors.of(e.key, themeProvider.theme),
+                ),
+              ),
+              const SizedBox(width: 7),
+              Text(
+                '${e.key} ${e.value}',
+                style: AppTextStyles.body(context).copyWith(
+                  fontSize: 13,
+                  color: colors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  /// The part of day most moments fall in, or null when nothing dominates.
+  /// Reads localHour, which is why it had to be stored rather than derived.
+  String? _dominantPeriod(AppLocalizations l10n) {
+    if (_moments.length < 3) return null;
+    final buckets = <String, int>{};
+    for (final m in _moments) {
+      final h = m.localHour;
+      final key = h < 5
+          ? 'late'
+          : h < 12
+              ? 'morning'
+              : h < 17
+                  ? 'afternoon'
+                  : h < 22
+                      ? 'evening'
+                      : 'late';
+      buckets[key] = (buckets[key] ?? 0) + 1;
+    }
+    final top = buckets.entries.reduce((a, b) => a.value >= b.value ? a : b);
+    // Only claim a pattern when it is actually one.
+    if (top.value / _moments.length < 0.5) return null;
+    return switch (top.key) {
+      'morning' => l10n.insightsPeriodMorning,
+      'afternoon' => l10n.insightsPeriodAfternoon,
+      'evening' => l10n.insightsPeriodEvening,
+      _ => l10n.insightsPeriodLateNight,
+    };
   }
 
   Widget _emptyPrimer(AppColorScheme colors) {

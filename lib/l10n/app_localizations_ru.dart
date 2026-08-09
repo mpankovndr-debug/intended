@@ -311,6 +311,28 @@ class AppLocalizationsRu extends AppLocalizations {
   String get insightsGridCaption => 'один квадрат — одно сделанное дело';
 
   @override
+  String insightsReturnsLine(int count) {
+    return '$count раза вы затихали на несколько дней. $count раза возвращались.';
+  }
+
+  @override
+  String insightsMostlyAt(String period) {
+    return 'Чаще всего — $period.';
+  }
+
+  @override
+  String get insightsPeriodMorning => 'утром';
+
+  @override
+  String get insightsPeriodAfternoon => 'днём';
+
+  @override
+  String get insightsPeriodEvening => 'вечером';
+
+  @override
+  String get insightsPeriodLateNight => 'поздно ночью';
+
+  @override
   String get insightsStartingWith => 'С ЧЕГО ВЫ НАЧИНАЕТЕ';
 
   @override

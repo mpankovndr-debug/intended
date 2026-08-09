@@ -644,6 +644,42 @@ abstract class AppLocalizations {
   /// **'one square = one thing you did'**
   String get insightsGridCaption;
 
+  /// No description provided for @insightsReturnsLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} times you went quiet for a few days. {count} times you came back.'**
+  String insightsReturnsLine(int count);
+
+  /// No description provided for @insightsMostlyAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Most of them {period}.'**
+  String insightsMostlyAt(String period);
+
+  /// No description provided for @insightsPeriodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'in the morning'**
+  String get insightsPeriodMorning;
+
+  /// No description provided for @insightsPeriodAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'in the afternoon'**
+  String get insightsPeriodAfternoon;
+
+  /// No description provided for @insightsPeriodEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'in the evening'**
+  String get insightsPeriodEvening;
+
+  /// No description provided for @insightsPeriodLateNight.
+  ///
+  /// In en, this message translates to:
+  /// **'late at night'**
+  String get insightsPeriodLateNight;
+
   /// No description provided for @insightsStartingWith.
   ///
   /// In en, this message translates to:

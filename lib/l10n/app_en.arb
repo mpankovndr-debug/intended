@@ -111,6 +111,22 @@
   "insightsEmptyTitle": "Nothing here yet — and that's exactly right.",
   "insightsEmptyBody": "Every small thing you do gets saved here.",
   "insightsGridCaption": "one square = one thing you did",
+  "insightsReturnsLine": "{count} times you went quiet for a few days. {count} times you came back.",
+  "insightsMostlyAt": "Most of them {period}.",
+  "insightsPeriodMorning": "in the morning",
+  "insightsPeriodAfternoon": "in the afternoon",
+  "insightsPeriodEvening": "in the evening",
+  "insightsPeriodLateNight": "late at night",
+  "@insightsReturnsLine": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "@insightsMostlyAt": {
+    "placeholders": {
+      "period": { "type": "String" }
+    }
+  },
   "insightsStartingWith": "WHAT YOU'RE STARTING WITH",
   "insightsStartingMeta": "{areas} · a reminder at {time}",
   "insightsThisMonth": "THIS MONTH",

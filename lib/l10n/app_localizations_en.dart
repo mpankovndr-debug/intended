@@ -312,6 +312,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightsGridCaption => 'one square = one thing you did';
 
   @override
+  String insightsReturnsLine(int count) {
+    return '$count times you went quiet for a few days. $count times you came back.';
+  }
+
+  @override
+  String insightsMostlyAt(String period) {
+    return 'Most of them $period.';
+  }
+
+  @override
+  String get insightsPeriodMorning => 'in the morning';
+
+  @override
+  String get insightsPeriodAfternoon => 'in the afternoon';
+
+  @override
+  String get insightsPeriodEvening => 'in the evening';
+
+  @override
+  String get insightsPeriodLateNight => 'late at night';
+
+  @override
   String get insightsStartingWith => 'WHAT YOU\'RE STARTING WITH';
 
   @override
