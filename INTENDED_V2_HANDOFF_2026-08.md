@@ -168,6 +168,18 @@ Not zero data — they just finished onboarding. Three cards:
 
 ⚠️ **Honest expectation:** user-generated sharing cannot bootstrap from zero. Wrapped works because millions post simultaneously. One user posting to 200 followers gets a couple of likes. **The card's real near-term job is as *your* marketing asset** — you post it. Build it once, cheaply, and stop tuning it.
 
+### 5.6 Coach marks — the dim-and-explain pattern doesn't survive
+
+Five coach marks exist today, each a full-screen dim plus a tooltip card. That's an interruption pattern in an app whose whole pitch is not interrupting you, and §5.2 now teaches the core concept better than a tooltip can. Per-mark decisions:
+
+- **`firstCompletion` — delete.** §5.2 step 2 *is* this moment: the tile animates in and says "Kept — 13 moments this month." An overlay firing straight after is the same lesson twice. It's also the mark that needed a `just_completed_onboarding` guard to stop it appearing at the wrong time — a symptom of the pattern not fitting.
+- **`pinning` — rework into an inline hint.** It currently teaches long-press = pin, but §7 reassigns long-press on an action card to **swap**. Shipped unchanged, it teaches a gesture that no longer exists. Replace with §5.1's just-in-time hint on the card itself: *"Not landing? Hold to swap."*
+- **`widget` — keep, but not as a dim.** The widget lives outside the app so it can't be hinted inline. A quiet card on Insights or Profile does the job.
+- **`smartNotifications` — drop.** Low value, and adaptive timing should be felt, not announced.
+- **`weeklyReflection` — fold into the Month page.** Once §5.3 exists, the page is its own explanation.
+
+**Rule going forward:** gesture discovery happens inline, next to the thing, at the moment it's relevant. Overlays are reserved for what genuinely lives outside the app.
+
 ---
 
 ## 6. New paid capabilities
@@ -297,15 +309,30 @@ users/{uid}
 
 ## 11. Build order
 
-1. **Mood tap + merged completion modal** (delete the confirm dialog) — feeds everything
-2. **Grid on the Moments screen** + tile-landing animation
-3. **Plain-language rewrite** across Today and Month (copy only, cheap)
-4. **Paywall moved to after first completed action** + rewritten copy
-5. **Intention surfaced on Today** (the one-day test)
-6. **Drift warning**
-7. **Monthly plan card**
-8. Retroactive logging, share cards
-9. Later: what-actually-lifts-you, Apple Health
+The original list sequenced only part of §4–§10. This is the full order, with the missing sections folded in and dependencies corrected.
+
+**Cross-cutting prerequisites** — neither is a screen, both block the ones that are:
+
+- **Per-theme category palettes.** §4.2 fixes coral/violet/sage as focus-area colours, but the app has 10 themes (2 dark). Fixed colours clash on `warmClay`, `nightBloom` and others, so each theme needs its own tuned trio. The share card picks one.
+- **Data foundation (§10).** Extend `Moment` with mood, category, note, `localHour`, `localWeekday`, tz offset; add the rollup. Must come first: `localHour`/`localWeekday` **cannot be backfilled** — a UTC timestamp doesn't record what the user's clock said — and steps 4, 5 and 6 all compute from them.
+
+| # | Work | Sections |
+|---|---|---|
+| 1 | Completion modal, two steps + tile-landing animation; delete the confirm dialog and the `firstCompletion` coach mark | §5.2, §5.6 |
+| 2 | Home redesign — completed-card treatment, intention as header, "Add something of your own" | §5.1, §4.1 |
+| 3 | Grid + day-one Insights (replaces `progress_screen.dart`) | §4.2, §5.4 |
+| 4 | Returns — "four times you went quiet, four times you came back" | §4.3 |
+| 5 | **Seasons** — four axes, ≥10-moment threshold, monthly compute, archive | §4.4 |
+| 6 | Paid Month page — drift warning, letter, monthly plan; absorb the `weeklyReflection` coach mark | §5.3, §6.1–6.3 |
+| 7 | Share cards — weekly workhorse + monthly season card, both with the "one square =" caption | §5.5 |
+| 8 | Paywall moved to after the first completed action + copy rewrite | §8 |
+| 9 | Packs → adoptable intentions; kill "Browse all habits"; long-press becomes swap + inline hint | §7, §5.6 |
+| 10 | Free rescue — gap detection, gentle nudge after silence, reduced home screen | §4.6 |
+| 11 | Later — what-actually-lifts-you, Apple Health, retroactive logging | §6.4, §6.5 |
+
+**Done:** §8 pricing and paywall copy (Lifetime €49.99, "Unlimited everything" bullet cut, per-month anchoring derived from the live App Store price).
+
+Plain-language rewrite (§9) isn't a step — it applies to every screen as it's built, not as a pass afterwards.
 
 ---
 
