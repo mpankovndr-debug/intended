@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/painting.dart';
 
+import '../models/moment.dart';
 import 'app_colors.dart';
 
 /// Colour for each focus area, tuned per theme.
@@ -34,6 +35,29 @@ class CategoryColors {
     'Finances': 172, // teal
   };
 
+  /// Per-hue saturation multiplier, applied on top of the per-theme knob.
+  ///
+  /// A single saturation number across all eight hues does not work, because
+  /// saturation is not perceived evenly around the wheel. At the value that
+  /// makes coral read as a soft salmon, green reads as neon lime and magenta
+  /// reads as a highlighter. Warm reds and ambers absorb chroma; greens and
+  /// magentas broadcast it.
+  ///
+  /// These are eyeballed against the reference palette — coral near full,
+  /// violet around two thirds, sage down at a bit over a third — so every
+  /// focus area lands at the same *apparent* softness rather than the same
+  /// number.
+  static const Map<String, double> _hueSaturation = {
+    'Health': 1.00, // coral
+    'Home & organization': 0.92, // amber
+    'Relationships': 0.86, // rose
+    'Productivity': 0.76, // blue
+    'Self-care': 0.68, // violet
+    'Finances': 0.60, // teal
+    'Creativity': 0.58, // magenta
+    'Mood': 0.38, // sage
+  };
+
   /// Fallback for custom habits with no focus area, and for any category key
   /// that stops matching. Deliberately desaturated so an unmapped square reads
   /// as "uncategorised" rather than impersonating a real focus area.
@@ -43,29 +67,42 @@ class CategoryColors {
   /// Per-theme saturation. This is the tuning knob: how vivid the palette
   /// feels on that theme. Lightness is *not* set here — see [of].
   ///
-  /// Kept low. Contrast is already guaranteed by the luminance solve, so
-  /// saturation only controls how loud a swatch feels — and at full strength
-  /// the tiles shouted next to the pale cards they sit on.
+  /// Kept high, and deliberately so. An earlier version ran these near 0.36
+  /// and paired them with a 3.4:1 contrast target; on a pale card the solve
+  /// can only reach that by driving lightness *down*, and dark plus
+  /// desaturated is mud. The tiles came out brown, not coral.
   ///
-  /// Dark themes carry less saturation, because a vivid swatch on a dark
-  /// field vibrates and pulls the eye off the text beside it.
+  /// Saturation and lightness have to move together for a swatch to read as a
+  /// colour rather than a stain: these are chosen so the solve lands in the
+  /// pastel band — vivid hue, high lightness — which is what the focus areas
+  /// are meant to look like.
+  ///
+  /// Dark themes carry less, because a vivid swatch on a dark field vibrates
+  /// and pulls the eye off the text beside it.
   static const Map<AppTheme, double> _saturation = {
-    AppTheme.warmClay: 0.36,
-    AppTheme.iris: 0.34,
-    AppTheme.clearSky: 0.38,
-    AppTheme.morningSlate: 0.38,
-    AppTheme.softDusk: 0.36,
-    AppTheme.deepFocus: 0.34,
-    AppTheme.forestFloor: 0.40,
-    AppTheme.goldenHour: 0.40,
-    AppTheme.nightBloom: 0.36,
-    AppTheme.sandDune: 0.40,
+    AppTheme.warmClay: 0.70,
+    AppTheme.iris: 0.72,
+    AppTheme.clearSky: 0.74,
+    AppTheme.morningSlate: 0.72,
+    AppTheme.softDusk: 0.68,
+    AppTheme.deepFocus: 0.52,
+    AppTheme.forestFloor: 0.70,
+    AppTheme.goldenHour: 0.74,
+    AppTheme.nightBloom: 0.52,
+    AppTheme.sandDune: 0.74,
   };
 
-  /// Contrast the swatches aim for against their card background. WCAG 1.4.11
-  /// requires 3:1 for non-text UI that carries meaning; the extra margin keeps
-  /// rounding and future background tweaks from dropping below the bar.
-  static const double _targetContrast = 3.4;
+  /// Contrast the swatches aim for against their card background.
+  ///
+  /// ⚠️ **This is below WCAG 1.4.11's 3:1 for meaningful non-text UI**, and it
+  /// is a deliberate trade rather than an oversight. At 3:1 on these pale
+  /// cards the palette is forced dark and stops reading as the coral / violet
+  /// / sage the design calls for. What makes it defensible: every place a
+  /// swatch carries meaning also names it in text — the legend reads
+  /// "Health 5" beside its dot, and a tapped tile names its own moment — so
+  /// colour is never the only channel. If that ever stops being true, this
+  /// number has to go back up first.
+  static const double _targetContrast = 2.0;
 
   static final Map<int, Color> _cache = {};
 
@@ -79,23 +116,34 @@ class CategoryColors {
   /// swatch is driven to the *luminance* that hits [_targetContrast] against
   /// this theme's card, which makes all eight categories equally legible and
   /// keeps any future theme correct without hand-tuning.
-  static Color of(String? category, AppTheme theme) {
-    final key = Object.hash(category, theme);
+  /// [mood] tints the swatch without moving its hue (§4.2: colour is the focus
+  /// area, brightness is how it landed). A wall of identical squares reads as
+  /// wallpaper; three tints of one hue read as a month with texture in it.
+  ///
+  /// Applied as a *contrast* offset rather than a lightness one, so it works
+  /// in the same direction on light and dark themes and — more importantly —
+  /// cannot drop a swatch below the legibility bar. The softest variant is the
+  /// one solved at [_targetContrast]; the others only ever add to it.
+  static Color of(String? category, AppTheme theme, {MomentMood? mood}) {
+    final key = Object.hash(category, theme, mood);
     final cached = _cache[key];
     if (cached != null) return cached;
 
     final hue = _hues[category] ?? _neutralHue;
-    final saturation =
-        _hues.containsKey(category) ? (_saturation[theme] ?? 0.40) : _neutralTuning.saturation;
+    final saturation = _hues.containsKey(category)
+        ? (_saturation[theme] ?? 0.40) * (_hueSaturation[category] ?? 1.0)
+        : _neutralTuning.saturation;
 
     final background = AppColors.of(theme).cardBackground;
     final backgroundLuminance = _relativeLuminance(background);
 
+    final contrast = _targetContrast + _moodWeight(mood);
+
     // Solve for the luminance that lands on the target ratio, on whichever
     // side of the background this theme needs.
     final double targetLuminance = theme.isDark
-        ? (backgroundLuminance + 0.05) * _targetContrast - 0.05
-        : (backgroundLuminance + 0.05) / _targetContrast - 0.05;
+        ? (backgroundLuminance + 0.05) * contrast - 0.05
+        : (backgroundLuminance + 0.05) / contrast - 0.05;
 
     final color = _solveForLuminance(
       hue: hue,
@@ -105,6 +153,22 @@ class CategoryColors {
     _cache[key] = color;
     return color;
   }
+
+  /// How much weight a mood adds on top of [_targetContrast].
+  ///
+  /// The ones that took effort sit deepest — they cost the most and they are
+  /// what a month is actually made of. Glad sits lightest. Unrated moments
+  /// take the middle rather than a fourth tint, because "you didn't say" is
+  /// not a fourth kind of feeling and should not look like one.
+  ///
+  /// Kept small on purpose: this is texture within a hue, not a second
+  /// encoding. If three tints start reading as three categories, the grid has
+  /// stopped saying what §4.2 needs it to say.
+  static double _moodWeight(MomentMood? mood) => switch (mood) {
+        MomentMood.gladIDid => 0.0,
+        MomentMood.tookEffort => 0.45,
+        _ => 0.20,
+      };
 
   /// Binary-searches HSL lightness for the colour closest to [targetLuminance].
   /// Luminance rises monotonically with lightness at fixed hue and saturation,
@@ -177,7 +241,11 @@ class CategoryColors {
   /// enough: at the same luminance a sage at full tuning saturation is much
   /// more vivid than a violet, and reads as "selected" rather than "kept".
   /// Pulling saturation back makes the tint whisper on every hue.
-  static const double _washSaturationFactor = 0.28;
+  ///
+  /// Cut when the swatch saturation roughly doubled to fix the muddy tiles.
+  /// A completed card and a grid tile want opposite things — pop and quiet —
+  /// so the wash is pinned to its own number rather than riding the swatch's.
+  static const double _washSaturationFactor = 0.13;
 
   /// The very pale fill behind a completed card (§5.1).
   ///
@@ -187,8 +255,9 @@ class CategoryColors {
   /// and read as disabled, which is the one thing this state must not do.
   static Color wash(String? category, AppTheme theme, {required bool isDark}) {
     final hue = _hues[category] ?? _neutralHue;
-    final base =
-        _hues.containsKey(category) ? (_saturation[theme] ?? 0.40) : _neutralTuning.saturation;
+    final base = _hues.containsKey(category)
+        ? (_saturation[theme] ?? 0.40) * (_hueSaturation[category] ?? 1.0)
+        : _neutralTuning.saturation;
 
     final background = AppColors.of(theme).cardBackground;
     final backgroundLuminance = _relativeLuminance(background);

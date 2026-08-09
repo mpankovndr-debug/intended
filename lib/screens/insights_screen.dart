@@ -1,3 +1,5 @@
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +16,7 @@ import '../services/moments_service.dart';
 import '../services/notification_preferences_service.dart';
 import '../services/notification_scheduler.dart';
 import '../services/plan_service.dart';
+import '../services/share_service.dart';
 import '../state/user_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
@@ -58,6 +61,9 @@ class _InsightsScreenState extends State<InsightsScreen> {
   bool _showAllNudges = false;
   bool _accepting = false;
   bool _loaded = false;
+
+  /// Wraps the season card so Share can capture exactly what is on screen.
+  final GlobalKey _seasonKey = GlobalKey();
 
   @override
   void initState() {
@@ -128,16 +134,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
             const SizedBox.shrink()
           else ...[
             _monthCard(l10n, colors, themeProvider),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             // Day one belongs to neither tier. There is genuinely nothing
             // behind a lock yet, so upgrading here would unlock three empty
             // cards — the Day-0 conversion window belongs to the onboarding
             // paywall instead (§5.4).
             if (_moments.isEmpty) ...[
               _startingWithCard(l10n, colors, onboarding),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               _exampleCard(l10n, colors, themeProvider),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
             ] else if (paid) ...[
               // Free and paid share the same cards and the same quality; paid
               // has more of them (§5.3). Nothing here is a degraded copy of
@@ -149,23 +155,23 @@ class _InsightsScreenState extends State<InsightsScreen> {
               // bought a promise and received a promise.
               if (_drift != null) ...[
                 _driftCard(l10n, colors, _drift!),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
               ],
               _seasonCard(l10n, colors),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               if (_letter != null) ...[
                 _letterCard(l10n, colors, _letter!),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
               ],
               if (!plan.isEmpty || _acceptedThisMonth != null) ...[
                 _planCard(l10n, colors, plan),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
               ],
             ] else ...[
               _seasonCard(l10n, colors),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               _teaserCard(l10n, colors, onboarding),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
             ],
             ],
           ],
@@ -222,17 +228,53 @@ class _InsightsScreenState extends State<InsightsScreen> {
     required Widget child,
     bool emphasis = false,
   }) {
+    // Real frost, not a flat translucent fill: the blur is what makes the
+    // landscape behind the card read as *behind* it. Without it the cards sit
+    // on the background like stickers, which is what the first version did.
     return Container(
-      padding: const EdgeInsets.all(20),
+      // The shadow has to sit outside the clip — inside, the ClipRRect eats
+      // it and the card goes back to lying flat on the wallpaper. The lift is
+      // half of what makes frosted glass read as glass.
       decoration: BoxDecoration(
-        color: colors.cardBackground.withValues(alpha: emphasis ? 0.78 : 0.55),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: colors.borderCard.withValues(alpha: emphasis ? 0.75 : 0.4),
-          width: emphasis ? 1.0 : 0.5,
+        boxShadow: [
+          BoxShadow(
+            color: colors.textPrimary.withValues(alpha: 0.06),
+            blurRadius: 24,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              // A vertical lift rather than a flat fill: light catches the top
+              // edge of real glass, and a single alpha never does that.
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  colors.cardBackground
+                      .withValues(alpha: emphasis ? 0.86 : 0.72),
+                  colors.cardBackground
+                      .withValues(alpha: emphasis ? 0.70 : 0.54),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color:
+                    colors.borderCard.withValues(alpha: emphasis ? 0.9 : 0.55),
+                width: emphasis ? 1.0 : 0.7,
+              ),
+            ),
+            child: child,
+          ),
         ),
       ),
-      child: child,
     );
   }
 
@@ -526,17 +568,30 @@ class _InsightsScreenState extends State<InsightsScreen> {
     AppColorScheme colors,
     OnboardingState onboarding,
   ) {
+    // The strongest possible tease is the paid content itself, since it is
+    // already computed and already about them. A free user gets the first true
+    // line of their own letter, and then watches the question dissolve.
+    //
+    // Anything else here is a claim about content rather than the content, and
+    // a claim is what the reader has to take on trust — which is the whole
+    // reason the old sentence didn't work.
+    final letter = _letter;
+    final lead = letter != null
+        ? _letterLine(l10n, letter.lines.first)
+        : _hasFocusGap(onboarding)
+            ? l10n.insightsTeaserBody
+            : l10n.insightsTeaserNoGap;
+
     return _card(
       colors: colors,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            _hasFocusGap(onboarding)
-                ? l10n.insightsTeaserBody
-                : l10n.insightsTeaserNoGap,
-            style: _cardBody(colors),
-          ),
+          Text(lead, style: _cardBody(colors)),
+          if (letter != null) ...[
+            const SizedBox(height: 8),
+            _fadingLine(_letterQuestion(l10n, letter.question), colors),
+          ],
           const SizedBox(height: 18),
           Align(
             alignment: Alignment.center,
@@ -557,6 +612,31 @@ class _InsightsScreenState extends State<InsightsScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// A real sentence that runs out of ink partway across.
+  ///
+  /// Never a padlock. A lock is a hard metal object in a world of mist and
+  /// glass — the one element that looks borrowed from another app — and it
+  /// says *blocked*. A sentence dissolving says *there is more here*, which is
+  /// the difference between a barrier and an invitation (§5.3).
+  Widget _fadingLine(String text, AppColorScheme colors) {
+    return ShaderMask(
+      blendMode: BlendMode.dstIn,
+      shaderCallback: (rect) => const LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        colors: [Color(0xFF000000), Color(0x00000000)],
+        stops: [0.45, 0.95],
+      ).createShader(rect),
+      child: Text(
+        text,
+        maxLines: 1,
+        softWrap: false,
+        overflow: TextOverflow.clip,
+        style: _cardBody(colors).copyWith(color: colors.textPrimary),
       ),
     );
   }
@@ -610,7 +690,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -626,7 +706,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                   ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             Text(
               l10n.insightsExampleSummary,
               style: _cardBody(colors),
@@ -674,7 +754,9 @@ class _InsightsScreenState extends State<InsightsScreen> {
         ),
     };
 
-    return _card(
+    return RepaintBoundary(
+      key: _seasonKey,
+      child: _card(
       colors: colors,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -701,8 +783,55 @@ class _InsightsScreenState extends State<InsightsScreen> {
             line,
             style: _cardBody(colors).copyWith(fontStyle: FontStyle.italic),
           ),
+          // Free on purpose (§4.4): the word is the shareable thing, and the
+          // explanation and the archive are what's paid for. A month still
+          // forming has no word yet, so there is nothing to share.
+          if (!forming) ...[
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.center,
+              child: CupertinoButton(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                minimumSize: Size.zero,
+                onPressed: _shareSeason,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      CupertinoIcons.share,
+                      size: 17,
+                      color: colors.ctaPrimary,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      l10n.shareButton,
+                      style: _cardBody(colors).copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: colors.ctaPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ],
       ),
+    ),
+    );
+  }
+
+  /// Shares the season card as it appears.
+  ///
+  /// §5.5's designed monthly card — season word as hero, the grid, the moment
+  /// count, the logo, "intention, not perfection" at legible size — is step 7
+  /// and is a different object from this. This shares what is on screen, which
+  /// is honest and works today; it is not yet the marketing asset §5.5 wants.
+  Future<void> _shareSeason() async {
+    final size = MediaQuery.of(context).size;
+    await ShareService.shareCard(
+      _seasonKey,
+      sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2),
     );
   }
 
@@ -841,12 +970,12 @@ class _InsightsScreenState extends State<InsightsScreen> {
           const SizedBox(height: 12),
           if (_proof != null) ...[
             Text(_proofLines(l10n, _proof!), style: _cardBody(colors)),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             Container(
               height: 1,
               color: colors.textDisabled.withValues(alpha: 0.25),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
           ],
           if (accepted != null)
             // One decision a month. Something has already been changed, so the
@@ -858,7 +987,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           else
             _nudge(l10n, colors, plan.nudges.first),
           if (remaining > 0) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             GestureDetector(
               onTap: () => setState(() => _showAllNudges = !_showAllNudges),
               child: Text(
@@ -887,7 +1016,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(_nudgeText(l10n, nudge), style: _cardTitle(colors)),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         Wrap(
           spacing: 10,
           runSpacing: 10,
@@ -1062,7 +1191,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
             const SizedBox(height: 6),
             Text(l10n.driftFollowed, style: _cardBody(colors)),
           ],
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Wrap(
             spacing: 10,
             runSpacing: 10,

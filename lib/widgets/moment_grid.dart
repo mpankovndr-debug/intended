@@ -53,7 +53,12 @@ class MomentGrid extends StatelessWidget {
       children: [
         for (var i = 0; i < moments.length; i++)
           _Tile(
-            color: CategoryColors.of(moments[i].category, theme),
+            // Hue is the focus area, tint is how it landed (§4.2).
+            color: CategoryColors.of(
+              moments[i].category,
+              theme,
+              mood: moments[i].mood,
+            ),
             size: tileSize,
             // A ring marks the first moment after a quiet stretch: "you came
             // back here." It is the only decoration the grid carries.

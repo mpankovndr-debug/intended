@@ -111,7 +111,7 @@
   "insightsEmptyTitle": "Nothing here yet — and that's exactly right.",
   "insightsEmptyBody": "Every small thing you do gets saved here.",
   "insightsGridCaption": "one square = one thing you did",
-  "insightsTeaserNoGap": "There's more in this month than the squares show — when you reach for these, and how they land.",
+  "insightsTeaserNoGap": "Every square here also knows what time it was, and how it landed. Intended+ reads them together and tells you what to change.",
   "driftLabel": "RIGHT NOW",
   "driftBody": "You've collected {thisWeek} moments this week. You usually collect {usual}.",
   "driftFollowed": "The last two times this happened, a quiet stretch followed.",

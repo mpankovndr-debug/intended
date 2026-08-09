@@ -312,7 +312,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get insightsTeaserNoGap =>
-      'В этом месяце есть больше, чем показывают квадраты — когда вы к этому тянетесь и как это отзывается.';
+      'Каждый квадрат здесь помнит ещё и время, и то, как это отозвалось. Intended+ читает их вместе и подсказывает, что изменить.';
 
   @override
   String get driftLabel => 'ПРЯМО СЕЙЧАС';

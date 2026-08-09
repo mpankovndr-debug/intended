@@ -647,7 +647,7 @@ abstract class AppLocalizations {
   /// No description provided for @insightsTeaserNoGap.
   ///
   /// In en, this message translates to:
-  /// **'There\'s more in this month than the squares show — when you reach for these, and how they land.'**
+  /// **'Every square here also knows what time it was, and how it landed. Intended+ reads them together and tells you what to change.'**
   String get insightsTeaserNoGap;
 
   /// No description provided for @driftLabel.

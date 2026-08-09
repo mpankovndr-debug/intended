@@ -313,7 +313,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get insightsTeaserNoGap =>
-      'There\'s more in this month than the squares show — when you reach for these, and how they land.';
+      'Every square here also knows what time it was, and how it landed. Intended+ reads them together and tells you what to change.';
 
   @override
   String get driftLabel => 'RIGHT NOW';
