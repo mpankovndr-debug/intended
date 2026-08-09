@@ -86,6 +86,11 @@ class _InsightsScreenState extends State<InsightsScreen> {
             if (_moments.isEmpty) ...[
               _startingWithCard(l10n, colors, onboarding),
               const SizedBox(height: 16),
+              _exampleCard(l10n, colors, themeProvider),
+              const SizedBox(height: 16),
+            ] else ...[
+              _teaserCard(l10n, colors),
+              const SizedBox(height: 16),
             ],
             ],
           ],
@@ -197,7 +202,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
                     child: Text(
                       // Never "you missed 4 stretches" — the same fact, told
                       // as a return rather than an absence (§4.3).
-                      l10n.insightsReturnsLine(_returnCount),
+                      _gapsShortening
+                          ? '${l10n.insightsReturnsLine(_returnCount)} '
+                              '${l10n.insightsGapsShortening}'
+                          : l10n.insightsReturnsLine(_returnCount),
                       style: AppTextStyles.body(context).copyWith(
                         fontSize: 13,
                         color: colors.textSecondary,
@@ -214,6 +222,32 @@ class _InsightsScreenState extends State<InsightsScreen> {
   }
 
   int get _returnCount => MomentGrid.returnIndicesFor(_moments).length;
+
+  /// True when each successive gap is no longer than the one before — the
+  /// half of §4.3 that turns a count into a direction.
+  bool get _gapsShortening {
+    final gaps = _gapLengths();
+    if (gaps.length < 2) return false;
+    for (var i = 1; i < gaps.length; i++) {
+      if (gaps[i] > gaps[i - 1]) return false;
+    }
+    return true;
+  }
+
+  List<int> _gapLengths() {
+    final gaps = <int>[];
+    DateTime? previous;
+    for (final m in _moments) {
+      final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
+      final day = DateTime.utc(local.year, local.month, local.day);
+      if (previous != null) {
+        final quiet = day.difference(previous).inDays - 1;
+        if (quiet >= MomentGrid.gapThresholdDays) gaps.add(quiet);
+      }
+      previous = day;
+    }
+    return gaps;
+  }
 
   /// Counts per focus area, largest first — the legend under the grid.
   Widget _legend(AppColorScheme colors, ThemeProvider themeProvider) {
@@ -360,6 +394,136 @@ class _InsightsScreenState extends State<InsightsScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Free tier's third card (§5.3): real content that stops mid-thought.
+  /// Never a padlock — a lock is a hard metal object in a world of mist and
+  /// says *blocked*, where an unfinished sentence says *there is more here*.
+  Widget _teaserCard(AppLocalizations l10n, AppColorScheme colors) {
+    return _card(
+      colors: colors,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.insightsTeaserBody,
+            style: AppTextStyles.body(context).copyWith(height: 1.5),
+          ),
+          const SizedBox(height: 18),
+          Align(
+            alignment: Alignment.center,
+            child: CupertinoButton(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+              borderRadius: BorderRadius.circular(22),
+              color: colors.ctaPrimary,
+              minimumSize: Size.zero,
+              onPressed: () {},
+              child: Text(
+                l10n.insightsTeaserCta,
+                style: AppTextStyles.body(context).copyWith(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFFFFFFFF),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Day one's third card: what this page becomes. Marked EXAMPLE and set at
+  /// reduced opacity, because at full strength someone could screenshot it
+  /// believing it were their own month.
+  Widget _exampleCard(
+    AppLocalizations l10n,
+    AppColorScheme colors,
+    ThemeProvider themeProvider,
+  ) {
+    // Illustrative only — a plausible spread, not stored data.
+    const pattern = [
+      'Health', 'Health', 'Health', 'Self-care', 'Health', 'Health',
+      'Health', 'Mood', 'Health', 'Health', 'Self-care', 'Mood',
+      'Health', 'Health', 'Health', 'Self-care', 'Health', 'Self-care',
+      'Self-care', 'Health', 'Mood', 'Health', 'Health', 'Self-care',
+      'Health', 'Mood', 'Health', 'Self-care', 'Health', 'Health',
+      'Self-care', 'Health', 'Health', 'Health', 'Health', 'Health',
+      'Health',
+    ];
+
+    return Opacity(
+      opacity: 0.72,
+      child: _card(
+        colors: colors,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.insightsExampleHeader,
+                    style: AppTextStyles.body(context).copyWith(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.0,
+                      color: colors.ctaPrimary,
+                    ),
+                  ),
+                ),
+                Text(
+                  l10n.insightsExampleLabel,
+                  style: AppTextStyles.body(context).copyWith(
+                    fontSize: 11,
+                    letterSpacing: 1.0,
+                    color: colors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final category in pattern)
+                  Container(
+                    width: 26,
+                    height: 26,
+                    decoration: BoxDecoration(
+                      color: CategoryColors.of(category, themeProvider.theme),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.insightsExampleSummary,
+              style: AppTextStyles.body(context)
+                  .copyWith(color: colors.textSecondary),
+            ),
+            Text(
+              l10n.insightsExampleReturns,
+              style: AppTextStyles.body(context)
+                  .copyWith(color: colors.textSecondary),
+            ),
+            const SizedBox(height: 14),
+            Container(height: 1, color: colors.textDisabled.withValues(alpha: 0.25)),
+            const SizedBox(height: 14),
+            Text(
+              l10n.insightsUnlockNote,
+              style: AppTextStyles.body(context).copyWith(
+                fontSize: 13,
+                height: 1.45,
+                color: colors.textSecondary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

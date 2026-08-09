@@ -311,6 +311,23 @@ class AppLocalizationsRu extends AppLocalizations {
   String get insightsGridCaption => 'один квадрат — одно сделанное дело';
 
   @override
+  String get insightsGapsShortening => 'И они становятся короче.';
+
+  @override
+  String get insightsTeaserBody =>
+      'В этом месяце есть закономерность, которую вы пока не видите — разрыв между фокусом, который вы выбрали, и тем, которым жили.';
+
+  @override
+  String get insightsTeaserCta => 'Посмотреть, что заметил Intended+';
+
+  @override
+  String get insightsExampleSummary => 'Вы сделали 37 маленьких дел для себя.';
+
+  @override
+  String get insightsExampleReturns =>
+      'Четыре раза вы затихали и четыре раза возвращались.';
+
+  @override
   String insightsReturnsLine(int count) {
     return '$count раза вы затихали на несколько дней. $count раза возвращались.';
   }

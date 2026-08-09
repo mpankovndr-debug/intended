@@ -312,6 +312,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightsGridCaption => 'one square = one thing you did';
 
   @override
+  String get insightsGapsShortening => 'And they\'re getting shorter.';
+
+  @override
+  String get insightsTeaserBody =>
+      'There\'s a pattern in this month you can\'t see yet — the gap between the focus you chose and the one you actually lived.';
+
+  @override
+  String get insightsTeaserCta => 'See what Intended+ noticed';
+
+  @override
+  String get insightsExampleSummary => 'You did 37 small things for yourself.';
+
+  @override
+  String get insightsExampleReturns =>
+      'Four times you went quiet, and four times you came back.';
+
+  @override
   String insightsReturnsLine(int count) {
     return '$count times you went quiet for a few days. $count times you came back.';
   }

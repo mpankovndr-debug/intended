@@ -644,6 +644,36 @@ abstract class AppLocalizations {
   /// **'one square = one thing you did'**
   String get insightsGridCaption;
 
+  /// No description provided for @insightsGapsShortening.
+  ///
+  /// In en, this message translates to:
+  /// **'And they\'re getting shorter.'**
+  String get insightsGapsShortening;
+
+  /// No description provided for @insightsTeaserBody.
+  ///
+  /// In en, this message translates to:
+  /// **'There\'s a pattern in this month you can\'t see yet — the gap between the focus you chose and the one you actually lived.'**
+  String get insightsTeaserBody;
+
+  /// No description provided for @insightsTeaserCta.
+  ///
+  /// In en, this message translates to:
+  /// **'See what Intended+ noticed'**
+  String get insightsTeaserCta;
+
+  /// No description provided for @insightsExampleSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'You did 37 small things for yourself.'**
+  String get insightsExampleSummary;
+
+  /// No description provided for @insightsExampleReturns.
+  ///
+  /// In en, this message translates to:
+  /// **'Four times you went quiet, and four times you came back.'**
+  String get insightsExampleReturns;
+
   /// No description provided for @insightsReturnsLine.
   ///
   /// In en, this message translates to:
