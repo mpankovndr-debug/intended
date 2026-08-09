@@ -409,10 +409,13 @@ class AppBackground extends StatelessWidget {
         // Layer 2: Background texture image — above the gradient so it's visible,
         // below the radial glows so they paint over it.
         Opacity(
-          opacity: 0.22,
+          // The illustration is the screen's depth — at 0.22 it was invisible
+          // and the cards floated on flat colour with nothing to sit against.
+          opacity: 0.62,
           child: Image.asset(
-            colors.backgroundSoft,
+            colors.backgroundMs,
             fit: BoxFit.cover,
+            alignment: Alignment.bottomCenter,
           ),
         ),
 
@@ -424,7 +427,7 @@ class AppBackground extends StatelessWidget {
               center: const Alignment(-0.3, -0.2),
               radius: 0.9,
               colors: [
-                colors.ctaPrimary.withValues(alpha: 0.22),
+                colors.ctaPrimary.withValues(alpha: 0.10),
                 colors.ctaPrimary.withValues(alpha: 0.05),
                 const Color(0x00000000),
               ],
