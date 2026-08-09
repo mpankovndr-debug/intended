@@ -312,6 +312,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightsGridCaption => 'one square = one thing you did';
 
   @override
+  String get insightsTeaserNoGap =>
+      'There\'s more in this month than the squares show — when you reach for these, and how they land.';
+
+  @override
+  String get driftLabel => 'RIGHT NOW';
+
+  @override
+  String driftBody(int thisWeek, int usual) {
+    return 'You\'ve collected $thisWeek moments this week. You usually collect $usual.';
+  }
+
+  @override
+  String get driftFollowed =>
+      'The last two times this happened, a quiet stretch followed.';
+
+  @override
+  String get driftActionEase => 'Just one action for a few days';
+
+  @override
+  String get driftActionFine => 'I\'m fine';
+
+  @override
   String get seasonLabel => 'YOUR SEASON';
 
   @override

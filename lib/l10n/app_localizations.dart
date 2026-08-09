@@ -644,6 +644,42 @@ abstract class AppLocalizations {
   /// **'one square = one thing you did'**
   String get insightsGridCaption;
 
+  /// No description provided for @insightsTeaserNoGap.
+  ///
+  /// In en, this message translates to:
+  /// **'There\'s more in this month than the squares show — when you reach for these, and how they land.'**
+  String get insightsTeaserNoGap;
+
+  /// No description provided for @driftLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'RIGHT NOW'**
+  String get driftLabel;
+
+  /// No description provided for @driftBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve collected {thisWeek} moments this week. You usually collect {usual}.'**
+  String driftBody(int thisWeek, int usual);
+
+  /// No description provided for @driftFollowed.
+  ///
+  /// In en, this message translates to:
+  /// **'The last two times this happened, a quiet stretch followed.'**
+  String get driftFollowed;
+
+  /// No description provided for @driftActionEase.
+  ///
+  /// In en, this message translates to:
+  /// **'Just one action for a few days'**
+  String get driftActionEase;
+
+  /// No description provided for @driftActionFine.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m fine'**
+  String get driftActionFine;
+
   /// No description provided for @seasonLabel.
   ///
   /// In en, this message translates to:

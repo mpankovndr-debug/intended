@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/moment.dart';
+import '../models/drift.dart';
 import '../models/season.dart';
 import '../services/season_service.dart';
 import '../onboarding_v2/onboarding_state.dart';
@@ -35,6 +36,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
   List<Moment> _moments = const [];
   String _reminderTime = '';
   Season? _season;
+  Drift? _drift;
   bool _loaded = false;
 
   @override
@@ -60,6 +62,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     setState(() {
       _moments = moments;
       _season = season;
+      _drift = Drift.read(moments);
       _reminderTime =
           '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
       _loaded = true;
@@ -79,7 +82,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       child: SafeArea(
         bottom: false,
         child: ListView(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 140),
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 180),
         children: [
           Text(l10n.insightsTitle, style: AppTextStyles.h1(context)),
           const SizedBox(height: 20),
@@ -94,9 +97,14 @@ class _InsightsScreenState extends State<InsightsScreen> {
               _exampleCard(l10n, colors, themeProvider),
               const SizedBox(height: 16),
             ] else ...[
+              // Only when there is something honest to say (§6.1).
+              if (_drift != null) ...[
+                _driftCard(l10n, colors, _drift!),
+                const SizedBox(height: 16),
+              ],
               _seasonCard(l10n, colors),
               const SizedBox(height: 16),
-              _teaserCard(l10n, colors),
+              _teaserCard(l10n, colors, onboarding),
               const SizedBox(height: 16),
             ],
             ],
@@ -427,14 +435,38 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// Free tier's third card (§5.3): real content that stops mid-thought.
   /// Never a padlock — a lock is a hard metal object in a world of mist and
   /// says *blocked*, where an unfinished sentence says *there is more here*.
-  Widget _teaserCard(AppLocalizations l10n, AppColorScheme colors) {
+  /// True when the focus area the user actually spent the month on is not one
+  /// they chose. This is the claim the teaser makes, so it has to be real: a
+  /// user whose chosen and lived focus agree would otherwise be told about a
+  /// gap that isn't there — the "bought a promise, received a promise" failure
+  /// §5.3 warns about.
+  bool _hasFocusGap(OnboardingState onboarding) {
+    if (_moments.length < 5) return false;
+    final counts = <String, int>{};
+    for (final m in _moments) {
+      final key = m.category;
+      if (key != null) counts[key] = (counts[key] ?? 0) + 1;
+    }
+    if (counts.isEmpty) return false;
+    final lived =
+        counts.entries.reduce((a, b) => a.value >= b.value ? a : b).key;
+    return !onboarding.focusAreas.contains(lived);
+  }
+
+  Widget _teaserCard(
+    AppLocalizations l10n,
+    AppColorScheme colors,
+    OnboardingState onboarding,
+  ) {
     return _card(
       colors: colors,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10n.insightsTeaserBody,
+            _hasFocusGap(onboarding)
+                ? l10n.insightsTeaserBody
+                : l10n.insightsTeaserNoGap,
             style: _cardBody(colors),
           ),
           const SizedBox(height: 18),
@@ -602,6 +634,61 @@ class _InsightsScreenState extends State<InsightsScreen> {
             style: _cardBody(colors).copyWith(fontStyle: FontStyle.italic),
           ),
         ],
+      ),
+    );
+  }
+
+  /// The drift warning (§6.1) — the only forward-looking thing in the app.
+  ///
+  /// Every competitor reacts to absence, noticing once you have already gone.
+  /// This speaks before the gap, while there is still a week left to change.
+  /// Measured against the user's own rolling average and never a target: "you
+  /// usually collect 6" is an observation about them, where "you should
+  /// collect 6" would be a goal, and goals are the pressure this app removes.
+  Widget _driftCard(AppLocalizations l10n, AppColorScheme colors, Drift drift) {
+    return _card(
+      colors: colors,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _eyebrow(l10n.driftLabel, colors),
+          const SizedBox(height: 10),
+          Text(
+            l10n.driftBody(drift.thisWeek, drift.usual),
+            style: _cardTitle(colors),
+          ),
+          if (drift.precededQuiet) ...[
+            const SizedBox(height: 6),
+            Text(l10n.driftFollowed, style: _cardBody(colors)),
+          ],
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              _driftAction(l10n.driftActionEase, colors, filled: true),
+              _driftAction(l10n.driftActionFine, colors, filled: false),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _driftAction(String label, AppColorScheme colors, {required bool filled}) {
+    return CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      minimumSize: Size.zero,
+      borderRadius: BorderRadius.circular(18),
+      color: filled ? colors.cardBackground : null,
+      onPressed: () {},
+      child: Text(
+        label,
+        style: AppTextStyles.body(context).copyWith(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: colors.textPrimary,
+        ),
       ),
     );
   }

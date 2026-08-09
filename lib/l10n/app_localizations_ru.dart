@@ -311,6 +311,28 @@ class AppLocalizationsRu extends AppLocalizations {
   String get insightsGridCaption => 'один квадрат — одно сделанное дело';
 
   @override
+  String get insightsTeaserNoGap =>
+      'В этом месяце есть больше, чем показывают квадраты — когда вы к этому тянетесь и как это отзывается.';
+
+  @override
+  String get driftLabel => 'ПРЯМО СЕЙЧАС';
+
+  @override
+  String driftBody(int thisWeek, int usual) {
+    return 'На этой неделе у вас $thisWeek моментов. Обычно — $usual.';
+  }
+
+  @override
+  String get driftFollowed =>
+      'В последние два раза после этого наступала тишина.';
+
+  @override
+  String get driftActionEase => 'Одно действие на несколько дней';
+
+  @override
+  String get driftActionFine => 'Всё в порядке';
+
+  @override
   String get seasonLabel => 'ВАШ СЕЗОН';
 
   @override
