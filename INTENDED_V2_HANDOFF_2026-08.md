@@ -6,46 +6,61 @@ Working brief from a full audit + redesign session (Aug 2026). Everything below 
 
 ## 0. Status — what's built, and what needs your eyes
 
-Branch: `restore-point/v2-onboarding-paths`. `main` is untouched until you merge.
+Branch: `restore-point/v2-onboarding-paths`, 21 commits. `main` is untouched until you merge.
+`flutter analyze`: 0 errors, 0 warnings. `flutter test`: 21 passing.
 
-### Done and verified on device
+### Build order progress
 
-| Work | Commit | Verified how |
-|---|---|---|
-| March + May work built, run and fixed | `22088f5` | Full onboarding walked on simulator |
-| §8 paywall pricing and copy | `461e095` | Paywall inspected on device |
-| Build order expanded + §5.6 coach marks | `df7d803` | — |
-| §10 data foundation: `Moment` + rollup | `d0c5d97` | Completion recorded, stored JSON inspected |
-| Per-theme category palettes | *this commit* | 4 automated tests, all 10 themes |
+| Step | State |
+|---|---|
+| Prerequisite — per-theme category palettes | ✅ |
+| Prerequisite — `Moment` schema + rollup | ✅ |
+| 1 Completion sheet, two steps | ✅ |
+| 2 Home redesign | ✅ |
+| 3 Grid + Insights page | ✅ |
+| 4 Returns | ✅ |
+| 5 Seasons | ✅ |
+| 6 Paid month page | ⏳ drift warning done; **letter and monthly plan remain** |
+| 7–11 Share cards, paywall move, packs, free rescue | not started |
 
-**Bug found and fixed while verifying:** `loadSelectedIntentionPath()` existed but was never called, so every cold launch reset the path to `your_own_way`. That silently disabled the path-specific paywall titles for every user — the feature was correctly implemented and completely dead. Only a runtime pass could have caught it; analyze and ARB parity were both clean.
+**Next up.** The letter (§5.3) is a generation function plus a card — comparable to the drift warning. The monthly plan (§6.2) is not a card but a subsystem: nudge generation, persistence of accepted nudges, an accept/adjust flow that actually writes settings (reminder time, retiring habits), and §6.3's before/after measurement, which needs the date a change was made stored so the effect can be measured across it. It is the largest single feature left and deserves its own session.
 
-### ⚠️ Needs your manual check
+### ⚠️ Needs you — cannot be done or seen from a dev machine
 
-Things I cannot verify from here — each needs you, a real device, or an external account:
+1. **Set Lifetime to €49.99 in App Store Connect.** The in-app value is only the pre-load fallback; RevenueCat supplies the real price. Until you change it there, users still see €69.99. *The only outstanding item with money attached.*
+2. **The review prompt → App Store redirect**, on a real device. Neither in-app review nor App Store links work in the Simulator.
+3. **The step-2 tile-landing animation.** The sheet auto-dismisses ~2.3s after the mood tap, faster than a scripted screenshot. §5.2 warns that if the landing doesn't read, drop the tile row for words.
+4. **Day-one Insights and the EXAMPLE card** — only render on a fresh install.
+5. **Real season words and the return glow** — need ≥10 moments and gaps between them. Only "Beginning" and gapless months have been seen.
+6. **The archive and month-freezing** — need a month boundary to cross.
+7. **The category palette on all 10 themes.** Tests guarantee 3:1 contrast everywhere, but legible is not the same as beautiful. Check `warmClay`, `goldenHour`, and both dark themes.
+8. **Russian copy** across the new strings — completion sheet, seasons, drift, insights. Mine is serviceable, not native.
 
-1. **Set Lifetime to €49.99 in App Store Connect.** The in-app value is only the pre-load fallback; RevenueCat supplies the real price. Until you change it there, users still see €69.99.
-2. **The review prompt → App Store redirect.** Rewritten to open the write-review page directly, but neither in-app review nor App Store links function in the Simulator. Needs a tap on your iPhone.
-3. **The category palette on all 10 themes.** Automated tests guarantee every swatch clears 3:1 contrast, but *legible* is not the same as *beautiful*. Worth eyeballing the grid on `warmClay`, `goldenHour`, and both dark themes (`deepFocus`, `nightBloom`) once tiles render in step 3.
-4. **Widget completion sync** — moments recorded from the iOS widget now capture category and local-clock fields. The widget extension can't be exercised properly in the Simulator.
-5. **Russian copy** for the new paywall anchor string (`paywallYearlyAnchor`) and the completion sheet strings (mood pills, note hint, "Kept —"). A native read would be better than mine.
-6. **The step-2 tile-landing animation.** The sheet auto-dismisses ~2.3s after the mood tap, which is faster than a scripted screenshot round-trip, so I confirmed the code and the stored data but never caught the animation on camera. Complete a habit and watch it once — §5.2 warns that if the landing doesn't read, the tile row should be dropped for words.
+Items 3–6 are covered by tests for *behaviour*, not appearance.
 
 ### Known issues, not yet fixed
 
-- **Paywall sheet scrolls under the status bar / Dynamic Island** — the top bullet is clipped. Missing safe-area inset.
+- **Paywall sheet scrolls under the status bar / Dynamic Island** — top bullet clipped, missing safe-area inset.
 - **"Let's begin" on habit reveal is green** while every other primary CTA is taupe.
-- **Focus-area screen**: the floating Continue button overlaps the "Creativity" card with no scrim.
-- **`lib/main.dart` is 6,600 lines** and holds the completion dialog step 1 must replace.
-- **`lib/main.dart.bak`** is a stale copy still in the repo; the orphaned refresh-habits code traced back to it.
+- **`lib/main.dart` is ~6,600 lines.**
+- **`lib/main.dart.bak`** is a stale copy still in the repo.
+- **The home-screen widget still shows a rotating affirmation**, not the intention — worth revisiting once the Today header change proves itself.
 
-### Decisions taken since this doc was written
+### Decisions taken, with reasons
 
-- Per-theme category palettes, not one fixed trio (§4.2).
-- Seasons are **in** this cycle (§4.4).
-- Completed card = wash + outline + full-opacity text, **no tiles, no fade** (§5.1).
-- Notes stored on `Moment`, capped at 280 chars, **not** fed into insights (§10).
-- The new Insights page replaces `progress_screen.dart`.
+- **Per-theme category palettes.** Hue carries meaning and never changes; saturation is the per-theme knob; **lightness is solved for**, driven to the luminance that hits a contrast target. Saturation is the wrong lever for softness — dropping Iris 0.58→0.26 barely changed the tiles because the contrast target pins luminance. `CategoryColors.of()` uses 3.4:1 for grids where colour is the only information; `onCard()` uses 2.1:1 where text names the thing anyway.
+- **Completed card** = wash + tile with glow + full-opacity text. **No fade** (reads as disabled), **no strikethrough** (reads as cancelled), no outline. The tile's presence is the non-colour cue.
+- **Today header is the intention phrase** ("Steadier on hard days"), not the path name — a product category would test a weaker claim than §4.1 makes.
+- **Notes** stored on `Moment`, capped 280 chars, **not** analysed.
+- **Seasons**: word from the strongest axis, not an average; ≥10 moments or it says "Beginning" with a count; open month recomputed every read, closed months frozen.
+- **Drift** compares to the user's own rolling average, never a target, and returns null unless there is something honest to say.
+- The new Insights page replaces `progress_screen.dart`. `moments_collection_screen.dart` is date-indexed and contradicts §4.2 — it should go once the grid proves itself.
+
+### Two things worth carrying forward
+
+**The tests never caught the design failures.** Muddy wash, loud wash, opaque wash, cramped bar, uneven margins, inverted type hierarchy — all passed every automated check. Contrast tests prove legibility, not meaning. Get eyes on new surfaces early.
+
+**Check whether a sentence is true before shipping it.** The teaser card asserted "the gap between the focus you chose and the one you actually lived" with nothing computing it — false for any user whose focus matched. §5.3 names this exact failure. It is now computed. Any copy that states a finding needs the finding.
 
 ---
 
