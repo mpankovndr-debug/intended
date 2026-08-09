@@ -4366,7 +4366,7 @@ class _HabitCardState extends State<_HabitCard>
                                     width: 26,
                                     height: 26,
                                     decoration: BoxDecoration(
-                                      color: CategoryColors.of(
+                                      color: CategoryColors.onCard(
                                         _completedCategory,
                                         themeProvider.theme,
                                       ),
@@ -4375,7 +4375,7 @@ class _HabitCardState extends State<_HabitCard>
                                       // rather than stuck on.
                                       boxShadow: [
                                         BoxShadow(
-                                          color: CategoryColors.of(
+                                          color: CategoryColors.onCard(
                                             _completedCategory,
                                             themeProvider.theme,
                                           ).withValues(alpha: 0.45),

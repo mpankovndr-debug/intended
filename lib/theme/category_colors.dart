@@ -139,6 +139,35 @@ class CategoryColors {
         0.0722 * channel(c.b);
   }
 
+  /// Contrast for the single tile on a habit card.
+  ///
+  /// Lighter than the grid's bar on purpose. WCAG 1.4.11 asks for 3:1 where
+  /// colour *is* the information — true in the grid, where a square is all
+  /// you get. On a card the habit is named in text beside it and the wash
+  /// repeats the same hue, so the tile is reinforcing meaning rather than
+  /// carrying it, and it can sit softer without costing anyone anything.
+  static const double _onCardContrast = 2.1;
+
+  /// The tile shown on a completed habit card. See [_onCardContrast].
+  static Color onCard(String? category, AppTheme theme) {
+    final hue = _hues[category] ?? _neutralHue;
+    final saturation = _hues.containsKey(category)
+        ? (_saturation[theme] ?? 0.40)
+        : _neutralTuning.saturation;
+
+    final backgroundLuminance =
+        _relativeLuminance(AppColors.of(theme).cardBackground);
+    final target = theme.isDark
+        ? (backgroundLuminance + 0.05) * _onCardContrast - 0.05
+        : (backgroundLuminance + 0.05) / _onCardContrast - 0.05;
+
+    return _solveForLuminance(
+      hue: hue,
+      saturation: saturation,
+      targetLuminance: target.clamp(0.0, 1.0),
+    );
+  }
+
   /// Contrast the completed-card wash aims for. Just enough to register as a
   /// tint, nowhere near the swatch — §5.1 warns a saturated fill reads as
   /// "selected" or "alert" rather than the quiet "kept" intended here.
