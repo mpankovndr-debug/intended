@@ -669,7 +669,17 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String insightsReturnsLine(int count) {
-    return '$count раза вы затихали на несколько дней. $count раза возвращались.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count раза вы затихали на несколько дней. $count раза возвращались',
+      many: '$count раз вы затихали на несколько дней. $count раз возвращались',
+      few:
+          '$count раза вы затихали на несколько дней. $count раза возвращались',
+      one: '$count раз вы затихали на несколько дней. $count раз возвращались',
+    );
+    return '$_temp0.';
   }
 
   @override

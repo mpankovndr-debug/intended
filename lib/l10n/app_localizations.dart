@@ -1025,7 +1025,7 @@ abstract class AppLocalizations {
   /// No description provided for @insightsReturnsLine.
   ///
   /// In en, this message translates to:
-  /// **'{count} times you went quiet for a few days. {count} times you came back.'**
+  /// **'{count, plural, =1{Once you went quiet for a few days. Once you came back} other{{count} times you went quiet for a few days. {count} times you came back}}.'**
   String insightsReturnsLine(int count);
 
   /// No description provided for @insightsMostlyAt.

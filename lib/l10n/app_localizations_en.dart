@@ -642,7 +642,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String insightsReturnsLine(int count) {
-    return '$count times you went quiet for a few days. $count times you came back.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count times you went quiet for a few days. $count times you came back',
+      one: 'Once you went quiet for a few days. Once you came back',
+    );
+    return '$_temp0.';
   }
 
   @override

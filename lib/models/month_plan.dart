@@ -111,7 +111,16 @@ class MonthPlan {
       _setAside(lastMonth, counts, activeHabits, customHabits),
       _keepAnchor(counts, activeHabits, hasPinnedHabit),
     ].whereType<PlanNudge>().where((n) => !declinedIds.contains(n.id)).toList()
-      ..sort((a, b) => b.confidence.compareTo(a.confidence));
+      // Ties fall back to the order the kinds are declared in, so the same
+      // month always proposes the same decision. Dart's sort is not stable,
+      // and a card that offered a different suggestion each time the tab
+      // opened would read as the app changing its mind.
+      ..sort((a, b) {
+        final byConfidence = b.confidence.compareTo(a.confidence);
+        return byConfidence != 0
+            ? byConfidence
+            : a.kind.index.compareTo(b.kind.index);
+      });
 
     return MonthPlan(monthKey: monthKey, nudges: nudges);
   }

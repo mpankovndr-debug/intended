@@ -224,7 +224,7 @@
   "insightsTeaserCta": "Посмотреть, что заметил Intended+",
   "insightsExampleSummary": "Вы сделали 37 маленьких дел для себя.",
   "insightsExampleReturns": "Четыре раза вы затихали и четыре раза возвращались.",
-  "insightsReturnsLine": "{count} раза вы затихали на несколько дней. {count} раза возвращались.",
+  "insightsReturnsLine": "{count, plural, one{{count} раз вы затихали на несколько дней. {count} раз возвращались} few{{count} раза вы затихали на несколько дней. {count} раза возвращались} many{{count} раз вы затихали на несколько дней. {count} раз возвращались} other{{count} раза вы затихали на несколько дней. {count} раза возвращались}}.",
   "insightsMostlyAt": "Чаще всего — {period}.",
   "insightsPeriodMorning": "утром",
   "insightsPeriodAfternoon": "днём",
