@@ -665,7 +665,9 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Future<void> _showPaywall() {
     return showCupertinoModalPopup(
       context: context,
-      barrierColor: const Color(0x80000000),
+      // Deeper than the paywall's 50%: the page behind is context,
+      // not content, and at half-dim it still competed (SS1).
+      barrierColor: const Color(0x99000000),
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
       builder: (context) => const PaywallScreen(source: 'insights_teaser'),
     );

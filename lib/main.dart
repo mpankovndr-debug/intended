@@ -1858,7 +1858,8 @@ class _HabitsScreenState extends State<HabitsScreen>
                                   child: habitCard,
                                 );
                               }),
-                              const SizedBox(height: 24),
+                              // A breath, not a chasm (design review, SS3).
+                              const SizedBox(height: 12),
                               Container(
                                 height: 1,
                                 color: colors.borderWarm,
@@ -1877,7 +1878,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                           child: ListView(
                               padding: EdgeInsets.fromLTRB(
                                 24,
-                                pinned.isNotEmpty ? 24 : 16,
+                                pinned.isNotEmpty ? 12 : 16,
                                 24,
                                 140,
                               ),

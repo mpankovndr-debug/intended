@@ -400,7 +400,10 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
       parent: _shareButtonController,
       curve: Curves.easeOutCubic,
     ));
+    final isDark = context.watch<ThemeProvider>().theme.isDark;
 
+    // A light pill (SS1): on the deep-dimmed barrier a bare label sank into
+    // the dark; a filled light button reads as the one thing left to do.
     return SlideTransition(
       position: slideUp,
       child: FadeTransition(
@@ -408,6 +411,12 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
         child: Padding(
           padding: const EdgeInsets.only(bottom: 24),
           child: CupertinoButton(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 30, vertical: 13),
+            borderRadius: BorderRadius.circular(26),
+            color: isDark
+                ? const Color(0xFFFFFFFF).withValues(alpha: 0.18)
+                : const Color(0xFFFFFFFF).withValues(alpha: 0.94),
             onPressed: _sharing ? null : _share,
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -415,7 +424,7 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
                 Icon(
                   CupertinoIcons.share,
                   size: 20,
-                  color: colors.textPrimary,
+                  color: isDark ? colors.textPrimary : colors.buttonDark,
                 ),
                 const SizedBox(width: 10),
                 Text(
@@ -423,7 +432,7 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
                   style: AppTextStyles.body(context).copyWith(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
-                    color: colors.textPrimary,
+                    color: isDark ? colors.textPrimary : colors.buttonDark,
                   ),
                 ),
               ],

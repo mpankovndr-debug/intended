@@ -30,6 +30,7 @@ class MomentGrid extends StatelessWidget {
     this.tileSize = 30,
     this.spacing = 8,
     this.showGhost = true,
+    this.lightenReturns = false,
   });
 
   /// Oldest first. Only this month's moments belong here.
@@ -41,6 +42,13 @@ class MomentGrid extends StatelessWidget {
   /// One faint tile after the last real one, hinting the grid continues.
   /// Exactly one — a row of them becomes the empty-slot problem above.
   final bool showGhost;
+
+  /// Marks returns by lightening the tile instead of the white halo.
+  ///
+  /// The halo is right on the app's muted cards, but on the share story's
+  /// bright sky it disappears — there, the return reads as a tile lit from
+  /// within: the same hue, a step lighter than its neighbours (SS1).
+  final bool lightenReturns;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +71,7 @@ class MomentGrid extends StatelessWidget {
             // A ring marks the first moment after a quiet stretch: "you came
             // back here." It is the only decoration the grid carries.
             isReturn: returnIndices.contains(i),
+            lightenReturn: lightenReturns,
           ),
         if (showGhost && moments.isNotEmpty)
           _Tile(
@@ -104,6 +113,7 @@ class _Tile extends StatelessWidget {
     required this.size,
     this.isReturn = false,
     this.flat = false,
+    this.lightenReturn = false,
   });
 
   final Color color;
@@ -118,9 +128,18 @@ class _Tile extends StatelessWidget {
   /// The ghost tile is a hint, not a moment, so it takes no dimension.
   final bool flat;
 
+  /// See [MomentGrid.lightenReturns].
+  final bool lightenReturn;
+
   @override
   Widget build(BuildContext context) {
-    final hsl = HSLColor.fromColor(color);
+    final base = isReturn && lightenReturn
+        ? HSLColor.fromColor(color)
+            .withLightness(
+                (HSLColor.fromColor(color).lightness + 0.16).clamp(0.0, 1.0))
+            .toColor()
+        : color;
+    final hsl = HSLColor.fromColor(base);
     // A slight lift toward the top-left gives the tile body rather than
     // leaving it a flat chip.
     final lit = hsl
@@ -134,17 +153,17 @@ class _Tile extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: flat ? color : null,
+        color: flat ? base : null,
         gradient: flat
             ? null
             : LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [lit, color, shade],
+                colors: [lit, base, shade],
                 stops: const [0.0, 0.55, 1.0],
               ),
         borderRadius: BorderRadius.circular(size * 0.28),
-        boxShadow: isReturn
+        boxShadow: isReturn && !lightenReturn
             ? [
                 BoxShadow(
                   color: const Color(0xFFFFFFFF).withValues(alpha: 0.95),

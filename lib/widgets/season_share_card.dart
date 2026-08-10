@@ -120,6 +120,7 @@ class SeasonShareCard extends StatelessWidget {
                       tileSize: 30,
                       spacing: 8,
                       showGhost: false,
+                      lightenReturns: true,
                     ),
                   ),
                 ),
