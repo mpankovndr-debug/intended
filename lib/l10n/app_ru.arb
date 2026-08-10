@@ -1685,5 +1685,9 @@
   "rescueShowAll": "Показать всё",
   "menuDidYesterday": "Я делал это вчера",
   "toastKeptYesterday": "Сохранено — за вчера.",
-  "toastAlreadyYesterday": "За вчера это уже записано."
+  "toastAlreadyYesterday": "За вчера это уже записано.",
+  "liftLabel": "ЧТО ВАС ПОДДЕРЖИВАЕТ",
+  "liftLine": "{habit} — {glad, plural, one{{glad} раз} few{{glad} раза} many{{glad} раз} other{{glad} раза}} из {total} были в радость.",
+  "liftForming": "Рано называть это закономерностью — спросите меня снова через {weeks, plural, one{неделю} few{{weeks} недели} many{{weeks} недель} other{{weeks} недели}}.",
+  "liftWorstLead": "Последнее чаще всего не отзывается."
 }

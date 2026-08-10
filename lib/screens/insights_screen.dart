@@ -8,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../models/moment.dart';
 import '../models/drift.dart';
 import '../models/letter.dart';
+import '../models/lift.dart';
 import '../models/month_plan.dart';
 import '../models/season.dart';
 import '../services/season_service.dart';
@@ -56,6 +57,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Map<String, Season> _archive = const {};
   Drift? _drift;
   Letter? _letter;
+  Lift? _lift;
+  int _liftWeeksRemaining = 0;
   Set<String> _declinedNudges = const {};
   AcceptedNudge? _acceptedThisMonth;
   PlanProof? _proof;
@@ -89,6 +92,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final hour = await NotificationPreferencesService.getHour();
     final minute = await NotificationPreferencesService.getMinute();
     final remindersEnabled = await NotificationPreferencesService.isEnabled();
+    final allMoments = await MomentsService.getAll();
     final declined = await PlanService.declinedFor(monthKey);
     final accepted = await PlanService.acceptedFor(monthKey);
     final proof = await PlanService.proof();
@@ -111,6 +115,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
       _declinedNudges = declined;
       _acceptedThisMonth = accepted;
       _proof = proof;
+      // Ranked from the full history, not the month: eight weeks of taps
+      // straddle a month boundary by definition.
+      _lift = Lift.read(
+        allMoments,
+        activeHabits: context.read<OnboardingState>().userHabits,
+      );
+      _liftWeeksRemaining = Lift.weeksRemaining(allMoments);
       _reminderTime =
           '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
       _loaded = true;
@@ -171,6 +182,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
               ],
               if (!plan.isEmpty || _acceptedThisMonth != null) ...[
                 _planCard(l10n, colors, plan),
+                const SizedBox(height: 12),
+              ],
+              if (_lift != null) ...[
+                _liftCard(l10n, colors, _lift!, plan),
                 const SizedBox(height: 12),
               ],
             ] else ...[
@@ -1334,6 +1349,85 @@ class _InsightsScreenState extends State<InsightsScreen> {
         Season.wandering => l10n.seasonWandering,
         _ => l10n.seasonBeginning,
       };
+
+  /// What actually lifts you (§6.4) — actions ranked by how they land.
+  ///
+  /// The one card built before its data exists: mood taps started with v2,
+  /// the ranking needs ~8 weeks of them, and shipping it later would mean the
+  /// users whose data matured first needed an app update to see it. Forming
+  /// state shows one real reading and an honest ask-me-later; the ranking
+  /// appears when it can actually rank.
+  ///
+  /// Its button follows §4.5 — when the bottom action clearly isn't landing,
+  /// setting it aside is one tap, recorded through the same accept path the
+  /// plan uses so §6.3 can measure what followed. Suppressed whenever the
+  /// plan is already proposing an action change: two cards asking for
+  /// decisions is the dashboard §5.3 forbids.
+  Widget _liftCard(
+    AppLocalizations l10n,
+    AppColorScheme colors,
+    Lift lift,
+    MonthPlan plan,
+  ) {
+    final worst = lift.worst;
+    final planProposesAction =
+        _acceptedThisMonth == null && plan.topAction != null;
+    final showSetAside = worst != null && !planProposesAction;
+
+    return _card(
+      colors: colors,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _eyebrow(l10n.liftLabel, colors),
+          const SizedBox(height: 12),
+          for (final r in lift.readings) ...[
+            Text(
+              l10n.liftLine(
+                localizeHabitName(r.habitName, l10n),
+                r.gladCount,
+                r.ratedCount,
+              ),
+              style: _cardBody(colors).copyWith(
+                color: r == lift.readings.first
+                    ? colors.textPrimary
+                    : colors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+          if (!lift.mature) ...[
+            const SizedBox(height: 2),
+            Text(
+              l10n.liftForming(_liftWeeksRemaining),
+              style: _cardMeta(colors),
+            ),
+          ],
+          if (showSetAside) ...[
+            const SizedBox(height: 6),
+            Text(l10n.liftWorstLead, style: _cardMeta(colors)),
+            const SizedBox(height: 12),
+            _planAction(
+              l10n.planAcceptSetAside,
+              colors,
+              filled: false,
+              onPressed: () => _acceptAll(
+                [
+                  PlanNudge(
+                    kind: NudgeKind.setAside,
+                    confidence: 1 - worst.gladShare,
+                    count: worst.ratedCount,
+                    habitName: worst.habitName,
+                  ),
+                ],
+                l10n,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 
   /// The drift warning (§6.1) — the only forward-looking thing in the app.
   ///

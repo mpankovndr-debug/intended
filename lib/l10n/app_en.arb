@@ -1994,5 +1994,29 @@
   },
   "menuDidYesterday": "I did this yesterday",
   "toastKeptYesterday": "Kept — for yesterday.",
-  "toastAlreadyYesterday": "Yesterday already has this one."
+  "toastAlreadyYesterday": "Yesterday already has this one.",
+  "liftLabel": "WHAT LIFTS YOU",
+  "liftLine": "{habit} — glad you did it {glad, plural, =1{once} other{{glad} times}} out of {total}.",
+  "liftForming": "Too early to call it a pattern — ask me again in {weeks, plural, =1{a week} other{{weeks} weeks}}.",
+  "liftWorstLead": "That last one mostly doesn't land.",
+  "@liftLine": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      },
+      "glad": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@liftForming": {
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  }
 }

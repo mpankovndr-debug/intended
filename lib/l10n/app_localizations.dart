@@ -7057,6 +7057,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yesterday already has this one.'**
   String get toastAlreadyYesterday;
+
+  /// No description provided for @liftLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'WHAT LIFTS YOU'**
+  String get liftLabel;
+
+  /// No description provided for @liftLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{habit} — glad you did it {glad, plural, =1{once} other{{glad} times}} out of {total}.'**
+  String liftLine(String habit, int glad, int total);
+
+  /// No description provided for @liftForming.
+  ///
+  /// In en, this message translates to:
+  /// **'Too early to call it a pattern — ask me again in {weeks, plural, =1{a week} other{{weeks} weeks}}.'**
+  String liftForming(int weeks);
+
+  /// No description provided for @liftWorstLead.
+  ///
+  /// In en, this message translates to:
+  /// **'That last one mostly doesn\'t land.'**
+  String get liftWorstLead;
 }
 
 class _AppLocalizationsDelegate

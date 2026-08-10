@@ -4184,4 +4184,36 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get toastAlreadyYesterday => 'За вчера это уже записано.';
+
+  @override
+  String get liftLabel => 'ЧТО ВАС ПОДДЕРЖИВАЕТ';
+
+  @override
+  String liftLine(String habit, int glad, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      glad,
+      locale: localeName,
+      other: '$glad раза',
+      many: '$glad раз',
+      few: '$glad раза',
+      one: '$glad раз',
+    );
+    return '$habit — $_temp0 из $total были в радость.';
+  }
+
+  @override
+  String liftForming(int weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: '$weeks недели',
+      many: '$weeks недель',
+      few: '$weeks недели',
+      one: 'неделю',
+    );
+    return 'Рано называть это закономерностью — спросите меня снова через $_temp0.';
+  }
+
+  @override
+  String get liftWorstLead => 'Последнее чаще всего не отзывается.';
 }

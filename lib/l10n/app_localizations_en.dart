@@ -4154,4 +4154,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get toastAlreadyYesterday => 'Yesterday already has this one.';
+
+  @override
+  String get liftLabel => 'WHAT LIFTS YOU';
+
+  @override
+  String liftLine(String habit, int glad, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      glad,
+      locale: localeName,
+      other: '$glad times',
+      one: 'once',
+    );
+    return '$habit — glad you did it $_temp0 out of $total.';
+  }
+
+  @override
+  String liftForming(int weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: '$weeks weeks',
+      one: 'a week',
+    );
+    return 'Too early to call it a pattern — ask me again in $_temp0.';
+  }
+
+  @override
+  String get liftWorstLead => 'That last one mostly doesn\'t land.';
 }
