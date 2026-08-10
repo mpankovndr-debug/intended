@@ -1,3 +1,5 @@
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'package:intl/intl.dart';
@@ -7,14 +9,19 @@ import '../l10n/app_localizations.dart';
 import '../main.dart' show AppBackground;
 import '../models/moment.dart';
 import '../services/share_service.dart';
+import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
 import '../widgets/season_share_card.dart';
 
-/// Presents the monthly card the way the weekly reveal presents its card:
-/// floating over the dimmed app landscape, X to leave, a quiet Share beneath.
-/// The first version put the card on a bare gradient page with a full-width
-/// button — a different app's furniture (design review, SS1).
+/// Presents the monthly story the way the weekly reveal always has: the app
+/// dims and blurs behind it, a shimmer skeleton "generates" for a beat, the
+/// card resolves from blur to sharp, and only then does Share slide up.
+///
+/// The pause is not decoration. A card that pops instantly reads as a
+/// template; one that takes a moment reads as *made from your month* — which
+/// it is. Same timings as the weekly reveal, so the two ceremonies feel like
+/// one ritual.
 class SeasonShareScreen extends StatefulWidget {
   const SeasonShareScreen({
     super.key,
@@ -33,12 +40,48 @@ class SeasonShareScreen extends StatefulWidget {
   State<SeasonShareScreen> createState() => _SeasonShareScreenState();
 }
 
-class _SeasonShareScreenState extends State<SeasonShareScreen> {
+class _SeasonShareScreenState extends State<SeasonShareScreen>
+    with TickerProviderStateMixin {
   final GlobalKey _cardKey = GlobalKey();
   bool _sharing = false;
+  bool _cardReady = false;
+
+  late final AnimationController _shimmerController;
+  late final AnimationController _shareButtonController;
+
+  @override
+  void initState() {
+    super.initState();
+    _shimmerController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1600),
+    )..repeat();
+    _shareButtonController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+
+    // The weekly reveal's clock: shimmer for 1.8s, then the card, then the
+    // button half a second later.
+    Future.delayed(const Duration(milliseconds: 1800), () {
+      if (!mounted) return;
+      _shimmerController.stop();
+      setState(() => _cardReady = true);
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) _shareButtonController.forward();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _shimmerController.dispose();
+    _shareButtonController.dispose();
+    super.dispose();
+  }
 
   Future<void> _share() async {
-    if (_sharing) return;
+    if (_sharing || !_cardReady) return;
     setState(() => _sharing = true);
     final size = MediaQuery.of(context).size;
     try {
@@ -54,92 +97,328 @@ class _SeasonShareScreenState extends State<SeasonShareScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final themeProvider = context.watch<ThemeProvider>();
-    final colors = themeProvider.colors;
-    final locale = Localizations.localeOf(context).toString();
-    final monthLabel = DateFormat.yMMMM(locale).format(DateTime.now());
+    final colors = context.watch<ThemeProvider>().colors;
 
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
       child: AppBackground(
-        child: ColoredBox(
-          color: Colors.black.withValues(alpha: 0.18),
-          child: SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
-                  child: Row(
-                    children: [
-                      CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Icon(
-                          CupertinoIcons.xmark,
-                          size: 22,
-                          color: colors.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 16),
-                      // Rounded for the preview only — the clip sits outside
-                      // the RepaintBoundary, so the exported story stays a
-                      // clean 9:16 rectangle. Scales down on short screens;
-                      // the capture reads layout size, so the export is
-                      // identical either way.
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: RepaintBoundary(
-                          key: _cardKey,
-                          child: SeasonShareCard(
-                            monthLabel: monthLabel,
-                            seasonWord: widget.seasonWord,
-                            moments: widget.moments,
-                            returnCount: widget.returnCount,
-                            gapsShortening: widget.gapsShortening,
-                            theme: themeProvider.theme,
-                            l10n: l10n,
-                          ),
-                        ),
-                      ),
-                      ),
-                    ),
-                  ),
-                ),
-                // A quiet pill, not a full-width slab — the card is the
-                // subject of this screen and the button is just its exit.
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 24),
-                  child: CupertinoButton(
-                    onPressed: _sharing ? null : _share,
+        // Dimmed *and* blurred: the landscape stays present but steps back,
+        // so the card is unmistakably the subject (design review).
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: ColoredBox(
+            color: Colors.black.withValues(alpha: 0.28),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          CupertinoIcons.share,
-                          size: 20,
-                          color: colors.textPrimary,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          l10n.shareButton,
-                          style: AppTextStyles.body(context).copyWith(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
+                        CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Icon(
+                            CupertinoIcons.xmark,
+                            size: 22,
                             color: colors.textPrimary,
                           ),
                         ),
                       ],
                     ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 16),
+                        child: _buildCardPreview(),
+                      ),
+                    ),
+                  ),
+                  _buildShareButton(colors),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCardPreview() {
+    const cardAspect = SeasonShareCard.width / SeasonShareCard.height;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxWidth = constraints.maxWidth;
+        final maxHeight = constraints.maxHeight;
+
+        double previewWidth;
+        double previewHeight;
+        if (maxWidth / maxHeight > cardAspect) {
+          previewHeight = maxHeight;
+          previewWidth = previewHeight * cardAspect;
+        } else {
+          previewWidth = maxWidth;
+          previewHeight = previewWidth / cardAspect;
+        }
+
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 800),
+          switchInCurve: Curves.easeOut,
+          switchOutCurve: Curves.easeIn,
+          transitionBuilder: (child, animation) =>
+              FadeTransition(opacity: animation, child: child),
+          child: _cardReady
+              ? _buildRevealCard(previewWidth, previewHeight)
+              : _buildShimmerSkeleton(previewWidth, previewHeight),
+        );
+      },
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Reveal: blur → sharp + subtle scale, same curve as the weekly card
+  // ---------------------------------------------------------------------------
+
+  Widget _buildRevealCard(double width, double height) {
+    return TweenAnimationBuilder<double>(
+      key: const ValueKey('card'),
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeOutCubic,
+      builder: (context, progress, child) {
+        final sigma = 24.0 * (1.0 - progress);
+        final scale = 0.92 + 0.08 * progress;
+        return Transform.scale(
+          scale: scale,
+          child: Opacity(
+            opacity: progress.clamp(0.0, 1.0),
+            child: sigma > 0.5
+                ? ImageFiltered(
+                    imageFilter: ImageFilter.blur(
+                      sigmaX: sigma,
+                      sigmaY: sigma,
+                      tileMode: TileMode.decal,
+                    ),
+                    child: child,
+                  )
+                : child,
+          ),
+        );
+      },
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.25),
+              blurRadius: 40,
+              spreadRadius: 2,
+              offset: const Offset(0, 12),
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        // Rounded for the preview only — the clip sits outside the
+        // RepaintBoundary, so the exported story stays a clean 9:16 rectangle.
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: RepaintBoundary(
+              key: _cardKey,
+              child: Builder(builder: (context) {
+                final l10n = AppLocalizations.of(context);
+                final themeProvider = context.watch<ThemeProvider>();
+                final locale = Localizations.localeOf(context).toString();
+                return SeasonShareCard(
+                  monthLabel:
+                      DateFormat.yMMMM(locale).format(DateTime.now()),
+                  seasonWord: widget.seasonWord,
+                  moments: widget.moments,
+                  returnCount: widget.returnCount,
+                  gapsShortening: widget.gapsShortening,
+                  theme: themeProvider.theme,
+                  l10n: l10n,
+                );
+              }),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Shimmer skeleton — the "being made" beat, borrowed whole from the weekly
+  // ---------------------------------------------------------------------------
+
+  Widget _buildShimmerSkeleton(double width, double height) {
+    final themeProvider = context.watch<ThemeProvider>();
+    final themeColors = themeProvider.colors;
+    final isDark = themeProvider.theme.isDark;
+
+    final shimmerPeak =
+        isDark ? const Color(0x28FFFFFF) : const Color(0x55FFFFFF);
+    final barStrong = isDark ? const Color(0x0A000000) : const Color(0x15000000);
+    final barLight = isDark ? const Color(0x06000000) : const Color(0x0D000000);
+
+    return AnimatedBuilder(
+      key: const ValueKey('shimmer'),
+      animation: _shimmerController,
+      builder: (context, _) {
+        final pos = _shimmerController.value;
+        return Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                themeColors.surfaceLightest,
+                themeColors.surfaceLight,
+                themeColors.surfaceLightest,
+              ],
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment(-1.5 + 3.0 * pos, -0.3),
+                        end: Alignment(-0.5 + 3.0 * pos, 0.3),
+                        colors: [
+                          const Color(0x00FFFFFF),
+                          shimmerPeak,
+                          const Color(0x00FFFFFF),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                // Ghost of the story's layout: eyebrow, hero word, grid rows,
+                // stats, branding.
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.12),
+                  child: Column(
+                    children: [
+                      SizedBox(height: height * 0.09),
+                      Container(
+                        width: width * 0.35,
+                        height: height * 0.018,
+                        decoration: BoxDecoration(
+                          color: barLight,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      SizedBox(height: height * 0.02),
+                      Container(
+                        width: width * 0.6,
+                        height: height * 0.055,
+                        decoration: BoxDecoration(
+                          color: barStrong,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      SizedBox(height: height * 0.05),
+                      for (var row = 0; row < 2; row++) ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            for (var i = 0; i < 6; i++)
+                              Container(
+                                width: width * 0.085,
+                                height: width * 0.085,
+                                margin: EdgeInsets.all(width * 0.011),
+                                decoration: BoxDecoration(
+                                  color: barStrong,
+                                  borderRadius:
+                                      BorderRadius.circular(width * 0.024),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                      SizedBox(height: height * 0.04),
+                      Container(
+                        width: width * 0.55,
+                        height: height * 0.016,
+                        decoration: BoxDecoration(
+                          color: barLight,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                      const Spacer(),
+                      Container(
+                        width: width * 0.38,
+                        height: height * 0.02,
+                        decoration: BoxDecoration(
+                          color: barLight,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      SizedBox(height: height * 0.07),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Share — slides up once the card exists
+  // ---------------------------------------------------------------------------
+
+  Widget _buildShareButton(dynamic colors) {
+    final slideUp = Tween<Offset>(
+      begin: const Offset(0, 1.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _shareButtonController,
+      curve: Curves.easeOutCubic,
+    ));
+
+    return SlideTransition(
+      position: slideUp,
+      child: FadeTransition(
+        opacity: _shareButtonController,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 24),
+          child: CupertinoButton(
+            onPressed: _sharing ? null : _share,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  CupertinoIcons.share,
+                  size: 20,
+                  color: colors.textPrimary,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  AppLocalizations.of(context).shareButton,
+                  style: AppTextStyles.body(context).copyWith(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    color: colors.textPrimary,
                   ),
                 ),
               ],
