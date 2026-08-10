@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/cupertino.dart';
@@ -6,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
-import '../main.dart' show AppBackground;
 import '../models/moment.dart';
 import '../services/share_service.dart';
 import '../theme/app_colors.dart';
@@ -14,9 +14,10 @@ import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
 import '../widgets/season_share_card.dart';
 
-/// Presents the monthly story the way the weekly reveal always has: the app
-/// dims and blurs behind it, a shimmer skeleton "generates" for a beat, the
-/// card resolves from blur to sharp, and only then does Share slide up.
+/// Presents the monthly story the way the weekly reveal always has: the page
+/// stays live behind it — dimmed and blurred by the modal barrier, exactly
+/// like the paywall — a shimmer skeleton "generates" for a beat, the card
+/// resolves from blur to sharp, and only then does Share slide up.
 ///
 /// The pause is not decoration. A card that pops instantly reads as a
 /// template; one that takes a moment reads as *made from your month* — which
@@ -61,13 +62,13 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
       duration: const Duration(milliseconds: 600),
     );
 
-    // The weekly reveal's clock: shimmer for 1.8s, then the card, then the
-    // button half a second later.
-    Future.delayed(const Duration(milliseconds: 1800), () {
+    // The weekly reveal's clock, tightened a notch on request: shimmer for
+    // 1.2s, then the card, then the button a beat later.
+    Future.delayed(const Duration(milliseconds: 1200), () {
       if (!mounted) return;
       _shimmerController.stop();
       setState(() => _cardReady = true);
-      Future.delayed(const Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 350), () {
         if (mounted) _shareButtonController.forward();
       });
     });
@@ -101,14 +102,10 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
 
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
-      child: AppBackground(
-        // Dimmed *and* blurred: the landscape stays present but steps back,
-        // so the card is unmistakably the subject (design review).
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-          child: ColoredBox(
-            color: Colors.black.withValues(alpha: 0.28),
-            child: SafeArea(
+      // Presented via showCupertinoModalPopup with the paywall's barrier:
+      // the Insights page itself stays behind this, dimmed and blurred by the
+      // route — real depth, not repainted scenery.
+      child: SafeArea(
               child: Column(
                 children: [
                   Padding(
@@ -139,9 +136,6 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
                   _buildShareButton(colors),
                 ],
               ),
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -335,21 +329,32 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
                         ),
                       ),
                       SizedBox(height: height * 0.05),
+                      // The tiles breathe in sequence — the month being
+                      // laid down one square at a time, not a static ghost.
                       for (var row = 0; row < 2; row++) ...[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             for (var i = 0; i < 6; i++)
-                              Container(
-                                width: width * 0.085,
-                                height: width * 0.085,
-                                margin: EdgeInsets.all(width * 0.011),
-                                decoration: BoxDecoration(
-                                  color: barStrong,
-                                  borderRadius:
-                                      BorderRadius.circular(width * 0.024),
-                                ),
-                              ),
+                              Builder(builder: (context) {
+                                final phase =
+                                    (pos * 2 * math.pi) - (row * 6 + i) * 0.55;
+                                final breath =
+                                    0.45 + 0.55 * (0.5 + 0.5 * math.sin(phase));
+                                return Opacity(
+                                  opacity: breath,
+                                  child: Container(
+                                    width: width * 0.085,
+                                    height: width * 0.085,
+                                    margin: EdgeInsets.all(width * 0.011),
+                                    decoration: BoxDecoration(
+                                      color: barStrong,
+                                      borderRadius:
+                                          BorderRadius.circular(width * 0.024),
+                                    ),
+                                  ),
+                                );
+                              }),
                           ],
                         ),
                       ],

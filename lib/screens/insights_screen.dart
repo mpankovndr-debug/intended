@@ -899,14 +899,19 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// that survives a thumbnail. What is worth reading in the app and what is
   /// worth posting are not the same picture.
   Future<void> _shareSeason(String seasonWord) async {
-    await Navigator.of(context).push(
-      CupertinoPageRoute<void>(
-        builder: (_) => SeasonShareScreen(
-          seasonWord: seasonWord,
-          moments: _moments,
-          returnCount: _returnCount,
-          gapsShortening: _gapsShortening,
-        ),
+    // The paywall's presentation exactly (design review): a modal over the
+    // live page, which stays visible behind it — dimmed and blurred. A pushed
+    // route would repaint its own background instead, and no amount of filter
+    // on fresh paint looks like depth.
+    await showCupertinoModalPopup<void>(
+      context: context,
+      barrierColor: const Color(0x80000000),
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      builder: (_) => SeasonShareScreen(
+        seasonWord: seasonWord,
+        moments: _moments,
+        returnCount: _returnCount,
+        gapsShortening: _gapsShortening,
       ),
     );
   }
