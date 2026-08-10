@@ -154,17 +154,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
           if (!_loaded)
             const SizedBox.shrink()
           else
-            // The month itself — the grid — stands alone (design review):
-            // it is the record, and everything below it is readings of it.
+            // One sheet of glass for the whole month — grid, week one,
+            // season, readings, all of it joined by the profile's dividers.
+            // The only thing that stands apart is the upsell below: it is not
+            // the user's data, so it doesn't get to sit inside it.
             ...[
             _shell(colors, sections: [
               _monthCard(l10n, colors, themeProvider, paid: paid),
-            ]),
-            const SizedBox(height: 12),
-            // One sheet of glass for the readings, joined by the profile's
-            // dividers instead of floating alone — Share then reads as
-            // sharing all of it.
-            _shell(colors, sections: [
               // The early days, on both tiers (§12) — week one is when every
               // pattern section is still null, so these two carry it.
               if (_moments.isNotEmpty) ...[
@@ -190,9 +186,14 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 if (_lift != null) _liftCard(l10n, colors, _lift!, plan),
               ] else ...[
                 _seasonCard(l10n, colors, paid: paid),
-                _teaserCard(l10n, colors, onboarding),
               ],
             ]),
+            if (!paid && _moments.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              _shell(colors, sections: [
+                _teaserCard(l10n, colors, onboarding),
+              ]),
+            ],
             ],
         ],
         ),
