@@ -153,73 +153,45 @@ class _InsightsScreenState extends State<InsightsScreen> {
           const SizedBox(height: 20),
           if (!_loaded)
             const SizedBox.shrink()
-          else ...[
-            _monthCard(l10n, colors, themeProvider, paid: paid),
-            const SizedBox(height: 12),
-            // The early days, on both tiers (§12). Week one is where people
-            // decide whether to keep the app, and it is exactly when every
-            // pattern card is still null — so these two carry it: each moment
-            // named in full while there are few enough to name, and a one-time
-            // keepsake when the first week completes.
-            if (_moments.isNotEmpty) ...[
-              if (_firstWeek != null) ...[
-                _firstWeekCard(l10n, colors, _firstWeek!),
-                const SizedBox(height: 12),
+          else
+            // One sheet of glass for the whole month (design review): the
+            // sections are joined by the profile's dividers instead of each
+            // floating alone, and Share reads as sharing all of it.
+            _shell(colors, sections: [
+              _monthCard(l10n, colors, themeProvider, paid: paid),
+              // The early days, on both tiers (§12) — week one is when every
+              // pattern section is still null, so these two carry it.
+              if (_moments.isNotEmpty) ...[
+                if (_firstWeek != null) _firstWeekCard(l10n, colors, _firstWeek!),
+                if (_moments.length < Letter.minMoments)
+                  _soFarCard(l10n, colors),
               ],
-              if (_moments.length < Letter.minMoments) ...[
-                _soFarCard(l10n, colors),
-                const SizedBox(height: 12),
+              // Day one belongs to neither tier (§5.4): nothing is behind a
+              // lock yet, so the Day-0 window stays with the onboarding
+              // paywall.
+              if (_moments.isEmpty) ...[
+                _startingWithCard(l10n, colors, onboarding),
+                _exampleCard(l10n, colors, themeProvider),
+              ] else if (paid) ...[
+                // Free and paid share the same sections and the same quality;
+                // paid has more of them (§5.3). Each returns null when it has
+                // nothing true to say, and then simply isn't on the page.
+                if (_drift != null) _driftCard(l10n, colors, _drift!),
+                _seasonCard(l10n, colors, paid: paid),
+                if (_letter != null) _letterCard(l10n, colors, _letter!),
+                if (!plan.isEmpty || _acceptedThisMonth != null)
+                  _planCard(l10n, colors, plan),
+                if (_lift != null) _liftCard(l10n, colors, _lift!, plan),
+              ] else ...[
+                _seasonCard(l10n, colors, paid: paid),
+                _teaserCard(l10n, colors, onboarding),
               ],
-            ],
-            // Day one belongs to neither tier. There is genuinely nothing
-            // behind a lock yet, so upgrading here would unlock three empty
-            // cards — the Day-0 conversion window belongs to the onboarding
-            // paywall instead (§5.4).
-            if (_moments.isEmpty) ...[
-              _startingWithCard(l10n, colors, onboarding),
-              const SizedBox(height: 12),
-              _exampleCard(l10n, colors, themeProvider),
-              const SizedBox(height: 12),
-            ] else if (paid) ...[
-              // Free and paid share the same cards and the same quality; paid
-              // has more of them (§5.3). Nothing here is a degraded copy of
-              // something better.
-              //
-              // Each of these returns null when it has nothing true to say, and
-              // then simply isn't on the screen. A section that appears with a
-              // reworded promise inside it is the failure §5.3 names: the user
-              // bought a promise and received a promise.
-              if (_drift != null) ...[
-                _driftCard(l10n, colors, _drift!),
-                const SizedBox(height: 12),
-              ],
-              _seasonCard(l10n, colors, paid: paid),
-              const SizedBox(height: 12),
-              if (_letter != null) ...[
-                _letterCard(l10n, colors, _letter!),
-                const SizedBox(height: 12),
-              ],
-              if (!plan.isEmpty || _acceptedThisMonth != null) ...[
-                _planCard(l10n, colors, plan),
-                const SizedBox(height: 12),
-              ],
-              if (_lift != null) ...[
-                _liftCard(l10n, colors, _lift!, plan),
-                const SizedBox(height: 12),
-              ],
-            ] else ...[
-              _seasonCard(l10n, colors, paid: paid),
-              const SizedBox(height: 12),
-              _teaserCard(l10n, colors, onboarding),
-              const SizedBox(height: 12),
-            ],
-            ],
-          ],
+            ]),
+        ],
         ),
       ),
     );
   }
-
 
   // One type scale for the whole page. Every card draws from these three and
   // nothing overrides them locally — the previous version set sizes and
@@ -259,34 +231,32 @@ class _InsightsScreenState extends State<InsightsScreen> {
         color: colors.textSecondary,
       );
 
-  /// [emphasis] is the plan card's only distinction (§5.3 calls it the most
-  /// prominent card on the screen): a denser glass and a brighter edge. It buys
-  /// prominence without a fourth text size, which is what the last redesign
-  /// spent it on and had to take back.
+  /// One card for the whole month (design review): every section lives in a
+  /// single sheet of the profile's glass, separated by the profile's own
+  /// dividers. Share then reads as sharing *this* — the month a user is
+  /// looking at — rather than one tile among many.
+  ///
+  /// [emphasis] is kept in the signature so call sites don't churn, but a
+  /// single card has no louder card to be; prominence now comes from order.
   Widget _card({
     required AppColorScheme colors,
     required Widget child,
     bool emphasis = false,
-  }) {
-    // The profile page's glass, exactly — same surface, same opacity, same
-    // border, same shadow — so the app has one card, not a family of
-    // near-misses (design review, SS8).
+  }) =>
+      child;
+
+  /// The one decorated surface on the page.
+  Widget _shell(AppColorScheme colors, {required List<Widget> sections}) {
     final isDark = context.read<ThemeProvider>().theme.isDark;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: colors.profileCard.withValues(
-          alpha: (colors.profileCardOpacity + (emphasis ? 0.12 : 0.0))
-              .clamp(0.0, 1.0),
-        ),
+        color: colors.profileCard.withValues(alpha: colors.profileCardOpacity),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: emphasis
-              ? colors.ctaPrimary.withValues(alpha: 0.45)
-              : isDark
-                  ? colors.borderCard
-                      .withValues(alpha: colors.borderCardOpacity)
-                  : const Color(0xFFFFFFFF).withValues(alpha: 0.6),
+          color: isDark
+              ? colors.borderCard.withValues(alpha: colors.borderCardOpacity)
+              : const Color(0xFFFFFFFF).withValues(alpha: 0.6),
           width: 1,
         ),
         boxShadow: [
@@ -297,9 +267,24 @@ class _InsightsScreenState extends State<InsightsScreen> {
           ),
         ],
       ),
-      child: child,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var i = 0; i < sections.length; i++) ...[
+            sections[i],
+            if (i != sections.length - 1) _divider(colors),
+          ],
+        ],
+      ),
     );
   }
+
+  /// The profile card's row divider.
+  Widget _divider(AppColorScheme colors) => Container(
+        margin: const EdgeInsets.symmetric(vertical: 16),
+        height: 1,
+        color: colors.textDisabled.withValues(alpha: 0.22),
+      );
 
   Widget _monthCard(
     AppLocalizations l10n,

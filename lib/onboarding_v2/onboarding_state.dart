@@ -727,7 +727,9 @@ class OnboardingState extends ChangeNotifier {
   }
 
   Future<void> addCustomHabit(String habitTitle, {String? focusArea}) async {
-    if (!canAddCustomHabit()) return;
+    // Tier limits live at the entry point (_createCustomHabit shows the
+    // paywall at the free cap). Guarding again here silently blocked *paid*
+    // users at two, because this layer cannot see the subscription.
     if (userHabits.any((h) => h.toLowerCase() == habitTitle.toLowerCase())) return;
 
     _customHabits.add(habitTitle);

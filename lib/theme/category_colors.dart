@@ -213,11 +213,20 @@ class CategoryColors {
   static const double _onCardContrast = 2.1;
 
   /// The tile shown on a completed habit card. See [_onCardContrast].
+  ///
+  /// Softer than the grid in two extra ways, both from the design review
+  /// (SS6): saturation is trimmed a quarter, and the solved colour is pulled a
+  /// quarter of the way toward the theme's own accent. The grid keeps the full
+  /// swatch — colour is the *data* there — but on a card the text names the
+  /// action, so the tile can afford to sit in the palette's family instead of
+  /// visiting from outside it. Coral on Iris stops shouting; the hue is still
+  /// legibly Health.
   static Color onCard(String? category, AppTheme theme) {
     final hue = _hues[category] ?? _neutralHue;
-    final saturation = _hues.containsKey(category)
-        ? (_saturation[theme] ?? 0.40)
-        : _neutralTuning.saturation;
+    final saturation = (_hues.containsKey(category)
+            ? (_saturation[theme] ?? 0.40)
+            : _neutralTuning.saturation) *
+        0.75;
 
     final backgroundLuminance =
         _relativeLuminance(AppColors.of(theme).cardBackground);
@@ -225,11 +234,12 @@ class CategoryColors {
         ? (backgroundLuminance + 0.05) * _onCardContrast - 0.05
         : (backgroundLuminance + 0.05) / _onCardContrast - 0.05;
 
-    return _solveForLuminance(
+    final solved = _solveForLuminance(
       hue: hue,
       saturation: saturation,
       targetLuminance: target.clamp(0.0, 1.0),
     );
+    return Color.lerp(solved, AppColors.of(theme).ctaPrimary, 0.25)!;
   }
 
   /// Contrast the completed-card wash aims for. Just enough to register as a

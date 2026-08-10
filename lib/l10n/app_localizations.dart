@@ -7129,6 +7129,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'My gaps are getting shorter.'**
   String get shareSeasonGaps;
+
+  /// No description provided for @pathMoreIntentions.
+  ///
+  /// In en, this message translates to:
+  /// **'MORE INTENTIONS'**
+  String get pathMoreIntentions;
 }
 
 class _AppLocalizationsDelegate

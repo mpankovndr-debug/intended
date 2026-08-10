@@ -89,10 +89,14 @@ class _SeasonShareScreenState extends State<SeasonShareScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 32, vertical: 16),
-                      // Scales down on short screens; the capture reads the
-                      // RepaintBoundary's layout size, so the exported image
-                      // is identical either way.
-                      child: FittedBox(
+                      // Rounded for the preview only — the clip sits outside
+                      // the RepaintBoundary, so the exported story stays a
+                      // clean 9:16 rectangle. Scales down on short screens;
+                      // the capture reads layout size, so the export is
+                      // identical either way.
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: RepaintBoundary(
                           key: _cardKey,
@@ -106,6 +110,7 @@ class _SeasonShareScreenState extends State<SeasonShareScreen> {
                             l10n: l10n,
                           ),
                         ),
+                      ),
                       ),
                     ),
                   ),

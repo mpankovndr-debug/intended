@@ -1685,10 +1685,23 @@ class _HabitsScreenState extends State<HabitsScreen>
     // open the app again tomorrow. Four cards and a browse link asks them to
     // resume. One card asks them to start.
     final rescue = _rescueDismissed ? null : _rescue;
-    final allHabits = onboardingState.userHabits
+    final pinnedHabit = onboardingState.pinnedHabit;
+    // The cap keeps the *user's own* actions first: pinned, then customs,
+    // then the catalog fills what's left. A plain take() cut customs off the
+    // end because generation appends them last — someone's own words were the
+    // first thing the ceiling deleted (design review, SS3).
+    final byPriority = [
+      if (pinnedHabit != null &&
+          onboardingState.userHabits.contains(pinnedHabit))
+        pinnedHabit,
+      ...onboardingState.userHabits.where((h) =>
+          h != pinnedHabit && onboardingState.isCustomHabit(h)),
+      ...onboardingState.userHabits.where((h) =>
+          h != pinnedHabit && !onboardingState.isCustomHabit(h)),
+    ];
+    final allHabits = byPriority
         .take(rescue == null ? OnboardingState.maxActiveHabits : 1)
         .toList();
-    final pinnedHabit = onboardingState.pinnedHabit;
 
     // Detect pin/unpin transitions (for arrival animations)
     final isNewPin = pinnedHabit != null && pinnedHabit != _lastKnownPinned;
@@ -2567,14 +2580,17 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                         children: [
                           IgnorePointer(
                             child: Container(
-                              height: 56,
+                              height: 72,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
+                                  // Ends at full strength: a 0.9 stop against
+                                  // the solid band below drew a visible seam
+                                  // right above the button (SS3).
                                   colors: [
                                     bottomScrim.withOpacity(0.0),
-                                    bottomScrim.withOpacity(0.9),
+                                    bottomScrim,
                                   ],
                                 ),
                               ),
@@ -4346,13 +4362,14 @@ class _HabitCardState extends State<_HabitCard>
     if (widget.isPinned) {
       effectiveAccentColor = colors.pinnedAccent; // Theme-aware pinned accent
     } else if (isCustom) {
-      // Use focus area color for custom habits
+      // The custom habit's focus area, through the same per-theme solve as
+      // every other category surface — this was the last caller of the legacy
+      // fixed palette, and its grass-green on Iris proved why it had to go.
       final customArea = context
           .read<OnboardingState>()
           .customHabitFocusAreas[widget.habitTitle];
       effectiveAccentColor = customArea != null
-          ? (AppColors.categoryColors[customArea] ??
-              colors.accentCustom)
+          ? CategoryColors.onCard(customArea, themeProvider.theme)
           : colors.accentCustom;
     } else {
       effectiveAccentColor =
@@ -4389,16 +4406,12 @@ class _HabitCardState extends State<_HabitCard>
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                  // CARD
+                  // CARD — the profile's glass, unblurred: the blur
+                  // behind a translucent fill let the landscape muddy the
+                  // surface, which is why these read grayer than every other
+                  // card in the app (design review, SS6).
                   Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(
-                          sigmaX: _isDoneToday ? 20 : 25,
-                          sigmaY: _isDoneToday ? 20 : 25,
-                        ),
-                        child: AnimatedContainer(
+                    child: AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           padding: EdgeInsets.symmetric(
                             horizontal: 18,
@@ -4549,9 +4562,7 @@ class _HabitCardState extends State<_HabitCard>
                             ],
                           ),
                         ),
-                      ),
                     ),
-                  ),
                   ],
                 ),
               ),

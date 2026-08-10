@@ -4253,4 +4253,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shareSeasonGaps => 'Мои паузы становятся короче.';
+
+  @override
+  String get pathMoreIntentions => 'ЕЩЁ НАМЕРЕНИЯ';
 }

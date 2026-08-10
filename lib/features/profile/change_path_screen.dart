@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../main.dart' show AppBackground;
+import '../../models/curated_pack.dart';
 import '../../models/intention_path.dart';
 import '../../onboarding_v2/onboarding_state.dart';
 import '../../theme/app_colors.dart';
@@ -61,6 +62,55 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
 
   late IntentionPathId _selected;
 
+  /// Selected curated pack, when the user chose one of the merged intentions
+  /// instead of a path. Mutually exclusive with a path change.
+  String? _selectedPackId;
+
+  ({String name, String subtitle}) _localizedPack(
+    AppLocalizations l10n,
+    CuratedPack pack,
+  ) =>
+      switch (pack.id) {
+        'gentle_mornings' => (
+            name: l10n.packGentleMorningsName,
+            subtitle: l10n.packGentleMorningsSubtitle
+          ),
+        'winding_down' => (
+            name: l10n.packWindingDownName,
+            subtitle: l10n.packWindingDownSubtitle
+          ),
+        'tiny_resets' => (
+            name: l10n.packTinyResetsName,
+            subtitle: l10n.packTinyResetsSubtitle
+          ),
+        'creative_spark' => (
+            name: l10n.packCreativeSparkName,
+            subtitle: l10n.packCreativeSparkSubtitle
+          ),
+        'stay_connected' => (
+            name: l10n.packStayConnectedName,
+            subtitle: l10n.packStayConnectedSubtitle
+          ),
+        _ => (name: pack.name, subtitle: pack.subtitle),
+      };
+
+  /// Adopting a pack (§7: packs and paths are one feature). Redirects the
+  /// catalog actions and focus areas; customs stay; the Today header keeps
+  /// the path phrase — an intention is *why*, a pack is *what this month*.
+  Future<void> _adoptPack(CuratedPack pack) async {
+    final onboarding = context.read<OnboardingState>();
+    HapticFeedback.mediumImpact();
+
+    final catalog = onboarding.userHabits
+        .where((h) => !onboarding.isCustomHabit(h))
+        .toList();
+    await onboarding.setAsideHabits(catalog);
+    await onboarding.addHabitsFromPack(pack.habitIds);
+    await onboarding.applyPackFocusAreas(pack.focusAreas);
+
+    if (mounted) Navigator.pop(context);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -71,6 +121,16 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
   Future<void> _handleSave() async {
     final onboardingState = context.read<OnboardingState>();
     final currentId = IntentionPathId.fromKey(onboardingState.selectedIntentionPath);
+
+    final packId = _selectedPackId;
+    if (packId != null) {
+      final pack =
+          CuratedPacks.all.where((p) => p.id == packId).firstOrNull;
+      if (pack != null) {
+        await _adoptPack(pack);
+        return;
+      }
+    }
 
     if (_selected == currentId) {
       Navigator.pop(context);
@@ -162,7 +222,7 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                     ),
                   ),
                   SliverPadding(
-                    padding: EdgeInsets.fromLTRB(24, 8, 24, 120 + bottomPadding),
+                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
@@ -179,12 +239,63 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                               colors: colors,
                               onTap: () {
                                 HapticFeedback.selectionClick();
-                                setState(() => _selected = path.id);
+                                setState(() {
+                                  _selected = path.id;
+                                  _selectedPackId = null;
+                                });
                               },
                             ),
                           );
                         },
                         childCount: IntentionPath.pickerOptions.length,
+                      ),
+                    ),
+                  ),
+                  // §7: packs and onboarding intentions are the same feature
+                  // under two names. The packs live here as intentions you can
+                  // adopt — same cards, same door. Adopting redirects the
+                  // catalog actions and focus areas; it never grows the list.
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(28, 18, 24, 12),
+                      child: Text(
+                        l10n.pathMoreIntentions,
+                        style: TextStyle(
+                          fontFamily: AppTextStyles.bodyFont(context),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.2,
+                          color: colors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.fromLTRB(24, 0, 24, 120 + bottomPadding),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final pack = CuratedPacks.all[index];
+                          final lp = _localizedPack(l10n, pack);
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 14),
+                            child: _PathCard(
+                              title: lp.name,
+                              subtitle: lp.subtitle,
+                              selected: _selectedPackId == pack.id,
+                              isDark: isDark,
+                              colors: colors,
+                              onTap: () {
+                                HapticFeedback.selectionClick();
+                                setState(() => _selectedPackId =
+                                    _selectedPackId == pack.id
+                                        ? null
+                                        : pack.id);
+                              },
+                            ),
+                          );
+                        },
+                        childCount: CuratedPacks.all.length,
                       ),
                     ),
                   ),
@@ -206,9 +317,11 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
+                            // Full strength at the bottom — a 0.9 stop drew a
+                            // seam against the solid band below (SS3).
                             colors: [
                               _scrim(colors).withValues(alpha: 0.0),
-                              _scrim(colors).withValues(alpha: 0.9),
+                              _scrim(colors),
                             ],
                           ),
                         ),
@@ -249,7 +362,7 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
 
 class _PathCard extends StatefulWidget {
   const _PathCard({
-    required this.path,
+    this.path,
     required this.title,
     required this.subtitle,
     required this.selected,
@@ -258,7 +371,7 @@ class _PathCard extends StatefulWidget {
     required this.onTap,
   });
 
-  final IntentionPath path;
+  final IntentionPath? path;
   final String title;
   final String subtitle;
   final bool selected;
@@ -287,51 +400,33 @@ class _PathCardState extends State<_PathCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeOut,
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
+        // The profile's glass, flat — no tinted gradient, no blur. The
+        // white-to-accent fill read as a stain on most palettes (design
+        // review, SS7); selection now speaks entirely through the border and
+        // the check, which is how the rest of the app says "chosen".
         decoration: BoxDecoration(
+          color: colors.profileCard.withValues(alpha: colors.profileCardOpacity),
           borderRadius: BorderRadius.circular(26),
+          border: Border.all(
+            color: sel
+                ? accent.withValues(alpha: 0.85)
+                : widget.isDark
+                    ? colors.borderCard
+                        .withValues(alpha: colors.borderCardOpacity)
+                    : const Color(0xFFFFFFFF).withValues(alpha: 0.6),
+            width: sel ? 1.6 : 1,
+          ),
           boxShadow: [
             BoxShadow(
               color: sel
-                  ? accent.withValues(alpha: 0.22)
-                  : colors.textPrimary.withValues(alpha: 0.08),
-              blurRadius: sel ? 22 : 16,
-              spreadRadius: sel ? 1 : 0,
+                  ? accent.withValues(alpha: 0.18)
+                  : colors.textPrimary.withValues(alpha: 0.04),
+              blurRadius: sel ? 18 : 12,
               offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(26),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 220),
-              curve: Curves.easeOut,
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: sel
-                      ? [
-                          const Color(0xFFFFFFFF).withValues(
-                              alpha: widget.isDark ? 0.18 : 0.80),
-                          accent.withValues(alpha: 0.38),
-                        ]
-                      : [
-                          const Color(0xFFFFFFFF).withValues(
-                              alpha: widget.isDark ? 0.10 : 0.65),
-                          colors.surfaceLight.withValues(alpha: 0.60),
-                        ],
-                ),
-                borderRadius: BorderRadius.circular(26),
-                border: Border.all(
-                  color: sel
-                      ? accent.withValues(alpha: 0.72)
-                      : const Color(0xFFFFFFFF).withValues(alpha: 0.40),
-                  width: sel ? 2.0 : 1.5,
-                ),
-              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -388,9 +483,6 @@ class _PathCardState extends State<_PathCard> {
                   ],
                 ],
               ),
-            ),
-          ),
-        ),
       ),
     );
   }

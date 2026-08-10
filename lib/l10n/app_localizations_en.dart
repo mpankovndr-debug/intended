@@ -4217,4 +4217,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareSeasonGaps => 'My gaps are getting shorter.';
+
+  @override
+  String get pathMoreIntentions => 'MORE INTENTIONS';
 }
