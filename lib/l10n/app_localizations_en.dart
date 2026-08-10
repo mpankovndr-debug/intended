@@ -4182,4 +4182,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get liftWorstLead => 'That last one mostly doesn\'t land.';
+
+  @override
+  String get soFarLabel => 'SO FAR';
+
+  @override
+  String soFarLine(String day, String time, String habit) {
+    return '$day, $time — $habit.';
+  }
+
+  @override
+  String get soFarGlad => 'Glad you did.';
+
+  @override
+  String get soFarEffort => 'It took effort.';
+
+  @override
+  String get soFarClosing =>
+      'Too early to call anything a pattern. This page grows as you do.';
+
+  @override
+  String get firstWeekLabel => 'YOUR FIRST WEEK';
+
+  @override
+  String firstWeekCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count small things',
+      one: 'One small thing',
+    );
+    return '$_temp0 for yourself in your first week.';
+  }
+
+  @override
+  String firstWeekGladdest(String habit) {
+    return 'The one you were glad about most: $habit.';
+  }
 }

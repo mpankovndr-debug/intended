@@ -1689,5 +1689,13 @@
   "liftLabel": "ЧТО ВАС ПОДДЕРЖИВАЕТ",
   "liftLine": "{habit} — {glad, plural, one{{glad} раз} few{{glad} раза} many{{glad} раз} other{{glad} раза}} из {total} были в радость.",
   "liftForming": "Рано называть это закономерностью — спросите меня снова через {weeks, plural, one{неделю} few{{weeks} недели} many{{weeks} недель} other{{weeks} недели}}.",
-  "liftWorstLead": "Последнее чаще всего не отзывается."
+  "liftWorstLead": "Последнее чаще всего не отзывается.",
+  "soFarLabel": "ПОКА ЧТО",
+  "soFarLine": "{day}, {time} — {habit}.",
+  "soFarGlad": "Хорошо, что сделали.",
+  "soFarEffort": "Далось непросто.",
+  "soFarClosing": "Рано говорить о закономерностях. Эта страница растёт вместе с вами.",
+  "firstWeekLabel": "ВАША ПЕРВАЯ НЕДЕЛЯ",
+  "firstWeekCount": "{count, plural, one{{count} маленькое дело} few{{count} маленьких дела} many{{count} маленьких дел} other{{count} маленьких дела}} для себя за первую неделю.",
+  "firstWeekGladdest": "Чаще всего вы были рады этому: «{habit}»."
 }

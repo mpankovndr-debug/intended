@@ -7081,6 +7081,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That last one mostly doesn\'t land.'**
   String get liftWorstLead;
+
+  /// No description provided for @soFarLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'SO FAR'**
+  String get soFarLabel;
+
+  /// No description provided for @soFarLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{day}, {time} — {habit}.'**
+  String soFarLine(String day, String time, String habit);
+
+  /// No description provided for @soFarGlad.
+  ///
+  /// In en, this message translates to:
+  /// **'Glad you did.'**
+  String get soFarGlad;
+
+  /// No description provided for @soFarEffort.
+  ///
+  /// In en, this message translates to:
+  /// **'It took effort.'**
+  String get soFarEffort;
+
+  /// No description provided for @soFarClosing.
+  ///
+  /// In en, this message translates to:
+  /// **'Too early to call anything a pattern. This page grows as you do.'**
+  String get soFarClosing;
+
+  /// No description provided for @firstWeekLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR FIRST WEEK'**
+  String get firstWeekLabel;
+
+  /// No description provided for @firstWeekCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One small thing} other{{count} small things}} for yourself in your first week.'**
+  String firstWeekCount(int count);
+
+  /// No description provided for @firstWeekGladdest.
+  ///
+  /// In en, this message translates to:
+  /// **'The one you were glad about most: {habit}.'**
+  String firstWeekGladdest(String habit);
 }
 
 class _AppLocalizationsDelegate

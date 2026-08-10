@@ -4216,4 +4216,43 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get liftWorstLead => 'Последнее чаще всего не отзывается.';
+
+  @override
+  String get soFarLabel => 'ПОКА ЧТО';
+
+  @override
+  String soFarLine(String day, String time, String habit) {
+    return '$day, $time — $habit.';
+  }
+
+  @override
+  String get soFarGlad => 'Хорошо, что сделали.';
+
+  @override
+  String get soFarEffort => 'Далось непросто.';
+
+  @override
+  String get soFarClosing =>
+      'Рано говорить о закономерностях. Эта страница растёт вместе с вами.';
+
+  @override
+  String get firstWeekLabel => 'ВАША ПЕРВАЯ НЕДЕЛЯ';
+
+  @override
+  String firstWeekCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count маленьких дела',
+      many: '$count маленьких дел',
+      few: '$count маленьких дела',
+      one: '$count маленькое дело',
+    );
+    return '$_temp0 для себя за первую неделю.';
+  }
+
+  @override
+  String firstWeekGladdest(String habit) {
+    return 'Чаще всего вы были рады этому: «$habit».';
+  }
 }

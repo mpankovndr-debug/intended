@@ -2018,5 +2018,40 @@
         "type": "int"
       }
     }
+  },
+  "soFarLabel": "SO FAR",
+  "soFarLine": "{day}, {time} — {habit}.",
+  "soFarGlad": "Glad you did.",
+  "soFarEffort": "It took effort.",
+  "soFarClosing": "Too early to call anything a pattern. This page grows as you do.",
+  "firstWeekLabel": "YOUR FIRST WEEK",
+  "firstWeekCount": "{count, plural, =1{One small thing} other{{count} small things}} for yourself in your first week.",
+  "firstWeekGladdest": "The one you were glad about most: {habit}.",
+  "@soFarLine": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      },
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
+  "@firstWeekCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@firstWeekGladdest": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../models/moment.dart';
 import '../models/drift.dart';
+import '../models/first_week.dart';
 import '../models/letter.dart';
 import '../models/lift.dart';
 import '../models/month_plan.dart';
@@ -58,6 +59,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Drift? _drift;
   Letter? _letter;
   Lift? _lift;
+  FirstWeek? _firstWeek;
   int _liftWeeksRemaining = 0;
   Set<String> _declinedNudges = const {};
   AcceptedNudge? _acceptedThisMonth;
@@ -122,6 +124,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
         activeHabits: context.read<OnboardingState>().userHabits,
       );
       _liftWeeksRemaining = Lift.weeksRemaining(allMoments);
+      _firstWeek = FirstWeek.read(allMoments);
       _reminderTime =
           '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
       _loaded = true;
@@ -152,6 +155,21 @@ class _InsightsScreenState extends State<InsightsScreen> {
           else ...[
             _monthCard(l10n, colors, themeProvider, paid: paid),
             const SizedBox(height: 12),
+            // The early days, on both tiers (§12). Week one is where people
+            // decide whether to keep the app, and it is exactly when every
+            // pattern card is still null — so these two carry it: each moment
+            // named in full while there are few enough to name, and a one-time
+            // keepsake when the first week completes.
+            if (_moments.isNotEmpty) ...[
+              if (_firstWeek != null) ...[
+                _firstWeekCard(l10n, colors, _firstWeek!),
+                const SizedBox(height: 12),
+              ],
+              if (_moments.length < Letter.minMoments) ...[
+                _soFarCard(l10n, colors),
+                const SizedBox(height: 12),
+              ],
+            ],
             // Day one belongs to neither tier. There is genuinely nothing
             // behind a lock yet, so upgrading here would unlock three empty
             // cards — the Day-0 conversion window belongs to the onboarding
@@ -1348,6 +1366,107 @@ class _InsightsScreenState extends State<InsightsScreen> {
         Season.focused => l10n.seasonFocused,
         Season.wandering => l10n.seasonWandering,
         _ => l10n.seasonBeginning,
+      };
+
+  /// The so-far card: every moment named in full, while that is possible.
+  ///
+  /// At four moments the app can be completely specific in a way it never can
+  /// again — the exact evening, the exact action, how it landed. This is
+  /// §5.3's honest-partial rule promoted to a card: real content with real
+  /// confidence, in place of pattern cards that would otherwise be silent for
+  /// a week. It retires itself the day the letter can exist, at eight.
+  Widget _soFarCard(AppLocalizations l10n, AppColorScheme colors) {
+    final locale = Localizations.localeOf(context).toString();
+
+    return _card(
+      colors: colors,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _eyebrow(l10n.soFarLabel, colors),
+          const SizedBox(height: 12),
+          for (final m in _moments) ...[
+            Builder(builder: (context) {
+              final local =
+                  m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
+              // Rebuilt as UTC-flagged wall clock; formatted without
+              // conversion so it shows the user's own clock at the time.
+              final line = l10n.soFarLine(
+                DateFormat.EEEE(locale).format(local),
+                DateFormat.jm(locale).format(local),
+                localizeHabitName(m.habitName, l10n),
+              );
+              final suffix = switch (m.mood) {
+                MomentMood.gladIDid => ' ${l10n.soFarGlad}',
+                MomentMood.tookEffort => ' ${l10n.soFarEffort}',
+                _ => '',
+              };
+              return Text(
+                '$line$suffix',
+                style: _cardBody(colors).copyWith(
+                  height: 1.5,
+                  color: colors.textPrimary,
+                ),
+              );
+            }),
+            const SizedBox(height: 8),
+          ],
+          const SizedBox(height: 2),
+          Text(l10n.soFarClosing, style: _cardMeta(colors)),
+        ],
+      ),
+    );
+  }
+
+  /// The first-week keepsake (§12). Appears when the week completes, leaves a
+  /// week later on its own — an event, not a fixture.
+  Widget _firstWeekCard(
+    AppLocalizations l10n,
+    AppColorScheme colors,
+    FirstWeek week,
+  ) {
+    final part = week.dominantPart;
+
+    return _card(
+      colors: colors,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _eyebrow(l10n.firstWeekLabel, colors),
+          const SizedBox(height: 10),
+          Text(
+            l10n.firstWeekCount(week.momentCount),
+            style: _cardTitle(colors),
+          ),
+          if (part != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              l10n.insightsMostlyAt(_partPeriodName(l10n, part)),
+              style: _cardBody(colors),
+            ),
+          ],
+          if (week.gladdestHabit != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              l10n.firstWeekGladdest(
+                localizeHabitName(week.gladdestHabit!, l10n),
+              ),
+              style: _cardBody(colors),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// The month card's period strings, reused so the first week and the month
+  /// can never disagree about what "in the evening" means.
+  String _partPeriodName(AppLocalizations l10n, DayPart part) =>
+      switch (part) {
+        DayPart.mornings => l10n.insightsPeriodMorning,
+        DayPart.afternoons => l10n.insightsPeriodAfternoon,
+        DayPart.evenings => l10n.insightsPeriodEvening,
+        DayPart.nights => l10n.insightsPeriodLateNight,
       };
 
   /// What actually lifts you (§6.4) — actions ranked by how they land.
