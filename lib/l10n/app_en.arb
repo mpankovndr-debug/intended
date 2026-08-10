@@ -1977,5 +1977,7 @@
         "type": "int"
       }
     }
-  }
+  },
+  "todayAdoptIntention": "Adopt a different intention",
+  "todaySwapHint": "Not landing? Hold to swap."
 }

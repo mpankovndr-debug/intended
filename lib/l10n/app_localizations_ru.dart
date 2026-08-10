@@ -4151,4 +4151,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shareIncludeHabitNames => 'Показывать названия привычек';
+
+  @override
+  String get todayAdoptIntention => 'Выбрать другое намерение';
+
+  @override
+  String get todaySwapHint => 'Не заходит? Удерживайте, чтобы заменить.';
 }

@@ -1675,5 +1675,7 @@
   "insightsReturnGaps": "с промежутками в {gaps} дней.",
   "shareSeasonMoments": "{count, plural, one{{count} момент} few{{count} момента} many{{count} моментов} other{{count} момента}}",
   "shareSeasonReturns": "{count, plural, one{Я возвращался {count} раз} few{Я возвращался {count} раза} many{Я возвращался {count} раз} other{Я возвращался {count} раза}}",
-  "shareIncludeHabitNames": "Показывать названия привычек"
+  "shareIncludeHabitNames": "Показывать названия привычек",
+  "todayAdoptIntention": "Выбрать другое намерение",
+  "todaySwapHint": "Не заходит? Удерживайте, чтобы заменить."
 }

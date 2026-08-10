@@ -29,6 +29,7 @@ import 'state/user_state.dart';
 import 'screens/paywall_screen.dart';
 import 'screens/insights_screen.dart';
 import 'screens/onboarding_paywall_screen.dart';
+import 'features/profile/change_path_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/habit_completion_modal.dart';
 import 'models/moment.dart';
@@ -1617,15 +1618,6 @@ class _HabitsScreenState extends State<HabitsScreen>
     }
   }
 
-  void _showBrowseHabits(BuildContext context) {
-    final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
-    showCupertinoModalPopup(
-      context: context,
-      barrierColor: colors.barrierColor.withOpacity(colors.barrierOpacity),
-      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-      builder: (context) => const BrowseHabitsSheet(),
-    );
-  }
 
 
   void _createCustomHabit(BuildContext context) {
@@ -1655,10 +1647,6 @@ class _HabitsScreenState extends State<HabitsScreen>
     );
   }
 
-  int _getAvailableHabitsCount(BuildContext context) {
-    return 8;
-  }
-
   @override
   Widget build(BuildContext context) {
     // Check for day change on every build (catches midnight crossing)
@@ -1667,7 +1655,6 @@ class _HabitsScreenState extends State<HabitsScreen>
     Responsive.init(context);
     final themeProvider = context.watch<ThemeProvider>();
     final colors = themeProvider.colors;
-    final isDark = themeProvider.theme.isDark;
     final onboardingState = context.watch<OnboardingState>();
     final l10n = AppLocalizations.of(context);
     // Four on Today, never more (OnboardingState.maxActiveHabits). Enforced
@@ -2095,86 +2082,52 @@ class _HabitsScreenState extends State<HabitsScreen>
                                   );
                                 }),
 
-                                // BROWSE ALL HABITS CARD
-                                const SizedBox(height: 16),
-
+                                // §7 killed the store. "Browse all habits"
+                                // was a shop whose implied verb was *acquire*
+                                // and whose only available action was making
+                                // your list longer — and its "8 more
+                                // available" was a hardcoded number.
+                                //
+                                // What replaces it is a door with the opposite
+                                // psychology: adopting an intention redirects
+                                // the list rather than growing it. Swap, the
+                                // other door, lives on the action cards.
+                                const SizedBox(height: 20),
                                 GestureDetector(
-                                    onTap: () => _showBrowseHabits(context),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(24),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                            sigmaX: 22, sigmaY: 22),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(20),
-                                          decoration: BoxDecoration(
-                                            color: colors.cardBrowse
-                                                .withOpacity(
-                                                    colors.cardBrowseOpacity),
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            border: Border.all(
-                                              color: isDark
-                                                  ? colors.borderCard.withOpacity(colors.borderCardOpacity)
-                                                  : const Color(0xFFFFFFFF).withOpacity(0.20),
-                                              width: 1,
-                                            ),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: colors.textPrimary
-                                                    .withOpacity(0.04),
-                                                blurRadius: 16,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    l10n.habitsBrowseAll,
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: colors.textPrimary,
-                                                      fontFamily: AppTextStyles
-                                                          .bodyFont(context),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 2),
-                                                  Text(
-                                                    l10n.habitsMoreAvailable(
-                                                        _getAvailableHabitsCount(
-                                                            context)),
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color:
-                                                          colors.textSecondary,
-                                                      fontFamily: AppTextStyles
-                                                          .bodyFont(context),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Icon(
-                                                CupertinoIcons.chevron_right,
-                                                size: 18,
-                                                color: colors.textSecondary,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                  onTap: () => Navigator.of(context).push(
+                                    CupertinoPageRoute<void>(
+                                      builder: (_) => const ChangePathScreen(),
                                     ),
                                   ),
+                                  behavior: HitTestBehavior.opaque,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 6),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.arrow_2_squarepath,
+                                          size: 15,
+                                          color: colors.textSecondary,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          l10n.todayAdoptIntention,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: colors.textSecondary,
+                                            fontFamily:
+                                                AppTextStyles.bodyFont(context),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
 
                                 // Upgrade nudge banner (one-shot, free users only)
                                 const UpgradeNudgeBanner(),
@@ -2638,6 +2591,15 @@ class _HabitCardState extends State<_HabitCard>
 
   bool _isDoneToday = false;
   bool _isAnimating = false;
+
+  /// True when this action hasn't been reached for in a fortnight.
+  ///
+  /// The just-in-time replacement for the pinning coach mark (§5.1, §5.6).
+  /// Long-press is undiscoverable on its own, so it is backed by a hint that
+  /// appears on the one card where swapping is actually the right idea — and
+  /// nowhere else, and never as an overlay.
+  bool _isStale = false;
+
   String _lastCheckedDate = '';
   late AnimationController _scaleController;
   late Animation<double> _scaleAnimation;
@@ -2655,6 +2617,7 @@ class _HabitCardState extends State<_HabitCard>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _checkIfDone();
+    _checkStaleness();
 
     _scaleController = AnimationController(
       vsync: this,
@@ -2833,8 +2796,6 @@ class _HabitCardState extends State<_HabitCard>
     if (prefs.getBool('just_completed_onboarding') == true) return;
     if (!mounted) return;
 
-    final l10n = AppLocalizations.of(context);
-    final service = CoachMarkService.instance;
     final count = await AppUsageService.incrementHabitsCompleted();
     if (!mounted) return;
 
@@ -2844,23 +2805,14 @@ class _HabitCardState extends State<_HabitCard>
     // beat later was the same thing twice, and needed a
     // just_completed_onboarding guard to stop it appearing at the wrong time.
 
-    // Moment 2 — third completion; only if user hasn't already pinned
-    if (count == 3) {
-      final prefs = await SharedPreferences.getInstance();
-      final alreadyPinned = (prefs.getString('pinned_habit') ?? '').isNotEmpty;
-      if (alreadyPinned) {
-        await service.markAsSeen(CoachMarkKeys.pinning);
-      } else {
-        await service.enqueue(
-          key: CoachMarkKeys.pinning,
-          targetKey: _cardKey,
-          title: l10n.coachMarkPinningTitle,
-          body: l10n.coachMarkPinningBody,
-        );
-      }
-    }
-
-    if (mounted) service.showNext(context);
+    // The pinning coach mark is gone too (§5.6). It taught long-press = pin,
+    // and §7 reassigns long-press on an action card to *swap* — shipped
+    // unchanged it would have taught a gesture that no longer means that.
+    //
+    // Gesture discovery now happens inline, next to the thing, at the moment
+    // it is relevant: an action nobody has reached for in a fortnight says so
+    // on its own card. A full-screen dim is an interruption pattern in an app
+    // whose whole pitch is not interrupting you.
 
     // ── Review request ────────────────────────────────────────────
     // Check after coach marks so they get priority.
@@ -2943,6 +2895,27 @@ class _HabitCardState extends State<_HabitCard>
     if (allDone && mounted) {
       widget.onAllDone?.call();
     }
+  }
+
+  /// A fortnight without a single completion. Short enough to catch something
+  /// that isn't working, long enough that an ordinary quiet week never trips
+  /// it — nothing else in this app treats a slow fortnight as failure.
+  static const int _staleAfterDays = 14;
+
+  Future<void> _checkStaleness() async {
+    final moments = await MomentsService.getAll();
+    if (moments.isEmpty) return;
+    final cutoff = DateTime.now().toUtc().subtract(
+          const Duration(days: _staleAfterDays),
+        );
+    final recent = moments.any(
+      (m) => m.habitName == widget.habitTitle && m.completedAt.isAfter(cutoff),
+    );
+    // Silent while the user's whole history is younger than the window: an
+    // action two days old has not failed to land, it has not been tried.
+    final oldEnough = moments.last.completedAt.isBefore(cutoff);
+    if (!mounted) return;
+    setState(() => _isStale = !recent && oldEnough);
   }
 
   void _handleLongPress() {
@@ -4539,7 +4512,31 @@ class _HabitCardState extends State<_HabitCard>
           : card,
     );
 
-    return KeyedSubtree(key: _cardKey, child: wrappedCard);
+    // The hint sits under the card it is about, not over the screen (§5.6).
+    if (!_isStale || _isDoneToday) {
+      return KeyedSubtree(key: _cardKey, child: wrappedCard);
+    }
+
+    return KeyedSubtree(
+      key: _cardKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          wrappedCard,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 6, 0, 0),
+            child: Text(
+              l10n.todaySwapHint,
+              style: TextStyle(
+                fontSize: 12,
+                color: colors.textSecondary,
+                fontFamily: AppTextStyles.bodyFont(context),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -4976,7 +4973,6 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
     final colors = themeProvider.colors;
-    final isDark = themeProvider.theme.isDark;
     final onboardingState = context.watch<OnboardingState>();
     final l10n = AppLocalizations.of(context);
 
@@ -5097,68 +5093,9 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
           // ============================================================
           // SEARCH BAR
           // ============================================================
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? colors.cardBackground.withOpacity(colors.cardBackgroundOpacity)
-                    : const Color(0xFFFFFFFF).withOpacity(0.7),
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: isDark
-                      ? colors.borderCard.withOpacity(colors.borderCardOpacity)
-                      : colors.buttonDark.withOpacity(0.12),
-                  width: 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: colors.textPrimary.withOpacity(0.04),
-                    blurRadius: 3,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    CupertinoIcons.search,
-                    size: 18,
-                    color: colors.textSecondary.withOpacity(0.6),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: CupertinoTextField(
-                      controller: _searchController,
-                      placeholder: l10n.browseHabitsSearch,
-                      padding: EdgeInsets.zero,
-                      decoration: const BoxDecoration(
-                        color: Colors.transparent,
-                      ),
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: colors.textPrimary,
-                        fontFamily: 'Sora',
-                      ),
-                      placeholderStyle: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: colors.textSecondary.withOpacity(0.6),
-                        fontFamily: 'Sora',
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _searchQuery = value;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // No search field (§7). It earns its place somewhere around fifty
+          // items; at twenty it is furniture, and it makes a short curated
+          // list look like a database that needs querying.
 
           // ============================================================
           // SCROLLABLE CONTENT

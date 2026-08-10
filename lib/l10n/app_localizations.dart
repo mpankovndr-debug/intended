@@ -6997,6 +6997,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Include my habit names'**
   String get shareIncludeHabitNames;
+
+  /// No description provided for @todayAdoptIntention.
+  ///
+  /// In en, this message translates to:
+  /// **'Adopt a different intention'**
+  String get todayAdoptIntention;
+
+  /// No description provided for @todaySwapHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Not landing? Hold to swap.'**
+  String get todaySwapHint;
 }
 
 class _AppLocalizationsDelegate

@@ -4122,4 +4122,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareIncludeHabitNames => 'Include my habit names';
+
+  @override
+  String get todayAdoptIntention => 'Adopt a different intention';
+
+  @override
+  String get todaySwapHint => 'Not landing? Hold to swap.';
 }
