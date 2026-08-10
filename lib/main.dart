@@ -1669,7 +1669,11 @@ class _HabitsScreenState extends State<HabitsScreen>
     final isDark = themeProvider.theme.isDark;
     final onboardingState = context.watch<OnboardingState>();
     final l10n = AppLocalizations.of(context);
-    final allHabits = onboardingState.userHabits;
+    // Four on Today, never more (OnboardingState.maxActiveHabits). Enforced
+    // at every add path too; this is the backstop for lists that grew before
+    // the ceiling existed.
+    final allHabits =
+        onboardingState.userHabits.take(OnboardingState.maxActiveHabits).toList();
     final pinnedHabit = onboardingState.pinnedHabit;
 
     // Detect pin/unpin transitions (for arrival animations)

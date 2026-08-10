@@ -24,6 +24,22 @@ enum NudgeKind {
   addFocusArea,
 }
 
+/// The two halves a plan is read under (§6.2).
+///
+/// One suggestion comes from each, so the month proposes a change to *what*
+/// you do and a change to *when* you do it — never two of the same kind, which
+/// is how a plan turns into a list of chores.
+enum NudgeGroup { actions, rhythm }
+
+extension NudgeKindGroup on NudgeKind {
+  NudgeGroup get group => switch (this) {
+        NudgeKind.setAside || NudgeKind.keepAnchor => NudgeGroup.actions,
+        NudgeKind.moveReminder ||
+        NudgeKind.addFocusArea =>
+          NudgeGroup.rhythm,
+      };
+}
+
 /// One proposed change, with the evidence that produced it.
 class PlanNudge {
   const PlanNudge({
@@ -66,10 +82,14 @@ class PlanNudge {
 /// month seven. It also absorbs what used to be loose nudges scattered across
 /// the app, so they stop being buttons and become one decision.
 ///
-/// **One decision per month, not three** (§5.3). The nudges are ranked and the
-/// screen shows the top one; the rest wait behind "2 more when you're ready".
-/// An earlier version put three nudges and six buttons on the page, which read
-/// as a dashboard demanding optimisation — the opposite of what this app is.
+/// **One from each half, not four** (§6.2). The nudges are ranked and the card
+/// shows the strongest under YOUR ACTIONS and the strongest under YOUR RHYTHM
+/// — a change to what you do, and a change to when. The rest are never shown.
+///
+/// Four items with their own buttons read as a dashboard demanding
+/// optimisation, which is the pressure this app exists to remove; a single
+/// item hides the fact that a plan has scope. Two is the shape that is both a
+/// plan and a decision.
 class MonthPlan {
   const MonthPlan({required this.monthKey, required this.nudges});
 
@@ -81,6 +101,22 @@ class MonthPlan {
   final List<PlanNudge> nudges;
 
   bool get isEmpty => nudges.isEmpty;
+
+  /// The strongest suggestion in each half, or null when that half has none.
+  /// These two are the plan the user is shown; everything else stays unread.
+  PlanNudge? get topAction => _topOf(NudgeGroup.actions);
+  PlanNudge? get topRhythm => _topOf(NudgeGroup.rhythm);
+
+  /// Both halves, in reading order, skipping whichever is empty.
+  List<PlanNudge> get shown =>
+      [topAction, topRhythm].whereType<PlanNudge>().toList();
+
+  PlanNudge? _topOf(NudgeGroup group) {
+    for (final n in nudges) {
+      if (n.kind.group == group) return n;
+    }
+    return null;
+  }
 
   /// Below this, last month cannot support a claim about how the month went.
   static const int minMoments = 10;

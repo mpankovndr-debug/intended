@@ -145,7 +145,13 @@
   "habitRevealDescription": "Выбирай то, что подходит. Пропускай то, что нет. Не нужно делать всё — достаточно одного.",
   "habitRevealBegin": "Давай начнём",
   "focusAreasStartingPointsTitle": "Твоя практика «{pathTitle}» начинается здесь",
-  "@focusAreasStartingPointsTitle": { "placeholders": { "pathTitle": { "type": "String" } } },
+  "@focusAreasStartingPointsTitle": {
+    "placeholders": {
+      "pathTitle": {
+        "type": "String"
+      }
+    }
+  },
   "focusAreasStartingPointsSubtext": "Мы выбрали несколько стартовых точек. Добавляй или убирай направления в любое время.",
   "habitsHoldForOptions": "Удерживай привычку для опций",
   "habitsCompleteOnboarding": "Заверши настройку, чтобы начать",
@@ -188,18 +194,12 @@
   "seasonWandering": "Блуждание",
   "seasonWanderingLine": "Вы двигались между делами, следуя за тем, что нужно.",
   "letterLabel": "ВАШЕ ПИСЬМО",
-  "letterCameBack": "Вы вернулись {date}, после {count, plural, one{{count} тихого дня} few{{count} тихих дней} many{{count} тихих дней} other{{count} тихих дней}}.",
-  "letterAnchor": "Больше всего в этом месяце было «{habit}» — {count, plural, one{{count} раз} few{{count} раза} many{{count} раз} other{{count} раза}}.",
+  "letterCameBack": "{count, plural, one{Прошёл {count} день} few{Прошло {count} дня} many{Прошло {count} дней} other{Прошло {count} дня}}, и вы вернулись.",
+  "letterAnchor": "Больше всего было «{habit}» — {count, plural, one{{count} раз} few{{count} раза} many{{count} раз} other{{count} раза}}.",
   "letterMood": "{glad, plural, one{{glad} момент был} few{{glad} момента были} many{{glad} моментов были} other{{glad} момента были}} в радость, {effort, plural, one{{effort} дался} few{{effort} дались} many{{effort} дались} other{{effort} дались}} непросто.",
   "letterMoodGladOnly": "{glad, plural, one{{glad} момент был} few{{glad} момента были} many{{glad} моментов были} other{{glad} момента были}} в радость.",
   "letterMoodEffortOnly": "{effort, plural, one{{effort} момент дался} few{{effort} момента дались} many{{effort} моментов дались} other{{effort} момента дались}} непросто.",
-  "letterOneBigDay": "{date} вы сделали {count, plural, one{{count} дело} few{{count} дела} many{{count} дел} other{{count} дела}} за один день.",
   "letterShowedUp": "Вы были здесь {count, plural, one{{count} день} few{{count} разных дня} many{{count} разных дней} other{{count} разных дня}}.",
-  "letterQuestionBroughtBack": "Что вернуло вас в тот день?",
-  "letterQuestionEasier": "Почему именно к этому легче потянуться, чем к остальному?",
-  "letterQuestionShare": "Что общего у тех, которым вы были рады?",
-  "letterQuestionDifferent": "Чем тот день отличался от других?",
-  "letterQuestionMiss": "Чего бы вам не хватало, если бы это прекратилось?",
   "planLabel": "ВАШ ПЛАН НА {month}",
   "planNudgeMoveReminder": "Перенесите напоминание на {time}. Именно тогда приходило большинство моментов прошлого месяца.",
   "planNudgeSetAside": "Отложите «{habit}». В прошлом месяце — {count, plural, =0{ни разу} one{{count} раз} few{{count} раза} many{{count} раз} other{{count} раза}}.",
@@ -224,7 +224,7 @@
   "insightsTeaserCta": "Посмотреть, что заметил Intended+",
   "insightsExampleSummary": "Вы сделали 37 маленьких дел для себя.",
   "insightsExampleReturns": "Четыре раза вы затихали и четыре раза возвращались.",
-  "insightsReturnsLine": "{count, plural, one{{count} раз вы затихали на несколько дней. {count} раз возвращались} few{{count} раза вы затихали на несколько дней. {count} раза возвращались} many{{count} раз вы затихали на несколько дней. {count} раз возвращались} other{{count} раза вы затихали на несколько дней. {count} раза возвращались}}.",
+  "insightsReturnsLine": "{count, plural, one{Вы затихали на несколько дней, а потом вернулись} few{{count} раза вы затихали на несколько дней и столько же раз возвращались} many{{count} раз вы затихали на несколько дней и столько же раз возвращались} other{{count} раза вы затихали на несколько дней и столько же раз возвращались}}.",
   "insightsMostlyAt": "Чаще всего — {period}.",
   "insightsPeriodMorning": "утром",
   "insightsPeriodAfternoon": "днём",
@@ -646,13 +646,40 @@
   "momentsToday": "Сегодня",
   "momentsYesterday": "Вчера",
   "monthSummaryMoments": "{count, plural, =1{1 момент в {month}} few{{count} момента в {month}} other{{count} моментов в {month}}}",
-  "@monthSummaryMoments": { "placeholders": { "count": { "type": "int" }, "month": { "type": "String" } } },
+  "@monthSummaryMoments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
   "monthSummaryIntentions": "{count, plural, =1{1 намерение в этом месяце} few{{count} намерения в этом месяце} other{{count} намерений в этом месяце}}",
-  "@monthSummaryIntentions": { "placeholders": { "count": { "type": "int" } } },
+  "@monthSummaryIntentions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "monthSummaryTopIntention": "Чаще всего: {intention}",
-  "@monthSummaryTopIntention": { "placeholders": { "intention": { "type": "String" } } },
+  "@monthSummaryTopIntention": {
+    "placeholders": {
+      "intention": {
+        "type": "String"
+      }
+    }
+  },
   "momentsShowAll": "Показать все {count} моментов",
-  "@momentsShowAll": { "placeholders": { "count": { "type": "int" } } },
+  "@momentsShowAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "paywallTitle": "Открой полный Intended",
   "paywallTitleGentleMornings": "Ещё мягче по утрам",
   "paywallTitleAnchorsForHardDays": "Больше опор в трудные дни",
@@ -665,7 +692,6 @@
   "paywallFeature2": "Виджет на главном экране, который держит намерения рядом",
   "paywallFeature3": "10 красивых тем и премиум-иконки — сделай приложение своим",
   "paywallFeature4": "Карточки для шеринга и готовые ритуалы для настоящей жизни",
-
   "paywallGroupRoom": "Больше пространства",
   "paywallGroupRoomA": "Безлимитные привычки и области фокуса",
   "paywallGroupRoomB": "Без ограничений на свои привычки",
@@ -678,7 +704,6 @@
   "paywallGroupYou": "Больше тебя",
   "paywallGroupYouA": "10 красивых тем и иконки",
   "paywallGroupYouB": "Премиум-виджеты для домашнего экрана",
-
   "paywallMonthly": "Ежемесячно",
   "paywallMonthlyPrice": "€5,99",
   "paywallMonthlyPeriod": "в месяц",
@@ -689,7 +714,13 @@
   "paywallYearlyAnchor": "{price} в месяц при оплате за год",
   "paywallYearlySave": "Экономия 37%",
   "paywallSavePercent": "Экономия {percent}%",
-  "@paywallSavePercent": { "placeholders": { "percent": { "type": "int" } } },
+  "@paywallSavePercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
   "paywallLifetime": "Навсегда",
   "paywallLifetimePrice": "€49,99",
   "paywallLifetimePeriod": "один раз",
@@ -697,7 +728,13 @@
   "paywallCtaTrial": "Начать 7-дневный пробный период",
   "paywallCtaLifetime": "Получить навсегда",
   "paywallTrialHint": "7 дней бесплатно, затем {price}. Отмена в любое время.",
-  "@paywallTrialHint": { "placeholders": { "price": { "type": "String" } } },
+  "@paywallTrialHint": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "paywallLifetimeHint": "Разовая покупка. Без подписки.",
   "paywallContinueFree": "Продолжить с Core",
   "paywallRestorePurchases": "Восстановить покупки",
@@ -706,13 +743,18 @@
   "paywallTerms": "Условия",
   "paywallPrivacy": "Конфиденциальность",
   "paywallFooter": "Новые функции добавляются регулярно. Подписка поддерживает независимую разработку.\nСоздано одним человеком, которому это так же важно, как и тебе.",
-
   "onboardingPaywallTitle": "Попробуй Intended+ бесплатно",
   "onboardingPaywallBody": "Начни 7-дневный пробный период Intended+ — откроются еженедельные размышления и безлимитные ритуалы. Если пока хочешь остаться с Core, он останется с тобой навсегда.",
   "onboardingPaywallPrimaryCta": "Начать пробный период",
   "onboardingPaywallSecondaryCta": "Продолжить с Core",
   "onboardingPaywallDisclaimer": "7 дней бесплатно, затем {price}. Отмена в любой момент.",
-  "@onboardingPaywallDisclaimer": { "placeholders": { "price": { "type": "String" } } },
+  "@onboardingPaywallDisclaimer": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "subscriptionTitle": "Intended+",
   "subscriptionSupporter": "Спасибо, что ты с нами ♥",
   "subscriptionPlan": "Тариф",
@@ -955,20 +997,23 @@
   "habitPutOnComfortable": "Надень что-нибудь удобное",
   "habitListenToSong": "Послушай одну любимую песню",
   "habitDoNothing": "Ничего не делай 5 минут",
-
   "shareCardWeeklyCheckin": "Недельный чек-ин",
   "shareCardMilestone": "Достижение",
   "shareCardShowedUpPhrase": "На этой неделе — забота о себе",
   "shareCardTimes": "{count, plural, =1{раз} other{раз}}",
   "@shareCardTimes": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "shareCardFocusedOn": "Фокус: {area}",
   "@shareCardFocusedOn": {
     "placeholders": {
-      "area": {"type": "String"}
+      "area": {
+        "type": "String"
+      }
     }
   },
   "shareCardTagline": "намерение важнее совершенства",
@@ -979,39 +1024,77 @@
   "shareCardSubtitlePlural": "раз я выбираю себя на этой неделе",
   "shareCardSubtitleDays": "дней я выбираю себя на этой неделе",
   "shareCardInsightTwoDays": "{day1} и {day2} — мои дни",
-  "@shareCardInsightTwoDays": { "placeholders": { "day1": { "type": "String" }, "day2": { "type": "String" } } },
+  "@shareCardInsightTwoDays": {
+    "placeholders": {
+      "day1": {
+        "type": "String"
+      },
+      "day2": {
+        "type": "String"
+      }
+    }
+  },
   "shareCardInsightOneDay": "{day} — мой день",
-  "@shareCardInsightOneDay": { "placeholders": { "day": { "type": "String" } } },
+  "@shareCardInsightOneDay": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
   "shareCardInsightFocus": "На этой неделе тянет к «{area}»",
-  "@shareCardInsightFocus": { "placeholders": { "area": { "type": "String" } } },
-
+  "@shareCardInsightFocus": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
   "shareButton": "Поделиться",
-
   "sharePickerTitle": "Чем хочешь поделиться?",
   "shareWeeklySubtitle": "сколько раз удалось позаботиться о себе на этой неделе",
   "shareShowingUpSubtitle": "по-своему, в своём темпе",
   "shareFocusAreaSubtitle": "то, к чему ты продолжаешь возвращаться",
   "shareYourThingSubtitle": "привычка, которая приживается",
-
   "milestoneShowingUpLabel": "Забота о себе",
   "milestoneAreaLabel": "Область фокуса",
   "milestoneIdentityLabel": "Это - твоё!",
-
   "milestoneShowingUpHero": "{count} {count, plural, =1{неделя} few{недели} other{недель}}",
-  "@milestoneShowingUpHero": { "placeholders": { "count": { "type": "int" } } },
+  "@milestoneShowingUpHero": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "milestoneShowingUpSubtitle": "ты продолжаешь заботиться о себе по-своему",
-
   "milestoneAreaHero": "{area}",
-  "@milestoneAreaHero": { "placeholders": { "area": { "type": "String" } } },
+  "@milestoneAreaHero": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
   "milestoneAreaSubtitle": "ты возвращаешься к тому, что важно",
-
   "milestoneIdentityHero": "{habit}",
-  "@milestoneIdentityHero": { "placeholders": { "habit": { "type": "String" } } },
+  "@milestoneIdentityHero": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "milestoneIdentitySubtitle": "становится твоей привычкой",
-
   "boostCardTitle": "Intended Boost — €1,99",
   "boostCardTitleDynamic": "Intended Boost — {price}",
-  "@boostCardTitleDynamic": { "placeholders": { "price": { "type": "String" } } },
+  "@boostCardTitleDynamic": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "boostCardSubtitle": "Открой обе тёмные темы.",
   "boostOrDivider": "или",
   "boostGoUnlimited": "Хочешь больше? Безлимитный доступ с Intended+",
@@ -1027,7 +1110,6 @@
   "boostOfferShareDesc": "Твой путь стоит того, чтобы им делиться - поделись им с близкими.",
   "boostOfferThemeTitle": "Открой обе тёмные темы",
   "boostOfferThemeDesc": "Тёмный уют и Ночное небо — спокойный вид для вечерних проверок.",
-
   "commonDismiss": "Закрыть",
   "focusLimitFreeTitle": "Лимит направлений достигнут",
   "focusLimitFreeMessage": "Бесплатный план включает одно направление. Перейди на платный, чтобы открыть больше.",
@@ -1035,54 +1117,101 @@
   "focusNudgeTitle": "Меньше — значит больше",
   "focusNudgeMessage": "Меньше направлений — глубже рост. Но тебе виднее.",
   "focusNudgeGotIt": "Понятно",
-
   "shareError": "Не удалось поделиться. Попробуй ещё раз.",
-
   "restoreSuccess": "Покупки восстановлены!",
   "restoreNotFound": "Покупки не найдены.",
-
   "restoreBackupTitle": "С возвращением!",
   "restoreBackupMessage": "Мы нашли твои данные из прошлой сессии. Восстановить?",
   "restoreBackupConfirm": "Восстановить",
   "restoreBackupSkip": "Начать заново",
-
   "profileBackedUp": "Сохранено {time}",
   "profileNotBackedUp": "Нет резервной копии",
   "profileBackupNow": "Сохранить сейчас",
   "profileBackingUp": "Сохраняем…",
   "profileBackedUpNote": "Твои данные сохранены в аккаунте.",
   "profileLocalDataNote": "Данные хранятся только на этом устройстве. Войди, чтобы сохранить.",
-
   "onboardingAlreadyHaveAccount": "Войти",
   "onboardingSignInWithApple": "Войти через Apple",
   "onboardingSignInWithGoogle": "Войти через Google",
-
   "onboardingPhilosophyLabel": "Прежде чем мы начнём",
   "onboardingPhilosophyHeading": "Это не трекер.\nЭто возвращение к себе.",
   "onboardingPhilosophyBody": "Никаких стриков. Никакой вины за пропуск.\nТвой прогресс не обнуляется. Достаточно одного лишь намерения.",
   "onboardingPhilosophyCta": "Понятно",
-
   "reflectionTitle": "Твоя неделя",
   "reflectionAnchor7": "7 из 7. Целая неделя заботы о себе — так держать!",
   "reflectionAnchor56": "{days} из 7 дней. Это {days} дней, когда ты выбираешь себя.",
-  "@reflectionAnchor56": { "placeholders": { "days": { "type": "int" } } },
+  "@reflectionAnchor56": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "reflectionAnchor34": "{days} дня. Это {days} дня, когда ты выбираешь себя.",
-  "@reflectionAnchor34": { "placeholders": { "days": { "type": "int" } } },
+  "@reflectionAnchor34": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "reflectionAnchor12": "{days} раз. Даже один день считается — ты не пропадаешь.",
-  "@reflectionAnchor12": { "placeholders": { "days": { "type": "int" } } },
+  "@reflectionAnchor12": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "reflectionAnchor0": "Тихая неделя. Ничего страшного. Ты здесь сейчас, и это главное.",
   "reflectionPatternOneDay": "Похоже, {dayName} — это твой день. Уже три недели подряд.",
-  "@reflectionPatternOneDay": { "placeholders": { "dayName": { "type": "String" } } },
+  "@reflectionPatternOneDay": {
+    "placeholders": {
+      "dayName": {
+        "type": "String"
+      }
+    }
+  },
   "reflectionPatternTwoDays": "{dayName1} и {dayName2} — похоже, это твои дни.",
-  "@reflectionPatternTwoDays": { "placeholders": { "dayName1": { "type": "String" }, "dayName2": { "type": "String" } } },
+  "@reflectionPatternTwoDays": {
+    "placeholders": {
+      "dayName1": {
+        "type": "String"
+      },
+      "dayName2": {
+        "type": "String"
+      }
+    }
+  },
   "reflectionPatternNone": "Твой ритм всё ещё формируется. Это нормально — продолжай.",
   "reflectionFocusDominant": "На этой неделе тебя тянет к «{area}». Кажется, сейчас это важно.",
-  "@reflectionFocusDominant": { "placeholders": { "area": { "type": "String" } } },
+  "@reflectionFocusDominant": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
   "reflectionFocusBalanced": "Энергия этой недели распределилась между «{area1}» и «{area2}». Сбалансированная неделя.",
-  "@reflectionFocusBalanced": { "placeholders": { "area1": { "type": "String" }, "area2": { "type": "String" } } },
+  "@reflectionFocusBalanced": {
+    "placeholders": {
+      "area1": {
+        "type": "String"
+      },
+      "area2": {
+        "type": "String"
+      }
+    }
+  },
   "reflectionReframeComeback": "Прошлая неделя была тише. А на этой — возвращение. В этом и смысл.",
   "reflectionReframeRefresh": "Привычки обновились {count} раз на этой неделе — это не отказ, это адаптация.",
-  "@reflectionReframeRefresh": { "placeholders": { "count": { "type": "int" } } },
+  "@reflectionReframeRefresh": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "reflectionReframeSwap": "Одна привычка заменена на этой неделе. Понять, что не подходит — тоже прогресс.",
   "reflectionShare": "Поделиться",
   "insightsGrowthHint": "Инсайты становятся точнее с каждой неделей",
@@ -1093,36 +1222,58 @@
   "reflectionSectionNotice": "НА ЗАМЕТКУ",
   "reflectionPreviewRhythm": "Через пару недель мы покажем, в какие дни ты стабильнее всего",
   "reflectionPreviewFocus": "Выполняй больше привычек, чтобы увидеть, к чему тебя тянет",
-
   "reflectionBlurRhythm": "Узнай, какие дни и ритмы подходят тебе лучше всего",
   "reflectionBlurFocus": "Узнай, на что уходит твоя энергия каждую неделю",
   "reflectionUnlockPlus": "Мои недельные инсайты",
-
   "tipPinHabit": "Удерживайте привычку, чтобы закрепить её сверху",
   "tipCuratedPack": "Попробуйте готовый набор привычек, который можно найти в «Все привычки»",
   "tipWidget": "Добавь Intended на главный экран — удерживай экран и добавь виджет",
   "tipGotIt": "Понятно",
   "tipSkipAll": "Пропустить подсказки",
-
   "packSwapTitle": "Освободите место для нового набора",
   "packSwapSubtitle": "Чтобы сохранить порядок, выберите привычки, которые хотите убрать. Ваши собственные привычки будут всегда с вами.",
   "packSwapConfirm": "Убрать {count} и добавить {packName}",
-  "@packSwapConfirm": { "placeholders": { "count": { "type": "int" }, "packName": { "type": "String" } } },
+  "@packSwapConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "packName": {
+        "type": "String"
+      }
+    }
+  },
   "packSwapAdded": "добавлен — {count} новых привычек готовы",
-  "@packSwapAdded": { "placeholders": { "count": { "type": "int" } } },
+  "@packSwapAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "packSwapAllActive": "Все привычки из этого набора уже активны",
-
   "packSectionHeader": "ГОТОВЫЕ НАБОРЫ ПРИВЫЧЕК",
   "packHabitsCount": "{count, plural, =1{1 привычка} few{{count} привычки} other{{count} привычек}}",
-  "@packHabitsCount": { "placeholders": { "count": { "type": "int" } } },
+  "@packHabitsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "packFreeBadge": "Бесплатно",
   "packStartButton": "Активировать «{packName}»",
-  "@packStartButton": { "placeholders": { "packName": { "type": "String" } } },
+  "@packStartButton": {
+    "placeholders": {
+      "packName": {
+        "type": "String"
+      }
+    }
+  },
   "packHabitsInPack": "ПРИВЫЧКИ В НАБОРЕ",
   "packAllActive": "Все привычки уже активны",
   "packHabitActive": "Активна",
   "packActiveBadge": "Активен",
-
   "packGentleMorningsName": "Мягкое утро",
   "packGentleMorningsSubtitle": "Утренний ритуал, который не похож на подъём в 5 утра",
   "packGentleMorningsDescription": "Четыре маленькие привычки как мягкая последовательность — выпить воды, подышать свежим воздухом, сосредоточиться и наметить день. Ранний подъём не нужен.",
@@ -1138,26 +1289,22 @@
   "packStayConnectedName": "На связи",
   "packStayConnectedSubtitle": "Те, кто важен — один маленький жест за раз.",
   "packStayConnectedDescription": "Четыре микро-привычки, чтобы оставаться ближе к своим людям. Не грандиозные жесты — просто быть рядом.",
-
   "widgetToday": "сегодня",
   "widgetMore": "ещё {n}",
   "widgetUpgrade": "Обновите для подробностей",
   "widgetNoHabits": "Пока нет привычек",
   "widgetAllDone": "Всё сделано!",
-
   "appIconSectionTitle": "ИКОНКА ПРИЛОЖЕНИЯ",
   "appIconDefault": "По умолчанию",
   "appIconMidnight": "Полночь",
   "appIconRose": "Роза",
   "appIconForest": "Лес",
   "appIconSky": "Небо",
-
   "legalDisclaimerPrefix": "Нажимая «Продолжить», вы соглашаетесь с нашими ",
   "legalDisclaimerTerms": "Условиями",
   "legalDisclaimerAnd": " и ",
   "legalDisclaimerPrivacy": "Политикой конфиденциальности",
   "legalDisclaimerSuffix": ".",
-
   "pathGentleMorningsTitle": "Мягкое утро",
   "pathGentleMorningsSubtitle": "Мягкий, осознанный способ начать день",
   "pathAnchorsForHardDaysTitle": "Опоры в трудные дни",
@@ -1168,27 +1315,44 @@
   "pathWindingDownSubtitle": "Маленький ритуал, чтобы отпустить день",
   "pathYourOwnWayTitle": "Свой путь",
   "pathYourOwnWaySubtitle": "Я знаю, что мне нужно — просто дайте инструменты",
-
   "intentionPathHeadline": "Что привело вас сюда?",
   "intentionPathSubtext": "Это задаст тон ближайшим 30 дням. Выбери то, что подходит сегодня — будущая ты скажет спасибо.",
-
   "tellUsAboutPathHeadline": "Что тебя сюда привело?",
   "tellUsAboutPathSubtext": "Это задаст тон ближайшим 30 дням. Выбери то, что подходит сегодня — будущая ты скажет спасибо.",
   "tellUsAboutFocusHeadline": "Что сейчас важно?",
   "tellUsAboutFocusSubtext": "Выбери до 2. Начнём с них.",
-
   "commitmentTitle": "Маленькое обещание.",
   "commitmentBody": "Это займёт всего 2 минуты в день.",
   "commitmentEchoFull": "Твой путь: {path}  ·  Фокус: {areas}",
-  "@commitmentEchoFull": { "placeholders": { "path": { "type": "String" }, "areas": { "type": "String" } } },
+  "@commitmentEchoFull": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "areas": {
+        "type": "String"
+      }
+    }
+  },
   "commitmentEchoAreasOnly": "Фокус: {areas}",
-  "@commitmentEchoAreasOnly": { "placeholders": { "areas": { "type": "String" } } },
+  "@commitmentEchoAreasOnly": {
+    "placeholders": {
+      "areas": {
+        "type": "String"
+      }
+    }
+  },
   "commitmentCta": "Быть с собой",
   "intentionPathUpdateFocusAreas": "Обновить направления в соответствии с «{pathName}»?",
-  "@intentionPathUpdateFocusAreas": { "placeholders": { "pathName": { "type": "String" } } },
+  "@intentionPathUpdateFocusAreas": {
+    "placeholders": {
+      "pathName": {
+        "type": "String"
+      }
+    }
+  },
   "intentionPathUpdateYes": "Да, обновить направления",
   "intentionPathUpdateNo": "Нет, оставить как есть",
-
   "coachMarkFirstCompletionTitle": "Ваша первая отметка",
   "coachMarkFirstCompletionBody": "Вот и всё. Вся практика. Приходите, когда можете, пропускайте, когда не получается.",
   "coachMarkPinningTitle": "Уже входит в привычку",
@@ -1203,14 +1367,11 @@
   "coachMarkMonthlyReflectionBody": "Месячное отражение находит закономерности между неделями, которые сложно заметить день за днём.",
   "coachMarkReflectionShareTitle": "Поделиться?",
   "coachMarkReflectionShareBody": "Нажмите кнопку «Поделиться», чтобы превратить это в карточку для друзей или публикации. Ваши данные остаются приватными — передаётся только итог.",
-
   "reviewPromptMessage": "Нравится Intended? Быстрая оценка поможет другим найти мягкий подход к привычкам.",
   "reviewPromptRate": "Оценить",
   "reviewPromptNotYet": "Не сейчас",
-
   "upgradeNudgeBody": "Ваша практика растёт. Intended+ даёт пространство расти вместе с ней.",
   "upgradeNudgeLearnMore": "Узнать больше",
-
   "notifWeeklyDynamic0": "Ваша недельная рефлексия готова. Каждая неделя — новый старт.",
   "notifWeeklyDynamic1": "Ваша недельная рефлексия готова — вы позаботились о себе на этой неделе.",
   "notifWeeklyDynamicN": "Ваша недельная рефлексия готова — вы позаботились о себе {count} раз на этой неделе.",
@@ -1221,7 +1382,6 @@
       }
     }
   },
-
   "faqSectionGettingStarted": "Начало работы",
   "faqWhatIsIntended": "Что такое Intended?",
   "faqWhatIsIntendedAnswer": "Intended — это мягкое приложение для привычек на iOS. Оно помогает выстраивать ежедневные привычки без стриков, чувства вины или давления. Нет счётчика, который сбрасывается — только спокойное пространство для ваших намерений.",
@@ -1235,7 +1395,6 @@
   "faqHowIsDifferentAnswer": "Большинство приложений используют стрики и геймификацию. Intended — наоборот. Нет стриков, нет рейтингов, нет вины. Ваш прогресс никогда не сбрасывается.",
   "faqNeedAccount": "Нужен ли аккаунт?",
   "faqNeedAccountAnswer": "Нет, чтобы начать. Можно использовать Intended без входа. Аккаунт (через Apple или Google) позволяет сделать резервную копию данных и восстановить их при смене устройства.",
-
   "faqSectionDailyHabits": "Ежедневные привычки",
   "faqHowToCheckIn": "Как отмечать привычку?",
   "faqHowToCheckInAnswer": "Нажмите на любую карточку привычки на главном экране. Одно нажатие — и готово.",
@@ -1251,7 +1410,6 @@
   "faqRefreshesAnswer": "Обновление даёт новые случайные привычки из ваших областей фокуса. 3 в день на бесплатном плане.",
   "faqAllDone": "Что будет, когда все привычки выполнены?",
   "faqAllDoneAnswer": "Появится тихий момент — мягкая анимация расцветания. Небольшое напоминание, что ваше присутствие имеет значение, сколько бы привычек вы ни отметили.",
-
   "faqSectionReflections": "Рефлексия",
   "faqWeeklyReflection": "Что такое недельная рефлексия?",
   "faqWeeklyReflectionAnswer": "Каждую неделю Intended создаёт карточку рефлексии на основе ваших отметок — какие привычки прижились, самые активные дни и мягкие наблюдения. Без оценок.",
@@ -1263,7 +1421,6 @@
   "faqNoReflectionAnswer": "Недельная рефлексия появляется через 7 дней. Месячная — через 30. Чем чаще отмечаетесь, тем богаче рефлексия.",
   "faqHowReflectionsGenerated": "Как создаются рефлексии?",
   "faqHowReflectionsGeneratedAnswer": "Рефлексии создаются полностью на вашем устройстве из данных отметок. Без ИИ, без облака. Приложение анализирует ваши закономерности — активные дни, любимые привычки, постоянство — и превращает их в мягкие наблюдения.",
-
   "faqSectionNotifications": "Уведомления",
   "faqHowNotifications": "Как работают уведомления?",
   "faqHowNotificationsAnswer": "Напоминания подстраиваются под ваш ритм. Регулярно заходите? Они отступают. Давно не были? Одно мягкое сообщение — не семь.",
@@ -1273,13 +1430,11 @@
   "faqPathNotificationsAnswer": "Да. На пути В поисках покоя будут другие формулировки, чем на Мягком утре.",
   "faqTurnOffNotifications": "Можно отключить уведомления?",
   "faqTurnOffNotificationsAnswer": "Да. Профиль → Настройки уведомлений — выключите их. Можно отключить только недельное напоминание, оставив ежедневные.",
-
   "faqSectionWidgets": "Виджеты",
   "faqAddWidget": "Как добавить виджет?",
   "faqAddWidgetAnswer": "Долгое нажатие на главный экран, нажмите +, найдите Intended. Виджеты на экран блокировки — через Настройки iOS.",
   "faqWidgetNotUpdating": "Почему виджет не обновляется?",
   "faqWidgetNotUpdatingAnswer": "iOS управляет частотой обновления. Откройте приложение ненадолго. Проверьте, что Обновление контента включено для Intended.",
-
   "faqSectionPricing": "Intended+ и цены",
   "faqWhatIsPlus": "Что такое Intended+?",
   "faqWhatIsPlusAnswer": "Безлимитные свои привычки, замены, обновления, доступ к библиотеке, все темы, месячная рефлексия и глубокие наблюдения.",
@@ -1293,7 +1448,6 @@
   "faqRestoreAnswer": "Профиль → Восстановить покупки.",
   "faqCancel": "Как отменить подписку?",
   "faqCancelAnswer": "Настройки iPhone → ваше имя → Подписки → Intended → Отменить.",
-
   "faqSectionPrivacy": "Конфиденциальность",
   "faqDataStorage": "Где хранятся мои данные?",
   "faqDataStorageAnswer": "Все данные хранятся локально на вашем устройстве. Ничего не загружается на сервер.",
@@ -1301,7 +1455,6 @@
   "faqDataSellingAnswer": "Нет. Мы используем анонимные отчёты об ошибках. Никогда — ваши данные о привычках.",
   "faqDeleteApp": "Что будет если удалить приложение?",
   "faqDeleteAppAnswer": "Данные локальные, поэтому удаление стирает всё. Подписки можно восстановить через App Store.",
-
   "faqSectionTroubleshooting": "Устранение неполадок",
   "faqCrash": "Приложение вылетело.",
   "faqCrashAnswer": "Закройте и откройте снова. Убедитесь, что установлена последняя версия.",
@@ -1311,106 +1464,125 @@
   "faqAppleNameAnswer": "Apple передаёт имя только при первом входе. Настройки iPhone → Apple ID → Пароль и безопасность → Приложения с Apple ID → Intended → Перестать использовать, затем войдите снова.",
   "faqNotificationsNotArriving": "Уведомления не приходят.",
   "faqNotificationsNotArrivingAnswer": "Проверьте, что уведомления включены для Intended в Настройках iPhone → Уведомления. Убедитесь, что Обновление контента активно. После переустановки откройте приложение, чтобы перепланировать напоминания.",
-
   "faqStillHaveQuestion": "Остались вопросы?",
   "faqContactButton": "Написать нам",
   "faqWidgetCompletion": "Можно отмечать привычки через виджет?",
   "faqWidgetCompletionAnswer": "Да! Нажмите на привычку прямо в виджете на домашнем экране. Данные синхронизируются при следующем открытии Intended.",
-
   "notifPathGentleMornings1": "Доброе утро. Не спеши — что сегодня по душе?",
   "notifPathGentleMornings2": "Новое утро, мягкое начало. У тебя всё получится.",
   "notifPathGentleMornings3": "Утро — твоё. Начни так, как хочется.",
   "notifPathGentleMornings4": "Утро не обязано быть идеальным. Просто будь здесь.",
   "notifPathGentleMornings5": "Проснись мягко. Одного маленького шага достаточно.",
   "notifPathGentleMornings6": "Твой утренний ритуал ждёт. Без давления, только возможности.",
-
   "notifPathAnchorsForHardDays1": "Одна опора на сегодня. Этого хватит.",
   "notifPathAnchorsForHardDays2": "День может быть тяжёлым. Покажись — мягко.",
   "notifPathAnchorsForHardDays3": "Опора не убирает бурю. Она держит тебя.",
   "notifPathAnchorsForHardDays4": "Даже маленькое возвращение — это возвращение.",
   "notifPathAnchorsForHardDays5": "Пауза. Замечание. Одно действие.",
   "notifPathAnchorsForHardDays6": "Тяжёлые дни — тоже дни, которые проходят.",
-
   "notifPathQuietFocus1": "Маленький блок фокуса. Потом отдых.",
   "notifPathQuietFocus2": "Какая одна вещь сегодня?",
   "notifPathQuietFocus3": "Сфокусируйся на меньшем — успеешь больше.",
   "notifPathQuietFocus4": "Выбери одно. Начни.",
   "notifPathQuietFocus5": "Тихая работа, настоящий прогресс.",
   "notifPathQuietFocus6": "Покажись к работе. Это и есть весь секрет.",
-
   "notifPathWindingDown1": "День почти закончился. Отпусти его мягко.",
   "notifPathWindingDown2": "Пора расслабиться. Ты достаточно нёс(ла) сегодня.",
   "notifPathWindingDown3": "Вечер — для отпускания, не для догоняния.",
   "notifPathWindingDown4": "Ты был(а) здесь сегодня. Это стоит того, чтобы отдохнуть.",
   "notifPathWindingDown5": "Ночь твоя. Отдыхай без вины.",
   "notifPathWindingDown6": "Замедлись. Завтра подождёт.",
-
   "notifPathYourOwnWay1": "Твоя практика, твой темп. Что сегодня по душе?",
   "notifPathYourOwnWay2": "Ты знаешь, что тебе нужно. Мы просто напоминаем.",
   "notifPathYourOwnWay3": "Отметься, когда будешь готов(а). Без расписания, без давления.",
   "notifPathYourOwnWay4": "Твой путь — твой собственный. Приходи как хочешь.",
   "notifPathYourOwnWay5": "Одно намерение. Это всё. Остальное — за тобой.",
   "notifPathYourOwnWay6": "Ты создал(а) эту практику. Доверяй, куда она ведёт.",
-
   "warmthPathGentleMornings1": "Не каждое утро должно быть новым началом. Иногда — просто тишина.",
   "warmthPathGentleMornings2": "Даже у утра бывают медленные дни. Это нормально.",
   "warmthPathGentleMornings3": "Твоё утро по-прежнему твоё, даже когда пропускаешь.",
   "warmthPathGentleMornings4": "Завтрашнее утро придёт мягко. Оно всегда так.",
   "warmthPathGentleMornings5": "Отдыхай. Рассвет не ведёт счёт.",
   "warmthPathGentleMornings6": "Тихое утро — это тоже хорошо проведённое утро.",
-
   "warmthPathAnchorsForHardDays1": "Когда день шумный, хватит одной маленькой вещи.",
   "warmthPathAnchorsForHardDays2": "Ты не опаздываешь. Ты здесь.",
   "warmthPathAnchorsForHardDays3": "Тяжёлый момент не портит весь день.",
   "warmthPathAnchorsForHardDays4": "Маленькое и устойчивое сильнее большого и хрупкого.",
   "warmthPathAnchorsForHardDays5": "Ты пришла. Это и есть практика.",
   "warmthPathAnchorsForHardDays6": "Мягкое восстановление — тоже восстановление.",
-
   "warmthPathQuietFocus1": "Медленно — значит надолго.",
   "warmthPathQuietFocus2": "Одно маленькое дело — это уже движение.",
   "warmthPathQuietFocus3": "Не обязательно сегодня сделать всё.",
   "warmthPathQuietFocus4": "Фокус — это доброта к себе.",
   "warmthPathQuietFocus5": "Работа подождёт. Паузы разрешены.",
   "warmthPathQuietFocus6": "Тихие усилия тоже считаются.",
-
   "warmthPathWindingDown1": "Сегодня вечером просто отдыхай. Вот и весь план.",
   "warmthPathWindingDown2": "Не нужно идеально завершать день. Просто остановись.",
   "warmthPathWindingDown3": "Отпусти день. Ты нёс(ла) достаточно.",
   "warmthPathWindingDown4": "Некоторые вечера просто для существования. Этот — один из них.",
   "warmthPathWindingDown5": "Ночи не нужен ритуал. Ей нужно, чтобы ты просто отпустил(а).",
   "warmthPathWindingDown6": "Спи спокойно. Завтра уже мягче, чем ты думаешь.",
-
   "warmthPathYourOwnWay1": "Твой путь включает отдых. Всегда включал.",
   "warmthPathYourOwnWay2": "Пропуск — часть ритма, который ты строишь.",
   "warmthPathYourOwnWay3": "Ты выбрал(а) этот путь. Ты можешь и остановиться на нём.",
   "warmthPathYourOwnWay4": "Никто не ведёт счёт. Тем более мы.",
   "warmthPathYourOwnWay5": "Доверяй себе. Ты вернёшься, когда будет время.",
   "warmthPathYourOwnWay6": "Твой темп. Твои правила. Всегда.",
-
   "reflectionPathGentleMorningsIntro": "Ещё одна неделя мягких утр — или хотя бы попыток.",
   "reflectionPathAnchorsForHardDaysIntro": "На этой неделе ты держалась за опоры.",
   "reflectionPathQuietFocusIntro": "На этой неделе ты держала фокус — мягко.",
   "reflectionPathWindingDownIntro": "Ещё одна неделя вечернего расслабления, по-своему.",
   "reflectionPathYourOwnWayIntro": "Ещё одна неделя на своих условиях.",
-
   "reflectionPathGentleMorningsQuiet": "Тихая неделя для утр. Некоторые недели — чтобы поспать подольше.",
   "reflectionPathAnchorsForHardDaysQuiet": "Тихая неделя. Опоры остаются, даже маленькие.",
   "reflectionPathQuietFocusQuiet": "Тихая неделя. Фокусу тоже нужен отдых.",
   "reflectionPathWindingDownQuiet": "Тихая неделя. Иногда лучший вечерний ритуал — ничего не делать.",
   "reflectionPathYourOwnWayQuiet": "Тихая неделя. Твой путь включает паузы.",
-
   "monthlyReflectionTitle": "Твой месяц",
   "monthlyReflectionSectionOverview": "ЭТОТ МЕСЯЦ",
   "monthlyReflectionSectionTrends": "ТЕНДЕНЦИИ",
   "monthlyReflectionSectionGrowth": "РОСТ",
   "monthlyReflectionMonthRange": "{month} {year}",
-  "@monthlyReflectionMonthRange": { "placeholders": { "month": { "type": "String" }, "year": { "type": "int" } } },
+  "@monthlyReflectionMonthRange": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
   "monthlyReflectionOverview": "Ты отмечался(лась) {days} дней из {total} в этом месяце.",
-  "@monthlyReflectionOverview": { "placeholders": { "days": { "type": "int" }, "total": { "type": "int" } } },
+  "@monthlyReflectionOverview": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "monthlyReflectionBestWeek": "Самая активная неделя — {weekRange}, {days} активных дней.",
-  "@monthlyReflectionBestWeek": { "placeholders": { "weekRange": { "type": "String" }, "days": { "type": "int" } } },
+  "@monthlyReflectionBestWeek": {
+    "placeholders": {
+      "weekRange": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "monthlyReflectionConsistentHabit": "{habit} — твоя самая стабильная привычка в этом месяце.",
-  "@monthlyReflectionConsistentHabit": { "placeholders": { "habit": { "type": "String" } } },
+  "@monthlyReflectionConsistentHabit": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "monthlyReflectionGrowthUp": "Этот месяц активнее предыдущего. Ты находишь свой ритм.",
   "monthlyReflectionGrowthSteady": "Стабильный месяц. Ты поддерживаешь то, что важно.",
   "monthlyReflectionGrowthDown": "Тише, чем в прошлом месяце. Это нормально — некоторые сезоны для отдыха.",
@@ -1419,52 +1591,85 @@
   "monthlyReflectionUnlock": "Увидеть месячные инсайты",
   "monthlyReflectionSectionNotice": "ОБРАТИТЬ ВНИМАНИЕ",
   "monthlyReflectionTopArea": "Тебя тянуло к {area} в этом месяце. Похоже, это сейчас важно.",
-  "@monthlyReflectionTopArea": { "placeholders": { "area": { "type": "String" } } },
-
+  "@monthlyReflectionTopArea": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
   "adaptiveNotifReducedTitle": "Мы отступаем",
   "adaptiveNotifReducedBody": "Ты регулярно отмечаешься — мы будем напоминать реже.",
   "adaptiveNotifReengageBody": "Прошло немного времени. Просто мягкий привет.",
   "adaptiveNotifSilentBody": "Мы заметили, что тебя давно не было. Без давления — мы будем здесь.",
-
   "bloomGentleMornings1": "Полное утро. Это кое-что значит.",
   "bloomGentleMornings2": "Каждое — мягко сделано.",
   "bloomGentleMornings3": "Утро завершено. Ты пришёл(а) тихо.",
   "bloomGentleMornings4": "Всё здесь. Утро было твоим.",
   "bloomGentleMornings5": "Нежно и готово. Этого достаточно.",
-
   "bloomAnchorsForHardDays1": "Опора удержала.",
   "bloomAnchorsForHardDays2": "Сегодня ты осталась.",
   "bloomAnchorsForHardDays3": "Даже в шуме ты вернулась.",
   "bloomAnchorsForHardDays4": "Маленькая устойчивая победа в трудный день.",
   "bloomAnchorsForHardDays5": "Ты не пропала. Ты здесь.",
-
   "bloomQuietFocus1": "Сфокусировалась. Закончила.",
   "bloomQuietFocus2": "Тихая работа сделана.",
   "bloomQuietFocus3": "Одно дело — целиком.",
   "bloomQuietFocus4": "Устойчивый фокус, реальный прогресс.",
   "bloomQuietFocus5": "Ты пришла к работе.",
-
   "bloomWindingDown1": "Вечер теперь твой. Отдыхай.",
   "bloomWindingDown2": "Всё улеглось. Пусть ночь придёт.",
   "bloomWindingDown3": "Мягко завершено. Завтра подождёт.",
   "bloomWindingDown4": "Всё на месте. Ты сделал(а) достаточно.",
   "bloomWindingDown5": "Нежно закрыто. Спи спокойно.",
-
   "bloomYourOwnWay1": "Ты пришёл(а) ко всему сегодня.",
   "bloomYourOwnWay2": "Всё готово, по-твоему. Вот что важно.",
   "bloomYourOwnWay3": "Каждое — на твоих условиях.",
   "bloomYourOwnWay4": "Готово. Никому больше не нужно было это видеть.",
   "bloomYourOwnWay5": "Тихо завершено. Это твоё.",
-
   "a11yTabHabits": "Привычки",
   "a11yTabProgress": "Прогресс",
   "a11yTabProfile": "Профиль",
   "a11yHabitCardDone": "{habit}, выполнено",
-  "@a11yHabitCardDone": { "placeholders": { "habit": { "type": "String" } } },
+  "@a11yHabitCardDone": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "a11yHabitCardTodo": "{habit}, нажмите для выполнения",
-  "@a11yHabitCardTodo": { "placeholders": { "habit": { "type": "String" } } },
+  "@a11yHabitCardTodo": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "a11yHabitCardPinned": "{habit}, закреплено, нажмите для выполнения",
-  "@a11yHabitCardPinned": { "placeholders": { "habit": { "type": "String" } } },
+  "@a11yHabitCardPinned": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "a11yEditHabit": "Редактировать привычку",
-  "a11yDeleteHabit": "Удалить привычку"
+  "a11yDeleteHabit": "Удалить привычку",
+  "letterOpenedQuietly": "Этот месяц начался тихо.",
+  "letterOpenedFull": "Вы вошли в этот месяц на полном ходу.",
+  "letterMostlyChose": "«{area}» занимало почти весь месяц.",
+  "letterQuestionPlanForPart": "Каким был бы {month}, если бы вы планировали на {lived}, а не на {planned}?",
+  "letterQuestionShorterQuiet": "Каким был бы {month}, если бы тихие полосы были короче?",
+  "letterQuestionMoreOfWhat": "Чего вам хочется больше в {month}?",
+  "letterPartMornings": "утро",
+  "letterPartAfternoons": "день",
+  "letterPartEvenings": "вечер",
+  "letterPartNights": "поздний вечер",
+  "planActionsHeader": "ВАШИ ДЕЙСТВИЯ",
+  "planRhythmHeader": "ВАШ РИТМ",
+  "planUse": "Взять этот план",
+  "planAdjust": "Изменить",
+  "planSkip": "Пропустить",
+  "planPreviewLabel": "ЧТО ПРЕДЛОЖИЛ БЫ INTENDED+"
 }

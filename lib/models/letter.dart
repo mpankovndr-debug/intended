@@ -1,168 +1,207 @@
 import 'moment.dart';
 import 'moment_rollup.dart';
+import 'season.dart';
 
-/// Which observation a letter line is making. The data each one needs differs,
-/// so a line is only ever built by its own reader below — never assembled by
-/// hand at a call site.
+/// Which observation a letter line is making.
 enum LetterLineKind {
-  /// A named day the user came back on, after a quiet stretch.
+  /// The month started slower than it finished.
+  openedQuietly,
+
+  /// Or the other way round.
+  openedFull,
+
+  /// A quiet stretch, and the return that ended it.
   cameBack,
 
-  /// The action that carried the month.
+  /// One focus area held almost the whole month.
+  mostlyChose,
+
+  /// The action that carried it.
   anchor,
 
-  /// How the month landed: glad / took effort.
+  /// How it landed: glad / took effort.
   mood,
-
-  /// A single day that held several moments.
-  oneBigDay,
 
   /// How many separate days had something in them.
   showedUp,
 }
 
-/// The closing line. Always a question — see [Letter].
+/// The closing line. Always a question, and always about the month ahead —
+/// see [Letter].
 enum LetterQuestion {
-  whatBroughtYouBack,
-  whatMakesItEasier,
-  whatDoTheyShare,
-  whatWasDifferent,
-  whatWouldYouMiss,
+  /// Their moments land in one part of the day and their reminder sits in
+  /// another. Carries both, so the question can name them.
+  planForPart,
+
+  /// They went quiet and came back more than once.
+  shorterQuiet,
+
+  /// Nothing sharper to ask.
+  moreOfWhat,
 }
 
+/// Parts of the day the letter can name, as plural nouns: "evenings".
+enum DayPart { mornings, afternoons, evenings, nights }
+
 /// One observation, with whatever that observation needs to be stated.
-///
-/// Dates travel as [DateTime] rather than pre-formatted text: "on the 14th"
-/// and "on Friday" are built differently in every language, so the screen
-/// formats them and the model stays out of it — the same split [Season] uses
-/// for its words.
 class LetterLine {
   const LetterLine(
     this.kind, {
     this.count = 0,
     this.secondCount = 0,
-    this.day,
     this.habitName,
+    this.focusArea,
   });
 
   final LetterLineKind kind;
 
   /// Quiet days before a return · times an action was reached for · moments
-  /// the user was glad about · moments on the busiest day · days shown up on.
+  /// the user was glad about · days shown up on.
   final int count;
 
   /// Only [LetterLineKind.mood] uses it: the moments that took effort.
   final int secondCount;
 
-  /// The user's own calendar day, as wall clock. Set for [cameBack] and
-  /// [oneBigDay].
-  final DateTime? day;
-
-  /// Set for [anchor].
   final String? habitName;
+  final String? focusArea;
 }
 
-/// Four lines about the month, ending in a question (§5.3).
+/// Four lines about the month, ending in a question about the next one (§5.3).
 ///
-/// Replaces the stock quote that used to sit in this slot ("Consistency is
-/// important, but so is self-compassion") — a sentence equally true of a
-/// stranger, which is why it read as filler. The letter earns the space by
-/// naming things only this user's month could produce: the weekday they came
-/// back on, the action that carried the month, how those moments landed.
+/// Replaces the stock quote that used to sit here ("Consistency is important,
+/// but so is self-compassion") — a sentence equally true of a stranger.
 ///
-/// Every line is generated from stored data and dropped when the data isn't
-/// there. Nothing is padded and nothing is inferred — a letter that pads is
-/// §5.3's "bought a promise, received a promise" failure in prose form, and
-/// the whole page is paid on the strength of these sentences being true.
+/// Two rules shape what it is allowed to say.
 ///
-/// It closes on a question rather than a comfort. A comfort finishes the
-/// subject; a question leaves the user holding it, which is what has to happen
-/// if this page is going to be worth opening in month seven.
+/// **It describes the month's shape, not its facts.** The grid already says
+/// how many and in which areas; the season already names the pattern. A letter
+/// that repeats either is three cards saying one thing. So the lines here are
+/// about pace, concentration and how the month felt to make — and [read] is
+/// told which season was drawn so it can drop a line that season has already
+/// made the whole card about.
+///
+/// **It closes on the month ahead.** A comfort finishes the subject and a
+/// backward question is just more looking; a question about next month is the
+/// hand-off to the plan sitting under it, which is the thing someone opens
+/// this page for in month seven.
 class Letter {
-  const Letter({required this.lines, required this.question});
+  const Letter({required this.lines, required this.question, this.part});
 
-  /// Observations, strongest first. Two or three of them; the question below
-  /// makes up the fourth line.
+  /// Observations, strongest first. Two or three; the question makes up the
+  /// fourth line.
   final List<LetterLine> lines;
 
-  /// Follows from [lines].first, so the letter asks about what it just found
-  /// rather than asking something generic underneath it.
   final LetterQuestion question;
 
-  /// How many observations a letter carries at most. Three, plus the question,
-  /// is the four lines §5.3 specifies — long enough to be about a month,
-  /// short enough to be read.
+  /// Set only for [LetterQuestion.planForPart]: where their moments actually
+  /// land, and where the reminder currently sits.
+  final ({DayPart lived, DayPart planned})? part;
+
   static const int maxLines = 3;
 
   /// Below this, a month is a handful of separate days rather than a month.
-  ///
-  /// Lower than the season's ten on purpose: a season names a *pattern* and
-  /// needs enough of one to be real, where the letter names *events*, and "you
-  /// came back on Friday" is true the first time it happens. But under eight,
-  /// three observations end up describing the same two afternoons three
-  /// different ways, which reads as the app straining to have something to say.
   static const int minMoments = 8;
 
   /// A month's letter, or null when there is nothing honest to write.
   ///
-  /// Silence is the default here, exactly as it is for the drift warning: a
-  /// card that appears only when it has something is worth reading, and one
-  /// that always appears has to invent material on quiet months.
-  static Letter? read(List<Moment> moments) {
+  /// [seasonPole] is the word the season card is showing, so the letter can
+  /// avoid restating it. [reminderHour] is where the daily nudge currently
+  /// sits, which is what makes the closing question specific rather than
+  /// rhetorical.
+  static Letter? read(
+    List<Moment> moments, {
+    String? seasonPole,
+    int? reminderHour,
+  }) {
     if (moments.length < minMoments) return null;
 
-    // Priority order, and also reading order — the most specific thing the
-    // month produced goes first, and the question follows from it.
     final candidates = [
-      _cameBack(moments),
+      _opening(moments),
+      // The season card is already a card-sized statement about going quiet
+      // and coming back. Saying it again two cards later is not emphasis.
+      if (seasonPole != Season.returning) _cameBack(moments),
+      _mostlyChose(moments),
       _anchor(moments),
       _mood(moments),
-      _oneBigDay(moments),
       _showedUp(moments),
     ].whereType<LetterLine>().toList();
 
-    // One observation is not a letter, it is a caption. [_showedUp] alone
-    // means the month held nothing worth naming beyond a count the grid
-    // already shows.
     if (candidates.length < 2) return null;
 
     final lines = candidates.take(maxLines).toList();
-    return Letter(lines: lines, question: _questionFor(lines.first.kind));
+    final lived = _dominantPart(moments);
+    final planned = reminderHour == null ? null : _partOf(reminderHour);
+
+    if (lived != null && planned != null && lived != planned) {
+      return Letter(
+        lines: lines,
+        question: LetterQuestion.planForPart,
+        part: (lived: lived, planned: planned),
+      );
+    }
+    return Letter(
+      lines: lines,
+      question: _gapCount(moments) >= 2
+          ? LetterQuestion.shorterQuiet
+          : LetterQuestion.moreOfWhat,
+    );
   }
 
-  static LetterQuestion _questionFor(LetterLineKind lead) => switch (lead) {
-        LetterLineKind.cameBack => LetterQuestion.whatBroughtYouBack,
-        LetterLineKind.anchor => LetterQuestion.whatMakesItEasier,
-        LetterLineKind.mood => LetterQuestion.whatDoTheyShare,
-        LetterLineKind.oneBigDay => LetterQuestion.whatWasDifferent,
-        LetterLineKind.showedUp => LetterQuestion.whatWouldYouMiss,
-      };
-
-  /// The most recent return in the month, not the longest gap.
+  /// Whether the month started slower or faster than it ended.
   ///
-  /// The question that follows asks what brought them back, so the day has to
-  /// be one they can still remember. A three-week-old comeback is a better
-  /// statistic and a worse question.
+  /// The one thing on this page that describes the month as something with a
+  /// direction rather than a total, which is why it leads.
+  static LetterLine? _opening(List<Moment> moments) {
+    final days = _activeDays(moments);
+    final span = days.last.day;
+    if (span < _minSpanForPace) return null;
+
+    final third = span / 3;
+    var early = 0;
+    var late = 0;
+    for (final m in moments) {
+      final day = _wallDay(m).day;
+      if (day <= third) early++;
+      if (day > span - third) late++;
+    }
+    if (early == 0 && late == 0) return null;
+
+    if (late >= early * 2) return const LetterLine(LetterLineKind.openedQuietly);
+    if (early >= late * 2) return const LetterLine(LetterLineKind.openedFull);
+    return null;
+  }
+
+  /// The most recent quiet stretch, told as the thing that ended it.
   static LetterLine? _cameBack(List<Moment> moments) {
     final days = _activeDays(moments);
     for (var i = days.length - 1; i >= 1; i--) {
       final quiet = days[i].difference(days[i - 1]).inDays - 1;
       if (quiet >= MomentRollup.gapThresholdDays) {
-        return LetterLine(
-          LetterLineKind.cameBack,
-          count: quiet,
-          day: days[i],
-        );
+        return LetterLine(LetterLineKind.cameBack, count: quiet);
       }
     }
     return null;
   }
 
-  /// The action the month leaned on, when one clearly did.
+  /// When one focus area held almost the whole month.
   ///
-  /// "Most of it was X" is a claim, so it is only made when X actually beat
-  /// everything else — a two-way tie at five each is a month with no anchor,
-  /// and naming either one would be picking a winner by sort order.
+  /// The legend under the grid gives the counts; this says what they add up
+  /// to, which is a different sentence.
+  static LetterLine? _mostlyChose(List<Moment> moments) {
+    final counts = <String, int>{};
+    for (final m in moments) {
+      final key = m.category;
+      if (key != null) counts[key] = (counts[key] ?? 0) + 1;
+    }
+    if (counts.length < 2) return null;
+
+    final top = counts.entries.reduce((a, b) => a.value >= b.value ? a : b);
+    if (top.value / moments.length < _minConcentration) return null;
+
+    return LetterLine(LetterLineKind.mostlyChose, focusArea: top.key);
+  }
+
+  /// The action the month leaned on, when one clearly did.
   static LetterLine? _anchor(List<Moment> moments) {
     final counts = <String, int>{};
     for (final m in moments) {
@@ -184,56 +223,59 @@ class Letter {
     );
   }
 
-  /// How the month landed, from the mood tap.
-  ///
-  /// Needs most of the month to actually carry a mood: counting "eleven you
-  /// were glad about" out of thirty moments where nineteen were skipped
-  /// reports a minority as if it were the month.
+  /// How the month landed, from the mood tap. Needs most of the month rated,
+  /// or it reports a minority as though it were the whole of it.
   static LetterLine? _mood(List<Moment> moments) {
     final rated = moments.where((m) => m.mood != null).toList();
     if (rated.length < _minRatedMoments) return null;
     if (rated.length / moments.length < _minRatedShare) return null;
 
-    final glad =
-        rated.where((m) => m.mood == MomentMood.gladIDid).length;
-    final effort =
-        rated.where((m) => m.mood == MomentMood.tookEffort).length;
+    final glad = rated.where((m) => m.mood == MomentMood.gladIDid).length;
+    final effort = rated.where((m) => m.mood == MomentMood.tookEffort).length;
     if (glad == 0 && effort == 0) return null;
 
     return LetterLine(LetterLineKind.mood, count: glad, secondCount: effort);
   }
 
-  /// The busiest single day, when it stands out from the rest.
-  static LetterLine? _oneBigDay(List<Moment> moments) {
-    final perDay = <DateTime, int>{};
-    for (final m in moments) {
-      final day = _wallDay(m);
-      perDay[day] = (perDay[day] ?? 0) + 1;
-    }
-    if (perDay.length < 2) return null;
-
-    final ranked = perDay.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    if (ranked.first.value < _minBigDayCount) return null;
-    if (ranked.first.value == ranked[1].value) return null;
-
-    return LetterLine(
-      LetterLineKind.oneBigDay,
-      count: ranked.first.value,
-      day: ranked.first.key,
-    );
-  }
-
-  /// Days with something in them. The one line that is always available, and
-  /// the reason it sits last: it is the least specific true thing there is.
+  /// Always available, and last for exactly that reason.
   static LetterLine _showedUp(List<Moment> moments) =>
       LetterLine(LetterLineKind.showedUp, count: _activeDays(moments).length);
 
-  /// Distinct days the user was active on, oldest first.
-  ///
-  /// Rebuilt from each moment's own recorded offset rather than the device's
-  /// current zone — the same rule every reader in this app follows, because a
-  /// UTC timestamp does not record what the user's clock said.
+  /// The part of day most moments fall in, or null when nothing dominates.
+  static DayPart? _dominantPart(List<Moment> moments) {
+    final counts = <DayPart, int>{};
+    for (final m in moments) {
+      final part = _partOf(m.localHour);
+      counts[part] = (counts[part] ?? 0) + 1;
+    }
+    final top = counts.entries.reduce((a, b) => a.value >= b.value ? a : b);
+    return top.value / moments.length < _minPartShare ? null : top.key;
+  }
+
+  static DayPart _partOf(int hour) => hour < 5
+      ? DayPart.nights
+      : hour < 12
+          ? DayPart.mornings
+          : hour < 17
+              ? DayPart.afternoons
+              : hour < 22
+                  ? DayPart.evenings
+                  : DayPart.nights;
+
+  static int _gapCount(List<Moment> moments) {
+    final days = _activeDays(moments);
+    var gaps = 0;
+    for (var i = 1; i < days.length; i++) {
+      if (days[i].difference(days[i - 1]).inDays - 1 >=
+          MomentRollup.gapThresholdDays) {
+        gaps++;
+      }
+    }
+    return gaps;
+  }
+
+  /// Distinct days the user was active on, oldest first, on the clock each
+  /// moment recorded rather than the reader's.
   static List<DateTime> _activeDays(List<Moment> moments) {
     final days = <DateTime>{for (final m in moments) _wallDay(m)};
     return days.toList()..sort();
@@ -244,20 +286,20 @@ class Letter {
     return DateTime.utc(local.year, local.month, local.day);
   }
 
-  /// Fewer than three times is not an anchor, it is a coincidence.
-  static const int _minAnchorCount = 3;
+  /// A month needs two weeks in it before "you started quietly" is describing
+  /// a shape rather than the fact that it is the 9th.
+  static const int _minSpanForPace = 14;
 
-  /// And it has to be enough of the month to carry the word "most".
-  ///
-  /// Set by the sentence, not the other way round: three out of twelve is the
-  /// tallest of a scatter, and calling that "most of the month" would be the
-  /// copy stating a finding the data doesn't hold. Two fifths, with nothing
-  /// else close, is a month that leaned somewhere.
+  /// "Carried almost the whole month" has to be nearly all of it.
+  static const double _minConcentration = 0.6;
+
+  static const int _minAnchorCount = 3;
   static const double _minAnchorShare = 0.4;
 
   static const int _minRatedMoments = 5;
   static const double _minRatedShare = 0.6;
 
-  /// Two things in a day is an ordinary day.
-  static const int _minBigDayCount = 3;
+  /// Below this the day has no shape worth planning around, and the closing
+  /// question would be proposing a change on the strength of a coin flip.
+  static const double _minPartShare = 0.5;
 }

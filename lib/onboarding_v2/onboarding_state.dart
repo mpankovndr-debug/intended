@@ -19,6 +19,18 @@ class OnboardingState extends ChangeNotifier {
   static const int _maxSwapsFree = 2;
   static const int _maxFocusAreasFree = 2;
 
+  /// Hard ceiling on how many actions can sit on Today at once.
+  ///
+  /// Onboarding happens to generate exactly four (two per focus area, two
+  /// areas), so the rule held by accident — but browse and packs both grew the
+  /// list with no limit, and nothing enforced it. §7 is explicit that neither
+  /// contextual door should grow the list: swap refines, adopt redirects. A
+  /// fifth card is how a gentle app becomes a checklist.
+  static const int maxActiveHabits = 4;
+
+  /// Whether another action can be added without breaking that ceiling.
+  bool get canAddHabit => userHabits.length < maxActiveHabits;
+
   // Intention path
   String _selectedIntentionPath = 'your_own_way';
   String? _lastPreselectedPathKey;
@@ -270,6 +282,7 @@ class OnboardingState extends ChangeNotifier {
   }
 
   Future<void> addHabitFromBrowse(String habit) async {
+    if (!canAddHabit) return;
     if (!userHabits.contains(habit)) {
       userHabits.add(habit);
       final prefs = await SharedPreferences.getInstance();
@@ -300,6 +313,7 @@ class OnboardingState extends ChangeNotifier {
   Future<int> addHabitsFromPack(List<String> habitIds) async {
     int added = 0;
     for (final habit in habitIds) {
+      if (!canAddHabit) break;
       if (!userHabits.contains(habit)) {
         userHabits.add(habit);
         added++;

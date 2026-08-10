@@ -1,6 +1,5 @@
 {
   "@@locale": "en",
-
   "commonOk": "OK",
   "commonCancel": "Cancel",
   "commonDelete": "Delete",
@@ -13,28 +12,36 @@
   "commonStart": "Start",
   "commonSkip": "Skip",
   "commonRefresh": "Refresh",
-
   "appNameIntended": "Intended",
   "appNameIntendedPlus": "Intended+",
   "appPlanCore": "Core",
   "appPlanBoost": "Boost",
   "appUnlockPlus": "Unlock Intended+",
-
   "welcomeTitle": "Welcome to Intended",
   "welcomeTitleWithName": "Welcome to Intended,\n{name}",
-  "@welcomeTitleWithName": { "placeholders": { "name": { "type": "String" } } },
+  "@welcomeTitleWithName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "welcomeSubtitle": "Build small daily habits\nwithout the guilt.",
-
   "onboardingTagline": "Intention, not perfection.",
   "onboardingDescriptor": "No streaks. No scores. Just small steps that bring you closer to yourself.",
   "onboardingNamePrompt": "What should we call you?",
   "onboardingLetsGetStarted": "Let's get started",
   "onboardingSkipForNow": "Skip for now",
   "onboardingNameTooLong": "Name should be under {max} characters",
-  "@onboardingNameTooLong": { "placeholders": { "max": { "type": "int" } } },
+  "@onboardingNameTooLong": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "onboardingNameInappropriate": "Please choose a more appropriate name",
   "onboardingOops": "Oops",
-
   "focusAreaHealth": "Health",
   "focusAreaHealthSub": "Your body will thank you.",
   "focusAreaMood": "Mood",
@@ -53,20 +60,40 @@
   "focusAreaSelfCareSub": "The small luxuries you keep skipping.",
   "focusAreasTitle": "Focus areas",
   "focusAreasPromptWithName": "What matters to you right now, {name}?",
-  "@focusAreasPromptWithName": { "placeholders": { "name": { "type": "String" } } },
+  "@focusAreasPromptWithName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "focusAreasPrompt": "What matters to you right now?",
   "focusAreasChooseCount": "Choose up to two areas ({count}/{max})",
-  "@focusAreasChooseCount": { "placeholders": { "count": { "type": "int" }, "max": { "type": "int" } } },
+  "@focusAreasChooseCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "focusAreasChangeLater": "You can change this later.",
   "focusAreasLimitTitle": "Limit Reached",
   "focusAreasLimitMessage": "You can select up to 2 areas. Deselect one to choose another.",
-
   "reminderTitle": "Reminder",
   "reminderSubtitle": "Want a gentle daily reminder?",
   "reminderDescription": "Just once a day. No pressure.",
   "reminderDailyToggle": "Gentle daily reminder",
   "reminderAroundTime": "Around {time}",
-  "@reminderAroundTime": { "placeholders": { "time": { "type": "String" } } },
+  "@reminderAroundTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "reminderTimeLabel": "Remind me at",
   "reminderTimePicker": "Set reminder time",
   "reminderSwitchHint": "Switch this on to pick the time for your daily reminder.",
@@ -74,29 +101,58 @@
   "reminderWeeklySummary": "Weekly summary",
   "reminderWeeklySubtitle": "Every Sunday evening",
   "reminderLetsGo": "Let's go, {name}",
-  "@reminderLetsGo": { "placeholders": { "name": { "type": "String" } } },
-
+  "@reminderLetsGo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "themeSelectionTitle": "Choose your space",
   "themeSelectionSubtitle": "You can always change this later.",
   "themeSelectionConfirm": "This feels right",
   "themeSelectionPremiumHint": "Deep Focus and more themes are available with Intended+. Try it free for 7 days after setup.",
-
   "habitRevealTitle": "Here's what we picked for you",
   "habitRevealSubtitleDefault": "Based on your preferences",
   "habitRevealSubtitleOneArea": "Based on {area}",
-  "@habitRevealSubtitleOneArea": { "placeholders": { "area": { "type": "String" } } },
+  "@habitRevealSubtitleOneArea": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
   "habitRevealSubtitleTwoAreas": "Based on {area1} & {area2}",
-  "@habitRevealSubtitleTwoAreas": { "placeholders": { "area1": { "type": "String" }, "area2": { "type": "String" } } },
+  "@habitRevealSubtitleTwoAreas": {
+    "placeholders": {
+      "area1": {
+        "type": "String"
+      },
+      "area2": {
+        "type": "String"
+      }
+    }
+  },
   "habitRevealSubtitlePath": "Here's what your {pathTitle} practice looks like.",
-  "@habitRevealSubtitlePath": { "placeholders": { "pathTitle": { "type": "String" } } },
+  "@habitRevealSubtitlePath": {
+    "placeholders": {
+      "pathTitle": {
+        "type": "String"
+      }
+    }
+  },
   "habitRevealSubtitleOwnWay": "Here's what your practice looks like.",
   "habitRevealDescription": "Pick what feels right. Skip what doesn't. There's no pressure to do them all — one is enough.",
   "habitRevealBegin": "Let's begin",
-
   "focusAreasStartingPointsTitle": "Your {pathTitle} practice starts here",
-  "@focusAreasStartingPointsTitle": { "placeholders": { "pathTitle": { "type": "String" } } },
+  "@focusAreasStartingPointsTitle": {
+    "placeholders": {
+      "pathTitle": {
+        "type": "String"
+      }
+    }
+  },
   "focusAreasStartingPointsSubtext": "We've picked some starting points. Add or remove areas anytime.",
-
   "habitsHoldForOptions": "Long press a habit for options",
   "habitsCompleteOnboarding": "Complete onboarding to get started",
   "habitsPinned": "PINNED",
@@ -119,8 +175,12 @@
   "driftActionFine": "I'm fine",
   "@driftBody": {
     "placeholders": {
-      "thisWeek": { "type": "int" },
-      "usual": { "type": "int" }
+      "thisWeek": {
+        "type": "int"
+      },
+      "usual": {
+        "type": "int"
+      }
     }
   },
   "seasonLabel": "YOUR SEASON",
@@ -145,61 +205,64 @@
   "seasonWanderingLine": "You moved between things, following what you needed.",
   "@seasonBeginningLine": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "letterLabel": "YOUR LETTER",
-  "letterCameBack": "You came back on {day}, after {count, plural, =1{one quiet day} other{{count} quiet days}}.",
-  "letterAnchor": "Most of the month was {habit} — {count, plural, =1{once} other{{count} times}}.",
+  "letterCameBack": "{count, plural, =1{A day passed} other{{count} days passed}}, and then you came back.",
+  "letterAnchor": "Most of it was {habit} — {count, plural, =1{once} other{{count} times}}.",
   "letterMood": "{glad} of them you were glad you did. {effort, plural, =1{One took effort} other{{effort} took effort}}.",
   "letterMoodGladOnly": "{glad, plural, =1{One of them you were glad you did} other{{glad} of them you were glad you did}}.",
   "letterMoodEffortOnly": "{effort, plural, =1{One of them took effort} other{{effort} of them took effort}}.",
-  "letterOneBigDay": "On {date} you did {count, plural, =1{one thing} other{{count} things}} in a single day.",
   "letterShowedUp": "You showed up on {count, plural, =1{one day} other{{count} different days}}.",
-  "letterQuestionBroughtBack": "What brought you back that day?",
-  "letterQuestionEasier": "What makes that one easier to reach for than the rest?",
-  "letterQuestionShare": "What do the ones you were glad about have in common?",
-  "letterQuestionDifferent": "What was different about that day?",
-  "letterQuestionMiss": "Which of these would you miss if it stopped?",
   "@letterCameBack": {
-    "description": "Both a weekday and a date are supplied. English names the weekday — a reader can still place 'Friday' a month later. Russian names the date instead: its weekday names decline and gender the verb, so 'you came back on Friday' cannot be built from a nominative weekday. Each locale uses the one it needs.",
     "placeholders": {
-      "day": { "type": "String" },
-      "date": { "type": "String" },
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "@letterAnchor": {
     "placeholders": {
-      "habit": { "type": "String" },
-      "count": { "type": "int" }
+      "habit": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
     }
   },
   "@letterMood": {
     "placeholders": {
-      "glad": { "type": "int" },
-      "effort": { "type": "int" }
+      "glad": {
+        "type": "int"
+      },
+      "effort": {
+        "type": "int"
+      }
     }
   },
   "@letterMoodGladOnly": {
     "placeholders": {
-      "glad": { "type": "int" }
+      "glad": {
+        "type": "int"
+      }
     }
   },
   "@letterMoodEffortOnly": {
     "placeholders": {
-      "effort": { "type": "int" }
-    }
-  },
-  "@letterOneBigDay": {
-    "placeholders": {
-      "date": { "type": "String" },
-      "count": { "type": "int" }
+      "effort": {
+        "type": "int"
+      }
     }
   },
   "@letterShowedUp": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "planLabel": "YOUR {month} PLAN",
@@ -223,77 +286,129 @@
   "planProofSame": "{after, plural, =1{1 moment} other{{after} moments}} in the four weeks after — the same as the four weeks before.",
   "@planLabel": {
     "description": "Month name arrives already uppercased by the caller, so the label matches the other all-caps card eyebrows without a locale-specific casing rule here.",
-    "placeholders": { "month": { "type": "String" } }
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
   },
   "@planNudgeMoveReminder": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "@planNudgeSetAside": {
     "placeholders": {
-      "habit": { "type": "String" },
-      "count": { "type": "int" }
+      "habit": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
     }
   },
   "@planNudgeKeepAnchor": {
     "placeholders": {
-      "habit": { "type": "String" },
-      "count": { "type": "int" }
+      "habit": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
     }
   },
   "@planNudgeAddFocus": {
     "placeholders": {
-      "area": { "type": "String" },
-      "count": { "type": "int" }
+      "area": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
     }
   },
   "@planMore": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "@planProofMovedReminder": {
     "placeholders": {
-      "date": { "type": "String" },
-      "time": { "type": "String" }
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
     }
   },
   "@planProofSetAside": {
     "placeholders": {
-      "date": { "type": "String" },
-      "habit": { "type": "String" }
+      "date": {
+        "type": "String"
+      },
+      "habit": {
+        "type": "String"
+      }
     }
   },
   "@planProofPinned": {
     "placeholders": {
-      "date": { "type": "String" },
-      "habit": { "type": "String" }
+      "date": {
+        "type": "String"
+      },
+      "habit": {
+        "type": "String"
+      }
     }
   },
   "@planProofAddedFocus": {
     "placeholders": {
-      "date": { "type": "String" },
-      "area": { "type": "String" }
+      "date": {
+        "type": "String"
+      },
+      "area": {
+        "type": "String"
+      }
     }
   },
   "@planProofUp": {
     "placeholders": {
-      "after": { "type": "int" },
-      "before": { "type": "int" }
+      "after": {
+        "type": "int"
+      },
+      "before": {
+        "type": "int"
+      }
     }
   },
   "@planProofDown": {
     "placeholders": {
-      "after": { "type": "int" },
-      "before": { "type": "int" }
+      "after": {
+        "type": "int"
+      },
+      "before": {
+        "type": "int"
+      }
     }
   },
   "@planProofSame": {
-    "placeholders": { "after": { "type": "int" } }
+    "placeholders": {
+      "after": {
+        "type": "int"
+      }
+    }
   },
   "insightsGapsShortening": "And they're getting shorter.",
   "insightsTeaserBody": "There's a pattern in this month you can't see yet — the gap between the focus you chose and the one you actually lived.",
   "insightsTeaserCta": "See what Intended+ noticed",
   "insightsExampleSummary": "You did 37 small things for yourself.",
   "insightsExampleReturns": "Four times you went quiet, and four times you came back.",
-  "insightsReturnsLine": "{count, plural, =1{Once you went quiet for a few days. Once you came back} other{{count} times you went quiet for a few days. {count} times you came back}}.",
+  "insightsReturnsLine": "{count, plural, =1{You went quiet for a few days, and then you came back} other{{count} times you went quiet for a few days. {count} times you came back}}.",
   "insightsMostlyAt": "Most of them {period}.",
   "insightsPeriodMorning": "in the morning",
   "insightsPeriodAfternoon": "in the afternoon",
@@ -301,12 +416,16 @@
   "insightsPeriodLateNight": "late at night",
   "@insightsReturnsLine": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "@insightsMostlyAt": {
     "placeholders": {
-      "period": { "type": "String" }
+      "period": {
+        "type": "String"
+      }
     }
   },
   "insightsStartingWith": "WHAT YOU'RE STARTING WITH",
@@ -319,33 +438,47 @@
   "insightsUnlockNote": "✦ Intended+ reads your month and suggests what to change. It unlocks once you have something to read.",
   "@insightsStartingMeta": {
     "placeholders": {
-      "areas": { "type": "String" },
-      "time": { "type": "String" }
+      "areas": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
     }
   },
   "@insightsDidThings": {
     "placeholders": {
-      "count": { "type": "int" },
-      "month": { "type": "String" }
+      "count": {
+        "type": "int"
+      },
+      "month": {
+        "type": "String"
+      }
     }
   },
   "@insightsReturns": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "habitsCreateCustom": "Create custom habit",
   "habitsBrowseAll": "Browse all habits",
   "habitsMoreAvailable": "{count} more available",
-  "@habitsMoreAvailable": { "placeholders": { "count": { "type": "int" } } },
-
+  "@habitsMoreAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "habitBreath": "Three slow breaths",
   "habitPause": "Ten-second pause",
   "habitWater": "Mindful water",
   "habitStretch": "Gentle stretch",
   "habitPriority": "One priority",
   "habitCheckin": "Honest check-in",
-
   "dayMonday": "Monday",
   "dayTuesday": "Tuesday",
   "dayWednesday": "Wednesday",
@@ -353,7 +486,6 @@
   "dayFriday": "Friday",
   "daySaturday": "Saturday",
   "daySunday": "Sunday",
-
   "dayShortMon": "M",
   "dayShortTue": "T",
   "dayShortWed": "W",
@@ -361,7 +493,6 @@
   "dayShortFri": "F",
   "dayShortSat": "S",
   "dayShortSun": "S",
-
   "monthJanuary": "January",
   "monthFebruary": "February",
   "monthMarch": "March",
@@ -374,7 +505,6 @@
   "monthOctober": "October",
   "monthNovember": "November",
   "monthDecember": "December",
-
   "dailyMessage1": "Do what feels right today",
   "dailyMessage2": "Today is a fresh start",
   "dailyMessage3": "Just one small thing counts",
@@ -398,54 +528,99 @@
   "dailyMessage21": "It's okay to adjust as you go",
   "dailyMessage22": "Small acts of care matter",
   "dailyMessage23": "You're doing more than you think",
-
   "customHabitTitle": "Create custom habit",
   "customHabitPrompt": "What small action would you like to take?",
   "customHabitHint": "Keep it simple and specific.",
   "customHabitPlaceholder": "e.g., Take a 5-minute walk",
   "customHabitCharCount": "{count}/50 characters",
-  "@customHabitCharCount": { "placeholders": { "count": { "type": "int" } } },
+  "@customHabitCharCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "customHabitFocusAreaLabel": "Which area is this for?",
   "customHabitSubmit": "Add to my habits",
   "editHabitTitle": "Edit habit",
   "editHabitSave": "Save",
   "customHabitCreatedTitle": "Habit created",
   "customHabitCreatedMessage": "\"{title}\" has been added to your habits.",
-  "@customHabitCreatedMessage": { "placeholders": { "title": { "type": "String" } } },
+  "@customHabitCreatedMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "customHabitLimitTitle": "Create more habits?",
   "customHabitLimitMessage": "Core: 2 custom habits\nIntended+: Unlimited custom habits",
-
   "menuUnpin": "Unpin",
   "menuPinToTop": "Pin to top",
   "menuSwap": "Swap for another",
-
   "replacePinTitle": "Replace pin?",
   "replacePinDescription": "Current: {current}\nNew: {newHabit}",
-  "@replacePinDescription": { "placeholders": { "current": { "type": "String" }, "newHabit": { "type": "String" } } },
+  "@replacePinDescription": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "newHabit": {
+        "type": "String"
+      }
+    }
+  },
   "replacePinConfirm": "Replace pin",
-
   "swapCantTitle": "Can't swap this habit",
   "swapCantMessage": "Custom habits can't be swapped. You can delete it and add a new one instead.",
   "swapTitle": "Swap \"{title}\"?",
-  "@swapTitle": { "placeholders": { "title": { "type": "String" } } },
+  "@swapTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "swapCategoryHabits": "More {category} habits:",
-  "@swapCategoryHabits": { "placeholders": { "category": { "type": "String" } } },
+  "@swapCategoryHabits": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
   "swapFreeRemaining": "Free swaps left: {remaining}",
-  "@swapFreeRemaining": { "placeholders": { "remaining": { "type": "int" } } },
+  "@swapFreeRemaining": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
   "swapSuccessTitle": "Habit swapped",
   "swapSuccessMessage": "Replaced with \"{habit}\"",
-  "@swapSuccessMessage": { "placeholders": { "habit": { "type": "String" } } },
+  "@swapSuccessMessage": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "swapErrorTitle": "Something went wrong",
   "swapErrorMessage": "We couldn't swap this habit. Please try again.",
   "swapLimitTitle": "Swap this habit?",
   "swapLimitMessage": "You've used all your free swaps this month.\n\nIntended+: Unlimited swaps",
   "swapNoAltTitle": "No alternatives",
   "swapNoAltMessage": "You're already using all available habits from this category.",
-
   "deleteHabitTitle": "Delete habit?",
   "deleteHabitMessage": "\"{title}\" will be removed and any progress lost.",
-  "@deleteHabitMessage": { "placeholders": { "title": { "type": "String" } } },
-
+  "@deleteHabitMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "completionQuestion": "Did you do this today?",
   "completionHowDidItLand": "How did that land?",
   "completionMoodGlad": "Glad I did",
@@ -457,13 +632,14 @@
   "completionKept": "Kept — {count} moments this month.",
   "@completionKept": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "completionKeptOne": "Kept — your first moment this month.",
   "completionConfirm": "I did it",
   "completionDecline": "No, not today",
-
   "celebrationNice": "Nice",
   "celebrationWellDone": "Well done",
   "celebrationYouDidIt": "You did it",
@@ -471,7 +647,6 @@
   "celebrationWayToGo": "Way to go",
   "celebrationGoodJob": "Good job",
   "celebrationLovely": "Lovely",
-
   "completionMsg1": "Small steps like this matter.",
   "completionMsg3": "This is how change happens.",
   "completionMsg4": "One step closer.",
@@ -485,7 +660,6 @@
   "completionMsg17": "Another habit built.",
   "completionMsg18": "You committed and you did it.",
   "completionMsg20": "You honored your intention.",
-
   "insightWater1": "Even mild dehydration can affect mood and concentration.",
   "insightWater2": "Your brain is 75% water. Hydration affects cognitive function.",
   "insightWater3": "Drinking water can reduce fatigue by up to 14%.",
@@ -549,7 +723,6 @@
   "insightMusic1": "Playing music strengthens the corpus callosum in the brain.",
   "insightMusic2": "Musical practice improves executive function and memory.",
   "insightMusic3": "Music activates the reward system, releasing dopamine.",
-
   "warmthMsg1": "That's okay. Tomorrow is still yours.",
   "warmthMsg2": "Rest counts too.",
   "warmthMsg4": "Not today — and that's allowed.",
@@ -561,7 +734,6 @@
   "warmthMsg11": "No streak to break. No score to lose. Just you.",
   "warmthMsg13": "You showed up enough today just by being here.",
   "warmthMsg15": "Progress isn't only visible. Sometimes it's just surviving.",
-
   "notifMsg1": "No rush today. Even one small thing counts.",
   "notifMsg2": "You don't have to be productive to deserve rest.",
   "notifMsg3": "Whatever you do today is enough.",
@@ -612,7 +784,6 @@
   "notifMsg56": "Nothing is lost. You can always begin again.",
   "notifMsg58": "Today's effort is invisible now and undeniable later.",
   "notifMsg60": "This is what taking care of yourself looks like.",
-
   "notifWeeklyBody": "Check in with how your week felt. Your habits were there for you.",
   "notifWeeklyPathGentleMornings": "Your week of gentle mornings is ready to look back on.",
   "notifWeeklyPathAnchorsForHardDays": "A week of holding steady. See how you anchored yourself.",
@@ -623,7 +794,6 @@
   "notifDailyChannelDesc": "Gentle daily habit reminders",
   "notifWeeklyChannelName": "Weekly Reminders",
   "notifWeeklyChannelDesc": "Weekly reflection reminders",
-
   "affirmation1": "Missing days doesn't erase what you've already done.",
   "affirmation2": "You don't need to earn rest.",
   "affirmation3": "Three habits or one — both are enough.",
@@ -659,26 +829,48 @@
   "affirmation33": "You don't need a reason to be kind to yourself.",
   "affirmation34": "What you're doing right now is enough.",
   "affirmation35": "Tomorrow is always a chance to try again.",
-
   "progressOnboardingPrompt": "Complete onboarding to see your week",
   "progressTitle": "Your week",
   "progressWeeklySummary": "WEEKLY SUMMARY",
   "progressWeekBeginning": "Your week is just beginning.",
   "progressShowedUpOnce": "You showed up once this week.",
   "progressShowedUpCount": "You showed up {count} times this week.",
-  "@progressShowedUpCount": { "placeholders": { "count": { "type": "int" } } },
+  "@progressShowedUpCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressMore": "+{count} more",
-  "@progressMore": { "placeholders": { "count": { "type": "int" } } },
+  "@progressMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressSeeAll": "See all",
   "progressShowLess": "Show less",
   "progressYourMoments": "YOUR MOMENTS",
   "progressEarlierToday": "Earlier today",
   "progressYesterday": "Yesterday",
   "progressDaysAgo": "{count} days ago",
-  "@progressDaysAgo": { "placeholders": { "count": { "type": "int" } } },
+  "@progressDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "progressMomentsCollected": "{count, plural, =1{1 moment collected} other{{count} moments collected}}",
-  "@progressMomentsCollected": { "placeholders": { "count": { "type": "int" } } },
-
+  "@progressMomentsCollected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "momentsTitle": "Your moments",
   "momentsSubtitle": "Every habit you complete is saved to your collection.",
   "momentsEmptyTitle": "Your moments will appear here.",
@@ -686,14 +878,40 @@
   "momentsToday": "Today",
   "momentsYesterday": "Yesterday",
   "monthSummaryMoments": "{count, plural, =1{1 moment in {month}} other{{count} moments in {month}}}",
-  "@monthSummaryMoments": { "placeholders": { "count": { "type": "int" }, "month": { "type": "String" } } },
+  "@monthSummaryMoments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
   "monthSummaryIntentions": "{count, plural, =1{1 intention this month} other{{count} intentions this month}}",
-  "@monthSummaryIntentions": { "placeholders": { "count": { "type": "int" } } },
+  "@monthSummaryIntentions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "monthSummaryTopIntention": "Your most frequent intention: {intention}",
-  "@monthSummaryTopIntention": { "placeholders": { "intention": { "type": "String" } } },
+  "@monthSummaryTopIntention": {
+    "placeholders": {
+      "intention": {
+        "type": "String"
+      }
+    }
+  },
   "momentsShowAll": "Show all {count} moments",
-  "@momentsShowAll": { "placeholders": { "count": { "type": "int" } } },
-
+  "@momentsShowAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "paywallTitle": "Get the full Intended experience",
   "paywallTitleGentleMornings": "Make your mornings even gentler",
   "paywallTitleAnchorsForHardDays": "More anchors for the hard days",
@@ -706,7 +924,6 @@
   "paywallFeature2": "A home screen widget that keeps your intentions close",
   "paywallFeature3": "10 beautiful themes & premium app icons — make it yours",
   "paywallFeature4": "Shareable moment cards & curated routines designed for real life",
-
   "paywallGroupRoom": "More room",
   "paywallGroupRoomA": "Unlimited habits & focus areas",
   "paywallGroupRoomB": "No ceiling on custom habits",
@@ -719,7 +936,6 @@
   "paywallGroupYou": "More you",
   "paywallGroupYouA": "10 beautiful themes & app icons",
   "paywallGroupYouB": "Premium widgets for your home screen",
-
   "paywallMonthly": "Monthly",
   "paywallMonthlyPrice": "€5.99",
   "paywallMonthlyPeriod": "per month",
@@ -730,12 +946,20 @@
   "paywallYearlyAnchor": "{price}/month, billed yearly",
   "@paywallYearlyAnchor": {
     "placeholders": {
-      "price": { "type": "String" }
+      "price": {
+        "type": "String"
+      }
     }
   },
   "paywallYearlySave": "Save 37%",
   "paywallSavePercent": "Save {percent}%",
-  "@paywallSavePercent": { "placeholders": { "percent": { "type": "int" } } },
+  "@paywallSavePercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
   "paywallLifetime": "Lifetime",
   "paywallLifetimePrice": "€49.99",
   "paywallLifetimePeriod": "one-time",
@@ -743,7 +967,13 @@
   "paywallCtaTrial": "Start 7-day free trial",
   "paywallCtaLifetime": "Get lifetime access",
   "paywallTrialHint": "7 days free, then {price}. Cancel anytime.",
-  "@paywallTrialHint": { "placeholders": { "price": { "type": "String" } } },
+  "@paywallTrialHint": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "paywallLifetimeHint": "One-time purchase. No subscription.",
   "paywallContinueFree": "Continue with Core",
   "paywallRestorePurchases": "Restore Purchases",
@@ -752,14 +982,18 @@
   "paywallTerms": "Terms",
   "paywallPrivacy": "Privacy",
   "paywallFooter": "New features added regularly. Your subscription supports independent development.\nBuilt by one person who cares about this as much as you do.",
-
   "onboardingPaywallTitle": "Try Intended+ free",
   "onboardingPaywallBody": "Start your 7-day free trial of Intended+ to unlock weekly reflections and unlimited routines. Skip if you'd rather start with Core — it's yours forever.",
   "onboardingPaywallPrimaryCta": "Start free trial",
   "onboardingPaywallSecondaryCta": "Continue with Core",
   "onboardingPaywallDisclaimer": "7 days free, then {price}. Cancel anytime.",
-  "@onboardingPaywallDisclaimer": { "placeholders": { "price": { "type": "String" } } },
-
+  "@onboardingPaywallDisclaimer": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "subscriptionTitle": "Intended+",
   "subscriptionSupporter": "You're a supporter ♥",
   "subscriptionPlan": "Plan",
@@ -767,7 +1001,6 @@
   "subscriptionRenews": "Renews",
   "subscriptionThankYou": "Thank you for supporting Intended.\nYou're helping us build a kinder\nalternative to hustle culture.",
   "subscriptionManage": "Manage in App Store",
-
   "profileTitle": "Profile",
   "profileNameError": "Hmm",
   "profileNameErrorMessage": "Please choose a different name",
@@ -781,7 +1014,13 @@
   "profileYourMoments": "Your moments",
   "profileMomentsNone": "None yet",
   "profileMomentsCount": "{count, plural, =1{1 moment} other{{count} moments}}",
-  "@profileMomentsCount": { "placeholders": { "count": { "type": "int" } } },
+  "@profileMomentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "profileYourPath": "Your path",
   "profileSettings": "SETTINGS",
   "profileDailyReminders": "Daily reminders",
@@ -835,7 +1074,6 @@
   "profileChangeFocusAreasScreenTitle": "Change Focus Areas",
   "profileChooseUpTo2": "Choose up to 2 areas",
   "profileSaveChanges": "Save Changes",
-
   "themeWarmClay": "Warm Clay",
   "themeIris": "Iris",
   "themeClearSky": "Clear Sky",
@@ -846,29 +1084,63 @@
   "themeGoldenHour": "Golden Hour",
   "themeNightBloom": "Night Bloom",
   "themeSandDune": "Sand Dune",
-
   "browseHabitsTitle": "Browse Habits",
   "browseHabitsAvailable": "{count} habits available",
-  "@browseHabitsAvailable": { "placeholders": { "count": { "type": "int" } } },
+  "@browseHabitsAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "browseHabitsSearch": "Search habits...",
   "browseAlreadyAddedTitle": "Already added",
   "browseAlreadyAddedMessage": "\"{habit}\" is already in your habits.",
-  "@browseAlreadyAddedMessage": { "placeholders": { "habit": { "type": "String" } } },
+  "@browseAlreadyAddedMessage": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "browseSwapLimitTitle": "Swap limit reached",
   "browseSwapConfirmTitle": "Swap an existing habit?",
   "browseSwapConfirmMessage": "Replace one of your current habits with \"{habit}\".",
-  "@browseSwapConfirmMessage": { "placeholders": { "habit": { "type": "String" } } },
+  "@browseSwapConfirmMessage": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "browseSwapRemainingCount": "You have {count} {count, plural, =1{swap} other{swaps}} remaining this month.",
-  "@browseSwapRemainingCount": { "placeholders": { "count": { "type": "int" } } },
+  "@browseSwapRemainingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "browseChooseHabitToSwap": "Choose habit to swap",
   "browseWhichToReplace": "Which habit to replace?",
   "browseChooseToReplaceMessage": "Choose one of your current habits to replace with \"{habit}\"",
-  "@browseChooseToReplaceMessage": { "placeholders": { "habit": { "type": "String" } } },
+  "@browseChooseToReplaceMessage": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "browseHabitAddedTitle": "Habit added",
   "browseHabitAddedMessage": "\"{habit}\" has been added to your habits.",
-  "@browseHabitAddedMessage": { "placeholders": { "habit": { "type": "String" } } },
+  "@browseHabitAddedMessage": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "browseHabitAddedConfirm": "Great!",
-
   "habitDrinkWater": "Drink 3 glasses of water",
   "habitThreeSlowBreaths": "Take 3 slow breaths",
   "habitStretchTenSeconds": "Stretch for 30 seconds",
@@ -881,7 +1153,6 @@
   "habitBodyScan": "2-minute body scan",
   "habitGentleMovement": "5 minutes of gentle stretching",
   "habitMindfulMeal": "Eat one meal mindfully",
-
   "habitTenSecondPause": "One-minute pause",
   "habitNoticeFeeling": "Notice one thing you feel",
   "habitGroundingBreath": "Three grounding breaths",
@@ -894,7 +1165,6 @@
   "habitSmileGently": "Smile kindly at yourself",
   "habitAskNeed": "Ask yourself \"what do I need right now?\"",
   "habitPermissionToRest": "Give yourself permission to rest",
-
   "habitSetPriority": "Set one priority today",
   "habitPlanTomorrow": "Plan tomorrow in one sentence",
   "habitThirtySecondReset": "Do a 1-minute reset",
@@ -906,7 +1176,6 @@
   "habitCloseTab": "Close unnecessary browser tabs",
   "habitArchiveEmails": "Archive 5 old emails",
   "habitUpdateTodo": "Update one to-do item",
-
   "habitTidyOneThing": "Tidy one small thing",
   "habitPutBack": "Put one thing back where it belongs",
   "habitWipeSurface": "Wipe one surface",
@@ -919,7 +1188,6 @@
   "habitOrganizeDrawer": "Organize one drawer",
   "habitWaterPlant": "Water your plants",
   "habitLightCandle": "Light a scented candle",
-
   "habitSendMessage": "Send one message to someone you care about",
   "habitAppreciatePerson": "Think of one person you appreciate",
   "habitAskHowAreYou": "Ask someone how they are",
@@ -932,7 +1200,6 @@
   "habitTellMeaning": "Tell someone what they mean to you",
   "habitOfferHelp": "Offer help to someone",
   "habitCelebrateOthers": "Celebrate someone else's win",
-
   "habitWriteSentence": "Write a short story",
   "habitDoodle": "Doodle for 5 minutes",
   "habitCaptureIdea": "Capture one idea",
@@ -945,7 +1212,6 @@
   "habitCreateTinyThing": "Play a short melody",
   "habitPlayCreative": "Play with one creative medium",
   "habitImagine": "Do a vocal warm-up",
-
   "habitCheckBalance": "Try one financial tip",
   "habitMoveToSavings": "Move €3/$3 to savings",
   "habitReviewSubscription": "Review one subscription",
@@ -958,7 +1224,6 @@
   "habitWait24Hours": "Wait 24 hours before a big purchase",
   "habitCelebrateMoneyWin": "Celebrate one money win",
   "habitSavingsGoal": "Set one savings goal",
-
   "habitSitStill": "Sit still for 1 minute",
   "habitKindThing": "Do one kind thing for yourself",
   "habitDrinkSlowly": "Drink a cup of tasty coffee",
@@ -971,20 +1236,23 @@
   "habitPutOnComfortable": "Put on something comfortable",
   "habitListenToSong": "Listen to one song you love",
   "habitDoNothing": "Do absolutely nothing for 5 minutes",
-
   "shareCardWeeklyCheckin": "Weekly check-in",
   "shareCardMilestone": "Milestone",
   "shareCardShowedUpPhrase": "I showed up for myself this week",
   "shareCardTimes": "{count, plural, =1{time} other{times}}",
   "@shareCardTimes": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "shareCardFocusedOn": "Focused on: {area}",
   "@shareCardFocusedOn": {
     "placeholders": {
-      "area": {"type": "String"}
+      "area": {
+        "type": "String"
+      }
     }
   },
   "shareCardTagline": "intention, not perfection",
@@ -995,39 +1263,77 @@
   "shareCardSubtitlePlural": "times I showed up this week",
   "shareCardSubtitleDays": "days I showed up this week",
   "shareCardInsightTwoDays": "{day1} and {day2} are my days",
-  "@shareCardInsightTwoDays": { "placeholders": { "day1": { "type": "String" }, "day2": { "type": "String" } } },
+  "@shareCardInsightTwoDays": {
+    "placeholders": {
+      "day1": {
+        "type": "String"
+      },
+      "day2": {
+        "type": "String"
+      }
+    }
+  },
   "shareCardInsightOneDay": "{day} is my day",
-  "@shareCardInsightOneDay": { "placeholders": { "day": { "type": "String" } } },
+  "@shareCardInsightOneDay": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
   "shareCardInsightFocus": "Drawn to {area} this week",
-  "@shareCardInsightFocus": { "placeholders": { "area": { "type": "String" } } },
-
+  "@shareCardInsightFocus": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
   "shareButton": "Share",
-
   "sharePickerTitle": "What would you like to share?",
   "shareWeeklySubtitle": "how many times you showed up this week",
   "shareShowingUpSubtitle": "your own way, your own pace",
   "shareFocusAreaSubtitle": "the area you keep returning to",
   "shareYourThingSubtitle": "the habit that's sticking",
-
   "milestoneShowingUpLabel": "Showing up",
   "milestoneAreaLabel": "Focus area",
   "milestoneIdentityLabel": "Your thing",
-
   "milestoneShowingUpHero": "{count} {count, plural, =1{week} other{weeks}}",
-  "@milestoneShowingUpHero": { "placeholders": { "count": { "type": "int" } } },
+  "@milestoneShowingUpHero": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "milestoneShowingUpSubtitle": "of showing up — in your own way",
-
   "milestoneAreaHero": "{area}",
-  "@milestoneAreaHero": { "placeholders": { "area": { "type": "String" } } },
+  "@milestoneAreaHero": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
   "milestoneAreaSubtitle": "you keep coming back to what matters",
-
   "milestoneIdentityHero": "{habit}",
-  "@milestoneIdentityHero": { "placeholders": { "habit": { "type": "String" } } },
+  "@milestoneIdentityHero": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "milestoneIdentitySubtitle": "is becoming your thing",
-
   "boostCardTitle": "Intended Boost — €1.99",
   "boostCardTitleDynamic": "Intended Boost — {price}",
-  "@boostCardTitleDynamic": { "placeholders": { "price": { "type": "String" } } },
+  "@boostCardTitleDynamic": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "boostCardSubtitle": "Unlock both dark themes.",
   "boostOrDivider": "or",
   "boostGoUnlimited": "Want more? Go unlimited with Intended+",
@@ -1043,7 +1349,6 @@
   "boostOfferShareDesc": "Your journey is worth celebrating — share it with people you care about.",
   "boostOfferThemeTitle": "Unlock both dark themes",
   "boostOfferThemeDesc": "Deep Focus and Night Bloom — a calmer look for evening check-ins.",
-
   "commonDismiss": "Dismiss",
   "focusLimitFreeTitle": "Focus area limit reached",
   "focusLimitFreeMessage": "Free plan includes 1 focus area. Upgrade to unlock more.",
@@ -1051,54 +1356,101 @@
   "focusNudgeTitle": "Less is more",
   "focusNudgeMessage": "Focus on one area at a time for the best results.",
   "focusNudgeGotIt": "Got it",
-
   "shareError": "Could not share. Please try again.",
-
   "restoreSuccess": "Purchases restored!",
   "restoreNotFound": "No purchases found.",
-
   "restoreBackupTitle": "Welcome back!",
   "restoreBackupMessage": "We found your data from a previous session. Would you like to restore it?",
   "restoreBackupConfirm": "Restore my data",
   "restoreBackupSkip": "Start fresh",
-
   "profileBackedUp": "Backed up {time}",
   "profileNotBackedUp": "Not backed up",
   "profileBackupNow": "Back up now",
   "profileBackingUp": "Backing up…",
   "profileBackedUpNote": "Your data is backed up to your account.",
   "profileLocalDataNote": "Your data is stored on this device only. Sign in to back it up.",
-
   "onboardingAlreadyHaveAccount": "Sign in",
   "onboardingSignInWithApple": "Sign in with Apple",
   "onboardingSignInWithGoogle": "Sign in with Google",
-
   "onboardingPhilosophyLabel": "Before we begin",
   "onboardingPhilosophyHeading": "This isn't a tracker.\nIt's a return to yourself.",
   "onboardingPhilosophyBody": "No streaks to maintain. No guilt for skipping.\nYour progress never resets. One small intention is enough.",
   "onboardingPhilosophyCta": "Got it",
-
   "reflectionTitle": "Your week",
   "reflectionAnchor7": "You showed up every single day this week. Not perfect — present.",
   "reflectionAnchor56": "You showed up {days} out of 7 days this week. That's {days} days you chose to try.",
-  "@reflectionAnchor56": { "placeholders": { "days": { "type": "int" } } },
+  "@reflectionAnchor56": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "reflectionAnchor34": "You showed up {days} days this week. That's {days} days you chose to try.",
-  "@reflectionAnchor34": { "placeholders": { "days": { "type": "int" } } },
+  "@reflectionAnchor34": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "reflectionAnchor12": "You checked in {days, plural, =1{1 time} other{{days} times}} this week. Even one day counts — you didn't disappear.",
-  "@reflectionAnchor12": { "placeholders": { "days": { "type": "int" } } },
+  "@reflectionAnchor12": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "reflectionAnchor0": "Quiet week. That's okay. You're here now, and that's what matters.",
   "reflectionPatternOneDay": "Looks like {dayName} is when you really show up. Three weeks in a row now.",
-  "@reflectionPatternOneDay": { "placeholders": { "dayName": { "type": "String" } } },
+  "@reflectionPatternOneDay": {
+    "placeholders": {
+      "dayName": {
+        "type": "String"
+      }
+    }
+  },
   "reflectionPatternTwoDays": "{dayName1} and {dayName2} seem to be your days.",
-  "@reflectionPatternTwoDays": { "placeholders": { "dayName1": { "type": "String" }, "dayName2": { "type": "String" } } },
+  "@reflectionPatternTwoDays": {
+    "placeholders": {
+      "dayName1": {
+        "type": "String"
+      },
+      "dayName2": {
+        "type": "String"
+      }
+    }
+  },
   "reflectionPatternNone": "Your rhythm is still finding its shape. That's normal — keep going.",
   "reflectionFocusDominant": "You've been drawn to {area} habits lately. That seems important to you right now.",
-  "@reflectionFocusDominant": { "placeholders": { "area": { "type": "String" } } },
+  "@reflectionFocusDominant": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
   "reflectionFocusBalanced": "You spread your energy across {area1} and {area2} this week. A balanced week.",
-  "@reflectionFocusBalanced": { "placeholders": { "area1": { "type": "String" }, "area2": { "type": "String" } } },
+  "@reflectionFocusBalanced": {
+    "placeholders": {
+      "area1": {
+        "type": "String"
+      },
+      "area2": {
+        "type": "String"
+      }
+    }
+  },
   "reflectionReframeComeback": "Last week was quieter. This week you came back. That's the whole point.",
   "reflectionReframeRefresh": "You refreshed your habits {count} time(s) this week — that's not quitting, that's adapting.",
-  "@reflectionReframeRefresh": { "placeholders": { "count": { "type": "int" } } },
+  "@reflectionReframeRefresh": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "reflectionReframeSwap": "You swapped out a habit this week. Knowing what doesn't work is progress too.",
   "reflectionShare": "Share",
   "insightsGrowthHint": "Insights get sharper every week",
@@ -1112,32 +1464,55 @@
   "reflectionBlurRhythm": "See which days and patterns work best for you",
   "reflectionBlurFocus": "Discover where your energy goes each week",
   "reflectionUnlockPlus": "See my weekly insights",
-
   "tipPinHabit": "Long press on a habit to pin it to the top",
   "tipCuratedPack": "Try a curated pack — find them in Browse all habits",
   "tipWidget": "Add Intended to your home screen — long press your wallpaper and add a widget",
   "tipGotIt": "Got it",
   "tipSkipAll": "Skip tips",
-
   "packSwapTitle": "Make room for your new pack",
   "packSwapSubtitle": "To keep your space focused, pick which habits to set aside. Your custom habits will always stay.",
   "packSwapConfirm": "Set aside {count} and add {packName}",
-  "@packSwapConfirm": { "placeholders": { "count": { "type": "int" }, "packName": { "type": "String" } } },
+  "@packSwapConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "packName": {
+        "type": "String"
+      }
+    }
+  },
   "packSwapAdded": "added — {count} new habits ready to go",
-  "@packSwapAdded": { "placeholders": { "count": { "type": "int" } } },
+  "@packSwapAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "packSwapAllActive": "All habits from this pack are already active",
-
   "packSectionHeader": "CURATED PACKS",
   "packHabitsCount": "{count, plural, =1{1 habit} other{{count} habits}}",
-  "@packHabitsCount": { "placeholders": { "count": { "type": "int" } } },
+  "@packHabitsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "packFreeBadge": "Free",
   "packStartButton": "Start {packName}",
-  "@packStartButton": { "placeholders": { "packName": { "type": "String" } } },
+  "@packStartButton": {
+    "placeholders": {
+      "packName": {
+        "type": "String"
+      }
+    }
+  },
   "packHabitsInPack": "HABITS IN THIS PACK",
   "packAllActive": "All habits already active",
   "packHabitActive": "Active",
   "packActiveBadge": "Active",
-
   "packGentleMorningsName": "Gentle Mornings",
   "packGentleMorningsSubtitle": "A small morning ritual that doesn't feel like a 5am hustle routine",
   "packGentleMorningsDescription": "Four tiny habits that work as a gentle sequence — hydrate, breathe fresh air, center yourself, then orient your day. No alarms at dawn required.",
@@ -1153,27 +1528,29 @@
   "packStayConnectedName": "Stay Connected",
   "packStayConnectedSubtitle": "The people who matter, one small gesture at a time.",
   "packStayConnectedDescription": "Four micro-habits for staying close to the people in your life. Not grand gestures — just showing up.",
-
   "widgetToday": "today",
   "widgetMore": "+{n} more",
-  "@widgetMore": { "placeholders": { "n": { "type": "int" } } },
+  "@widgetMore": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "widgetUpgrade": "Upgrade to see more",
   "widgetNoHabits": "No habits yet",
   "widgetAllDone": "All done for today!",
-
   "appIconSectionTitle": "APP ICON",
   "appIconDefault": "Default",
   "appIconMidnight": "Midnight",
   "appIconRose": "Rose",
   "appIconForest": "Forest",
   "appIconSky": "Sky",
-
   "legalDisclaimerPrefix": "By continuing, you agree to our ",
   "legalDisclaimerTerms": "Terms",
   "legalDisclaimerAnd": " and ",
   "legalDisclaimerPrivacy": "Privacy Policy",
   "legalDisclaimerSuffix": ".",
-
   "pathGentleMorningsTitle": "Gentle Mornings",
   "pathGentleMorningsSubtitle": "A soft, intentional way to start the day",
   "pathAnchorsForHardDaysTitle": "Anchors for Hard Days",
@@ -1184,27 +1561,44 @@
   "pathWindingDownSubtitle": "A small ritual for letting the day go",
   "pathYourOwnWayTitle": "Your Own Way",
   "pathYourOwnWaySubtitle": "I know what I need — just give me the tools",
-
   "intentionPathHeadline": "What brings you here?",
   "intentionPathSubtext": "This shapes the next 30 days. Pick the one that fits today — your future self will thank you.",
   "intentionPathUpdateFocusAreas": "Update your focus areas to match \"{pathName}\"?",
-  "@intentionPathUpdateFocusAreas": { "placeholders": { "pathName": { "type": "String" } } },
+  "@intentionPathUpdateFocusAreas": {
+    "placeholders": {
+      "pathName": {
+        "type": "String"
+      }
+    }
+  },
   "intentionPathUpdateYes": "Yes, update focus areas",
   "intentionPathUpdateNo": "No, keep my current areas",
-
   "tellUsAboutPathHeadline": "What brings you here?",
   "tellUsAboutPathSubtext": "This shapes the next 30 days. Pick the one that fits today — your future self will thank you.",
   "tellUsAboutFocusHeadline": "What feels important right now?",
   "tellUsAboutFocusSubtext": "Pick up to 2. We'll start there.",
-
   "commitmentTitle": "One small promise.",
   "commitmentBody": "Building this takes 2 minutes a day. That's it.",
   "commitmentEchoFull": "Your path: {path}  ·  Your focus: {areas}",
-  "@commitmentEchoFull": { "placeholders": { "path": { "type": "String" }, "areas": { "type": "String" } } },
+  "@commitmentEchoFull": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "areas": {
+        "type": "String"
+      }
+    }
+  },
   "commitmentEchoAreasOnly": "Your focus: {areas}",
-  "@commitmentEchoAreasOnly": { "placeholders": { "areas": { "type": "String" } } },
+  "@commitmentEchoAreasOnly": {
+    "placeholders": {
+      "areas": {
+        "type": "String"
+      }
+    }
+  },
   "commitmentCta": "I'll show up for myself",
-
   "coachMarkFirstCompletionTitle": "Your first check-in",
   "coachMarkFirstCompletionBody": "That's it. That's the whole practice. Show up when you can, skip when you can't.",
   "coachMarkPinningTitle": "This one's sticking",
@@ -1219,14 +1613,11 @@
   "coachMarkMonthlyReflectionBody": "Your monthly reflection finds patterns across weeks that you might not notice day-to-day. It's here whenever you want it.",
   "coachMarkReflectionShareTitle": "Worth sharing?",
   "coachMarkReflectionShareBody": "Tap the share button to turn this into a card you can send to someone or post. Your data stays private — only the summary is shared.",
-
   "reviewPromptMessage": "Enjoying Intended? A quick rating helps others find a gentler way to build habits.",
   "reviewPromptRate": "Rate now",
   "reviewPromptNotYet": "Not yet",
-
   "upgradeNudgeBody": "Your practice is growing. Intended+ gives you room to grow with it.",
   "upgradeNudgeLearnMore": "Learn more",
-
   "notifWeeklyDynamic0": "Your weekly reflection is here. Every week is a fresh start.",
   "notifWeeklyDynamic1": "Your weekly reflection is here — you showed up for yourself this week.",
   "notifWeeklyDynamicN": "Your weekly reflection is here — you showed up {count} times for yourself this week.",
@@ -1237,7 +1628,6 @@
       }
     }
   },
-
   "faqSectionGettingStarted": "Getting Started",
   "faqWhatIsIntended": "What is Intended?",
   "faqWhatIsIntendedAnswer": "Intended is a gentle habit app for iOS. It helps you build daily habits without streaks, guilt, or pressure. There's no counter that resets when you miss a day — just a calm space to check in with your intentions whenever you're ready.",
@@ -1251,7 +1641,6 @@
   "faqHowIsDifferentAnswer": "Most habit apps use streaks and gamification. Intended takes the opposite approach. No streaks to break, no leaderboards, no guilt. Your progress never resets.",
   "faqNeedAccount": "Do I need an account?",
   "faqNeedAccountAnswer": "Not to get started. You can use Intended without signing in. Creating an account (via Apple or Google) lets you back up your data to the cloud and restore it if you switch devices.",
-
   "faqSectionDailyHabits": "Daily Habits",
   "faqHowToCheckIn": "How do I check in?",
   "faqHowToCheckInAnswer": "Tap any habit card on your home screen. A single tap is all it takes.",
@@ -1267,7 +1656,6 @@
   "faqRefreshesAnswer": "Refreshing gives you new random habits from your focus areas. 3 per day on the free plan.",
   "faqAllDone": "What happens when I complete all my habits?",
   "faqAllDoneAnswer": "You'll see a quiet celebration — a gentle bloom moment. It's a small reminder that showing up matters, no matter how many habits you checked off.",
-
   "faqSectionReflections": "Reflections",
   "faqWeeklyReflection": "What is a Weekly Reflection?",
   "faqWeeklyReflectionAnswer": "Every week, Intended generates a reflection card based on your check-in patterns — which habits stuck, your most active days, and gentle observations. Never judgments.",
@@ -1279,7 +1667,6 @@
   "faqNoReflectionAnswer": "Weekly reflections appear after 7 days. Monthly after 30. The more you check in, the richer they become.",
   "faqHowReflectionsGenerated": "How are reflections generated?",
   "faqHowReflectionsGeneratedAnswer": "Reflections are generated entirely on your device from your check-in data. No AI, no cloud processing. The app looks at your patterns — active days, favorite habits, consistency — and turns them into gentle observations.",
-
   "faqSectionNotifications": "Notifications",
   "faqHowNotifications": "How do notifications work?",
   "faqHowNotificationsAnswer": "Reminders adapt to your rhythm. Check in regularly and they step back. Been away? One gentle nudge — never seven.",
@@ -1289,13 +1676,11 @@
   "faqPathNotificationsAnswer": "Yes. Someone on Finding Calm sees different wording than someone on Gentle Mornings.",
   "faqTurnOffNotifications": "Can I turn off notifications?",
   "faqTurnOffNotificationsAnswer": "Yes. Go to Profile → Notification Settings and toggle them off. You can also disable just the weekly reflection reminder while keeping daily ones.",
-
   "faqSectionWidgets": "Widgets",
   "faqAddWidget": "How do I add a widget?",
   "faqAddWidgetAnswer": "Long-press your home screen, tap +, search for Intended. You can also add lock screen widgets through iOS Settings.",
   "faqWidgetNotUpdating": "Why isn't my widget updating?",
   "faqWidgetNotUpdatingAnswer": "iOS controls refresh timing. Open the app briefly to trigger it. Check that Background App Refresh is enabled for Intended.",
-
   "faqSectionPricing": "Intended+ & Pricing",
   "faqWhatIsPlus": "What is Intended+?",
   "faqWhatIsPlusAnswer": "Unlimited custom habits, swaps, refreshes, library access, focus area changes, all themes, monthly reflections, and deeper insights.",
@@ -1309,7 +1694,6 @@
   "faqRestoreAnswer": "Profile → Restore Purchases.",
   "faqCancel": "How do I cancel?",
   "faqCancelAnswer": "iPhone Settings → your name → Subscriptions → Intended → Cancel.",
-
   "faqSectionPrivacy": "Privacy",
   "faqDataStorage": "Where is my data stored?",
   "faqDataStorageAnswer": "All data is stored locally on your device. Nothing is uploaded to any server.",
@@ -1317,7 +1701,6 @@
   "faqDataSellingAnswer": "No. We use anonymous crash reports to fix bugs. Never your habit data.",
   "faqDeleteApp": "What if I delete the app?",
   "faqDeleteAppAnswer": "Data is local, so deleting removes everything. Subscriptions can be restored through the App Store.",
-
   "faqSectionTroubleshooting": "Troubleshooting",
   "faqCrash": "The app crashed.",
   "faqCrashAnswer": "Try closing and reopening. Make sure you have the latest version.",
@@ -1327,136 +1710,150 @@
   "faqAppleNameAnswer": "Apple only sends your name the first time. Go to iPhone Settings → Apple ID → Password & Security → Apps Using Apple ID → Intended → Stop Using, then sign in again.",
   "faqNotificationsNotArriving": "Notifications aren't arriving.",
   "faqNotificationsNotArrivingAnswer": "Check that notifications are enabled for Intended in iPhone Settings → Notifications. Also make sure Background App Refresh is on. If you recently reinstalled, open the app once so it can reschedule reminders.",
-
   "faqStillHaveQuestion": "Still have a question?",
   "faqContactButton": "Email us",
   "faqWidgetCompletion": "Can I complete habits from my widget?",
   "faqWidgetCompletionAnswer": "Yes! Tap any habit on your home screen widget to mark it done. It syncs when you next open Intended.",
-
   "bloomGentleMornings1": "A full morning. That's something.",
   "bloomGentleMornings2": "Every one, gently done.",
   "bloomGentleMornings3": "Morning complete. You showed up softly.",
   "bloomGentleMornings4": "All here. The morning was yours.",
   "bloomGentleMornings5": "Gentle and done. That's enough.",
-
   "bloomAnchorsForHardDays1": "An anchor held.",
   "bloomAnchorsForHardDays2": "Today, you stayed.",
   "bloomAnchorsForHardDays3": "Even when loud, you returned.",
   "bloomAnchorsForHardDays4": "A small steady win on a hard day.",
   "bloomAnchorsForHardDays5": "You're not gone. You're here.",
-
   "bloomQuietFocus1": "Focused. Finished.",
   "bloomQuietFocus2": "Quiet work, fully done.",
   "bloomQuietFocus3": "One thing, all the way through.",
   "bloomQuietFocus4": "Steady focus. Real progress.",
   "bloomQuietFocus5": "You showed up to the work.",
-
   "bloomWindingDown1": "The evening is yours now. Rest.",
   "bloomWindingDown2": "All wound down. Let the night come.",
   "bloomWindingDown3": "Done softly. Tomorrow can wait.",
   "bloomWindingDown4": "Everything settled. You did enough.",
   "bloomWindingDown5": "Gently closed. Sleep well.",
-
   "bloomYourOwnWay1": "You showed up for all of it today.",
   "bloomYourOwnWay2": "All done, your way. That's what counts.",
   "bloomYourOwnWay3": "Every one, on your terms.",
   "bloomYourOwnWay4": "Finished. No one else needed to see this.",
   "bloomYourOwnWay5": "Quietly complete. That's yours to keep.",
-
   "notifPathGentleMornings1": "Good morning. No rush — what feels right today?",
   "notifPathGentleMornings2": "A new morning, a gentle start. You've got this.",
   "notifPathGentleMornings3": "The morning is yours. Begin however feels right.",
   "notifPathGentleMornings4": "Mornings don't need to be perfect. Just present.",
   "notifPathGentleMornings5": "Rise gently. One small thing is enough today.",
   "notifPathGentleMornings6": "Your morning ritual is waiting. No pressure, just possibility.",
-
   "notifPathAnchorsForHardDays1": "One small anchor for today. That's enough.",
   "notifPathAnchorsForHardDays2": "Today might be heavy. Show up gently anyway.",
   "notifPathAnchorsForHardDays3": "An anchor doesn't fix the storm. It holds you steady.",
   "notifPathAnchorsForHardDays4": "Even a small return counts. Especially today.",
   "notifPathAnchorsForHardDays5": "Pause. Notice. Pick one thing.",
   "notifPathAnchorsForHardDays6": "Hard days are also days that pass. You're here.",
-
   "notifPathQuietFocus1": "A small block of focus. Then rest.",
   "notifPathQuietFocus2": "What's the one thing today?",
   "notifPathQuietFocus3": "Focus on less. Finish more.",
   "notifPathQuietFocus4": "Pick one. Begin.",
   "notifPathQuietFocus5": "Quiet work, real progress.",
   "notifPathQuietFocus6": "Show up to the work. That's the whole secret.",
-
   "notifPathWindingDown1": "The day is almost done. Let it go gently.",
   "notifPathWindingDown2": "Time to unwind. You carried enough today.",
   "notifPathWindingDown3": "Evening is for letting go, not catching up.",
   "notifPathWindingDown4": "You showed up today. That's worth settling into.",
   "notifPathWindingDown5": "The night is yours. Rest without guilt.",
   "notifPathWindingDown6": "Slow down. Tomorrow will wait for you.",
-
   "notifPathYourOwnWay1": "Your practice, your pace. What feels right today?",
   "notifPathYourOwnWay2": "You know what you need. We're just here to remind you.",
   "notifPathYourOwnWay3": "Check in when you're ready. No schedule, no pressure.",
   "notifPathYourOwnWay4": "Your path is your own. Show up however you want.",
   "notifPathYourOwnWay5": "One intention. That's all. The rest is up to you.",
   "notifPathYourOwnWay6": "You built this practice. Trust where it takes you.",
-
   "warmthPathGentleMornings1": "Not every morning needs to be a fresh start. Some just need quiet.",
   "warmthPathGentleMornings2": "Even mornings have slow days. That's allowed.",
   "warmthPathGentleMornings3": "Your morning is still yours, even when you skip this.",
   "warmthPathGentleMornings4": "Tomorrow morning will come gently. It always does.",
   "warmthPathGentleMornings5": "Rest now. The sunrise doesn't keep score.",
   "warmthPathGentleMornings6": "A quiet morning is still a morning well spent.",
-
   "warmthPathAnchorsForHardDays1": "When the day feels loud, one small thing is enough.",
   "warmthPathAnchorsForHardDays2": "You're not behind. You're here.",
   "warmthPathAnchorsForHardDays3": "A hard moment doesn't ruin the whole day.",
   "warmthPathAnchorsForHardDays4": "Small and steady beats big and brittle.",
   "warmthPathAnchorsForHardDays5": "You showed up. That's the practice.",
   "warmthPathAnchorsForHardDays6": "Soft repairs are still repairs.",
-
   "warmthPathQuietFocus1": "Slow is steady. Steady is far.",
   "warmthPathQuietFocus2": "One small task done is real progress.",
   "warmthPathQuietFocus3": "You don't have to do it all today.",
   "warmthPathQuietFocus4": "Focus is a kindness you give yourself.",
   "warmthPathQuietFocus5": "The work waits. You're allowed pauses.",
   "warmthPathQuietFocus6": "Quiet effort still counts.",
-
   "warmthPathWindingDown1": "Tonight, just rest. That's the whole plan.",
   "warmthPathWindingDown2": "You don't need to wind down perfectly. Just stop.",
   "warmthPathWindingDown3": "Let the day go. You held enough.",
   "warmthPathWindingDown4": "Some evenings are just for existing. This is one of them.",
   "warmthPathWindingDown5": "The night doesn't need a routine. It just needs you to let go.",
   "warmthPathWindingDown6": "Sleep well. Tomorrow is already gentler than you think.",
-
   "warmthPathYourOwnWay1": "Your own way includes rest. Always has.",
   "warmthPathYourOwnWay2": "Skipping is part of the rhythm you're building.",
   "warmthPathYourOwnWay3": "You chose this path. You also get to pause on it.",
   "warmthPathYourOwnWay4": "No one's keeping score. Especially not us.",
   "warmthPathYourOwnWay5": "Trust yourself. You'll come back when it's time.",
   "warmthPathYourOwnWay6": "Your pace. Your rules. Always.",
-
   "reflectionPathGentleMorningsIntro": "Another week of gentle mornings — or at least trying for them.",
   "reflectionPathAnchorsForHardDaysIntro": "This week, you anchored yourself.",
   "reflectionPathQuietFocusIntro": "This week, you stayed focused — gently.",
   "reflectionPathWindingDownIntro": "Another week of winding down, your way.",
   "reflectionPathYourOwnWayIntro": "Another week on your own terms.",
-
   "reflectionPathGentleMorningsQuiet": "A quiet week for mornings. Some weeks are for sleeping in.",
   "reflectionPathAnchorsForHardDaysQuiet": "A quiet week. Anchors stay even when small.",
   "reflectionPathQuietFocusQuiet": "A quiet week. Focus is allowed to rest.",
   "reflectionPathWindingDownQuiet": "A quiet week. Sometimes the best evening ritual is doing nothing at all.",
   "reflectionPathYourOwnWayQuiet": "Quiet week. Your path includes pauses too.",
-
   "monthlyReflectionTitle": "Your month",
   "monthlyReflectionSectionOverview": "THIS MONTH",
   "monthlyReflectionSectionTrends": "TRENDS",
   "monthlyReflectionSectionGrowth": "GROWTH",
   "monthlyReflectionMonthRange": "{month} {year}",
-  "@monthlyReflectionMonthRange": { "placeholders": { "month": { "type": "String" }, "year": { "type": "int" } } },
+  "@monthlyReflectionMonthRange": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
   "monthlyReflectionOverview": "You showed up {days} days out of {total} this month.",
-  "@monthlyReflectionOverview": { "placeholders": { "days": { "type": "int" }, "total": { "type": "int" } } },
+  "@monthlyReflectionOverview": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "monthlyReflectionBestWeek": "Your strongest week was {weekRange} with {days} active days.",
-  "@monthlyReflectionBestWeek": { "placeholders": { "weekRange": { "type": "String" }, "days": { "type": "int" } } },
+  "@monthlyReflectionBestWeek": {
+    "placeholders": {
+      "weekRange": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "monthlyReflectionConsistentHabit": "{habit} was your most consistent habit this month.",
-  "@monthlyReflectionConsistentHabit": { "placeholders": { "habit": { "type": "String" } } },
+  "@monthlyReflectionConsistentHabit": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "monthlyReflectionGrowthUp": "This month was more active than last month. You're finding your rhythm.",
   "monthlyReflectionGrowthSteady": "Steady month. You're maintaining what matters.",
   "monthlyReflectionGrowthDown": "Quieter month than last. That's okay — some seasons are for resting.",
@@ -1465,22 +1862,94 @@
   "monthlyReflectionUnlock": "See my monthly insights",
   "monthlyReflectionSectionNotice": "SOMETHING TO NOTICE",
   "monthlyReflectionTopArea": "You gravitated toward {area} this month. That seems to matter to you right now.",
-  "@monthlyReflectionTopArea": { "placeholders": { "area": { "type": "String" } } },
-
+  "@monthlyReflectionTopArea": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
   "adaptiveNotifReducedTitle": "We're stepping back",
   "adaptiveNotifReducedBody": "You've been checking in regularly — we'll remind you less often.",
   "adaptiveNotifReengageBody": "It's been a little while. Just a gentle hello.",
   "adaptiveNotifSilentBody": "We noticed you've been away. No pressure — we'll be here when you're ready.",
-
   "a11yTabHabits": "Habits",
   "a11yTabProgress": "Progress",
   "a11yTabProfile": "Profile",
   "a11yHabitCardDone": "{habit}, completed",
-  "@a11yHabitCardDone": { "placeholders": { "habit": { "type": "String" } } },
+  "@a11yHabitCardDone": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "a11yHabitCardTodo": "{habit}, tap to complete",
-  "@a11yHabitCardTodo": { "placeholders": { "habit": { "type": "String" } } },
+  "@a11yHabitCardTodo": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "a11yHabitCardPinned": "{habit}, pinned, tap to complete",
-  "@a11yHabitCardPinned": { "placeholders": { "habit": { "type": "String" } } },
+  "@a11yHabitCardPinned": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "a11yEditHabit": "Edit habit",
-  "a11yDeleteHabit": "Delete habit"
+  "a11yDeleteHabit": "Delete habit",
+  "letterOpenedQuietly": "You started this month quietly.",
+  "letterOpenedFull": "You came into this month at full speed.",
+  "letterMostlyChose": "{area} carried almost the whole month.",
+  "letterQuestionPlanForPart": "What would {month} look like if you planned for {lived} instead of {planned}?",
+  "letterQuestionShorterQuiet": "What would {month} look like if the quiet stretches were shorter?",
+  "letterQuestionMoreOfWhat": "What do you want more of in {month}?",
+  "letterPartMornings": "mornings",
+  "letterPartAfternoons": "afternoons",
+  "letterPartEvenings": "evenings",
+  "letterPartNights": "late nights",
+  "@letterMostlyChose": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "@letterQuestionPlanForPart": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "lived": {
+        "type": "String"
+      },
+      "planned": {
+        "type": "String"
+      }
+    }
+  },
+  "@letterQuestionShorterQuiet": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "@letterQuestionMoreOfWhat": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "planActionsHeader": "YOUR ACTIONS",
+  "planRhythmHeader": "YOUR RHYTHM",
+  "planUse": "Use this plan",
+  "planAdjust": "Adjust",
+  "planSkip": "Skip",
+  "planPreviewLabel": "WHAT INTENDED+ WOULD SUGGEST"
 }

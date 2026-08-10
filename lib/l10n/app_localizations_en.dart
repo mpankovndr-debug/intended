@@ -402,14 +402,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get letterLabel => 'YOUR LETTER';
 
   @override
-  String letterCameBack(String day, String date, int count) {
+  String letterCameBack(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count quiet days',
-      one: 'one quiet day',
+      other: '$count days passed',
+      one: 'A day passed',
     );
-    return 'You came back on $day, after $_temp0.';
+    return '$_temp0, and then you came back.';
   }
 
   @override
@@ -420,7 +420,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$count times',
       one: 'once',
     );
-    return 'Most of the month was $habit — $_temp0.';
+    return 'Most of it was $habit — $_temp0.';
   }
 
   @override
@@ -457,17 +457,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String letterOneBigDay(String date, int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count things',
-      one: 'one thing',
-    );
-    return 'On $date you did $_temp0 in a single day.';
-  }
-
-  @override
   String letterShowedUp(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -477,24 +466,6 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return 'You showed up on $_temp0.';
   }
-
-  @override
-  String get letterQuestionBroughtBack => 'What brought you back that day?';
-
-  @override
-  String get letterQuestionEasier =>
-      'What makes that one easier to reach for than the rest?';
-
-  @override
-  String get letterQuestionShare =>
-      'What do the ones you were glad about have in common?';
-
-  @override
-  String get letterQuestionDifferent => 'What was different about that day?';
-
-  @override
-  String get letterQuestionMiss =>
-      'Which of these would you miss if it stopped?';
 
   @override
   String planLabel(String month) {
@@ -647,7 +618,7 @@ class AppLocalizationsEn extends AppLocalizations {
       locale: localeName,
       other:
           '$count times you went quiet for a few days. $count times you came back',
-      one: 'Once you went quiet for a few days. Once you came back',
+      one: 'You went quiet for a few days, and then you came back',
     );
     return '$_temp0.';
   }
@@ -4065,4 +4036,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get a11yDeleteHabit => 'Delete habit';
+
+  @override
+  String get letterOpenedQuietly => 'You started this month quietly.';
+
+  @override
+  String get letterOpenedFull => 'You came into this month at full speed.';
+
+  @override
+  String letterMostlyChose(String area) {
+    return '$area carried almost the whole month.';
+  }
+
+  @override
+  String letterQuestionPlanForPart(String month, String lived, String planned) {
+    return 'What would $month look like if you planned for $lived instead of $planned?';
+  }
+
+  @override
+  String letterQuestionShorterQuiet(String month) {
+    return 'What would $month look like if the quiet stretches were shorter?';
+  }
+
+  @override
+  String letterQuestionMoreOfWhat(String month) {
+    return 'What do you want more of in $month?';
+  }
+
+  @override
+  String get letterPartMornings => 'mornings';
+
+  @override
+  String get letterPartAfternoons => 'afternoons';
+
+  @override
+  String get letterPartEvenings => 'evenings';
+
+  @override
+  String get letterPartNights => 'late nights';
+
+  @override
+  String get planActionsHeader => 'YOUR ACTIONS';
+
+  @override
+  String get planRhythmHeader => 'YOUR RHYTHM';
+
+  @override
+  String get planUse => 'Use this plan';
+
+  @override
+  String get planAdjust => 'Adjust';
+
+  @override
+  String get planSkip => 'Skip';
+
+  @override
+  String get planPreviewLabel => 'WHAT INTENDED+ WOULD SUGGEST';
 }

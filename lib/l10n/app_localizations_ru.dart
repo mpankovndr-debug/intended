@@ -402,16 +402,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get letterLabel => 'ВАШЕ ПИСЬМО';
 
   @override
-  String letterCameBack(String day, String date, int count) {
+  String letterCameBack(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count тихих дней',
-      many: '$count тихих дней',
-      few: '$count тихих дней',
-      one: '$count тихого дня',
+      other: 'Прошло $count дня',
+      many: 'Прошло $count дней',
+      few: 'Прошло $count дня',
+      one: 'Прошёл $count день',
     );
-    return 'Вы вернулись $date, после $_temp0.';
+    return '$_temp0, и вы вернулись.';
   }
 
   @override
@@ -424,7 +424,7 @@ class AppLocalizationsRu extends AppLocalizations {
       few: '$count раза',
       one: '$count раз',
     );
-    return 'Больше всего в этом месяце было «$habit» — $_temp0.';
+    return 'Больше всего было «$habit» — $_temp0.';
   }
 
   @override
@@ -475,19 +475,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String letterOneBigDay(String date, int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count дела',
-      many: '$count дел',
-      few: '$count дела',
-      one: '$count дело',
-    );
-    return '$date вы сделали $_temp0 за один день.';
-  }
-
-  @override
   String letterShowedUp(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -499,23 +486,6 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return 'Вы были здесь $_temp0.';
   }
-
-  @override
-  String get letterQuestionBroughtBack => 'Что вернуло вас в тот день?';
-
-  @override
-  String get letterQuestionEasier =>
-      'Почему именно к этому легче потянуться, чем к остальному?';
-
-  @override
-  String get letterQuestionShare => 'Что общего у тех, которым вы были рады?';
-
-  @override
-  String get letterQuestionDifferent => 'Чем тот день отличался от других?';
-
-  @override
-  String get letterQuestionMiss =>
-      'Чего бы вам не хватало, если бы это прекратилось?';
 
   @override
   String planLabel(String month) {
@@ -673,11 +643,12 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count раза вы затихали на несколько дней. $count раза возвращались',
-      many: '$count раз вы затихали на несколько дней. $count раз возвращались',
+          '$count раза вы затихали на несколько дней и столько же раз возвращались',
+      many:
+          '$count раз вы затихали на несколько дней и столько же раз возвращались',
       few:
-          '$count раза вы затихали на несколько дней. $count раза возвращались',
-      one: '$count раз вы затихали на несколько дней. $count раз возвращались',
+          '$count раза вы затихали на несколько дней и столько же раз возвращались',
+      one: 'Вы затихали на несколько дней, а потом вернулись',
     );
     return '$_temp0.';
   }
@@ -4090,4 +4061,60 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get a11yDeleteHabit => 'Удалить привычку';
+
+  @override
+  String get letterOpenedQuietly => 'Этот месяц начался тихо.';
+
+  @override
+  String get letterOpenedFull => 'Вы вошли в этот месяц на полном ходу.';
+
+  @override
+  String letterMostlyChose(String area) {
+    return '«$area» занимало почти весь месяц.';
+  }
+
+  @override
+  String letterQuestionPlanForPart(String month, String lived, String planned) {
+    return 'Каким был бы $month, если бы вы планировали на $lived, а не на $planned?';
+  }
+
+  @override
+  String letterQuestionShorterQuiet(String month) {
+    return 'Каким был бы $month, если бы тихие полосы были короче?';
+  }
+
+  @override
+  String letterQuestionMoreOfWhat(String month) {
+    return 'Чего вам хочется больше в $month?';
+  }
+
+  @override
+  String get letterPartMornings => 'утро';
+
+  @override
+  String get letterPartAfternoons => 'день';
+
+  @override
+  String get letterPartEvenings => 'вечер';
+
+  @override
+  String get letterPartNights => 'поздний вечер';
+
+  @override
+  String get planActionsHeader => 'ВАШИ ДЕЙСТВИЯ';
+
+  @override
+  String get planRhythmHeader => 'ВАШ РИТМ';
+
+  @override
+  String get planUse => 'Взять этот план';
+
+  @override
+  String get planAdjust => 'Изменить';
+
+  @override
+  String get planSkip => 'Пропустить';
+
+  @override
+  String get planPreviewLabel => 'ЧТО ПРЕДЛОЖИЛ БЫ INTENDED+';
 }

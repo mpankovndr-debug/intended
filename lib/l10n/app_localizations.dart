@@ -806,16 +806,16 @@ abstract class AppLocalizations {
   /// **'YOUR LETTER'**
   String get letterLabel;
 
-  /// Both a weekday and a date are supplied. English names the weekday — a reader can still place 'Friday' a month later. Russian names the date instead: its weekday names decline and gender the verb, so 'you came back on Friday' cannot be built from a nominative weekday. Each locale uses the one it needs.
+  /// No description provided for @letterCameBack.
   ///
   /// In en, this message translates to:
-  /// **'You came back on {day}, after {count, plural, =1{one quiet day} other{{count} quiet days}}.'**
-  String letterCameBack(String day, String date, int count);
+  /// **'{count, plural, =1{A day passed} other{{count} days passed}}, and then you came back.'**
+  String letterCameBack(int count);
 
   /// No description provided for @letterAnchor.
   ///
   /// In en, this message translates to:
-  /// **'Most of the month was {habit} — {count, plural, =1{once} other{{count} times}}.'**
+  /// **'Most of it was {habit} — {count, plural, =1{once} other{{count} times}}.'**
   String letterAnchor(String habit, int count);
 
   /// No description provided for @letterMood.
@@ -836,47 +836,11 @@ abstract class AppLocalizations {
   /// **'{effort, plural, =1{One of them took effort} other{{effort} of them took effort}}.'**
   String letterMoodEffortOnly(int effort);
 
-  /// No description provided for @letterOneBigDay.
-  ///
-  /// In en, this message translates to:
-  /// **'On {date} you did {count, plural, =1{one thing} other{{count} things}} in a single day.'**
-  String letterOneBigDay(String date, int count);
-
   /// No description provided for @letterShowedUp.
   ///
   /// In en, this message translates to:
   /// **'You showed up on {count, plural, =1{one day} other{{count} different days}}.'**
   String letterShowedUp(int count);
-
-  /// No description provided for @letterQuestionBroughtBack.
-  ///
-  /// In en, this message translates to:
-  /// **'What brought you back that day?'**
-  String get letterQuestionBroughtBack;
-
-  /// No description provided for @letterQuestionEasier.
-  ///
-  /// In en, this message translates to:
-  /// **'What makes that one easier to reach for than the rest?'**
-  String get letterQuestionEasier;
-
-  /// No description provided for @letterQuestionShare.
-  ///
-  /// In en, this message translates to:
-  /// **'What do the ones you were glad about have in common?'**
-  String get letterQuestionShare;
-
-  /// No description provided for @letterQuestionDifferent.
-  ///
-  /// In en, this message translates to:
-  /// **'What was different about that day?'**
-  String get letterQuestionDifferent;
-
-  /// No description provided for @letterQuestionMiss.
-  ///
-  /// In en, this message translates to:
-  /// **'Which of these would you miss if it stopped?'**
-  String get letterQuestionMiss;
 
   /// Month name arrives already uppercased by the caller, so the label matches the other all-caps card eyebrows without a locale-specific casing rule here.
   ///
@@ -1025,7 +989,7 @@ abstract class AppLocalizations {
   /// No description provided for @insightsReturnsLine.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{Once you went quiet for a few days. Once you came back} other{{count} times you went quiet for a few days. {count} times you came back}}.'**
+  /// **'{count, plural, =1{You went quiet for a few days, and then you came back} other{{count} times you went quiet for a few days. {count} times you came back}}.'**
   String insightsReturnsLine(int count);
 
   /// No description provided for @insightsMostlyAt.
@@ -6913,6 +6877,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete habit'**
   String get a11yDeleteHabit;
+
+  /// No description provided for @letterOpenedQuietly.
+  ///
+  /// In en, this message translates to:
+  /// **'You started this month quietly.'**
+  String get letterOpenedQuietly;
+
+  /// No description provided for @letterOpenedFull.
+  ///
+  /// In en, this message translates to:
+  /// **'You came into this month at full speed.'**
+  String get letterOpenedFull;
+
+  /// No description provided for @letterMostlyChose.
+  ///
+  /// In en, this message translates to:
+  /// **'{area} carried almost the whole month.'**
+  String letterMostlyChose(String area);
+
+  /// No description provided for @letterQuestionPlanForPart.
+  ///
+  /// In en, this message translates to:
+  /// **'What would {month} look like if you planned for {lived} instead of {planned}?'**
+  String letterQuestionPlanForPart(String month, String lived, String planned);
+
+  /// No description provided for @letterQuestionShorterQuiet.
+  ///
+  /// In en, this message translates to:
+  /// **'What would {month} look like if the quiet stretches were shorter?'**
+  String letterQuestionShorterQuiet(String month);
+
+  /// No description provided for @letterQuestionMoreOfWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you want more of in {month}?'**
+  String letterQuestionMoreOfWhat(String month);
+
+  /// No description provided for @letterPartMornings.
+  ///
+  /// In en, this message translates to:
+  /// **'mornings'**
+  String get letterPartMornings;
+
+  /// No description provided for @letterPartAfternoons.
+  ///
+  /// In en, this message translates to:
+  /// **'afternoons'**
+  String get letterPartAfternoons;
+
+  /// No description provided for @letterPartEvenings.
+  ///
+  /// In en, this message translates to:
+  /// **'evenings'**
+  String get letterPartEvenings;
+
+  /// No description provided for @letterPartNights.
+  ///
+  /// In en, this message translates to:
+  /// **'late nights'**
+  String get letterPartNights;
+
+  /// No description provided for @planActionsHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR ACTIONS'**
+  String get planActionsHeader;
+
+  /// No description provided for @planRhythmHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR RHYTHM'**
+  String get planRhythmHeader;
+
+  /// No description provided for @planUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this plan'**
+  String get planUse;
+
+  /// No description provided for @planAdjust.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust'**
+  String get planAdjust;
+
+  /// No description provided for @planSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get planSkip;
+
+  /// No description provided for @planPreviewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'WHAT INTENDED+ WOULD SUGGEST'**
+  String get planPreviewLabel;
 }
 
 class _AppLocalizationsDelegate

@@ -99,7 +99,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
       _lastMonth = lastMonth;
       _season = season;
       _drift = Drift.read(moments);
-      _letter = Letter.read(moments);
+      // Given the season and the reminder so it can avoid repeating the
+      // card above it, and can ask a question with a real alternative in it.
+      _letter = Letter.read(
+        moments,
+        seasonPole: season.pole,
+        reminderHour: hour,
+      );
       _reminderHour = hour;
       _remindersEnabled = remindersEnabled;
       _declinedNudges = declined;
@@ -568,29 +574,44 @@ class _InsightsScreenState extends State<InsightsScreen> {
     AppColorScheme colors,
     OnboardingState onboarding,
   ) {
-    // The strongest possible tease is the paid content itself, since it is
-    // already computed and already about them. A free user gets the first true
-    // line of their own letter, and then watches the question dissolve.
+    // The plan, not the letter. Free already tells you what happened — the
+    // grid, the returns, the season word. What it cannot tell you is what to
+    // do next, and that gap is the whole reason the tier exists (§4.5). So the
+    // teaser shows one real suggestion, computed from their own last month,
+    // and lets the second dissolve.
     //
-    // Anything else here is a claim about content rather than the content, and
-    // a claim is what the reader has to take on trust — which is the whole
-    // reason the old sentence didn't work.
-    final letter = _letter;
-    final lead = letter != null
-        ? _letterLine(l10n, letter.lines.first)
-        : _hasFocusGap(onboarding)
-            ? l10n.insightsTeaserBody
-            : l10n.insightsTeaserNoGap;
+    // When there is no plan yet — a first month, or nothing worth proposing —
+    // it falls back to naming what this card becomes, because a fade with
+    // nothing behind it is a padlock with extra steps.
+    final plan = _plan(onboarding);
+    final shown = plan.shown;
 
     return _card(
       colors: colors,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(lead, style: _cardBody(colors)),
-          if (letter != null) ...[
-            const SizedBox(height: 8),
-            _fadingLine(_letterQuestion(l10n, letter.question), colors),
+          _eyebrow(
+            shown.isEmpty ? l10n.insightsThisMonth : l10n.planPreviewLabel,
+            colors,
+          ),
+          const SizedBox(height: 12),
+          if (shown.isEmpty)
+            Text(
+              _hasFocusGap(onboarding)
+                  ? l10n.insightsTeaserBody
+                  : l10n.insightsTeaserNoGap,
+              style: _cardBody(colors),
+            )
+          else ...[
+            Text(
+              _nudgeText(l10n, shown.first),
+              style: _cardBody(colors).copyWith(color: colors.textPrimary),
+            ),
+            if (shown.length > 1) ...[
+              const SizedBox(height: 8),
+              _fadingLine(_nudgeText(l10n, shown[1]), colors),
+            ],
           ],
           const SizedBox(height: 18),
           Align(
@@ -858,37 +879,35 @@ class _InsightsScreenState extends State<InsightsScreen> {
           _eyebrow(l10n.letterLabel, colors),
           const SizedBox(height: 14),
           for (final line in letter.lines) ...[
-            Text(
-              _letterLine(l10n, line),
-              style: _cardBody(colors).copyWith(height: 1.5),
-            ),
-            const SizedBox(height: 10),
+            Text(_letterLine(l10n, line), style: _letterStyle(colors)),
+            const SizedBox(height: 8),
           ],
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Text(
-            _letterQuestion(l10n, letter.question),
-            style: _cardBody(colors).copyWith(
-              height: 1.5,
-              color: colors.textPrimary,
-            ),
+            _letterQuestion(l10n, letter),
+            style: _letterStyle(colors).copyWith(color: colors.textPrimary),
           ),
         ],
       ),
     );
   }
 
+  /// Italic throughout, and looser than the rest of the page.
+  ///
+  /// The whole card has to read as one voice rather than a list of findings —
+  /// the observations and the question are the same person talking. A serif
+  /// would carry this better; the app ships only Sora and Montserrat, so
+  /// italic and air are what is available.
+  TextStyle _letterStyle(AppColorScheme colors) =>
+      _cardBody(colors).copyWith(height: 1.6, fontStyle: FontStyle.italic);
+
   String _letterLine(AppLocalizations l10n, LetterLine line) {
-    final locale = Localizations.localeOf(context).toString();
     return switch (line.kind) {
-      // Two forms of the same day, because the languages need different ones:
-      // English can say "on Friday", Russian cannot put a nominative weekday
-      // there, so it names the date. Each locale's string uses one and ignores
-      // the other.
-      LetterLineKind.cameBack => l10n.letterCameBack(
-          DateFormat.EEEE(locale).format(line.day!),
-          DateFormat.MMMMd(locale).format(line.day!),
-          line.count,
-        ),
+      LetterLineKind.openedQuietly => l10n.letterOpenedQuietly,
+      LetterLineKind.openedFull => l10n.letterOpenedFull,
+      LetterLineKind.cameBack => l10n.letterCameBack(line.count),
+      LetterLineKind.mostlyChose =>
+        l10n.letterMostlyChose(localizeCategoryName(line.focusArea!, l10n)),
       LetterLineKind.anchor => l10n.letterAnchor(
           localizeHabitName(line.habitName!, l10n),
           line.count,
@@ -898,23 +917,38 @@ class _InsightsScreenState extends State<InsightsScreen> {
           : line.count == 0
               ? l10n.letterMoodEffortOnly(line.secondCount)
               : l10n.letterMood(line.count, line.secondCount),
-      LetterLineKind.oneBigDay => l10n.letterOneBigDay(
-          DateFormat.MMMMd(locale).format(line.day!),
-          line.count,
-        ),
       LetterLineKind.showedUp => l10n.letterShowedUp(line.count),
     };
   }
 
-  String _letterQuestion(AppLocalizations l10n, LetterQuestion question) {
-    return switch (question) {
-      LetterQuestion.whatBroughtYouBack => l10n.letterQuestionBroughtBack,
-      LetterQuestion.whatMakesItEasier => l10n.letterQuestionEasier,
-      LetterQuestion.whatDoTheyShare => l10n.letterQuestionShare,
-      LetterQuestion.whatWasDifferent => l10n.letterQuestionDifferent,
-      LetterQuestion.whatWouldYouMiss => l10n.letterQuestionMiss,
+  /// The closing question, which always names the month ahead.
+  ///
+  /// Reading it needs next month's name, so it is built here rather than in
+  /// the model — the same split every other localised string on this page
+  /// uses.
+  String _letterQuestion(AppLocalizations l10n, Letter letter) {
+    final locale = Localizations.localeOf(context).toString();
+    final now = DateTime.now();
+    final month =
+        DateFormat.LLLL(locale).format(DateTime(now.year, now.month + 1, 1));
+
+    return switch (letter.question) {
+      LetterQuestion.planForPart => l10n.letterQuestionPlanForPart(
+          month,
+          _partName(l10n, letter.part!.lived),
+          _partName(l10n, letter.part!.planned),
+        ),
+      LetterQuestion.shorterQuiet => l10n.letterQuestionShorterQuiet(month),
+      LetterQuestion.moreOfWhat => l10n.letterQuestionMoreOfWhat(month),
     };
   }
+
+  String _partName(AppLocalizations l10n, DayPart part) => switch (part) {
+        DayPart.mornings => l10n.letterPartMornings,
+        DayPart.afternoons => l10n.letterPartAfternoons,
+        DayPart.evenings => l10n.letterPartEvenings,
+        DayPart.nights => l10n.letterPartNights,
+      };
 
   /// This month's plan, read from last month (§6.2).
   ///
@@ -956,9 +990,6 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final locale = Localizations.localeOf(context).toString();
     final month = DateFormat.LLLL(locale).format(DateTime.now());
     final accepted = _acceptedThisMonth;
-    final remaining = accepted == null && plan.nudges.isNotEmpty
-        ? plan.nudges.length - 1
-        : plan.nudges.length;
 
     return _card(
       colors: colors,
@@ -970,71 +1001,121 @@ class _InsightsScreenState extends State<InsightsScreen> {
           const SizedBox(height: 12),
           if (_proof != null) ...[
             Text(_proofLines(l10n, _proof!), style: _cardBody(colors)),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             Container(
               height: 1,
               color: colors.textDisabled.withValues(alpha: 0.25),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
           ],
           if (accepted != null)
-            // One decision a month. Something has already been changed, so the
-            // card stops asking and waits to see what it did.
+            // One plan a month. Something has already been changed, so the
+            // card stops proposing and waits to see what it did.
             Text(
               l10n.planDone,
               style: _cardBody(colors).copyWith(color: colors.textPrimary),
             )
-          else
-            _nudge(l10n, colors, plan.nudges.first),
-          if (remaining > 0) ...[
-            const SizedBox(height: 12),
-            GestureDetector(
-              onTap: () => setState(() => _showAllNudges = !_showAllNudges),
-              child: Text(
-                l10n.planMore(remaining),
-                style: _cardMeta(colors).copyWith(color: colors.ctaPrimary),
-              ),
-            ),
-            if (_showAllNudges)
-              for (final nudge
-                  in plan.nudges.skip(accepted == null ? 1 : 0)) ...[
-                const SizedBox(height: 18),
-                _nudge(l10n, colors, nudge),
+          else ...[
+            if (plan.topAction != null)
+              _planGroup(l10n, colors, l10n.planActionsHeader, plan.topAction!),
+            if (plan.topRhythm != null)
+              _planGroup(l10n, colors, l10n.planRhythmHeader, plan.topRhythm!),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                _planAction(
+                  l10n.planUse,
+                  colors,
+                  filled: true,
+                  onPressed: () => _acceptAll(plan.shown, l10n),
+                ),
+                _planAction(
+                  l10n.planAdjust,
+                  colors,
+                  filled: false,
+                  onPressed: () =>
+                      setState(() => _showAllNudges = !_showAllNudges),
+                ),
               ],
+            ),
           ],
         ],
       ),
     );
   }
 
-  Widget _nudge(
+  /// One half of the plan: its sub-header and the suggestion under it.
+  ///
+  /// Adjust opens per-item controls rather than a second screen. "Accept or
+  /// adjust" means the user can take half a plan — the alternative is a single
+  /// all-or-nothing button, which turns a declined rhythm change into a
+  /// declined month.
+  Widget _planGroup(
     AppLocalizations l10n,
     AppColorScheme colors,
+    String header,
     PlanNudge nudge,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(_nudgeText(l10n, nudge), style: _cardTitle(colors)),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
+        Text(
+          header,
+          style: AppTextStyles.body(context).copyWith(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.0,
+            color: colors.textSecondary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _planAction(
-              _acceptLabel(l10n, nudge.kind),
-              colors,
-              filled: true,
-              onPressed: () => _accept(nudge, l10n),
+            Container(
+              margin: const EdgeInsets.only(top: 8),
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colors.ctaPrimary.withValues(alpha: 0.8),
+              ),
             ),
-            _planAction(
-              l10n.planDecline,
-              colors,
-              filled: false,
-              onPressed: () => _decline(nudge),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                _nudgeText(l10n, nudge),
+                style: _cardBody(colors).copyWith(color: colors.textPrimary),
+              ),
             ),
           ],
         ),
+        if (_showAllNudges) ...[
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Wrap(
+              spacing: 8,
+              children: [
+                _planAction(
+                  _acceptLabel(l10n, nudge.kind),
+                  colors,
+                  filled: false,
+                  onPressed: () => _acceptAll([nudge], l10n),
+                ),
+                _planAction(
+                  l10n.planSkip,
+                  colors,
+                  filled: false,
+                  onPressed: () => _decline(nudge),
+                ),
+              ],
+            ),
+          ),
+        ],
+        const SizedBox(height: 14),
       ],
     );
   }
@@ -1126,15 +1207,36 @@ class _InsightsScreenState extends State<InsightsScreen> {
     return '$what $result';
   }
 
-  /// Accepting writes the setting, then records the change and the count it
-  /// will be measured against (§6.3).
-  Future<void> _accept(PlanNudge nudge, AppLocalizations l10n) async {
-    if (_accepting) return;
+  /// Applies every suggestion the user took, then records each one with the
+  /// count it will be measured against (§6.3).
+  Future<void> _acceptAll(
+    List<PlanNudge> nudges,
+    AppLocalizations l10n,
+  ) async {
+    if (_accepting || nudges.isEmpty) return;
     setState(() => _accepting = true);
 
     final onboarding = context.read<OnboardingState>();
     final monthKey = SeasonService.monthKeyFor(DateTime.now());
 
+    for (final nudge in nudges) {
+      await _applyAndRecord(nudge, monthKey, onboarding, l10n);
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _accepting = false;
+      _showAllNudges = false;
+    });
+    await _load();
+  }
+
+  Future<void> _applyAndRecord(
+    PlanNudge nudge,
+    String monthKey,
+    OnboardingState onboarding,
+    AppLocalizations l10n,
+  ) async {
     switch (nudge.kind) {
       case NudgeKind.moveReminder:
         await NotificationPreferencesService.setHour(nudge.hour!);
@@ -1151,12 +1253,6 @@ class _InsightsScreenState extends State<InsightsScreen> {
     // Recorded after the write, so a failure to change the setting can never
     // leave a measurement running against a change that didn't happen.
     await PlanService.accept(nudge, monthKey);
-    if (!mounted) return;
-    setState(() {
-      _accepting = false;
-      _showAllNudges = false;
-    });
-    await _load();
   }
 
   Future<void> _decline(PlanNudge nudge) async {
