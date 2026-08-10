@@ -53,6 +53,12 @@ class ChangePathScreen extends StatefulWidget {
 }
 
 class _ChangePathScreenState extends State<ChangePathScreen> {
+  /// The band under the Save button, pulled toward the card surface. At the
+  /// raw gradient-bottom colour it sat at the background's most saturated
+  /// stop and read as a coloured bar rather than a fade (design review, SS7).
+  Color _scrim(AppColorScheme colors) =>
+      Color.lerp(colors.bgGradientBottom, colors.cardBackground, 0.45)!;
+
   late IntentionPathId _selected;
 
   @override
@@ -201,15 +207,15 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              colors.bgGradientBottom.withValues(alpha: 0.0),
-                              colors.bgGradientBottom.withValues(alpha: 0.92),
+                              _scrim(colors).withValues(alpha: 0.0),
+                              _scrim(colors).withValues(alpha: 0.9),
                             ],
                           ),
                         ),
                       ),
                     ),
                     Container(
-                      color: colors.bgGradientBottom,
+                      color: _scrim(colors),
                       padding: EdgeInsets.fromLTRB(24, 0, 24, bottomPadding + 24),
                       child: SizedBox(
                         width: double.infinity,
@@ -267,7 +273,12 @@ class _PathCard extends StatefulWidget {
 class _PathCardState extends State<_PathCard> {
   @override
   Widget build(BuildContext context) {
-    final accent = widget.path.accentColor;
+    // The theme's own accent, not the path's fixed one. Four fixed hues
+    // cannot sit right on ten palettes — an amber card on Iris reads as a
+    // visitor from another app. Selection is state, and state speaks in the
+    // theme's voice everywhere else; the paths stay distinct by name, which
+    // is how they differ anyway (design review, SS2/SS7).
+    final accent = widget.colors.ctaPrimary;
     final sel = widget.selected;
     final colors = widget.colors;
 

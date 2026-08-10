@@ -313,7 +313,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get insightsTeaserNoGap =>
-      'Every square here also knows what time it was, and how it landed. Intended+ reads them together and tells you what to change.';
+      'There\'s a why underneath these squares. Intended+ finds it — and turns it into next month\'s plan.';
 
   @override
   String get driftLabel => 'RIGHT NOW';
@@ -4187,15 +4187,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get soFarLabel => 'SO FAR';
 
   @override
-  String soFarLine(String day, String time, String habit) {
-    return '$day, $time — $habit.';
-  }
+  String get soFarGlad => 'glad you did';
 
   @override
-  String get soFarGlad => 'Glad you did.';
-
-  @override
-  String get soFarEffort => 'It took effort.';
+  String get soFarEffort => 'took effort';
 
   @override
   String get soFarClosing =>
@@ -4219,4 +4214,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String firstWeekGladdest(String habit) {
     return 'The one you were glad about most: $habit.';
   }
+
+  @override
+  String get shareSeasonGaps => 'My gaps are getting shorter.';
 }

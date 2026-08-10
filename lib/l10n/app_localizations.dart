@@ -647,7 +647,7 @@ abstract class AppLocalizations {
   /// No description provided for @insightsTeaserNoGap.
   ///
   /// In en, this message translates to:
-  /// **'Every square here also knows what time it was, and how it landed. Intended+ reads them together and tells you what to change.'**
+  /// **'There\'s a why underneath these squares. Intended+ finds it — and turns it into next month\'s plan.'**
   String get insightsTeaserNoGap;
 
   /// No description provided for @driftLabel.
@@ -7088,22 +7088,16 @@ abstract class AppLocalizations {
   /// **'SO FAR'**
   String get soFarLabel;
 
-  /// No description provided for @soFarLine.
-  ///
-  /// In en, this message translates to:
-  /// **'{day}, {time} — {habit}.'**
-  String soFarLine(String day, String time, String habit);
-
   /// No description provided for @soFarGlad.
   ///
   /// In en, this message translates to:
-  /// **'Glad you did.'**
+  /// **'glad you did'**
   String get soFarGlad;
 
   /// No description provided for @soFarEffort.
   ///
   /// In en, this message translates to:
-  /// **'It took effort.'**
+  /// **'took effort'**
   String get soFarEffort;
 
   /// No description provided for @soFarClosing.
@@ -7129,6 +7123,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The one you were glad about most: {habit}.'**
   String firstWeekGladdest(String habit);
+
+  /// No description provided for @shareSeasonGaps.
+  ///
+  /// In en, this message translates to:
+  /// **'My gaps are getting shorter.'**
+  String get shareSeasonGaps;
 }
 
 class _AppLocalizationsDelegate

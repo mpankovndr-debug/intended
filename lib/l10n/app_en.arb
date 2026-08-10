@@ -167,7 +167,7 @@
   "insightsEmptyTitle": "Nothing here yet — and that's exactly right.",
   "insightsEmptyBody": "Every small thing you do gets saved here.",
   "insightsGridCaption": "one square = one thing you did",
-  "insightsTeaserNoGap": "Every square here also knows what time it was, and how it landed. Intended+ reads them together and tells you what to change.",
+  "insightsTeaserNoGap": "There's a why underneath these squares. Intended+ finds it — and turns it into next month's plan.",
   "driftLabel": "RIGHT NOW",
   "driftBody": "You've collected {thisWeek} moments this week. You usually collect {usual}.",
   "driftFollowed": "The last two times this happened, a quiet stretch followed.",
@@ -2020,26 +2020,12 @@
     }
   },
   "soFarLabel": "SO FAR",
-  "soFarLine": "{day}, {time} — {habit}.",
-  "soFarGlad": "Glad you did.",
-  "soFarEffort": "It took effort.",
+  "soFarGlad": "glad you did",
+  "soFarEffort": "took effort",
   "soFarClosing": "Too early to call anything a pattern. This page grows as you do.",
   "firstWeekLabel": "YOUR FIRST WEEK",
   "firstWeekCount": "{count, plural, =1{One small thing} other{{count} small things}} for yourself in your first week.",
   "firstWeekGladdest": "The one you were glad about most: {habit}.",
-  "@soFarLine": {
-    "placeholders": {
-      "day": {
-        "type": "String"
-      },
-      "time": {
-        "type": "String"
-      },
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
   "@firstWeekCount": {
     "placeholders": {
       "count": {
@@ -2053,5 +2039,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "shareSeasonGaps": "My gaps are getting shorter."
 }

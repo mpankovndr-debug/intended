@@ -312,7 +312,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get insightsTeaserNoGap =>
-      'Каждый квадрат здесь помнит ещё и время, и то, как это отозвалось. Intended+ читает их вместе и подсказывает, что изменить.';
+      'Под этими квадратами есть «почему». Intended+ находит его — и превращает в план на следующий месяц.';
 
   @override
   String get driftLabel => 'ПРЯМО СЕЙЧАС';
@@ -4221,15 +4221,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get soFarLabel => 'ПОКА ЧТО';
 
   @override
-  String soFarLine(String day, String time, String habit) {
-    return '$day, $time — $habit.';
-  }
+  String get soFarGlad => 'в радость';
 
   @override
-  String get soFarGlad => 'Хорошо, что сделали.';
-
-  @override
-  String get soFarEffort => 'Далось непросто.';
+  String get soFarEffort => 'далось непросто';
 
   @override
   String get soFarClosing =>
@@ -4255,4 +4250,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String firstWeekGladdest(String habit) {
     return 'Чаще всего вы были рады этому: «$habit».';
   }
+
+  @override
+  String get shareSeasonGaps => 'Мои паузы становятся короче.';
 }

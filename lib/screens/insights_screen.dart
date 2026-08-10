@@ -18,6 +18,7 @@ import '../services/moments_service.dart';
 import '../services/notification_preferences_service.dart';
 import '../services/notification_scheduler.dart';
 import '../services/plan_service.dart';
+import 'paywall_screen.dart';
 import 'season_share_screen.dart';
 import '../state/user_state.dart';
 import '../theme/app_colors.dart';
@@ -267,53 +268,36 @@ class _InsightsScreenState extends State<InsightsScreen> {
     required Widget child,
     bool emphasis = false,
   }) {
-    // Real frost, not a flat translucent fill: the blur is what makes the
-    // landscape behind the card read as *behind* it. Without it the cards sit
-    // on the background like stickers, which is what the first version did.
+    // The profile page's glass, exactly — same surface, same opacity, same
+    // border, same shadow — so the app has one card, not a family of
+    // near-misses (design review, SS8).
+    final isDark = context.read<ThemeProvider>().theme.isDark;
     return Container(
-      // The shadow has to sit outside the clip — inside, the ClipRRect eats
-      // it and the card goes back to lying flat on the wallpaper. The lift is
-      // half of what makes frosted glass read as glass.
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
+        color: colors.profileCard.withValues(
+          alpha: (colors.profileCardOpacity + (emphasis ? 0.12 : 0.0))
+              .clamp(0.0, 1.0),
+        ),
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: emphasis
+              ? colors.ctaPrimary.withValues(alpha: 0.45)
+              : isDark
+                  ? colors.borderCard
+                      .withValues(alpha: colors.borderCardOpacity)
+                  : const Color(0xFFFFFFFF).withValues(alpha: 0.6),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: colors.textPrimary.withValues(alpha: 0.06),
-            blurRadius: 24,
-            offset: const Offset(0, 6),
+            color: colors.textPrimary.withValues(alpha: 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              // A vertical lift rather than a flat fill: light catches the top
-              // edge of real glass, and a single alpha never does that.
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  colors.cardBackground
-                      .withValues(alpha: emphasis ? 0.86 : 0.72),
-                  colors.cardBackground
-                      .withValues(alpha: emphasis ? 0.70 : 0.54),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color:
-                    colors.borderCard.withValues(alpha: emphasis ? 0.9 : 0.55),
-                width: emphasis ? 1.0 : 0.7,
-              ),
-            ),
-            child: child,
-          ),
-        ),
-      ),
+      child: child,
     );
   }
 
@@ -666,7 +650,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
               borderRadius: BorderRadius.circular(22),
               color: colors.ctaPrimary,
               minimumSize: Size.zero,
-              onPressed: () {},
+              onPressed: _showPaywall,
               child: Text(
                 l10n.insightsTeaserCta,
                 style: AppTextStyles.body(context).copyWith(
@@ -679,6 +663,19 @@ class _InsightsScreenState extends State<InsightsScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  /// Same presentation as the profile's "Try Intended+": the page dims and
+  /// blurs behind the sheet, so the paywall arrives over the app rather than
+  /// replacing it. This button did nothing at all until the design review
+  /// caught it.
+  Future<void> _showPaywall() {
+    return showCupertinoModalPopup(
+      context: context,
+      barrierColor: const Color(0x80000000),
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      builder: (context) => const PaywallScreen(source: 'insights_teaser'),
     );
   }
 
@@ -916,6 +913,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           seasonWord: seasonWord,
           moments: _moments,
           returnCount: _returnCount,
+          gapsShortening: _gapsShortening,
         ),
       ),
     );
@@ -1384,32 +1382,42 @@ class _InsightsScreenState extends State<InsightsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _eyebrow(l10n.soFarLabel, colors),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
+          // Rows, not prose (design review, SS8): the action carries the
+          // line, and the when-and-how sits under it in meta. Five sentences
+          // in a row read as a wall; five named things read as a list of
+          // things you did.
           for (final m in _moments) ...[
             Builder(builder: (context) {
-              final local =
-                  m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
               // Rebuilt as UTC-flagged wall clock; formatted without
               // conversion so it shows the user's own clock at the time.
-              final line = l10n.soFarLine(
+              final local =
+                  m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
+              final meta = [
                 DateFormat.EEEE(locale).format(local),
                 DateFormat.jm(locale).format(local),
-                localizeHabitName(m.habitName, l10n),
-              );
-              final suffix = switch (m.mood) {
-                MomentMood.gladIDid => ' ${l10n.soFarGlad}',
-                MomentMood.tookEffort => ' ${l10n.soFarEffort}',
-                _ => '',
-              };
-              return Text(
-                '$line$suffix',
-                style: _cardBody(colors).copyWith(
-                  height: 1.5,
-                  color: colors.textPrimary,
-                ),
+                switch (m.mood) {
+                  MomentMood.gladIDid => l10n.soFarGlad,
+                  MomentMood.tookEffort => l10n.soFarEffort,
+                  _ => null,
+                },
+              ].whereType<String>().join(' · ');
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    localizeHabitName(m.habitName, l10n),
+                    style: _cardBody(colors).copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(meta, style: _cardMeta(colors)),
+                ],
               );
             }),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
           ],
           const SizedBox(height: 2),
           Text(l10n.soFarClosing, style: _cardMeta(colors)),

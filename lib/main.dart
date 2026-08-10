@@ -2136,23 +2136,25 @@ class _HabitsScreenState extends State<HabitsScreen>
                                     ),
                                   ),
                                   behavior: HitTestBehavior.opaque,
+                                  // Mirrors the add-your-own row above it:
+                                  // same left edge, same icon size, same type
+                                  // — two quiet doors in one column, not one
+                                  // door and one centred stray.
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 6),
+                                        horizontal: 16, vertical: 14),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           CupertinoIcons.arrow_2_squarepath,
-                                          size: 15,
+                                          size: 18,
                                           color: colors.textSecondary,
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
                                           l10n.todayAdoptIntention,
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 15,
                                             fontWeight: FontWeight.w500,
                                             color: colors.textSecondary,
                                             fontFamily:
@@ -2308,6 +2310,10 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
     final colors = themeProvider.colors;
     final isDark = themeProvider.theme.isDark;
     final l10n = AppLocalizations.of(context);
+    // Pulled toward the card surface so the band under the button doesn't
+    // sit at the background gradient's most saturated stop (design review).
+    final bottomScrim =
+        Color.lerp(colors.bgGradientBottom, colors.cardBackground, 0.45)!;
 
     return CupertinoPageScaffold(
       // Use AppBackground for consistent warm background
@@ -2358,13 +2364,11 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
               // MAIN CONTENT
               // ============================================================
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(24, 32, 24, 140),
+                      child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                       // Title
@@ -2550,11 +2554,37 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                       }),
                             ],
                           ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
+                    ),
+                    // Content scrolls under the pinned button and dims on the
+                    // way down — the same treatment the path screen's Save
+                    // button has (design review, SS4).
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IgnorePointer(
+                            child: Container(
+                              height: 56,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    bottomScrim.withOpacity(0.0),
+                                    bottomScrim.withOpacity(0.9),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            color: bottomScrim,
+                            padding:
+                                const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                            child:
                       // ============================================================
                       // SUBMIT BUTTON
                       // ============================================================
@@ -2588,8 +2618,11 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -4386,16 +4419,23 @@ class _HabitCardState extends State<_HabitCard>
                                   )
                                 : widget.isPinned
                                     ? colors.cardPinned.withOpacity(colors.cardPinnedOpacity)
-                                    : colors.cardBackground.withOpacity(colors.cardBackgroundOpacity),
+                                    // Same glass as the profile's cards, so a
+                                    // card reads as a card on every theme —
+                                    // at cardBackground's opacity these sat
+                                    // nearly flush with the landscape behind
+                                    // them (design review, SS3/SS6).
+                                    : colors.profileCard.withOpacity(colors.profileCardOpacity),
                             borderRadius: BorderRadius.circular(24),
                             // No outline on completed cards: the wash and the
                             // tile carry the state. The tile's *presence* is a
                             // non-colour cue in its own right, so dropping the
                             // outline doesn't make completion colour-dependent.
                             border: Border.all(
-                              color: colors.borderCard
-                                  .withOpacity(colors.borderCardOpacity),
-                              width: 0.5,
+                              color: _isDoneToday || isDark
+                                  ? colors.borderCard
+                                      .withOpacity(colors.borderCardOpacity)
+                                  : const Color(0xFFFFFFFF).withOpacity(0.6),
+                              width: _isDoneToday ? 0.5 : 1,
                             ),
                             boxShadow: [
                               // Outer shadow for depth

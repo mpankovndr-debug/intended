@@ -9,7 +9,6 @@ import '../utils/habit_l10n.dart';
 import '../services/analytics_service.dart';
 import '../services/moments_service.dart';
 import '../services/reflection_service.dart';
-import '../onboarding_v2/onboarding_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
@@ -673,26 +672,9 @@ class _MomentRow extends StatelessWidget {
             child: Row(
               children: [
                 // Focus area color dot
-                Builder(builder: (context) {
-                  final category = context
-                      .read<OnboardingState>()
-                      .getCategoryForHabit(moment.habitName);
-                  final catColor = category != null
-                      ? AppColors.categoryColors[category]
-                      : null;
-                  if (catColor == null) return const SizedBox.shrink();
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: catColor,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  );
-                }),
+                // The star alone (design review, SS5). The dot doubled the
+                // star's job with a second, older palette — the legacy fixed
+                // category colours rather than the per-theme solve.
                 // Symbol
                 Text(
                   moment.habitEmoji,
