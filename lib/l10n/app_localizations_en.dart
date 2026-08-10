@@ -4092,4 +4092,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planPreviewLabel => 'WHAT INTENDED+ WOULD SUGGEST';
+
+  @override
+  String insightsReturnGaps(String gaps) {
+    return '$gaps days apart.';
+  }
 }

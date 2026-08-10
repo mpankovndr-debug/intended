@@ -1671,5 +1671,6 @@
   "planUse": "Взять этот план",
   "planAdjust": "Изменить",
   "planSkip": "Пропустить",
-  "planPreviewLabel": "ЧТО ПРЕДЛОЖИЛ БЫ INTENDED+"
+  "planPreviewLabel": "ЧТО ПРЕДЛОЖИЛ БЫ INTENDED+",
+  "insightsReturnGaps": "с промежутками в {gaps} дней."
 }

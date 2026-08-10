@@ -4117,4 +4117,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get planPreviewLabel => 'ЧТО ПРЕДЛОЖИЛ БЫ INTENDED+';
+
+  @override
+  String insightsReturnGaps(String gaps) {
+    return 'с промежутками в $gaps дней.';
+  }
 }

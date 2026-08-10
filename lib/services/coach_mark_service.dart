@@ -8,7 +8,6 @@ class CoachMarkKeys {
   static const String firstCompletion = 'coach_mark_first_completion';
   static const String pinning = 'coach_mark_pinning';
   static const String widget = 'coach_mark_widget';
-  static const String weeklyReflection = 'coach_mark_weekly_reflection';
   static const String smartNotifications = 'coach_mark_smart_notifications';
   static const String monthlyReflection = 'coach_mark_monthly_reflection';
   static const String reflectionShare = 'coach_mark_reflection_share';
@@ -42,7 +41,6 @@ class CoachMarkService {
       CoachMarkKeys.firstCompletion,
       CoachMarkKeys.pinning,
       CoachMarkKeys.widget,
-      CoachMarkKeys.weeklyReflection,
       CoachMarkKeys.smartNotifications,
       CoachMarkKeys.monthlyReflection,
       CoachMarkKeys.reflectionShare,

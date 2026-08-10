@@ -53,6 +53,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
   int _reminderHour = 9;
   bool _remindersEnabled = false;
   Season? _season;
+  Map<String, Season> _archive = const {};
   Drift? _drift;
   Letter? _letter;
   Set<String> _declinedNudges = const {};
@@ -87,6 +88,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final lastMonth =
         await MomentsService.momentsForMonth(DateTime(now.year, now.month - 1, 1));
     final season = await SeasonService.currentSeason();
+    final archive = await SeasonService.archive();
     final hour = await NotificationPreferencesService.getHour();
     final minute = await NotificationPreferencesService.getMinute();
     final remindersEnabled = await NotificationPreferencesService.isEnabled();
@@ -98,6 +100,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       _moments = moments;
       _lastMonth = lastMonth;
       _season = season;
+      _archive = archive;
       _drift = Drift.read(moments);
       // Given the season and the reminder so it can avoid repeating the
       // card above it, and can ask a question with a real alternative in it.
@@ -139,7 +142,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           if (!_loaded)
             const SizedBox.shrink()
           else ...[
-            _monthCard(l10n, colors, themeProvider),
+            _monthCard(l10n, colors, themeProvider, paid: paid),
             const SizedBox(height: 12),
             // Day one belongs to neither tier. There is genuinely nothing
             // behind a lock yet, so upgrading here would unlock three empty
@@ -163,7 +166,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 _driftCard(l10n, colors, _drift!),
                 const SizedBox(height: 12),
               ],
-              _seasonCard(l10n, colors),
+              _seasonCard(l10n, colors, paid: paid),
               const SizedBox(height: 12),
               if (_letter != null) ...[
                 _letterCard(l10n, colors, _letter!),
@@ -174,7 +177,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 const SizedBox(height: 12),
               ],
             ] else ...[
-              _seasonCard(l10n, colors),
+              _seasonCard(l10n, colors, paid: paid),
               const SizedBox(height: 12),
               _teaserCard(l10n, colors, onboarding),
               const SizedBox(height: 12),
@@ -287,8 +290,9 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Widget _monthCard(
     AppLocalizations l10n,
     AppColorScheme colors,
-    ThemeProvider themeProvider,
-  ) {
+    ThemeProvider themeProvider, {
+    required bool paid,
+  }) {
     final now = DateTime.now();
     final monthLabel = DateFormat.yMMMM(
       Localizations.localeOf(context).toString(),
@@ -365,10 +369,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                     child: Text(
                       // Never "you missed 4 stretches" — the same fact, told
                       // as a return rather than an absence (§4.3).
-                      _gapsShortening
-                          ? '${l10n.insightsReturnsLine(_returnCount)} '
-                              '${l10n.insightsGapsShortening}'
-                          : l10n.insightsReturnsLine(_returnCount),
+                      _returnsLine(l10n, paid),
                       style: _cardMeta(colors),
                     ),
                   ),
@@ -382,6 +383,20 @@ class _InsightsScreenState extends State<InsightsScreen> {
   }
 
   int get _returnCount => MomentGrid.returnIndicesFor(_moments).length;
+
+  /// Free is told how many times; paid is told how far apart (§5.3).
+  ///
+  /// The intervals are the half that turns a count into a direction — "9, 6,
+  /// 4, 2" is a person whose quiet stretches are closing, and that is a thing
+  /// only their own history can say.
+  String _returnsLine(AppLocalizations l10n, bool paid) {
+    final base = l10n.insightsReturnsLine(_returnCount);
+    final gaps = _gapLengths();
+    if (paid && gaps.length >= 2) {
+      return '$base ${l10n.insightsReturnGaps(gaps.reversed.join(', '))}';
+    }
+    return _gapsShortening ? '$base ${l10n.insightsGapsShortening}' : base;
+  }
 
   /// True when each successive gap is no longer than the one before — the
   /// half of §4.3 that turns a count into a direction.
@@ -755,7 +770,11 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// Always phrased as "this month you've been", never "you are" — a reading
   /// that changes each month is an observation, while a permanent label is a
   /// personality test, which is the failure mode this has to avoid.
-  Widget _seasonCard(AppLocalizations l10n, AppColorScheme colors) {
+  Widget _seasonCard(
+    AppLocalizations l10n,
+    AppColorScheme colors, {
+    required bool paid,
+  }) {
     final season = _season;
     if (season == null) return const SizedBox.shrink();
 
@@ -794,16 +813,31 @@ class _InsightsScreenState extends State<InsightsScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          if (!forming)
+          // The word is free; the reading behind it and the archive are what
+          // is paid for (§4.4). Free is not shown a worse version of the
+          // explanation — it is shown the word, which is the whole of what it
+          // was promised.
+          if (paid) ...[
+            if (!forming)
+              Text(
+                l10n.seasonPatternThisMonth,
+                style: _cardMeta(colors).copyWith(color: colors.ctaPrimary),
+              ),
+            const SizedBox(height: 4),
             Text(
-              l10n.seasonPatternThisMonth,
-              style: _cardMeta(colors).copyWith(color: colors.ctaPrimary),
+              line,
+              style: _cardBody(colors).copyWith(fontStyle: FontStyle.italic),
             ),
-          const SizedBox(height: 4),
-          Text(
-            line,
-            style: _cardBody(colors).copyWith(fontStyle: FontStyle.italic),
-          ),
+            if (_pastSeasons(l10n).isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Container(
+                height: 1,
+                color: colors.textDisabled.withValues(alpha: 0.2),
+              ),
+              const SizedBox(height: 12),
+              Text(_pastSeasons(l10n), style: _cardMeta(colors)),
+            ],
+          ],
           // Free on purpose (§4.4): the word is the shareable thing, and the
           // explanation and the archive are what's paid for. A month still
           // forming has no word yet, so there is nothing to share.
@@ -1263,6 +1297,45 @@ class _InsightsScreenState extends State<InsightsScreen> {
     if (!mounted) return;
     await _load();
   }
+
+  /// Closed months, newest first: "July · Steady · June · Emerging".
+  ///
+  /// The archive is the reason a season is frozen once its month ends (§10).
+  /// A word that changed retroactively would destroy "this was who I was in
+  /// September", and that permanence is the thing being paid for — so this row
+  /// is the only place it is visible, and it was dead storage until now.
+  String _pastSeasons(AppLocalizations l10n) {
+    final locale = Localizations.localeOf(context).toString();
+    final keys = _archive.keys.toList()..sort((a, b) => b.compareTo(a));
+
+    final parts = <String>[];
+    for (final key in keys.take(_archiveMonths)) {
+      final season = _archive[key]!;
+      final bits = key.split('-');
+      if (bits.length != 2) continue;
+      final month = DateFormat.LLLL(locale).format(
+        DateTime(int.parse(bits[0]), int.parse(bits[1])),
+      );
+      parts.add('$month · ${_seasonWord(l10n, season.pole)}');
+    }
+    return parts.join('  ·  ');
+  }
+
+  /// Four is enough to show the archive is real without turning the card into
+  /// a history page.
+  static const int _archiveMonths = 4;
+
+  String _seasonWord(AppLocalizations l10n, String pole) => switch (pole) {
+        Season.morning => l10n.seasonMorning,
+        Season.evening => l10n.seasonEvening,
+        Season.steady => l10n.seasonSteady,
+        Season.bursts => l10n.seasonBursts,
+        Season.returning => l10n.seasonReturning,
+        Season.continuous => l10n.seasonContinuous,
+        Season.focused => l10n.seasonFocused,
+        Season.wandering => l10n.seasonWandering,
+        _ => l10n.seasonBeginning,
+      };
 
   /// The drift warning (§6.1) — the only forward-looking thing in the app.
   ///

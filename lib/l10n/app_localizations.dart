@@ -6973,6 +6973,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'WHAT INTENDED+ WOULD SUGGEST'**
   String get planPreviewLabel;
+
+  /// Comma-joined gap lengths, longest-ago first: '9, 6, 4, 2'. Paid only (§5.3) — free gets the count without the intervals.
+  ///
+  /// In en, this message translates to:
+  /// **'{gaps} days apart.'**
+  String insightsReturnGaps(String gaps);
 }
 
 class _AppLocalizationsDelegate
