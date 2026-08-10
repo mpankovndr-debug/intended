@@ -4175,4 +4175,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get rescueShowAll => 'Показать всё';
+
+  @override
+  String get menuDidYesterday => 'Я делал это вчера';
+
+  @override
+  String get toastKeptYesterday => 'Сохранено — за вчера.';
+
+  @override
+  String get toastAlreadyYesterday => 'За вчера это уже записано.';
 }

@@ -2933,6 +2933,47 @@ class _HabitCardState extends State<_HabitCard>
     }
   }
 
+  /// Records this action for yesterday (§6.5).
+  ///
+  /// The absence of any way to say "I did do it, I just didn't tell you" is
+  /// embarrassing for a self-compassion app — a user who genuinely showed up
+  /// gets a gap they know is false, and the grid stops being trustworthy.
+  ///
+  /// The moment lands at this hour yesterday: we don't know when it really
+  /// happened, and the same hour a day back is the guess that distorts the
+  /// morning/evening axes least. One per action per day — the grid indexes by
+  /// moment, so a duplicate would be a real square that never happened.
+  Future<void> _logYesterday() async {
+    final l10n = AppLocalizations.of(context);
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+
+    final all = await MomentsService.getAll();
+    final already = all.any((m) {
+      if (m.habitName != widget.habitTitle) return false;
+      final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
+      return local.year == yesterday.year &&
+          local.month == yesterday.month &&
+          local.day == yesterday.day;
+    });
+    if (!mounted) return;
+    if (already) {
+      AppToast.show(context, l10n.toastAlreadyYesterday);
+      return;
+    }
+
+    final category = ReflectionService.categoryForHabit(widget.habitTitle);
+    await MomentsService.record(Moment.create(
+      habitName: widget.habitTitle,
+      category: category,
+      at: yesterday,
+    ));
+    MilestoneService.invalidate();
+    if (!mounted) return;
+    context.read<BackupService>().backup();
+    HapticFeedback.lightImpact();
+    AppToast.show(context, l10n.toastKeptYesterday);
+  }
+
   /// A fortnight without a single completion. Short enough to catch something
   /// that isn't working, long enough that an ordinary quiet week never trips
   /// it — nothing else in this app treats a slow fortnight as failure.
@@ -3039,6 +3080,21 @@ class _HabitCardState extends State<_HabitCard>
                                 onTap: () {
                                   Navigator.pop(context);
                                   _handleSwap();
+                                },
+                                showDivider: true,
+                              ),
+
+                            // Retroactive check-in (§6.5). Yesterday only —
+                            // "I did things last month, trust me" is a diary,
+                            // and the grid's honesty depends on moments being
+                            // roughly when they say they were.
+                            if (!_isDoneToday)
+                              _buildActionRow(
+                                icon: CupertinoIcons.arrow_counterclockwise,
+                                label: l10n.menuDidYesterday,
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  _logYesterday();
                                 },
                                 showDivider: true,
                               ),

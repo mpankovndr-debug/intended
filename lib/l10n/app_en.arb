@@ -1991,5 +1991,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "menuDidYesterday": "I did this yesterday",
+  "toastKeptYesterday": "Kept — for yesterday.",
+  "toastAlreadyYesterday": "Yesterday already has this one."
 }

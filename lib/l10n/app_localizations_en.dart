@@ -4145,4 +4145,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rescueShowAll => 'Show everything';
+
+  @override
+  String get menuDidYesterday => 'I did this yesterday';
+
+  @override
+  String get toastKeptYesterday => 'Kept — for yesterday.';
+
+  @override
+  String get toastAlreadyYesterday => 'Yesterday already has this one.';
 }

@@ -7039,6 +7039,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show everything'**
   String get rescueShowAll;
+
+  /// No description provided for @menuDidYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'I did this yesterday'**
+  String get menuDidYesterday;
+
+  /// No description provided for @toastKeptYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept — for yesterday.'**
+  String get toastKeptYesterday;
+
+  /// No description provided for @toastAlreadyYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday already has this one.'**
+  String get toastAlreadyYesterday;
 }
 
 class _AppLocalizationsDelegate

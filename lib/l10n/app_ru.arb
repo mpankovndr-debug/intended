@@ -1682,5 +1682,8 @@
   "rescueBody": "Может, только это сегодня?",
   "rescueLongTitle": "Прошло время. Так можно.",
   "rescueLongBody": "Здесь никто ничего не считал, пока вас не было.",
-  "rescueShowAll": "Показать всё"
+  "rescueShowAll": "Показать всё",
+  "menuDidYesterday": "Я делал это вчера",
+  "toastKeptYesterday": "Сохранено — за вчера.",
+  "toastAlreadyYesterday": "За вчера это уже записано."
 }
