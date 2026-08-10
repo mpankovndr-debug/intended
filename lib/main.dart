@@ -28,6 +28,7 @@ import 'onboarding_v2/welcome_v2_screen.dart';
 import 'state/user_state.dart';
 import 'screens/paywall_screen.dart';
 import 'screens/insights_screen.dart';
+import 'screens/onboarding_paywall_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/habit_completion_modal.dart';
 import 'models/moment.dart';
@@ -2776,7 +2777,51 @@ class _HabitCardState extends State<_HabitCard>
       // Coach marks — Moment 1 (first completion) & Moment 2 (pinning)
       if (mounted) _checkCompletionCoachMarks();
     }
+
+    if (mounted) await _maybeShowFirstCompletionPaywall();
   }
+
+  /// The paywall, once, right after the first action anyone completes (§8).
+  ///
+  /// It used to close onboarding, where it asked people to buy insights about
+  /// patterns they had no data for yet. Here the promise is verifiable: the
+  /// moment just landed, the tile just animated in, and the pitch is about
+  /// reading months that have actually started.
+  ///
+  /// Day 0 carries 90% of trial starts and 44.5% of all purchases, and users
+  /// who don't convert during onboarding mostly never return to a paywall — so
+  /// this is still the same window, just the part of it with evidence in it.
+  Future<void> _maybeShowFirstCompletionPaywall() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(_firstCompletionPaywallKey) == true) return;
+
+    // Only ever the *first* moment. Anyone with history behind them has
+    // already passed this point.
+    final total = await MomentsService.getCount();
+    if (total > 1) {
+      await prefs.setBool(_firstCompletionPaywallKey, true);
+      return;
+    }
+
+    if (!mounted) return;
+    // Nothing to pitch to someone who already subscribed — including a
+    // subscription restored from their Apple ID on first launch.
+    if (context.read<RevenueCatService>().isPremium) return;
+
+    await prefs.setBool(_firstCompletionPaywallKey, true);
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (_, animation, __) => const OnboardingPaywallScreen(),
+        transitionDuration: const Duration(milliseconds: 400),
+        transitionsBuilder: (_, animation, __, child) =>
+            FadeTransition(opacity: animation, child: child),
+      ),
+    );
+  }
+
+  static const String _firstCompletionPaywallKey =
+      'first_completion_paywall_shown';
 
   Future<void> _checkCompletionCoachMarks() async {
     // Wait for the completion animation to finish before overlaying coach mark.

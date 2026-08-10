@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart';
 import '../models/intention_path.dart';
-import '../screens/onboarding_paywall_screen.dart';
 import '../services/analytics_service.dart';
 import '../services/backup_service.dart';
 import '../services/revenue_cat_service.dart';
@@ -154,25 +153,12 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
     if (!mounted) return;
     context.read<BackupService>().backup();
 
-    // Soft paywall at peak intent — the user has just finished onboarding.
-    // Skip if RevenueCat has already activated Intended+ (e.g. an existing
-    // subscription was restored on first launch via Apple ID); we shouldn't
-    // pitch a trial they've already paid for.
-    if (!revenueCat.isPremium) {
-      // reverseTransitionDuration: Duration.zero means the paywall pops
-      // instantly (no exit fade), so the MainTabs fade-in below covers the
-      // transition without a visible HabitReveal flash in between.
-      await Navigator.of(context).push(
-        PageRouteBuilder(
-          pageBuilder: (_, animation, __) => const OnboardingPaywallScreen(),
-          transitionDuration: const Duration(milliseconds: 400),
-          reverseTransitionDuration: Duration.zero,
-          transitionsBuilder: (_, animation, __, child) =>
-              FadeTransition(opacity: animation, child: child),
-        ),
-      );
-      if (!mounted) return;
-    }
+    // No paywall here any more (§8). Onboarding used to end on it, which
+    // meant asking someone to buy pattern-insights before they had a single
+    // data point — an unverifiable promise, and the weakest possible moment to
+    // make it. It now fires after the first completed action instead, with
+    // that moment on screen. Paywalls triggered after a measurable value
+    // moment see 2.1x the trial-start rate.
 
     Navigator.pushReplacement(
       context,
