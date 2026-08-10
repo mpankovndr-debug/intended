@@ -6979,6 +6979,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{gaps} days apart.'**
   String insightsReturnGaps(String gaps);
+
+  /// No description provided for @shareSeasonMoments.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 moment} other{{count} moments}}'**
+  String shareSeasonMoments(int count);
+
+  /// No description provided for @shareSeasonReturns.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{I came back once} other{I came back {count} times}}'**
+  String shareSeasonReturns(int count);
+
+  /// No description provided for @shareIncludeHabitNames.
+  ///
+  /// In en, this message translates to:
+  /// **'Include my habit names'**
+  String get shareIncludeHabitNames;
 }
 
 class _AppLocalizationsDelegate

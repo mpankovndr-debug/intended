@@ -4097,4 +4097,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String insightsReturnGaps(String gaps) {
     return '$gaps days apart.';
   }
+
+  @override
+  String shareSeasonMoments(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count moments',
+      one: '1 moment',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String shareSeasonReturns(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'I came back $count times',
+      one: 'I came back once',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shareIncludeHabitNames => 'Include my habit names';
 }

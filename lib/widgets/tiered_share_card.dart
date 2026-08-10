@@ -35,11 +35,20 @@ class TieredShareCard extends StatelessWidget {
   /// Used to lock free users to Tier 1 ("The Number").
   final ShareCardTier? forceTier;
 
+  /// Whether the card names the user's actions.
+  ///
+  /// Off by default, and §5.5 is deliberate about that: habit names are
+  /// aspirational rather than embarrassing, so they belong on the card — but
+  /// the person posting it is the only one who can decide that, and a default
+  /// of "on" makes the decision for them in a room they don't control.
+  final bool includeHabitNames;
+
   const TieredShareCard({
     super.key,
     required this.stats,
     this.reflection,
     this.forceTier,
+    this.includeHabitNames = false,
   });
 
   @override
@@ -452,6 +461,7 @@ class TieredShareCard extends StatelessWidget {
 
   Widget _buildHabitList(AppLocalizations l10n, Color t1, Color accent,
       double textSize, double checkSize, double strokeWidth, double rowSpacing) {
+    if (!includeHabitNames) return const SizedBox.shrink();
     final habits = stats.completedHabits;
     if (habits.isEmpty) return const SizedBox.shrink();
 

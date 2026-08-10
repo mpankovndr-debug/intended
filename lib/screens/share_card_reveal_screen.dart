@@ -93,6 +93,11 @@ class ShareCardRevealScreen extends StatefulWidget {
 class _ShareCardRevealScreenState extends State<ShareCardRevealScreen>
     with TickerProviderStateMixin {
   final GlobalKey _repaintKey = GlobalKey();
+
+  /// Off by default and never remembered between shares (§5.5). A preference
+  /// that persists would quietly turn one deliberate choice into every future
+  /// card's default, which is the opposite of opting in.
+  bool _includeHabitNames = false;
   bool _isSharing = false;
   bool _cardReady = false;
 
@@ -197,6 +202,7 @@ class _ShareCardRevealScreenState extends State<ShareCardRevealScreen>
                           stats: widget.stats,
                           reflection: widget.reflection,
                           forceTier: widget.forceTier,
+                          includeHabitNames: _includeHabitNames,
                         ),
                       ),
                     ),
@@ -213,6 +219,8 @@ class _ShareCardRevealScreenState extends State<ShareCardRevealScreen>
                     ),
                   ),
                 ),
+
+                _buildHabitNamesToggle(colors),
 
                 // Share button — slides up after reveal
                 _buildShareButton(colors),
@@ -376,9 +384,41 @@ class _ShareCardRevealScreenState extends State<ShareCardRevealScreen>
               stats: widget.stats,
               reflection: widget.reflection,
               forceTier: widget.forceTier,
+              includeHabitNames: _includeHabitNames,
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  /// "Include my habit names", off by default (§5.5).
+  ///
+  /// Sits with the card rather than in settings, because the decision is about
+  /// *this* post and the room it is going into — not a standing preference.
+  Widget _buildHabitNamesToggle(dynamic colors) {
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(32, 4, 32, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible(
+            child: Text(
+              l10n.shareIncludeHabitNames,
+              style: AppTextStyles.body(context).copyWith(
+                fontSize: 14,
+                color: colors.textSecondary,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          CupertinoSwitch(
+            value: _includeHabitNames,
+            activeTrackColor: colors.ctaPrimary,
+            onChanged: (v) => setState(() => _includeHabitNames = v),
+          ),
+        ],
       ),
     );
   }

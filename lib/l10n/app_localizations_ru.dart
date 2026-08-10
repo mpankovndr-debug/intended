@@ -4122,4 +4122,33 @@ class AppLocalizationsRu extends AppLocalizations {
   String insightsReturnGaps(String gaps) {
     return 'с промежутками в $gaps дней.';
   }
+
+  @override
+  String shareSeasonMoments(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count момента',
+      many: '$count моментов',
+      few: '$count момента',
+      one: '$count момент',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String shareSeasonReturns(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Я возвращался $count раза',
+      many: 'Я возвращался $count раз',
+      few: 'Я возвращался $count раза',
+      one: 'Я возвращался $count раз',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shareIncludeHabitNames => 'Показывать названия привычек';
 }

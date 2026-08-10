@@ -1960,5 +1960,22 @@
         "type": "String"
       }
     }
+  },
+  "shareSeasonMoments": "{count, plural, =1{1 moment} other{{count} moments}}",
+  "shareSeasonReturns": "{count, plural, =1{I came back once} other{I came back {count} times}}",
+  "shareIncludeHabitNames": "Include my habit names",
+  "@shareSeasonMoments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@shareSeasonReturns": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

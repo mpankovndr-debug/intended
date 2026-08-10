@@ -16,7 +16,7 @@ import '../services/moments_service.dart';
 import '../services/notification_preferences_service.dart';
 import '../services/notification_scheduler.dart';
 import '../services/plan_service.dart';
-import '../services/share_service.dart';
+import 'season_share_screen.dart';
 import '../state/user_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
@@ -62,9 +62,6 @@ class _InsightsScreenState extends State<InsightsScreen> {
   bool _showAllNudges = false;
   bool _accepting = false;
   bool _loaded = false;
-
-  /// Wraps the season card so Share can capture exactly what is on screen.
-  final GlobalKey _seasonKey = GlobalKey();
 
   @override
   void initState() {
@@ -794,9 +791,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
         ),
     };
 
-    return RepaintBoundary(
-      key: _seasonKey,
-      child: _card(
+    return _card(
       colors: colors,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -848,7 +843,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
               child: CupertinoButton(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 minimumSize: Size.zero,
-                onPressed: _shareSeason,
+                onPressed: () => _shareSeason(word),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -872,21 +867,24 @@ class _InsightsScreenState extends State<InsightsScreen> {
           ],
         ],
       ),
-    ),
     );
   }
 
-  /// Shares the season card as it appears.
+  /// Opens the monthly card (§5.5).
   ///
-  /// §5.5's designed monthly card — season word as hero, the grid, the moment
-  /// count, the logo, "intention, not perfection" at legible size — is step 7
-  /// and is a different object from this. This shares what is on screen, which
-  /// is honest and works today; it is not yet the marketing asset §5.5 wants.
-  Future<void> _shareSeason() async {
-    final size = MediaQuery.of(context).size;
-    await ShareService.shareCard(
-      _seasonKey,
-      sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2),
+  /// A different object from the card on screen: season word as hero, the
+  /// grid, the count, the wordmark, and "intention, not perfection" at a size
+  /// that survives a thumbnail. What is worth reading in the app and what is
+  /// worth posting are not the same picture.
+  Future<void> _shareSeason(String seasonWord) async {
+    await Navigator.of(context).push(
+      CupertinoPageRoute<void>(
+        builder: (_) => SeasonShareScreen(
+          seasonWord: seasonWord,
+          moments: _moments,
+          returnCount: _returnCount,
+        ),
+      ),
     );
   }
 
