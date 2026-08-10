@@ -154,11 +154,17 @@ class _InsightsScreenState extends State<InsightsScreen> {
           if (!_loaded)
             const SizedBox.shrink()
           else
-            // One sheet of glass for the whole month (design review): the
-            // sections are joined by the profile's dividers instead of each
-            // floating alone, and Share reads as sharing all of it.
+            // The month itself — the grid — stands alone (design review):
+            // it is the record, and everything below it is readings of it.
+            ...[
             _shell(colors, sections: [
               _monthCard(l10n, colors, themeProvider, paid: paid),
+            ]),
+            const SizedBox(height: 12),
+            // One sheet of glass for the readings, joined by the profile's
+            // dividers instead of floating alone — Share then reads as
+            // sharing all of it.
+            _shell(colors, sections: [
               // The early days, on both tiers (§12) — week one is when every
               // pattern section is still null, so these two carry it.
               if (_moments.isNotEmpty) ...[
@@ -187,6 +193,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 _teaserCard(l10n, colors, onboarding),
               ],
             ]),
+            ],
         ],
         ),
       ),
@@ -605,11 +612,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _eyebrow(
-            shown.isEmpty ? l10n.insightsThisMonth : l10n.planPreviewLabel,
-            colors,
-          ),
-          const SizedBox(height: 12),
+          if (shown.isNotEmpty) ...[
+            _eyebrow(l10n.planPreviewLabel, colors),
+            const SizedBox(height: 12),
+          ],
           if (shown.isEmpty)
             Text(
               _hasFocusGap(onboarding)
