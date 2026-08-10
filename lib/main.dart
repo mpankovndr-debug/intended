@@ -33,6 +33,7 @@ import 'features/profile/change_path_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/habit_completion_modal.dart';
 import 'models/moment.dart';
+import 'models/rescue.dart';
 import 'services/moments_service.dart';
 import 'services/milestone_service.dart';
 import 'services/reflection_service.dart';
@@ -1466,6 +1467,11 @@ class _HabitsScreenState extends State<HabitsScreen>
   // Coach mark target for home-screen-level marks (widget, smart notifications)
   final _homeTopKey = GlobalKey();
 
+  /// Set when the user has been away long enough that the full list is the
+  /// wrong thing to greet them with (§4.6, §5.1). Free forever.
+  Rescue? _rescue;
+  bool _rescueDismissed = false;
+
   // Unified entrance animation (staggered, like welcome screen)
   late AnimationController _entranceController;
   late Animation<double> _fadeHeader;
@@ -1551,11 +1557,24 @@ class _HabitsScreenState extends State<HabitsScreen>
     if (mounted) service.showNext(context);
   }
 
+  /// Reads how long it has been, once, on open.
+  ///
+  /// The screen should know what week it is (§5.1). Showing four cards and a
+  /// browse link to someone returning after nine days asks them to pick up
+  /// exactly where they left off, which is the moment most people close the
+  /// app again.
+  Future<void> _checkForGap() async {
+    final moments = await MomentsService.getAll();
+    if (!mounted) return;
+    setState(() => _rescue = Rescue.read(moments));
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     AnalyticsService.logScreenView('habits');
+    _checkForGap();
     _entranceController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
@@ -1660,8 +1679,15 @@ class _HabitsScreenState extends State<HabitsScreen>
     // Four on Today, never more (OnboardingState.maxActiveHabits). Enforced
     // at every add path too; this is the backstop for lists that grew before
     // the ceiling existed.
-    final allHabits =
-        onboardingState.userHabits.take(OnboardingState.maxActiveHabits).toList();
+    //
+    // One, though, for someone who has been away (§4.6). A returning user is
+    // not looking at a to-do list they abandoned; they are deciding whether to
+    // open the app again tomorrow. Four cards and a browse link asks them to
+    // resume. One card asks them to start.
+    final rescue = _rescueDismissed ? null : _rescue;
+    final allHabits = onboardingState.userHabits
+        .take(rescue == null ? OnboardingState.maxActiveHabits : 1)
+        .toList();
     final pinnedHabit = onboardingState.pinnedHabit;
 
     // Detect pin/unpin transitions (for arrival animations)
@@ -2081,6 +2107,16 @@ class _HabitsScreenState extends State<HabitsScreen>
                                       ),
                                   );
                                 }),
+
+                                if (rescue != null) ...[
+                                  _RescueCard(
+                                    rescue: rescue,
+                                    colors: colors,
+                                    onShowAll: () => setState(
+                                        () => _rescueDismissed = true),
+                                  ),
+                                  const SizedBox(height: 4),
+                                ],
 
                                 // §7 killed the store. "Browse all habits"
                                 // was a shop whose implied verb was *acquire*
@@ -6498,6 +6534,88 @@ class _HabitActionScreenState extends State<HabitActionScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The reduced home screen after a quiet stretch (§4.6, §5.1).
+///
+/// The copy is the whole design. "Eight days. That's allowed." names the
+/// number rather than skirting it — a returning user already knows how long it
+/// has been, and an app that pretends otherwise reads as either oblivious or
+/// polite in a way that feels like disapproval. Naming it and immediately
+/// permitting it is the only move that isn't one of those two.
+///
+/// Then one question, in the smallest possible form: not "here are your four
+/// habits", not a plan, not a streak to rebuild. Just this one today?
+///
+/// Free forever. Never gate this.
+class _RescueCard extends StatelessWidget {
+  const _RescueCard({
+    required this.rescue,
+    required this.colors,
+    required this.onShowAll,
+  });
+
+  final Rescue rescue;
+  final AppColorScheme colors;
+  final VoidCallback onShowAll;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            // Past three weeks the count stops helping. "Twenty-nine days"
+            // is a number someone can feel judged by; "it's been a while"
+            // is the same fact without the arithmetic.
+            rescue.isLongAbsence
+                ? l10n.rescueLongTitle
+                : l10n.rescueTitle(rescue.quietDays),
+            style: TextStyle(
+              fontSize: 20,
+              height: 1.3,
+              fontWeight: FontWeight.w600,
+              color: colors.textPrimary,
+              fontFamily: 'Sora',
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            rescue.isLongAbsence ? l10n.rescueLongBody : l10n.rescueBody,
+            style: TextStyle(
+              fontSize: 15,
+              height: 1.45,
+              color: colors.textSecondary,
+              fontFamily: AppTextStyles.bodyFont(context),
+            ),
+          ),
+          const SizedBox(height: 14),
+          // The way back to the full list is always one tap away and never
+          // the thing being asked for.
+          GestureDetector(
+            onTap: onShowAll,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Text(
+                l10n.rescueShowAll,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: colors.ctaPrimary,
+                  fontFamily: AppTextStyles.bodyFont(context),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

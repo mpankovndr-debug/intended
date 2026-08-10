@@ -4157,4 +4157,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get todaySwapHint => 'Не заходит? Удерживайте, чтобы заменить.';
+
+  @override
+  String rescueTitle(int count) {
+    return '$count дней. Так можно.';
+  }
+
+  @override
+  String get rescueBody => 'Может, только это сегодня?';
+
+  @override
+  String get rescueLongTitle => 'Прошло время. Так можно.';
+
+  @override
+  String get rescueLongBody =>
+      'Здесь никто ничего не считал, пока вас не было.';
+
+  @override
+  String get rescueShowAll => 'Показать всё';
 }

@@ -7009,6 +7009,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not landing? Hold to swap.'**
   String get todaySwapHint;
+
+  /// No description provided for @rescueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days. That\'s allowed.'**
+  String rescueTitle(int count);
+
+  /// No description provided for @rescueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Just this one today?'**
+  String get rescueBody;
+
+  /// No description provided for @rescueLongTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s been a while. That\'s allowed.'**
+  String get rescueLongTitle;
+
+  /// No description provided for @rescueLongBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here kept score while you were gone.'**
+  String get rescueLongBody;
+
+  /// No description provided for @rescueShowAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Show everything'**
+  String get rescueShowAll;
 }
 
 class _AppLocalizationsDelegate

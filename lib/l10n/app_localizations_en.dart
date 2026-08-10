@@ -4128,4 +4128,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get todaySwapHint => 'Not landing? Hold to swap.';
+
+  @override
+  String rescueTitle(int count) {
+    return '$count days. That\'s allowed.';
+  }
+
+  @override
+  String get rescueBody => 'Just this one today?';
+
+  @override
+  String get rescueLongTitle => 'It\'s been a while. That\'s allowed.';
+
+  @override
+  String get rescueLongBody => 'Nothing here kept score while you were gone.';
+
+  @override
+  String get rescueShowAll => 'Show everything';
 }

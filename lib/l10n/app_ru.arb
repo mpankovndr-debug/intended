@@ -1677,5 +1677,10 @@
   "shareSeasonReturns": "{count, plural, one{Я возвращался {count} раз} few{Я возвращался {count} раза} many{Я возвращался {count} раз} other{Я возвращался {count} раза}}",
   "shareIncludeHabitNames": "Показывать названия привычек",
   "todayAdoptIntention": "Выбрать другое намерение",
-  "todaySwapHint": "Не заходит? Удерживайте, чтобы заменить."
+  "todaySwapHint": "Не заходит? Удерживайте, чтобы заменить.",
+  "rescueTitle": "{count} дней. Так можно.",
+  "rescueBody": "Может, только это сегодня?",
+  "rescueLongTitle": "Прошло время. Так можно.",
+  "rescueLongBody": "Здесь никто ничего не считал, пока вас не было.",
+  "rescueShowAll": "Показать всё"
 }
