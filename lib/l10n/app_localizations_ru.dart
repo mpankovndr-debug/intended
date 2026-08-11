@@ -4267,7 +4267,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get intentionSofterNights => 'Сон, который приходит легче';
 
   @override
-  String get pathLookingUpTitle => 'Глаза от экрана';
+  String get pathLookingUpTitle => 'Поднять глаза';
 
   @override
   String get pathLookingUpSubtitle =>

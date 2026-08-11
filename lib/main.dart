@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:intl/intl.dart' show DateFormat;
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'dart:ui' show ImageFilter;
@@ -1628,6 +1629,17 @@ class _HabitsScreenState extends State<HabitsScreen>
   }
 
   /// Forces all habit cards to rebuild when the calendar date changes.
+  /// "Tuesday, August 11" / "вторник, 11 августа" — the locale's own order
+  /// and case. The hand-built version glued a nominative month after the day
+  /// ("Вторник, Август 11"), which is not a date in Russian.
+  String _localizedToday(BuildContext context, DateTime now) {
+    final locale = Localizations.localeOf(context).toString();
+    final text = DateFormat('EEEE, d MMMM', locale).format(now);
+    return text.isEmpty
+        ? text
+        : text[0].toUpperCase() + text.substring(1);
+  }
+
   void _checkDayChange() {
     final today = DateTime.now().toIso8601String().substring(0, 10);
     if (today != _currentDateStr) {
@@ -1734,7 +1746,7 @@ class _HabitsScreenState extends State<HabitsScreen>
 
     final now = DateTime.now();
     final dateStr =
-        '${_getDayName(now.weekday, l10n)}, ${_getMonthName(now.month, l10n)} ${now.day}';
+        _localizedToday(context, now);
 
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
@@ -2162,7 +2174,10 @@ class _HabitsScreenState extends State<HabitsScreen>
                                         Icon(
                                           CupertinoIcons.arrow_2_squarepath,
                                           size: 18,
-                                          color: colors.textSecondary,
+                                          // Same colour as the add row: two
+                                          // doors of equal standing (§7), not
+                                          // a door and an afterthought.
+                                          color: colors.ctaPrimary,
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
@@ -2170,7 +2185,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500,
-                                            color: colors.textSecondary,
+                                            color: colors.ctaPrimary,
                                             fontFamily:
                                                 AppTextStyles.bodyFont(context),
                                           ),
@@ -2199,36 +2214,7 @@ class _HabitsScreenState extends State<HabitsScreen>
     );
   }
 
-  String _getDayName(int weekday, AppLocalizations l10n) {
-    final days = [
-      l10n.dayMonday,
-      l10n.dayTuesday,
-      l10n.dayWednesday,
-      l10n.dayThursday,
-      l10n.dayFriday,
-      l10n.daySaturday,
-      l10n.daySunday
-    ];
-    return days[weekday - 1];
-  }
 
-  String _getMonthName(int month, AppLocalizations l10n) {
-    final months = [
-      l10n.monthJanuary,
-      l10n.monthFebruary,
-      l10n.monthMarch,
-      l10n.monthApril,
-      l10n.monthMay,
-      l10n.monthJune,
-      l10n.monthJuly,
-      l10n.monthAugust,
-      l10n.monthSeptember,
-      l10n.monthOctober,
-      l10n.monthNovember,
-      l10n.monthDecember,
-    ];
-    return months[month - 1];
-  }
 }
 
 // ============================================================
@@ -4455,12 +4441,16 @@ class _HabitCardState extends State<_HabitCard>
                                 ? LinearGradient(
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
+                                    // Dark themes take a lighter hand: their
+                                    // onCard swatches are solved brighter, so
+                                    // the same stops that whisper on Iris
+                                    // shout on nightBloom.
                                     colors: [
                                       Color.alphaBlend(
                                         CategoryColors.onCard(
                                           _completedCategory,
                                           themeProvider.theme,
-                                        ).withOpacity(0.18),
+                                        ).withOpacity(isDark ? 0.13 : 0.18),
                                         colors.profileCard.withOpacity(
                                             colors.profileCardOpacity),
                                       ),
@@ -4468,7 +4458,7 @@ class _HabitCardState extends State<_HabitCard>
                                         CategoryColors.onCard(
                                           _completedCategory,
                                           themeProvider.theme,
-                                        ).withOpacity(0.07),
+                                        ).withOpacity(isDark ? 0.05 : 0.07),
                                         colors.profileCard.withOpacity(
                                             colors.profileCardOpacity),
                                       ),
