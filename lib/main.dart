@@ -4437,14 +4437,7 @@ class _HabitCardState extends State<_HabitCard>
                             // solved against the card background but sits on
                             // the page's (design review: B with A's border).
                             color: _isDoneToday
-                                ? Color.alphaBlend(
-                                    CategoryColors.onCard(
-                                      _completedCategory,
-                                      themeProvider.theme,
-                                    ).withOpacity(0.10),
-                                    colors.profileCard
-                                        .withOpacity(colors.profileCardOpacity),
-                                  )
+                                ? null
                                 : widget.isPinned
                                     ? colors.cardPinned.withOpacity(colors.cardPinnedOpacity)
                                     // Same glass as the profile's cards, so a
@@ -4453,6 +4446,35 @@ class _HabitCardState extends State<_HabitCard>
                                     // nearly flush with the landscape behind
                                     // them (design review, SS3/SS6).
                                     : colors.profileCard.withOpacity(colors.profileCardOpacity),
+                            // A wash with a direction, not a flat blend (V1):
+                            // the tint leans into the top-left light and eases
+                            // away, matching the lit face every tile carries.
+                            // Flat, the 10% blend read as discolouration;
+                            // moving, it reads as glass catching colour.
+                            gradient: _isDoneToday
+                                ? LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Color.alphaBlend(
+                                        CategoryColors.onCard(
+                                          _completedCategory,
+                                          themeProvider.theme,
+                                        ).withOpacity(0.18),
+                                        colors.profileCard.withOpacity(
+                                            colors.profileCardOpacity),
+                                      ),
+                                      Color.alphaBlend(
+                                        CategoryColors.onCard(
+                                          _completedCategory,
+                                          themeProvider.theme,
+                                        ).withOpacity(0.07),
+                                        colors.profileCard.withOpacity(
+                                            colors.profileCardOpacity),
+                                      ),
+                                    ],
+                                  )
+                                : null,
                             borderRadius: BorderRadius.circular(24),
                             border: Border.all(
                               color: _isDoneToday
@@ -4510,8 +4532,16 @@ class _HabitCardState extends State<_HabitCard>
                                   width: 4,
                                   height: 26,
                                   decoration: BoxDecoration(
+                                    // Completed keeps its bar (V1): same
+                                    // focus-area colour as the tile, so the
+                                    // card's left edge and right tile bracket
+                                    // the kept action instead of the bar
+                                    // reading as "pending only".
                                     color: _isDoneToday
-                                        ? const Color(0x00000000)
+                                        ? CategoryColors.onCard(
+                                            _completedCategory,
+                                            themeProvider.theme,
+                                          )
                                         : effectiveAccentColor,
                                     borderRadius: BorderRadius.circular(2),
                                   ),
