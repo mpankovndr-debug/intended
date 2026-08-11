@@ -61,7 +61,8 @@ class NotificationMessages {
   /// Path-specific notification messages (6 per path).
   /// Mixed with generic pool for variety: path messages appear ~40% of the time.
   static List<String> forPath(AppLocalizations l10n, IntentionPathId pathId) {
-    return switch (pathId) {
+    // New paths borrow an elder path's pools — see IntentionPathVoice.
+    return switch (pathId.voice) {
       IntentionPathId.gentleMornings => [
         l10n.notifPathGentleMornings1,
         l10n.notifPathGentleMornings2,
@@ -94,7 +95,7 @@ class NotificationMessages {
         l10n.notifPathWindingDown5,
         l10n.notifPathWindingDown6,
       ],
-      IntentionPathId.yourOwnWay => [
+      _ => [
         l10n.notifPathYourOwnWay1,
         l10n.notifPathYourOwnWay2,
         l10n.notifPathYourOwnWay3,
@@ -116,13 +117,13 @@ class NotificationMessages {
   /// Path-specific weekly reflection notification message.
   /// Falls back to generic notifWeeklyBody if no path is set.
   static String weeklyForPath(AppLocalizations l10n, IntentionPathId pathId) {
-    return switch (pathId) {
+    return switch (pathId.voice) {
       IntentionPathId.gentleMornings => l10n.notifWeeklyPathGentleMornings,
       IntentionPathId.anchorsForHardDays =>
         l10n.notifWeeklyPathAnchorsForHardDays,
       IntentionPathId.quietFocus => l10n.notifWeeklyPathQuietFocus,
       IntentionPathId.windingDown => l10n.notifWeeklyPathWindingDown,
-      IntentionPathId.yourOwnWay => l10n.notifWeeklyPathYourOwnWay,
+      _ => l10n.notifWeeklyPathYourOwnWay,
     };
   }
 

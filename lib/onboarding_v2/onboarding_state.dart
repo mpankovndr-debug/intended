@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/intention_path.dart';
 import '../services/reflection_service.dart';
 
 class OnboardingState extends ChangeNotifier {
@@ -81,6 +82,7 @@ class OnboardingState extends ChangeNotifier {
       '2-minute body scan',
       '10 minutes of gentle movement',
       'Eat one meal mindfully',
+      'Screens away 20 minutes before bed',
     ],
     'Mood': [
       'Ten-second pause',
@@ -95,6 +97,7 @@ class OnboardingState extends ChangeNotifier {
       'Smile gently at yourself',
       'Ask yourself "what do I need right now?"',
       'Give yourself permission to rest',
+      'One meal without your phone',
     ],
     'Productivity': [
       'Set one priority',
@@ -178,6 +181,7 @@ class OnboardingState extends ChangeNotifier {
       'Put on something comfortable',
       'Listen to one song you love',
       'Do absolutely nothing for 30 seconds',
+      'Dim the lights an hour before sleep',
     ],
   };
 
@@ -250,7 +254,15 @@ class OnboardingState extends ChangeNotifier {
     final random = Random();
     final selectedHabits = <String>[];
 
-    if (_focusAreas.isEmpty) {
+    // A path that knows its own actions seeds exactly those (§7): a random
+    // draw from "Health" could hand a sleep-seeker a glass of water.
+    final path = IntentionPath.getById(
+      IntentionPathId.fromKey(_selectedIntentionPath),
+    );
+    final starters = path.starterActions;
+    if (starters != null) {
+      selectedHabits.addAll(starters);
+    } else if (_focusAreas.isEmpty) {
       selectedHabits.addAll([
         'Drink a glass of water',
         'Take 3 slow breaths',

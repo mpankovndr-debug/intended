@@ -40,6 +40,9 @@ String _catSelfCare(AppLocalizations l10n) => l10n.focusAreaSelfCare;
 const Map<String, _L10nGetter> _habitNameGetters = {
   // Health
   'Drink a glass of water': _hDrinkWater,
+  'Screens away 20 minutes before bed': _hScreensAwayBed,
+  'Dim the lights an hour before sleep': _hDimLights,
+  'One meal without your phone': _hMealWithoutPhone,
   'Take 3 slow breaths': _hThreeSlowBreaths,
   'Stretch for 10 seconds': _hStretchTenSeconds,
   'Stand up and roll your shoulders': _hRollShoulders,
@@ -152,6 +155,9 @@ const Map<String, _L10nGetter> _habitNameGetters = {
 
 // Health
 String _hDrinkWater(AppLocalizations l) => l.habitDrinkWater;
+String _hScreensAwayBed(AppLocalizations l) => l.habitScreensAwayBed;
+String _hDimLights(AppLocalizations l) => l.habitDimLights;
+String _hMealWithoutPhone(AppLocalizations l) => l.habitMealWithoutPhone;
 String _hThreeSlowBreaths(AppLocalizations l) => l.habitThreeSlowBreaths;
 String _hStretchTenSeconds(AppLocalizations l) => l.habitStretchTenSeconds;
 String _hRollShoulders(AppLocalizations l) => l.habitRollShoulders;

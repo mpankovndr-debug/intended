@@ -2041,5 +2041,23 @@
     }
   },
   "shareSeasonGaps": "My gaps are getting shorter.",
-  "pathMoreIntentions": "MORE INTENTIONS"
+  "pathMoreIntentions": "MORE INTENTIONS",
+  "pathSofterNightsTitle": "Softer Nights",
+  "pathSofterNightsSubtitle": "For sleep that doesn't fight you",
+  "intentionSofterNights": "Sleep that comes easier",
+  "pathLookingUpTitle": "Looking Up",
+  "pathLookingUpSubtitle": "Less scrolling, more of everything else",
+  "intentionLookingUp": "More life outside the screen",
+  "pathCloserToPeopleTitle": "Closer to People",
+  "pathCloserToPeopleSubtitle": "Small ways to stay in touch",
+  "intentionCloserToPeople": "Closer to my people",
+  "pathMovingALittleTitle": "Moving a Little",
+  "pathMovingALittleSubtitle": "Gentle movement, no gym required",
+  "intentionMovingALittle": "Moving a little, most days",
+  "pathThroughAHardSeasonTitle": "Through a Hard Season",
+  "pathThroughAHardSeasonSubtitle": "The smallest steps, for the heaviest months",
+  "intentionThroughAHardSeason": "Gentle with myself through this",
+  "habitScreensAwayBed": "Screens away 20 minutes before bed",
+  "habitDimLights": "Dim the lights an hour before sleep",
+  "habitMealWithoutPhone": "One meal without your phone"
 }

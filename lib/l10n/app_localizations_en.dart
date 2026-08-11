@@ -4220,4 +4220,59 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pathMoreIntentions => 'MORE INTENTIONS';
+
+  @override
+  String get pathSofterNightsTitle => 'Softer Nights';
+
+  @override
+  String get pathSofterNightsSubtitle => 'For sleep that doesn\'t fight you';
+
+  @override
+  String get intentionSofterNights => 'Sleep that comes easier';
+
+  @override
+  String get pathLookingUpTitle => 'Looking Up';
+
+  @override
+  String get pathLookingUpSubtitle => 'Less scrolling, more of everything else';
+
+  @override
+  String get intentionLookingUp => 'More life outside the screen';
+
+  @override
+  String get pathCloserToPeopleTitle => 'Closer to People';
+
+  @override
+  String get pathCloserToPeopleSubtitle => 'Small ways to stay in touch';
+
+  @override
+  String get intentionCloserToPeople => 'Closer to my people';
+
+  @override
+  String get pathMovingALittleTitle => 'Moving a Little';
+
+  @override
+  String get pathMovingALittleSubtitle => 'Gentle movement, no gym required';
+
+  @override
+  String get intentionMovingALittle => 'Moving a little, most days';
+
+  @override
+  String get pathThroughAHardSeasonTitle => 'Through a Hard Season';
+
+  @override
+  String get pathThroughAHardSeasonSubtitle =>
+      'The smallest steps, for the heaviest months';
+
+  @override
+  String get intentionThroughAHardSeason => 'Gentle with myself through this';
+
+  @override
+  String get habitScreensAwayBed => 'Screens away 20 minutes before bed';
+
+  @override
+  String get habitDimLights => 'Dim the lights an hour before sleep';
+
+  @override
+  String get habitMealWithoutPhone => 'One meal without your phone';
 }

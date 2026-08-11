@@ -46,6 +46,16 @@ String _resolvePathSubtitle(AppLocalizations l10n, String subtitleKey) {
   }
 }
 
+/// Packs that duplicate a path stay out of MORE INTENTIONS: Gentle Mornings
+/// and Winding Down were promoted into paths, and Stay Connected became the
+/// Closer to People path — listing them twice read as a bug, because it was
+/// one (design review, SS2).
+const Set<String> _packsPromotedToPaths = {
+  'gentle_mornings',
+  'winding_down',
+  'stay_connected',
+};
+
 class ChangePathScreen extends StatefulWidget {
   const ChangePathScreen({super.key});
 
@@ -275,7 +285,11 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          final pack = CuratedPacks.all[index];
+                          final packs = CuratedPacks.all
+                              .where((p) =>
+                                  !_packsPromotedToPaths.contains(p.id))
+                              .toList();
+                          final pack = packs[index];
                           final lp = _localizedPack(l10n, pack);
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 14),
@@ -295,7 +309,10 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                             ),
                           );
                         },
-                        childCount: CuratedPacks.all.length,
+                        childCount: CuratedPacks.all
+                            .where((p) =>
+                                !_packsPromotedToPaths.contains(p.id))
+                            .length,
                       ),
                     ),
                   ),

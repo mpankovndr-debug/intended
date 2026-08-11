@@ -681,23 +681,23 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
   /// Path-aware intro line for the reflection card.
   String _pathIntro(AppLocalizations l10n, ReflectionData data) {
     if (data.daysActive == 0) {
-      return switch (_pathId) {
+      return switch (_pathId.voice) {
         IntentionPathId.gentleMornings =>
           l10n.reflectionPathGentleMorningsQuiet,
         IntentionPathId.anchorsForHardDays =>
           l10n.reflectionPathAnchorsForHardDaysQuiet,
         IntentionPathId.quietFocus => l10n.reflectionPathQuietFocusQuiet,
         IntentionPathId.windingDown => l10n.reflectionPathWindingDownQuiet,
-        IntentionPathId.yourOwnWay => l10n.reflectionPathYourOwnWayQuiet,
+        _ => l10n.reflectionPathYourOwnWayQuiet,
       };
     }
-    return switch (_pathId) {
+    return switch (_pathId.voice) {
       IntentionPathId.gentleMornings => l10n.reflectionPathGentleMorningsIntro,
       IntentionPathId.anchorsForHardDays =>
         l10n.reflectionPathAnchorsForHardDaysIntro,
       IntentionPathId.quietFocus => l10n.reflectionPathQuietFocusIntro,
       IntentionPathId.windingDown => l10n.reflectionPathWindingDownIntro,
-      IntentionPathId.yourOwnWay => l10n.reflectionPathYourOwnWayIntro,
+      _ => l10n.reflectionPathYourOwnWayIntro,
     };
   }
 

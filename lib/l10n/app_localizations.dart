@@ -7135,6 +7135,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'MORE INTENTIONS'**
   String get pathMoreIntentions;
+
+  /// No description provided for @pathSofterNightsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Softer Nights'**
+  String get pathSofterNightsTitle;
+
+  /// No description provided for @pathSofterNightsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'For sleep that doesn\'t fight you'**
+  String get pathSofterNightsSubtitle;
+
+  /// No description provided for @intentionSofterNights.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep that comes easier'**
+  String get intentionSofterNights;
+
+  /// No description provided for @pathLookingUpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking Up'**
+  String get pathLookingUpTitle;
+
+  /// No description provided for @pathLookingUpSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Less scrolling, more of everything else'**
+  String get pathLookingUpSubtitle;
+
+  /// No description provided for @intentionLookingUp.
+  ///
+  /// In en, this message translates to:
+  /// **'More life outside the screen'**
+  String get intentionLookingUp;
+
+  /// No description provided for @pathCloserToPeopleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Closer to People'**
+  String get pathCloserToPeopleTitle;
+
+  /// No description provided for @pathCloserToPeopleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Small ways to stay in touch'**
+  String get pathCloserToPeopleSubtitle;
+
+  /// No description provided for @intentionCloserToPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Closer to my people'**
+  String get intentionCloserToPeople;
+
+  /// No description provided for @pathMovingALittleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving a Little'**
+  String get pathMovingALittleTitle;
+
+  /// No description provided for @pathMovingALittleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle movement, no gym required'**
+  String get pathMovingALittleSubtitle;
+
+  /// No description provided for @intentionMovingALittle.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving a little, most days'**
+  String get intentionMovingALittle;
+
+  /// No description provided for @pathThroughAHardSeasonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Through a Hard Season'**
+  String get pathThroughAHardSeasonTitle;
+
+  /// No description provided for @pathThroughAHardSeasonSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The smallest steps, for the heaviest months'**
+  String get pathThroughAHardSeasonSubtitle;
+
+  /// No description provided for @intentionThroughAHardSeason.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle with myself through this'**
+  String get intentionThroughAHardSeason;
+
+  /// No description provided for @habitScreensAwayBed.
+  ///
+  /// In en, this message translates to:
+  /// **'Screens away 20 minutes before bed'**
+  String get habitScreensAwayBed;
+
+  /// No description provided for @habitDimLights.
+  ///
+  /// In en, this message translates to:
+  /// **'Dim the lights an hour before sleep'**
+  String get habitDimLights;
+
+  /// No description provided for @habitMealWithoutPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'One meal without your phone'**
+  String get habitMealWithoutPhone;
 }
 
 class _AppLocalizationsDelegate

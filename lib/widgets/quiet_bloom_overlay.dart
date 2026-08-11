@@ -220,7 +220,7 @@ class _QuietBloomOverlayState extends State<QuietBloomOverlay>
   }
 
   String _getBloomMessage(AppLocalizations l10n, IntentionPathId pathId, int index) {
-    return switch (pathId) {
+    return switch (pathId.voice) {
       IntentionPathId.gentleMornings => switch (index) {
         1 => l10n.bloomGentleMornings1,
         2 => l10n.bloomGentleMornings2,
@@ -249,7 +249,7 @@ class _QuietBloomOverlayState extends State<QuietBloomOverlay>
         4 => l10n.bloomWindingDown4,
         _ => l10n.bloomWindingDown5,
       },
-      IntentionPathId.yourOwnWay => switch (index) {
+      _ => switch (index) {
         1 => l10n.bloomYourOwnWay1,
         2 => l10n.bloomYourOwnWay2,
         3 => l10n.bloomYourOwnWay3,

@@ -4256,4 +4256,61 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pathMoreIntentions => 'ЕЩЁ НАМЕРЕНИЯ';
+
+  @override
+  String get pathSofterNightsTitle => 'Мягкие ночи';
+
+  @override
+  String get pathSofterNightsSubtitle => 'Чтобы сон приходил сам';
+
+  @override
+  String get intentionSofterNights => 'Сон, который приходит легче';
+
+  @override
+  String get pathLookingUpTitle => 'Глаза от экрана';
+
+  @override
+  String get pathLookingUpSubtitle =>
+      'Меньше листания — больше всего остального';
+
+  @override
+  String get intentionLookingUp => 'Больше жизни вне экрана';
+
+  @override
+  String get pathCloserToPeopleTitle => 'Ближе к людям';
+
+  @override
+  String get pathCloserToPeopleSubtitle =>
+      'Маленькие способы оставаться на связи';
+
+  @override
+  String get intentionCloserToPeople => 'Ближе к своим людям';
+
+  @override
+  String get pathMovingALittleTitle => 'Немного движения';
+
+  @override
+  String get pathMovingALittleSubtitle => 'Мягкое движение — без спортзала';
+
+  @override
+  String get intentionMovingALittle => 'Немного движения почти каждый день';
+
+  @override
+  String get pathThroughAHardSeasonTitle => 'Сквозь трудный сезон';
+
+  @override
+  String get pathThroughAHardSeasonSubtitle =>
+      'Самые маленькие шаги для самых тяжёлых месяцев';
+
+  @override
+  String get intentionThroughAHardSeason => 'Бережнее к себе в это время';
+
+  @override
+  String get habitScreensAwayBed => 'Убрать экраны за 20 минут до сна';
+
+  @override
+  String get habitDimLights => 'Приглушить свет за час до сна';
+
+  @override
+  String get habitMealWithoutPhone => 'Один приём пищи без телефона';
 }

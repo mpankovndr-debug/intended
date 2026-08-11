@@ -22,7 +22,8 @@ class WarmthMessageService {
 
   /// Path-specific warmth messages (6 per path).
   static List<String> _pathMessages(AppLocalizations l10n, IntentionPathId pathId) {
-    return switch (pathId) {
+    // New paths borrow an elder path's warmth — see IntentionPathVoice.
+    return switch (pathId.voice) {
       IntentionPathId.gentleMornings => [
         l10n.warmthPathGentleMornings1,
         l10n.warmthPathGentleMornings2,
@@ -55,7 +56,7 @@ class WarmthMessageService {
         l10n.warmthPathWindingDown5,
         l10n.warmthPathWindingDown6,
       ],
-      IntentionPathId.yourOwnWay => [
+      _ => [
         l10n.warmthPathYourOwnWay1,
         l10n.warmthPathYourOwnWay2,
         l10n.warmthPathYourOwnWay3,

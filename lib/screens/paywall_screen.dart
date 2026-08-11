@@ -271,12 +271,13 @@ class _PaywallScreenState extends State<PaywallScreen>
       return l10n.paywallCeilingTitle;
     }
     final pathKey = context.read<OnboardingState>().selectedIntentionPath;
-    return switch (IntentionPathId.fromKey(pathKey)) {
+    // New paths borrow an elder path's copy — see IntentionPathVoice.
+    return switch (IntentionPathId.fromKey(pathKey).voice) {
       IntentionPathId.gentleMornings => l10n.paywallTitleGentleMornings,
       IntentionPathId.anchorsForHardDays => l10n.paywallTitleAnchorsForHardDays,
       IntentionPathId.quietFocus => l10n.paywallTitleQuietFocus,
       IntentionPathId.windingDown => l10n.paywallTitleWindingDown,
-      IntentionPathId.yourOwnWay => l10n.paywallTitle,
+      _ => l10n.paywallTitle,
     };
   }
 

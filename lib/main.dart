@@ -2333,6 +2333,7 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
       // Use AppBackground for consistent warm background
       child: AppBackground(
         child: SafeArea(
+          bottom: false,
           child: Column(
             children: [
               // ============================================================
@@ -2599,8 +2600,11 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                           ),
                           Container(
                             color: bottomScrim,
-                            padding:
-                                const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                            // Runs under the home indicator — the SafeArea
+                            // above excludes bottom, so without this inset the
+                            // landscape peeked out beneath the band (SS1).
+                            padding: EdgeInsets.fromLTRB(24, 0, 24,
+                                16 + MediaQuery.of(context).padding.bottom),
                             child:
                       // ============================================================
                       // SUBMIT BUTTON
@@ -4425,11 +4429,21 @@ class _HabitCardState extends State<_HabitCard>
                             // large version of the tile that just landed in
                             // the month. The outline is the structural cue,
                             // so the state doesn't rest on colour alone.
+                            // A done card is the pending card, kept — the
+                            // same glass every theme already legibly renders,
+                            // tinted a tenth toward its focus area, edged in
+                            // the tile's own colour. The wash-only version
+                            // dissolved into Iris's lavender because it was
+                            // solved against the card background but sits on
+                            // the page's (design review: B with A's border).
                             color: _isDoneToday
-                                ? CategoryColors.wash(
-                                    _completedCategory,
-                                    themeProvider.theme,
-                                    isDark: isDark,
+                                ? Color.alphaBlend(
+                                    CategoryColors.onCard(
+                                      _completedCategory,
+                                      themeProvider.theme,
+                                    ).withOpacity(0.10),
+                                    colors.profileCard
+                                        .withOpacity(colors.profileCardOpacity),
                                   )
                                 : widget.isPinned
                                     ? colors.cardPinned.withOpacity(colors.cardPinnedOpacity)
@@ -4440,16 +4454,17 @@ class _HabitCardState extends State<_HabitCard>
                                     // them (design review, SS3/SS6).
                                     : colors.profileCard.withOpacity(colors.profileCardOpacity),
                             borderRadius: BorderRadius.circular(24),
-                            // No outline on completed cards: the wash and the
-                            // tile carry the state. The tile's *presence* is a
-                            // non-colour cue in its own right, so dropping the
-                            // outline doesn't make completion colour-dependent.
                             border: Border.all(
-                              color: _isDoneToday || isDark
-                                  ? colors.borderCard
-                                      .withOpacity(colors.borderCardOpacity)
-                                  : const Color(0xFFFFFFFF).withOpacity(0.6),
-                              width: _isDoneToday ? 0.5 : 1,
+                              color: _isDoneToday
+                                  ? CategoryColors.onCard(
+                                      _completedCategory,
+                                      themeProvider.theme,
+                                    ).withOpacity(0.35)
+                                  : isDark
+                                      ? colors.borderCard
+                                          .withOpacity(colors.borderCardOpacity)
+                                      : const Color(0xFFFFFFFF).withOpacity(0.6),
+                              width: 1,
                             ),
                             boxShadow: [
                               // Outer shadow for depth
