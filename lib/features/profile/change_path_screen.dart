@@ -39,6 +39,11 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
 
   late IntentionPathId _selected;
 
+  /// The path saved when the screen opened. Ordering pivots on this, not on
+  /// [_selected]: reshuffling the list under the user's finger as they tap
+  /// alternatives would move the thing they are about to tap again.
+  late IntentionPathId _openedWith;
+
   /// Selected curated pack, when the user chose one of the merged intentions
   /// instead of a path. Mutually exclusive with a path change.
   String? _selectedPackId;
@@ -93,6 +98,7 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
     super.initState();
     final currentKey = context.read<OnboardingState>().selectedIntentionPath;
     _selected = IntentionPathId.fromKey(currentKey);
+    _openedWith = _selected;
   }
 
   Future<void> _handleSave() async {
@@ -118,22 +124,133 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
     final path = IntentionPath.getById(_selected);
     final pathTitle = path.title(l10n);
 
+    // The app's own glass, not the system alert — the one native dialog in
+    // this flow looked borrowed (design review, SS1). Mirrors the profile
+    // page's modal: blurred barrier, modal gradient, one gradient CTA and a
+    // ghost decline.
+    final themeProvider = context.read<ThemeProvider>();
+    final colors = themeProvider.colors;
+    final isDark = themeProvider.theme.isDark;
     final shouldUpdateAreas = await showCupertinoDialog<bool>(
       context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: Text(l10n.intentionPathUpdateFocusAreas(pathTitle)),
-        actions: [
-          CupertinoDialogAction(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(l10n.intentionPathUpdateNo),
+      barrierDismissible: true,
+      builder: (ctx) => Container(
+        color: colors.barrierColor.withOpacity(colors.barrierOpacity),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: Center(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              constraints: const BoxConstraints(maxWidth: 384),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(32),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(28, 30, 28, 24),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: const Alignment(0.0, 2.41),
+                        end: const Alignment(0.0, -2.41),
+                        colors: [
+                          colors.modalBg1.withOpacity(0.96),
+                          colors.modalBg2.withOpacity(0.93),
+                          colors.modalBg3.withOpacity(0.95),
+                        ],
+                        stops: const [0.0, 0.5, 1.0],
+                      ),
+                      borderRadius: BorderRadius.circular(32),
+                      border: Border.all(
+                        color: isDark
+                            ? colors.borderCard
+                                .withOpacity(colors.borderCardOpacity)
+                            : const Color(0xFFFFFFFF).withOpacity(0.5),
+                        width: 1.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colors.modalShadow.withOpacity(0.2),
+                          blurRadius: 40,
+                          offset: const Offset(0, 16),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          l10n.intentionPathUpdateFocusAreas(pathTitle),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Sora',
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: colors.textPrimary,
+                            letterSpacing: -0.2,
+                            height: 1.35,
+                          ),
+                        ),
+                        const SizedBox(height: 26),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  colors.ctaPrimary.withOpacity(0.92),
+                                  colors.ctaSecondary.withOpacity(0.88),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: colors.ctaPrimary.withOpacity(0.4),
+                                width: 1,
+                              ),
+                            ),
+                            child: CupertinoButton(
+                              onPressed: () => Navigator.pop(ctx, true),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15),
+                              borderRadius: BorderRadius.circular(24),
+                              child: Text(
+                                l10n.intentionPathUpdateYes,
+                                style: TextStyle(
+                                  fontFamily: AppTextStyles.bodyFont(context),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFFFFFFFF),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: double.infinity,
+                          child: CupertinoButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            padding: const EdgeInsets.symmetric(vertical: 11),
+                            child: Text(
+                              l10n.intentionPathUpdateNo,
+                              style: TextStyle(
+                                fontFamily: AppTextStyles.bodyFont(context),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: colors.textTertiary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
-          CupertinoDialogAction(
-            isDestructiveAction: false,
-            isDefaultAction: true,
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(l10n.intentionPathUpdateYes),
-          ),
-        ],
+        ),
       ),
     );
 
@@ -203,15 +320,15 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          final path = IntentionPath.pickerOptions[index];
-                          final isSelected = _selected == path.id;
+                          final path = IntentionPath.getById(_openedWith);
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 14),
                             child: _PathCard(
                               path: path,
                               title: path.title(l10n),
                               subtitle: path.subtitle(l10n),
-                              selected: isSelected,
+                              selected: _selected == path.id &&
+                                  _selectedPackId == null,
                               isDark: isDark,
                               colors: colors,
                               onTap: () {
@@ -224,7 +341,7 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                             ),
                           );
                         },
-                        childCount: IntentionPath.pickerOptions.length,
+                        childCount: 1,
                       ),
                     ),
                   ),
@@ -252,11 +369,36 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
+                          final others = IntentionPath.pickerOptions
+                              .where((p) => p.id != _openedWith)
+                              .toList();
                           final packs = CuratedPacks.all
                               .where((p) =>
                                   !_packsPromotedToPaths.contains(p.id))
                               .toList();
-                          final pack = packs[index];
+                          if (index < others.length) {
+                            final path = others[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 14),
+                              child: _PathCard(
+                                path: path,
+                                title: path.title(l10n),
+                                subtitle: path.subtitle(l10n),
+                                selected: _selected == path.id &&
+                                    _selectedPackId == null,
+                                isDark: isDark,
+                                colors: colors,
+                                onTap: () {
+                                  HapticFeedback.selectionClick();
+                                  setState(() {
+                                    _selected = path.id;
+                                    _selectedPackId = null;
+                                  });
+                                },
+                              ),
+                            );
+                          }
+                          final pack = packs[index - others.length];
                           final lp = _localizedPack(l10n, pack);
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 14),
@@ -276,10 +418,12 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                             ),
                           );
                         },
-                        childCount: CuratedPacks.all
-                            .where((p) =>
-                                !_packsPromotedToPaths.contains(p.id))
-                            .length,
+                        childCount: IntentionPath.pickerOptions.length -
+                            1 +
+                            CuratedPacks.all
+                                .where((p) =>
+                                    !_packsPromotedToPaths.contains(p.id))
+                                .length,
                       ),
                     ),
                   ),

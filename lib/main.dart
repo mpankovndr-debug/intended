@@ -4550,13 +4550,33 @@ class _HabitCardState extends State<_HabitCard>
                               if (_isDoneToday) ...[
                                 const SizedBox(width: 12),
                                 ExcludeSemantics(
-                                  child: Container(
+                                  child: Builder(builder: (context) {
+                                    final tile = CategoryColors.onCard(
+                                      _completedCategory,
+                                      themeProvider.theme,
+                                    );
+                                    final hsl = HSLColor.fromColor(tile);
+                                    // Same body the grid's tiles carry — lit
+                                    // toward the top-left, shaded away — so
+                                    // the square on the card and the square
+                                    // in the month read as one object.
+                                    final lit = hsl
+                                        .withLightness((hsl.lightness + 0.07)
+                                            .clamp(0.0, 1.0))
+                                        .toColor();
+                                    final shade = hsl
+                                        .withLightness((hsl.lightness - 0.05)
+                                            .clamp(0.0, 1.0))
+                                        .toColor();
+                                    return Container(
                                     width: 26,
                                     height: 26,
                                     decoration: BoxDecoration(
-                                      color: CategoryColors.onCard(
-                                        _completedCategory,
-                                        themeProvider.theme,
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [lit, tile, shade],
+                                        stops: const [0.0, 0.55, 1.0],
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                       // Soft halo so the tile reads as lit
@@ -4572,7 +4592,8 @@ class _HabitCardState extends State<_HabitCard>
                                         ),
                                       ],
                                     ),
-                                  ),
+                                  );
+                                  }),
                                 ),
                               ],
                             ],
