@@ -7,7 +7,7 @@ Working brief from a full audit + redesign session (Aug 2026). Everything below 
 ## 0. Status — what's built, and what needs your eyes
 
 Branch: **`main`**, 31 commits ahead of `origin/main` and unpushed. `restore-point/v2-onboarding-paths` is the pre-v2 restore point, not the work — an earlier version of this section had that the wrong way round.
-`flutter analyze`: 0 errors, 0 warnings. `flutter test`: 67 passing.
+`flutter analyze`: 0 errors, 0 warnings. `flutter test`: 82 passing.
 
 ### Build order progress
 
@@ -25,11 +25,11 @@ Branch: **`main`**, 31 commits ahead of `origin/main` and unpushed. `restore-poi
 | 8 Paywall move | ✅ fires after the first completed action |
 | 9 Packs → intentions | ✅ store killed, inline swap hint, search dropped |
 | 10 Free rescue | ✅ gap detection + reduced home screen |
-| 11 Later — what-lifts-you, Apple Health, retroactive logging | not started, deferred by §6.5 |
+| 11 Later | ✅ what-lifts-you (dormant until ~8 weeks of mood taps; forming state until then) · ✅ retroactive logging (yesterday, via long-press) · Apple Health stays deferred per §6.5 |
 
 **Next up.** Steps 1–10 are built. What remains is §12's list, not §11's — and §12's first item is the one that matters: **week one (~day 5)**, still undesigned, still where people decide whether to keep the app. §11 is deferred on purpose (Apple Health is "not this year" per §6.5; what-actually-lifts-you needs ~8 weeks of mood data that does not exist yet; retroactive logging is a papercut worth shipping whenever).
 
-⚠️ **Nothing built after the letter has been seen running.** The simulator verified the letter and plan in their *first* form; everything since — the rewritten letter, the two-group plan, the season archive, the monthly share card, the moved paywall, the killed store, the rescue screen — is verified by tests and the analyzer only. §0's own warning applies: the tests never caught the design failures.
+Four design-review rounds were applied against live simulator screenshots (share story card on the theme background, one-card Insights, done-card treatment, nine paths with fixed starter actions, path adoption end-to-end). The letter's rewritten voice, the two-group plan, the moved paywall and the rescue screen have been verified by tests and the analyzer; the rest has had eyes on it.
 
 **What step 6 turned out to need.** The page now splits by tier, which it didn't before: paid gets drift, season, letter and plan; free gets season and the teaser; day one belongs to neither (§5.4). The drift card had shipped ungated.
 
