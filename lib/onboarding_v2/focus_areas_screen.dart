@@ -91,22 +91,6 @@ class FocusAreasScreen extends StatelessWidget {
     }
   }
 
-  static String _resolvePathTitle(AppLocalizations l10n, IntentionPath path) {
-    switch (path.titleKey) {
-      case 'pathGentleMorningsTitle':
-        return l10n.pathGentleMorningsTitle;
-      case 'pathAnchorsForHardDaysTitle':
-        return l10n.pathAnchorsForHardDaysTitle;
-      case 'pathQuietFocusTitle':
-        return l10n.pathQuietFocusTitle;
-      case 'pathWindingDownTitle':
-        return l10n.pathWindingDownTitle;
-      case 'pathYourOwnWayTitle':
-        return l10n.pathYourOwnWayTitle;
-      default:
-        return path.titleKey;
-    }
-  }
 
   void _handleAreaTap(BuildContext context, String area) {
     HapticFeedback.selectionClick();
@@ -343,7 +327,7 @@ class FocusAreasScreen extends StatelessWidget {
                                     ? l10n.focusAreasPromptWithName(userName)
                                     : l10n.focusAreasPrompt)
                                 : l10n.focusAreasStartingPointsTitle(
-                                    _resolvePathTitle(l10n, selectedPath!)),
+                                    selectedPath!.title(l10n)),
                             style: TextStyle(
                               fontFamily: 'Sora',
                               fontSize: 26,

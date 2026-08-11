@@ -437,7 +437,7 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
     String subtitle;
     if (!isOwnWay) {
       final path = IntentionPath.getById(IntentionPathId.fromKey(pathKey));
-      final title = _resolvePathTitle(l10n, path);
+      final title = path.title(l10n);
       subtitle = l10n.habitRevealSubtitlePath(title);
     } else {
       subtitle = l10n.habitRevealSubtitleOwnWay;
@@ -456,22 +456,6 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
     );
   }
 
-  String _resolvePathTitle(AppLocalizations l10n, IntentionPath path) {
-    switch (path.titleKey) {
-      case 'pathGentleMorningsTitle':
-        return l10n.pathGentleMorningsTitle;
-      case 'pathAnchorsForHardDaysTitle':
-        return l10n.pathAnchorsForHardDaysTitle;
-      case 'pathQuietFocusTitle':
-        return l10n.pathQuietFocusTitle;
-      case 'pathWindingDownTitle':
-        return l10n.pathWindingDownTitle;
-      case 'pathYourOwnWayTitle':
-        return l10n.pathYourOwnWayTitle;
-      default:
-        return path.titleKey;
-    }
-  }
 
   Widget _buildAnimatedHabitCard(String habit, int index, OnboardingState state, AppColorScheme colors) {
     if (_controllers.isEmpty || index >= _controllers.length) {
