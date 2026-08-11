@@ -12,39 +12,6 @@ import '../../theme/app_colors.dart';
 import '../../theme/theme_provider.dart';
 import '../../utils/text_styles.dart';
 
-String _resolvePathTitle(AppLocalizations l10n, String titleKey) {
-  switch (titleKey) {
-    case 'pathGentleMorningsTitle':
-      return l10n.pathGentleMorningsTitle;
-    case 'pathAnchorsForHardDaysTitle':
-      return l10n.pathAnchorsForHardDaysTitle;
-    case 'pathQuietFocusTitle':
-      return l10n.pathQuietFocusTitle;
-    case 'pathWindingDownTitle':
-      return l10n.pathWindingDownTitle;
-    case 'pathYourOwnWayTitle':
-      return l10n.pathYourOwnWayTitle;
-    default:
-      return titleKey;
-  }
-}
-
-String _resolvePathSubtitle(AppLocalizations l10n, String subtitleKey) {
-  switch (subtitleKey) {
-    case 'pathGentleMorningsSubtitle':
-      return l10n.pathGentleMorningsSubtitle;
-    case 'pathAnchorsForHardDaysSubtitle':
-      return l10n.pathAnchorsForHardDaysSubtitle;
-    case 'pathQuietFocusSubtitle':
-      return l10n.pathQuietFocusSubtitle;
-    case 'pathWindingDownSubtitle':
-      return l10n.pathWindingDownSubtitle;
-    case 'pathYourOwnWaySubtitle':
-      return l10n.pathYourOwnWaySubtitle;
-    default:
-      return subtitleKey;
-  }
-}
 
 /// Packs that duplicate a path stay out of MORE INTENTIONS: Gentle Mornings
 /// and Winding Down were promoted into paths, and Stay Connected became the
@@ -149,7 +116,7 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
 
     final l10n = AppLocalizations.of(context);
     final path = IntentionPath.getById(_selected);
-    final pathTitle = _resolvePathTitle(l10n, path.titleKey);
+    final pathTitle = path.title(l10n);
 
     final shouldUpdateAreas = await showCupertinoDialog<bool>(
       context: context,
@@ -242,8 +209,8 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                             padding: const EdgeInsets.only(bottom: 14),
                             child: _PathCard(
                               path: path,
-                              title: _resolvePathTitle(l10n, path.titleKey),
-                              subtitle: _resolvePathSubtitle(l10n, path.subtitleKey),
+                              title: path.title(l10n),
+                              subtitle: path.subtitle(l10n),
                               selected: isSelected,
                               isDark: isDark,
                               colors: colors,

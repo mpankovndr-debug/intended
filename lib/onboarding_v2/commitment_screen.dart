@@ -108,26 +108,10 @@ class _CommitmentScreenState extends State<CommitmentScreen>
     }
 
     final path = IntentionPath.getById(IntentionPathId.fromKey(pathKey));
-    final pathTitle = _localizedPathTitle(l10n, path);
+    final pathTitle = path.title(l10n);
     return l10n.commitmentEchoFull(pathTitle, areaText);
   }
 
-  static String _localizedPathTitle(AppLocalizations l10n, IntentionPath path) {
-    switch (path.titleKey) {
-      case 'pathGentleMorningsTitle':
-        return l10n.pathGentleMorningsTitle;
-      case 'pathAnchorsForHardDaysTitle':
-        return l10n.pathAnchorsForHardDaysTitle;
-      case 'pathQuietFocusTitle':
-        return l10n.pathQuietFocusTitle;
-      case 'pathWindingDownTitle':
-        return l10n.pathWindingDownTitle;
-      case 'pathYourOwnWayTitle':
-        return l10n.pathYourOwnWayTitle;
-      default:
-        return path.titleKey;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

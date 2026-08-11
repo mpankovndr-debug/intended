@@ -213,6 +213,42 @@ class IntentionPath {
     return _all.firstWhere((p) => p.id == id);
   }
 
+  /// Display title, resolved here so every screen shares one mapping.
+  ///
+  /// Three screens used to carry copies of a titleKey→string switch; the five
+  /// newest paths missed all three and rendered their raw keys (SS: "Your
+  /// path" showing pathSofterNightsTitle). An exhaustive switch on the id
+  /// makes the compiler catch the next forgotten path.
+  String title(AppLocalizations l10n) => switch (id) {
+        IntentionPathId.gentleMornings => l10n.pathGentleMorningsTitle,
+        IntentionPathId.anchorsForHardDays =>
+          l10n.pathAnchorsForHardDaysTitle,
+        IntentionPathId.quietFocus => l10n.pathQuietFocusTitle,
+        IntentionPathId.windingDown => l10n.pathWindingDownTitle,
+        IntentionPathId.softerNights => l10n.pathSofterNightsTitle,
+        IntentionPathId.lookingUp => l10n.pathLookingUpTitle,
+        IntentionPathId.closerToPeople => l10n.pathCloserToPeopleTitle,
+        IntentionPathId.movingALittle => l10n.pathMovingALittleTitle,
+        IntentionPathId.throughAHardSeason =>
+          l10n.pathThroughAHardSeasonTitle,
+        IntentionPathId.yourOwnWay => l10n.pathYourOwnWayTitle,
+      };
+
+  String subtitle(AppLocalizations l10n) => switch (id) {
+        IntentionPathId.gentleMornings => l10n.pathGentleMorningsSubtitle,
+        IntentionPathId.anchorsForHardDays =>
+          l10n.pathAnchorsForHardDaysSubtitle,
+        IntentionPathId.quietFocus => l10n.pathQuietFocusSubtitle,
+        IntentionPathId.windingDown => l10n.pathWindingDownSubtitle,
+        IntentionPathId.softerNights => l10n.pathSofterNightsSubtitle,
+        IntentionPathId.lookingUp => l10n.pathLookingUpSubtitle,
+        IntentionPathId.closerToPeople => l10n.pathCloserToPeopleSubtitle,
+        IntentionPathId.movingALittle => l10n.pathMovingALittleSubtitle,
+        IntentionPathId.throughAHardSeason =>
+          l10n.pathThroughAHardSeasonSubtitle,
+        IntentionPathId.yourOwnWay => l10n.pathYourOwnWaySubtitle,
+      };
+
   /// The user's intention, phrased as something they're doing — this is what
   /// heads the Today screen (§4.1).
   ///

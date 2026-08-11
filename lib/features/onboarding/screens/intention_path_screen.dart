@@ -22,40 +22,6 @@ class IntentionPathScreen extends StatefulWidget {
 class _IntentionPathScreenState extends State<IntentionPathScreen> {
   IntentionPathId? _selected;
 
-  String _resolveTitle(AppLocalizations l10n, String titleKey) {
-    switch (titleKey) {
-      case 'pathGentleMorningsTitle':
-        return l10n.pathGentleMorningsTitle;
-      case 'pathAnchorsForHardDaysTitle':
-        return l10n.pathAnchorsForHardDaysTitle;
-      case 'pathQuietFocusTitle':
-        return l10n.pathQuietFocusTitle;
-      case 'pathWindingDownTitle':
-        return l10n.pathWindingDownTitle;
-      case 'pathYourOwnWayTitle':
-        return l10n.pathYourOwnWayTitle;
-      default:
-        return titleKey;
-    }
-  }
-
-  String _resolveSubtitle(AppLocalizations l10n, String subtitleKey) {
-    switch (subtitleKey) {
-      case 'pathGentleMorningsSubtitle':
-        return l10n.pathGentleMorningsSubtitle;
-      case 'pathAnchorsForHardDaysSubtitle':
-        return l10n.pathAnchorsForHardDaysSubtitle;
-      case 'pathQuietFocusSubtitle':
-        return l10n.pathQuietFocusSubtitle;
-      case 'pathWindingDownSubtitle':
-        return l10n.pathWindingDownSubtitle;
-      case 'pathYourOwnWaySubtitle':
-        return l10n.pathYourOwnWaySubtitle;
-      default:
-        return subtitleKey;
-    }
-  }
-
   void _handleContinue(BuildContext context, {IntentionPathId? override}) {
     HapticFeedback.mediumImpact();
     final pathId = override ?? _selected ?? IntentionPathId.yourOwnWay;
@@ -175,9 +141,9 @@ class _IntentionPathScreenState extends State<IntentionPathScreen> {
                               padding: const EdgeInsets.only(bottom: 14),
                               child: _IntentionPathCard(
                                 path: path,
-                                title: _resolveTitle(l10n, path.titleKey),
+                                title: path.title(l10n),
                                 subtitle:
-                                    _resolveSubtitle(l10n, path.subtitleKey),
+                                    path.subtitle(l10n),
                                 selected: isSelected,
                                 onTap: () {
                                   HapticFeedback.selectionClick();
