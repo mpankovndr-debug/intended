@@ -402,7 +402,7 @@ The original list sequenced only part of §4–§10. This is the full order, wit
 | 6 | Paid Month page — drift warning, letter, monthly plan; absorb the `weeklyReflection` coach mark ✅ *(the coach mark itself is still to remove)* | §5.3, §6.1–6.3 |
 | 7 | Share cards — weekly workhorse + monthly season card, both with the "one square =" caption | §5.5 |
 | 8 | Paywall moved to after the first completed action + copy rewrite | §8 |
-| 9 | Packs → adoptable intentions; kill "Browse all habits"; long-press becomes swap + inline hint | §7, §5.6 |
+| 9 | Packs → adoptable intentions; kill "Browse all habits"; long-press becomes swap + inline hint. **Nine paths now**: the original four plus Softer Nights, Looking Up, Closer to People, Moving a Little, Through a Hard Season — each with fixed starter actions (a random Health draw could hand a sleep-seeker a glass of water). New paths borrow an elder path's notification/warmth copy via `IntentionPathVoice` until they earn their own. Path titles resolve on the model (`IntentionPath.title`) — three screens each carried a copy of that switch and all three missed the new paths. | §7, §5.6 |
 | 10 | Free rescue — gap detection, gentle nudge after silence, reduced home screen | §4.6 |
 | 11 | Later — what-actually-lifts-you, Apple Health, retroactive logging | §6.4, §6.5 |
 
