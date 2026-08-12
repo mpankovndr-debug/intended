@@ -8,6 +8,7 @@ import '../widgets/app_toast.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
+import '../models/intention_path.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -96,20 +97,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  String _pathTitle(AppLocalizations l10n, String key) {
-    switch (key) {
-      case 'gentle_mornings':
-        return l10n.pathGentleMorningsTitle;
-      case 'anchors_for_hard_days':
-        return l10n.pathAnchorsForHardDaysTitle;
-      case 'quiet_focus':
-        return l10n.pathQuietFocusTitle;
-      case 'winding_down':
-        return l10n.pathWindingDownTitle;
-      default:
-        return l10n.pathYourOwnWayTitle;
-    }
-  }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     setState(() => _isSigningIn = true);
@@ -1309,8 +1296,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  _pathTitle(l10n,
-                                      onboardingState.selectedIntentionPath),
+                                  // Through the model, not a local switch —
+                                  // the seventh copy of this mapping showed a
+                                  // Softer Nights user "Your Own Way" here.
+                                  IntentionPath.getById(
+                                    IntentionPathId.fromKey(onboardingState
+                                        .selectedIntentionPath),
+                                  ).title(l10n),
                                   style: TextStyle(
                                     fontFamily: AppTextStyles.bodyFont(context),
                                     fontSize: 17,
