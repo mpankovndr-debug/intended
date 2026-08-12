@@ -41,6 +41,10 @@ class InsightsScreen extends StatefulWidget {
 
   final bool isActive;
 
+  /// A month the archive asked this page to open on. Consumed on the next
+  /// activation — the same hand-off pattern the notification tap uses.
+  static final ValueNotifier<DateTime?> jumpTo = ValueNotifier(null);
+
   @override
   State<InsightsScreen> createState() => _InsightsScreenState();
 }
@@ -106,7 +110,15 @@ class _InsightsScreenState extends State<InsightsScreen> {
   void didUpdateWidget(covariant InsightsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Re-read when the tab becomes visible; a moment may have landed since.
-    if (widget.isActive && !oldWidget.isActive) _load();
+    if (widget.isActive && !oldWidget.isActive) {
+      final jump = InsightsScreen.jumpTo.value;
+      if (jump != null) {
+        InsightsScreen.jumpTo.value = null;
+        _anchor = DateTime(jump.year, jump.month, 1);
+        _gridFilter = null;
+      }
+      _load();
+    }
   }
 
   Future<void> _load() async {

@@ -7315,6 +7315,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing you made. Every moment, note and season stays yours, the grid keeps growing, and the gentle come-back nudge stays free forever. What pauses is the reading: drift, the letter, the plan, and what lifts you.'**
   String get faqStopPayingAnswer;
+
+  /// No description provided for @yearInSeasonsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your months'**
+  String get yearInSeasonsTitle;
 }
 
 class _AppLocalizationsDelegate

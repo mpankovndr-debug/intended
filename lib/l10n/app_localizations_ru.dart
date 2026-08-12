@@ -4378,4 +4378,7 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get faqStopPayingAnswer =>
       'Ничего из сделанного. Все моменты, заметки и сезоны остаются твоими, сетка продолжает расти, а мягкое «возвращайся» бесплатно навсегда. На паузу встаёт только чтение: дрейф, письмо, план и «что тебя поддерживает».';
+
+  @override
+  String get yearInSeasonsTitle => 'Твои месяцы';
 }

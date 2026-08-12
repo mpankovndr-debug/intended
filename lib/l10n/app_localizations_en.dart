@@ -4330,4 +4330,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get faqStopPayingAnswer =>
       'Nothing you made. Every moment, note and season stays yours, the grid keeps growing, and the gentle come-back nudge stays free forever. What pauses is the reading: drift, the letter, the plan, and what lifts you.';
+
+  @override
+  String get yearInSeasonsTitle => 'Your months';
 }

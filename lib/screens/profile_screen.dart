@@ -33,7 +33,7 @@ import '../services/revenue_cat_service.dart';
 import '../services/moments_service.dart';
 import '../services/notification_scheduler.dart';
 import '../services/notification_preferences_service.dart';
-import 'moments_collection_screen.dart';
+import 'year_in_seasons_screen.dart';
 import '../widgets/app_icon_picker.dart';
 import '../widgets/boost_offer_sheet.dart';
 import '../widgets/focus_area_card.dart';
@@ -1341,7 +1341,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           // Section: Your Moments
                           Text(
-                            l10n.profileYourMoments,
+                            l10n.yearInSeasonsTitle,
                             style: TextStyle(
                               fontFamily: AppTextStyles.bodyFont(context),
                               fontSize: 15,
@@ -1379,7 +1379,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         context,
                                         CupertinoPageRoute(
                                           builder: (_) =>
-                                              const MomentsCollectionScreen(),
+                                              const YearInSeasonsScreen(),
                                         ),
                                       );
                                       if (mounted) setState(() {});

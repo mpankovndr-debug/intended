@@ -9,7 +9,7 @@ import '../l10n/app_localizations.dart';
 import '../services/coach_mark_service.dart';
 import '../models/intention_path.dart';
 import '../models/reflection_data.dart';
-import '../screens/moments_collection_screen.dart';
+import '../screens/year_in_seasons_screen.dart';
 import '../screens/paywall_screen.dart';
 import '../screens/share_card_reveal_screen.dart';
 import 'tiered_share_card.dart';
@@ -334,7 +334,7 @@ class _WeeklyReflectionCardState extends State<WeeklyReflectionCard>
             onTap: () {
               Navigator.of(context).push(
                 CupertinoPageRoute(
-                  builder: (_) => const MomentsCollectionScreen(),
+                  builder: (_) => const YearInSeasonsScreen(),
                 ),
               );
             },
