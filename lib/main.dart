@@ -645,23 +645,29 @@ Future<void> refreshHomeWidget(BuildContext context) async {
     final locale = Localizations.localeOf(context);
     final l10n = AppLocalizations.of(context);
 
-    // Compute today's greeting (same logic as HabitsScreen)
-    final messages = List.generate(23, (i) => [
-      l10n.dailyMessage1, l10n.dailyMessage2, l10n.dailyMessage3,
-      l10n.dailyMessage4, l10n.dailyMessage5, l10n.dailyMessage6,
-      l10n.dailyMessage7, l10n.dailyMessage8, l10n.dailyMessage9,
-      l10n.dailyMessage10, l10n.dailyMessage11, l10n.dailyMessage12,
-      l10n.dailyMessage13, l10n.dailyMessage14, l10n.dailyMessage15,
-      l10n.dailyMessage16, l10n.dailyMessage17, l10n.dailyMessage18,
-      l10n.dailyMessage19, l10n.dailyMessage20, l10n.dailyMessage21,
-      l10n.dailyMessage22, l10n.dailyMessage23,
-    ][i]);
-    final now = DateTime.now();
-    final dayOfYear = now.difference(DateTime(now.year, 1, 1)).inDays;
-    final greeting = messages[dayOfYear % messages.length];
+    // The intention, not a rotating affirmation (§4.1). The Today header
+    // made this exact swap and proved it; the widget was the last surface
+    // still speaking in stock phrases. Same payload key, so the extension
+    // needs no change at all.
+    final greeting = IntentionPath.phraseFor(
+      IntentionPathId.fromKey(onboarding.selectedIntentionPath),
+      l10n,
+    );
+
+    // The same four actions Today shows, in the same order — pinned, then
+    // the user's own, then the catalog. The widget previously got the raw
+    // uncapped list, which put customs off the end of a 4-slot widget.
+    final pinned = onboarding.pinnedHabit;
+    final visible = [
+      if (pinned != null && onboarding.userHabits.contains(pinned)) pinned,
+      ...onboarding.userHabits
+          .where((h) => h != pinned && onboarding.isCustomHabit(h)),
+      ...onboarding.userHabits
+          .where((h) => h != pinned && !onboarding.isCustomHabit(h)),
+    ].take(OnboardingState.maxActiveHabits).toList();
 
     await WidgetService.updateWidget(
-      userHabits: onboarding.userHabits,
+      userHabits: visible,
       customHabitFocusAreas: onboarding.customHabitFocusAreas,
       isPremium: userState.hasSubscription,
       theme: themeProvider.theme,
