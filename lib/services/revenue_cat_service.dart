@@ -10,7 +10,8 @@ class RevenueCatService extends ChangeNotifier {
   static const _appleApiKey = 'appl_RPNUxXhvXrpnWAiTvMswDDrigtJ';
   static const entitlementPlus = 'Intended+';
   static const entitlementBoost = 'Intended Boost';
-  static const _boostProductId = 'com.intendedapp.boost';
+  // The Boost SKU (com.intendedapp.boost) is retired from sale; the
+  // entitlement below is still honoured for everyone who bought it.
 
   final UserState _userState;
 
@@ -35,8 +36,6 @@ class RevenueCatService extends ChangeNotifier {
       _findProduct('com.intendedapp.plus.yearly')?.priceString;
   String? get lifetimePriceString =>
       _findProduct('com.intendedapp.plus.lifetime')?.priceString;
-  String? get boostPriceString =>
-      _findProduct(_boostProductId)?.priceString;
 
   double? get _monthlyPrice =>
       _findProduct('com.intendedapp.plus.monthly')?.price;
@@ -192,25 +191,6 @@ class RevenueCatService extends ChangeNotifier {
 
   /// Purchase the Intended Boost (one-time, non-consumable).
   /// Returns true if the boost entitlement is active after purchase.
-  Future<bool> purchaseBoost() async {
-    final package = getPackageByProductId(_boostProductId);
-    if (package == null) {
-      debugPrint('RevenueCat: Boost package not found for $_boostProductId');
-      return false;
-    }
-
-    try {
-      final result = await Purchases.purchasePackage(package);
-      _updatePremiumStatus(result.customerInfo);
-      return _hasBoost;
-    } on PurchasesErrorCode catch (e) {
-      if (e == PurchasesErrorCode.purchaseCancelledError) {
-        return false;
-      }
-      debugPrint('RevenueCat: Boost purchase error: $e');
-      rethrow;
-    }
-  }
 
   /// Purchase by plan name (monthly, yearly, lifetime)
   /// Maps plan names to RevenueCat product IDs.

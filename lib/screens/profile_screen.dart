@@ -572,7 +572,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context: this.context,
                                 title: l10n.boostOfferThemeTitle,
                                 description: l10n.boostOfferThemeDesc,
-                                showBoostOption: true,
+                                showBoostOption: false,
                                 source: 'theme_picker',
                               ).then((result) {
                                 if (!mounted) return;

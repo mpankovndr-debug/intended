@@ -32,7 +32,11 @@ Future<String?> showBoostOfferSheet({
   required BuildContext context,
   required String title,
   required String description,
-  bool showBoostOption = true,
+  // Boost is retired from sale (v2 pricing, §8): the mini-tier sold removed
+  // restrictions — the exact thing §1 says premium must not be — and its
+  // cheap yes cannibalised the trial. Existing owners keep their entitlement;
+  // this sheet now only ever opens the door to the real paywall.
+  bool showBoostOption = false,
   String source = 'unknown',
 }) {
   AnalyticsService.logScreenView('boost_offer_sheet');
@@ -43,7 +47,7 @@ Future<String?> showBoostOfferSheet({
     builder: (_) => _BoostOfferSheet(
       title: title,
       description: description,
-      showBoostOption: showBoostOption,
+      showBoostOption: false,
       source: source,
     ),
   );
@@ -69,50 +73,8 @@ class _BoostOfferSheet extends StatefulWidget {
 class _BoostOfferSheetState extends State<_BoostOfferSheet> {
   bool _isLoading = false;
 
-  Future<void> _purchaseBoost() async {
-    setState(() => _isLoading = true);
-    AnalyticsService.logPurchaseStarted('boost');
-    try {
-      final success = await context.read<RevenueCatService>().purchaseBoost();
-      if (mounted && success) {
-        AnalyticsService.logPurchaseCompleted('boost');
-        Navigator.pop(context);
-      } else {
-        AnalyticsService.logPurchaseCancelled();
-      }
-    } catch (_) {
-      AnalyticsService.logPurchaseFailed();
-      if (mounted) {
-        _showErrorDialog();
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
 
-  String _boostTitle(AppLocalizations l10n) {
-    final price = context.read<RevenueCatService>().boostPriceString;
-    return price != null
-        ? l10n.boostCardTitleDynamic(price)
-        : l10n.boostCardTitle;
-  }
 
-  void _showErrorDialog() {
-    final l10n = AppLocalizations.of(context);
-    showCupertinoDialog(
-      context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: Text(l10n.swapErrorTitle),
-        content: Text(l10n.boostPurchaseError),
-        actions: [
-          CupertinoDialogAction(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(l10n.commonOk),
-          ),
-        ],
-      ),
-    );
-  }
 
   void _openPaywall() {
     Navigator.pop(context, 'paywall');
@@ -226,14 +188,6 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
 
                 const SizedBox(height: 28),
 
-                // Boost card (if applicable)
-                if (widget.showBoostOption) ...[
-                  _buildBoostCard(colors, l10n, isDark: isDark),
-                  const SizedBox(height: 20),
-                  _buildOrDivider(colors, l10n),
-                  const SizedBox(height: 20),
-                ],
-
                 // Go unlimited button
                 _buildUnlimitedButton(colors, l10n),
 
@@ -243,180 +197,6 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildBenefitRow(
-    AppColorScheme colors,
-    String benefit,
-    String? detail,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        children: [
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFFFFF).withOpacity(0.2),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: const Center(
-              child: Text(
-                '\u2713',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFFFFFFFF),
-                  height: 1,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              benefit,
-              style: const TextStyle(
-                fontFamily: 'Sora',
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFFFFFFFF),
-                height: 1.3,
-              ),
-            ),
-          ),
-          if (detail != null) ...[
-            const SizedBox(width: 6),
-            Text(
-              detail,
-              style: TextStyle(
-                fontFamily: 'Sora',
-                fontSize: 13,
-                fontWeight: FontWeight.w400,
-                color: const Color(0xFFFFFFFF).withOpacity(0.55),
-                height: 1.3,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBoostCard(AppColorScheme colors, AppLocalizations l10n, {required bool isDark}) {
-    return GestureDetector(
-      onTap: _isLoading ? null : _purchaseBoost,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colors.ctaPrimary.withOpacity(0.90),
-                  colors.ctaSecondary.withOpacity(0.84),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: colors.ctaPrimary.withOpacity(0.35),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: colors.textPrimary.withOpacity(0.2),
-                  blurRadius: 20,
-                  offset: const Offset(0, 6),
-                ),
-                if (!isDark)
-                  BoxShadow(
-                    color: const Color(0xFFFFFFFF).withOpacity(0.15),
-                    blurRadius: 0,
-                    offset: const Offset(0, 1),
-                    spreadRadius: 0,
-                    blurStyle: BlurStyle.inner,
-                  ),
-              ],
-            ),
-            child: _isLoading
-                ? const Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24),
-                      child:
-                          CupertinoActivityIndicator(color: Color(0xFFFFFFFF)),
-                    ),
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _boostTitle(l10n),
-                        style: TextStyle(
-                          fontFamily: AppTextStyles.bodyFont(context),
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFFFFFFFF),
-                          letterSpacing: -0.2,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        l10n.boostCardSubtitle,
-                        style: TextStyle(
-                          fontFamily: 'Sora',
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xFFFFFFFF).withOpacity(0.70),
-                          height: 1.35,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      // Benefits list
-                      _buildBenefitRow(
-                          colors, l10n.boostBenefit1, null),
-                    ],
-                  ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOrDivider(AppColorScheme colors, AppLocalizations l10n) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            height: 0.5,
-            color: colors.divider.withOpacity(colors.dividerOpacity),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Text(
-            l10n.boostOrDivider,
-            style: TextStyle(
-              fontFamily: 'Sora',
-              fontSize: 13,
-              fontWeight: FontWeight.w400,
-              color: colors.textTertiary,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            height: 0.5,
-            color: colors.divider.withOpacity(colors.dividerOpacity),
-          ),
-        ),
-      ],
     );
   }
 

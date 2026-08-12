@@ -146,8 +146,6 @@ List<_FaqCategory> _buildCategories() => [
           _FaqItem(
               question: (l) => l.faqPricing, answer: (l) => l.faqPricingAnswer),
           _FaqItem(
-              question: (l) => l.faqBoost, answer: (l) => l.faqBoostAnswer),
-          _FaqItem(
               question: (l) => l.faqFreeVersion,
               answer: (l) => l.faqFreeVersionAnswer),
           _FaqItem(
