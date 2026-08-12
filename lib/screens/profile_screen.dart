@@ -1358,7 +1358,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               final label = count == 0
                                   ? l10n.profileMomentsNone
                                   : l10n.profileMomentsCount(count);
-                              return Row(
+                              // The whole row is the door, not just the
+                              // chevron — a 20pt icon was the only tap target
+                              // and every miss read as a dead row.
+                              return GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () async {
+                                  await Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (_) =>
+                                          const YearInSeasonsScreen(),
+                                    ),
+                                  );
+                                  if (mounted) setState(() {});
+                                },
+                                child: Row(
                                 children: [
                                   Expanded(
                                     child: Text(
@@ -1372,25 +1387,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                                   ),
-                                  CupertinoButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () async {
-                                      await Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (_) =>
-                                              const YearInSeasonsScreen(),
-                                        ),
-                                      );
-                                      if (mounted) setState(() {});
-                                    },
-                                    child: Icon(
-                                      CupertinoIcons.chevron_right,
-                                      size: 20,
-                                      color: colors.ctaPrimary,
-                                    ),
+                                  Icon(
+                                    CupertinoIcons.chevron_right,
+                                    size: 20,
+                                    color: colors.ctaPrimary,
                                   ),
                                 ],
+                                ),
                               );
                             },
                           ),
