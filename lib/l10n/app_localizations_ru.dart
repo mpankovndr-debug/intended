@@ -4319,4 +4319,28 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get habitMealWithoutPhone => 'Один приём пищи без телефона';
+
+  @override
+  String insightsFilterLine(String area, int count, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count момента',
+      many: '$count моментов',
+      few: '$count момента',
+      one: '$count момент',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days дня',
+      many: '$days дней',
+      few: '$days дня',
+      one: '$days день',
+    );
+    return '$area — $_temp0 за $_temp1.';
+  }
+
+  @override
+  String get momentSheetYesterday => 'вчера';
 }

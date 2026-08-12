@@ -2059,5 +2059,20 @@
   "intentionThroughAHardSeason": "Gentle with myself through this",
   "habitScreensAwayBed": "Screens away 20 minutes before bed",
   "habitDimLights": "Dim the lights an hour before sleep",
-  "habitMealWithoutPhone": "One meal without your phone"
+  "habitMealWithoutPhone": "One meal without your phone",
+  "insightsFilterLine": "{area} — {count, plural, =1{one moment} other{{count} moments}} across {days, plural, =1{one day} other{{days} days}}.",
+  "momentSheetYesterday": "yesterday",
+  "@insightsFilterLine": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -4275,4 +4275,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get habitMealWithoutPhone => 'One meal without your phone';
+
+  @override
+  String insightsFilterLine(String area, int count, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count moments',
+      one: 'one moment',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: 'one day',
+    );
+    return '$area — $_temp0 across $_temp1.';
+  }
+
+  @override
+  String get momentSheetYesterday => 'yesterday';
 }

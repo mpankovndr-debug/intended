@@ -1716,5 +1716,7 @@
   "intentionThroughAHardSeason": "Бережнее к себе в это время",
   "habitScreensAwayBed": "Убрать экраны за 20 минут до сна",
   "habitDimLights": "Приглушить свет за час до сна",
-  "habitMealWithoutPhone": "Один приём пищи без телефона"
+  "habitMealWithoutPhone": "Один приём пищи без телефона",
+  "insightsFilterLine": "{area} — {count, plural, one{{count} момент} few{{count} момента} many{{count} моментов} other{{count} момента}} за {days, plural, one{{days} день} few{{days} дня} many{{days} дней} other{{days} дня}}.",
+  "momentSheetYesterday": "вчера"
 }

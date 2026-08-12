@@ -65,6 +65,9 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Set<String> _declinedNudges = const {};
   AcceptedNudge? _acceptedThisMonth;
   PlanProof? _proof;
+  /// Legend filter: when set, the grid recedes to this focus area.
+  String? _gridFilter;
+
   bool _showAllNudges = false;
   bool _accepting = false;
   bool _loaded = false;
@@ -345,7 +348,12 @@ class _InsightsScreenState extends State<InsightsScreen> {
           if (empty)
             _emptyPrimer(colors)
           else
-            MomentGrid(moments: _moments, theme: themeProvider.theme),
+            MomentGrid(
+              moments: _moments,
+              theme: themeProvider.theme,
+              highlightCategory: _gridFilter,
+              onTileTap: (i) => _showMomentSheet(_moments[i]),
+            ),
           const SizedBox(height: 12),
           Text(
             l10n.insightsGridCaption,
@@ -353,7 +361,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           ),
           if (!empty) ...[
             const SizedBox(height: 14),
-            _legend(colors, themeProvider),
+            _legend(l10n, colors, themeProvider),
             if (_returnCount > 0) ...[
               const SizedBox(height: 12),
               Row(
@@ -432,7 +440,14 @@ class _InsightsScreenState extends State<InsightsScreen> {
   }
 
   /// Counts per focus area, largest first — the legend under the grid.
-  Widget _legend(AppColorScheme colors, ThemeProvider themeProvider) {
+  /// Counts per focus area — and since the design review, the grid's
+  /// controls. Tapping a chip filters the grid to that area (§4.2-safe:
+  /// everything else dims, nothing disappears); tapping again releases it.
+  Widget _legend(
+    AppLocalizations l10n,
+    AppColorScheme colors,
+    ThemeProvider themeProvider,
+  ) {
     final counts = <String, int>{};
     for (final m in _moments) {
       final key = m.category;
@@ -442,32 +457,170 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final entries = counts.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
-    return Wrap(
-      spacing: 16,
-      runSpacing: 8,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final e in entries)
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 10,
-                height: 10,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: CategoryColors.of(e.key, themeProvider.theme),
+        Wrap(
+          spacing: 16,
+          runSpacing: 8,
+          children: [
+            for (final e in entries)
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => setState(() =>
+                    _gridFilter = _gridFilter == e.key ? null : e.key),
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 180),
+                  opacity: _gridFilter == null || _gridFilter == e.key
+                      ? 1.0
+                      : 0.45,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: CategoryColors.of(e.key, themeProvider.theme),
+                        ),
+                      ),
+                      const SizedBox(width: 7),
+                      Text(
+                        '${localizeCategoryName(e.key, l10n)} ${e.value}',
+                        style: _cardMeta(colors).copyWith(
+                          fontWeight: _gridFilter == e.key
+                              ? FontWeight.w600
+                              : FontWeight.w400,
+                          color: _gridFilter == e.key
+                              ? colors.ctaPrimary
+                              : null,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(width: 7),
-              Text(
-                '${e.key} ${e.value}',
-                style: _cardMeta(colors),
-              ),
-            ],
+          ],
+        ),
+        // The observation the filter earns: count and spread, told as fact.
+        // "Across 7 days" and never "7 of 12 days" — a denominator would
+        // rebuild the target the grid exists to remove.
+        if (_gridFilter != null && counts.containsKey(_gridFilter)) ...[
+          const SizedBox(height: 10),
+          Text(
+            l10n.insightsFilterLine(
+              localizeCategoryName(_gridFilter!, l10n),
+              counts[_gridFilter]!,
+              _daysOf(_gridFilter!),
+            ),
+            style: _cardMeta(colors).copyWith(color: colors.textPrimary),
           ),
+        ],
       ],
     );
   }
+
+  /// Distinct wall-clock days holding a moment of [category].
+  int _daysOf(String category) {
+    final days = <DateTime>{};
+    for (final m in _moments) {
+      if (m.category != category) continue;
+      final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
+      days.add(DateTime.utc(local.year, local.month, local.day));
+    }
+    return days.length;
+  }
+
+  /// One moment, up close: the action, when, how it landed — and the note,
+  /// which until now was stored on every moment and surfaced nowhere.
+  void _showMomentSheet(Moment m) {
+    final l10n = AppLocalizations.of(context);
+    final themeProvider = context.read<ThemeProvider>();
+    final colors = themeProvider.colors;
+    final locale = Localizations.localeOf(context).toString();
+    final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
+    final when =
+        '${DateFormat.EEEE(locale).format(local)} · ${DateFormat.jm(locale).format(local)}';
+    final mood = switch (m.mood) {
+      MomentMood.gladIDid => l10n.completionMoodGlad,
+      MomentMood.neutral => l10n.completionMoodNeutral,
+      MomentMood.tookEffort => l10n.completionMoodTookEffort,
+      null => null,
+    };
+
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (ctx) => Container(
+        width: double.infinity,
+        padding: EdgeInsets.fromLTRB(
+          28, 28, 28, 28 + MediaQuery.of(ctx).padding.bottom),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              colors.modalBg1.withValues(alpha: 0.98),
+              colors.modalBg2.withValues(alpha: 0.96),
+            ],
+          ),
+          borderRadius:
+              const BorderRadius.vertical(top: Radius.circular(28)),
+          border: Border.all(
+            color: const Color(0xFFFFFFFF).withValues(alpha: 0.4),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 26,
+                  height: 26,
+                  margin: const EdgeInsets.only(top: 2),
+                  decoration: BoxDecoration(
+                    color: CategoryColors.of(
+                      m.category,
+                      themeProvider.theme,
+                      mood: m.mood,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    localizeHabitName(m.habitName, l10n),
+                    style: _cardTitle(colors),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              mood == null ? when : '$when · $mood',
+              style: _cardMeta(colors),
+            ),
+            if (m.note != null) ...[
+              const SizedBox(height: 14),
+              Text(
+                m.note!,
+                style: _cardBody(colors).copyWith(
+                  fontStyle: FontStyle.italic,
+                  color: colors.textPrimary,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
 
   /// The part of day most moments fall in, or null when nothing dominates.
   /// Reads localHour, which is why it had to be stored rather than derived.

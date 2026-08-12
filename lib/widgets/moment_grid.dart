@@ -31,6 +31,8 @@ class MomentGrid extends StatelessWidget {
     this.spacing = 8,
     this.showGhost = true,
     this.lightenReturns = false,
+    this.highlightCategory,
+    this.onTileTap,
   });
 
   /// Oldest first. Only this month's moments belong here.
@@ -50,6 +52,14 @@ class MomentGrid extends StatelessWidget {
   /// within: the same hue, a step lighter than its neighbours (SS1).
   final bool lightenReturns;
 
+  /// When set, tiles of every *other* category recede (§4.2-safe filtering:
+  /// dimmed, never removed — a filter that emptied the grid would recreate
+  /// the absence the grid exists to make unrepresentable).
+  final String? highlightCategory;
+
+  /// Makes tiles tappable. Called with the index into [moments].
+  final void Function(int index)? onTileTap;
+
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(theme);
@@ -60,18 +70,28 @@ class MomentGrid extends StatelessWidget {
       runSpacing: spacing,
       children: [
         for (var i = 0; i < moments.length; i++)
-          _Tile(
-            // Hue is the focus area, tint is how it landed (§4.2).
-            color: CategoryColors.of(
-              moments[i].category,
-              theme,
-              mood: moments[i].mood,
+          GestureDetector(
+            onTap: onTileTap == null ? null : () => onTileTap!(i),
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 180),
+              opacity: highlightCategory == null ||
+                      moments[i].category == highlightCategory
+                  ? 1.0
+                  : 0.22,
+              child: _Tile(
+                // Hue is the focus area, tint is how it landed (§4.2).
+                color: CategoryColors.of(
+                  moments[i].category,
+                  theme,
+                  mood: moments[i].mood,
+                ),
+                size: tileSize,
+                // A ring marks the first moment after a quiet stretch: "you
+                // came back here." The only decoration the grid carries.
+                isReturn: returnIndices.contains(i),
+                lightenReturn: lightenReturns,
+              ),
             ),
-            size: tileSize,
-            // A ring marks the first moment after a quiet stretch: "you came
-            // back here." It is the only decoration the grid carries.
-            isReturn: returnIndices.contains(i),
-            lightenReturn: lightenReturns,
           ),
         if (showGhost && moments.isNotEmpty)
           _Tile(

@@ -7243,6 +7243,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'One meal without your phone'**
   String get habitMealWithoutPhone;
+
+  /// No description provided for @insightsFilterLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{area} — {count, plural, =1{one moment} other{{count} moments}} across {days, plural, =1{one day} other{{days} days}}.'**
+  String insightsFilterLine(String area, int count, int days);
+
+  /// No description provided for @momentSheetYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'yesterday'**
+  String get momentSheetYesterday;
 }
 
 class _AppLocalizationsDelegate
