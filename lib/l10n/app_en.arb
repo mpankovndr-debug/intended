@@ -1618,9 +1618,9 @@
   "reviewPromptNotYet": "Not yet",
   "upgradeNudgeBody": "Your practice is growing. Intended+ gives you room to grow with it.",
   "upgradeNudgeLearnMore": "Learn more",
-  "notifWeeklyDynamic0": "Your weekly reflection is here. Every week is a fresh start.",
-  "notifWeeklyDynamic1": "Your weekly reflection is here — you showed up for yourself this week.",
-  "notifWeeklyDynamicN": "Your weekly reflection is here — you showed up {count} times for yourself this week.",
+  "notifWeeklyDynamic0": "Your week's page is ready. Every week is a fresh start.",
+  "notifWeeklyDynamic1": "Your week is on the page — one moment of care in it.",
+  "notifWeeklyDynamicN": "Your week is on the page — {count} moments in it.",
   "@notifWeeklyDynamicN": {
     "placeholders": {
       "count": {

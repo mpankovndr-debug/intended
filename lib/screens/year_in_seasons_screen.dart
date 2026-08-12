@@ -188,8 +188,14 @@ class _YearInSeasonsScreenState extends State<YearInSeasonsScreen> {
         // The month page opens on this month: hand the anchor to Insights,
         // front its tab, and clear this screen off the stack.
         InsightsScreen.jumpTo.value = row.anchor;
+        // Notify even if the value is already 1 — a stale unconsumed 1 from a
+        // cold-start notification would otherwise swallow the switch.
+        NotificationScheduler.pendingTabSwitch.value = -1;
         NotificationScheduler.pendingTabSwitch.value = 1;
-        Navigator.of(context).popUntil((r) => r.isFirst);
+        // One level: this screen was pushed over the tabs. popUntil(isFirst)
+        // overshot in the first session, where onboarding leaves routes under
+        // MainTabs, and dropped the user back into the path picker.
+        Navigator.of(context).pop();
       },
       child: Container(
         padding: const EdgeInsets.all(20),

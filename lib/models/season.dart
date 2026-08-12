@@ -185,7 +185,13 @@ class Season {
     return SeasonReading(
       axis: SeasonAxis.returning,
       pole: gaps > 0 ? returning : continuous,
-      strength: gaps == 0 ? 0.6 : (gaps / 4).clamp(0.3, 1.0),
+      // A month with real comebacks outranks an unbroken one — the old
+      // formula gave zero gaps 0.6 and one gap 0.3, which meant the user who
+      // most embodied §4.3 was the least likely to be named for it (review
+      // finding #8). Continuous keeps a solid-but-beatable 0.6; Returning
+      // starts above it and grows with each return.
+      strength:
+          gaps == 0 ? 0.6 : (0.65 + 0.1 * (gaps - 1)).clamp(0.65, 0.95),
     );
   }
 

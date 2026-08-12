@@ -56,6 +56,19 @@ class Moment {
   final int localWeekday;
   final int tzOffsetMinutes;
 
+  /// The completion instant on the user's own clock at the time, rebuilt
+  /// from the offset recorded with the moment — flagged UTC so wall-clock
+  /// values compare against each other, never against device-local times.
+  /// Every reader must use this, not the device's current zone (§10).
+  DateTime get localWallClock =>
+      completedAt.add(Duration(minutes: tzOffsetMinutes));
+
+  /// The user's calendar day of the completion, as a UTC-flagged date.
+  DateTime get localDay {
+    final w = localWallClock;
+    return DateTime.utc(w.year, w.month, w.day);
+  }
+
   const Moment({
     required this.id,
     required this.habitName,

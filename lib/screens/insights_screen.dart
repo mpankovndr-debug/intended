@@ -165,7 +165,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       // straddle a month boundary by definition.
       _lift = Lift.read(
         allMoments,
-        activeHabits: context.read<OnboardingState>().userHabits,
+        activeHabits: context.read<OnboardingState>().visibleHabits(),
       );
       _liftWeeksRemaining = Lift.weeksRemaining(allMoments);
       _firstWeek = FirstWeek.read(allMoments);
@@ -518,7 +518,9 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final base = l10n.insightsReturnsLine(_returnCount);
     final gaps = _gapLengths();
     if (paid && gaps.length >= 2) {
-      return '$base ${l10n.insightsReturnGaps(gaps.reversed.join(', '))}';
+      // Chronological: "9, 6, 4, 2" is a person closing their gaps. Reversed,
+      // the same numbers read as gaps widening (review finding #6).
+      return '$base ${l10n.insightsReturnGaps(gaps.join(', '))}';
     }
     return _gapsShortening ? '$base ${l10n.insightsGapsShortening}' : base;
   }
@@ -1199,6 +1201,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
       builder: (_) => SeasonShareScreen(
         seasonWord: seasonWord,
+        month: _anchor,
         moments: _moments,
         returnCount: _returnCount,
         gapsShortening: _gapsShortening,
@@ -1310,7 +1313,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     return MonthPlan.read(
       monthKey: SeasonService.monthKeyFor(DateTime.now()),
       lastMonth: _lastMonth,
-      activeHabits: onboarding.userHabits,
+      activeHabits: onboarding.visibleHabits(),
       customHabits: onboarding.customHabits,
       focusAreas: onboarding.focusAreas,
       reminderHour: _reminderHour,

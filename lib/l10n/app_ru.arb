@@ -1372,9 +1372,9 @@
   "reviewPromptNotYet": "Не сейчас",
   "upgradeNudgeBody": "Твоя практика растёт. Intended+ даёт пространство расти вместе с ней.",
   "upgradeNudgeLearnMore": "Узнать больше",
-  "notifWeeklyDynamic0": "Твоя недельная рефлексия готова. Каждая неделя — новый старт.",
-  "notifWeeklyDynamic1": "Твоя недельная рефлексия готова — эта неделя не прошла без заботы о себе.",
-  "notifWeeklyDynamicN": "Твоя недельная рефлексия готова: моментов заботы о себе за неделю — {count}.",
+  "notifWeeklyDynamic0": "Страница твоей недели готова. Каждая неделя — новый старт.",
+  "notifWeeklyDynamic1": "Твоя неделя на странице — в ней один момент заботы о себе.",
+  "notifWeeklyDynamicN": "Твоя неделя на странице — в ней моментов: {count}.",
   "@notifWeeklyDynamicN": {
     "placeholders": {
       "count": {

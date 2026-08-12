@@ -153,7 +153,15 @@ class Letter {
   /// direction rather than a total, which is why it leads.
   static LetterLine? _opening(List<Moment> moments) {
     final days = _activeDays(moments);
-    final span = days.last.day;
+    // Measured across the *active* span — first active day to last — not the
+    // calendar's day numbers. Day-of-month made `early` count days before a
+    // mid-month install existed, so anyone who started on the 18th was told
+    // "you started this month quietly" regardless of how they actually
+    // started (review finding #9). The first day is active by construction,
+    // so `early` is always at least one.
+    final first = days.first.day;
+    final last = days.last.day;
+    final span = last - first + 1;
     if (span < _minSpanForPace) return null;
 
     final third = span / 3;
@@ -161,10 +169,9 @@ class Letter {
     var late = 0;
     for (final m in moments) {
       final day = _wallDay(m).day;
-      if (day <= third) early++;
-      if (day > span - third) late++;
+      if (day < first + third) early++;
+      if (day > last - third) late++;
     }
-    if (early == 0 && late == 0) return null;
 
     if (late >= early * 2) return const LetterLine(LetterLineKind.openedQuietly);
     if (early >= late * 2) return const LetterLine(LetterLineKind.openedFull);

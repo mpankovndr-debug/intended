@@ -74,9 +74,6 @@ class ReviewRequestService {
   /// Fired when the user views their weekly reflection for the first time
   /// with real (non-zero) data. The reflection card builds organically on
   /// Sundays — this hook ensures we ask in the moment it lands.
-  static Future<void> onFirstWeeklyReflection(BuildContext context) async {
-    await _maybePrompt(context, trigger: 'first_weekly_reflection');
-  }
 
   /// Fired when every habit in a curated pack has been completed today.
   /// The [packId] dedupes per pack — completing Gentle Mornings twice

@@ -160,10 +160,15 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
     // that moment on screen. Paywalls triggered after a measurable value
     // moment see 2.1x the trial-start rate.
 
-    Navigator.pushReplacement(
+    // Remove the whole onboarding stack, not just this screen: two earlier
+    // steps push rather than replace (so their back-chevrons work), which
+    // left routes *under* MainTabs for the entire first session — any
+    // overshooting pop landed the user back in onboarding.
+    Navigator.pushAndRemoveUntil(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const MainTabs(),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const MainTabs(),
         transitionDuration: const Duration(milliseconds: 350),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
@@ -172,6 +177,7 @@ class _HabitRevealScreenState extends State<HabitRevealScreen>
           );
         },
       ),
+      (route) => false,
     );
   }
 

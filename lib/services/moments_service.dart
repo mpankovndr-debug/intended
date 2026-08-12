@@ -47,14 +47,19 @@ class MomentsService {
 
   /// Every moment in [anchor]'s calendar month, oldest first. Bucketed by the
   /// offset each moment recorded, not the device's current zone.
+  ///
+  /// [anchor] is a wall-clock timestamp: its `year` and `month` name the
+  /// month, read directly. The previous version added the anchor's own
+  /// timeZoneOffset before reading them — double-shifting an already-local
+  /// anchor, which put every user west of UTC a whole month off and froze
+  /// seasons under the wrong archive key.
   static Future<List<Moment>> momentsForMonth(DateTime anchor) async {
     final all = await getAll();
-    final target =
-        anchor.add(Duration(minutes: anchor.timeZoneOffset.inMinutes));
-    return all.where((m) {
-      final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
-      return local.year == target.year && local.month == target.month;
-    }).toList()
+    return all
+        .where((m) =>
+            m.localWallClock.year == anchor.year &&
+            m.localWallClock.month == anchor.month)
+        .toList()
       ..sort((a, b) => a.completedAt.compareTo(b.completedAt));
   }
 
@@ -65,11 +70,11 @@ class MomentsService {
   /// not the device's current zone.
   static Future<List<String?>> categoriesForMonth(DateTime anchor) async {
     final all = await getAll();
-    final target = anchor.add(Duration(minutes: anchor.timeZoneOffset.inMinutes));
-    final inMonth = all.where((m) {
-      final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
-      return local.year == target.year && local.month == target.month;
-    }).toList()
+    final inMonth = all
+        .where((m) =>
+            m.localWallClock.year == anchor.year &&
+            m.localWallClock.month == anchor.month)
+        .toList()
       ..sort((a, b) => a.completedAt.compareTo(b.completedAt));
     return inMonth.map((m) => m.category).toList();
   }

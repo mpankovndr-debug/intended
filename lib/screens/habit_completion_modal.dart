@@ -117,7 +117,13 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
     await _tileController.forward();
     // Let the landing settle before the sheet leaves.
     await Future<void>.delayed(const Duration(milliseconds: 1400));
-    if (mounted) Navigator.of(context).maybePop();
+    // `mounted` is not enough: the sheet is barrier-dismissible, and a State
+    // stays mounted for the whole exit transition. A pop fired then would
+    // land on the route *below* — in the first session that route is
+    // MainTabs, and the user would be thrown back into leftover onboarding.
+    if (!mounted) return;
+    if (ModalRoute.of(context)?.isCurrent != true) return;
+    Navigator.of(context).pop();
   }
 
   String _timeLabel() {

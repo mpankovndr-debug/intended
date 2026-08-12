@@ -657,17 +657,8 @@ Future<void> refreshHomeWidget(BuildContext context) async {
     // The same four actions Today shows, in the same order — pinned, then
     // the user's own, then the catalog. The widget previously got the raw
     // uncapped list, which put customs off the end of a 4-slot widget.
-    final pinned = onboarding.pinnedHabit;
-    final visible = [
-      if (pinned != null && onboarding.userHabits.contains(pinned)) pinned,
-      ...onboarding.userHabits
-          .where((h) => h != pinned && onboarding.isCustomHabit(h)),
-      ...onboarding.userHabits
-          .where((h) => h != pinned && !onboarding.isCustomHabit(h)),
-    ].take(OnboardingState.maxActiveHabits).toList();
-
     await WidgetService.updateWidget(
-      userHabits: visible,
+      userHabits: onboarding.visibleHabits(),
       customHabitFocusAreas: onboarding.customHabitFocusAreas,
       isPremium: userState.hasSubscription,
       theme: themeProvider.theme,
@@ -1013,7 +1004,6 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
   int _currentIndex = 0;
   bool? _lastPremiumStatus;
   UserState? _userState;
-  bool _hasUnseenReflection = false;
 
   @override
   void initState() {
@@ -1025,32 +1015,14 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
       _userState = context.read<UserState>();
       _lastPremiumStatus = _userState!.hasSubscription;
       _userState!.addListener(_onSubscriptionChanged);
-      _loadUnseenReflection();
     });
-  }
-
-  Future<void> _loadUnseenReflection() async {
-    final prefs = await SharedPreferences.getInstance();
-    final unseen = prefs.getBool('has_unseen_reflection') ?? false;
-    if (mounted && unseen != _hasUnseenReflection) {
-      setState(() => _hasUnseenReflection = unseen);
-    }
   }
 
   void _onPendingTabSwitch() {
     final tab = NotificationScheduler.pendingTabSwitch.value;
     if (tab >= 0 && mounted) {
-      setState(() {
-        _currentIndex = tab;
-        // Clear unseen badge since we're navigating to Progress
-        if (tab == 1) _hasUnseenReflection = false;
-      });
+      setState(() => _currentIndex = tab);
       NotificationScheduler.pendingTabSwitch.value = -1; // consumed
-      if (tab == 1) {
-        SharedPreferences.getInstance().then(
-          (prefs) => prefs.setBool('has_unseen_reflection', false),
-        );
-      }
     }
   }
 
@@ -1091,7 +1063,6 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
       });
       NotificationScheduler.refreshTimezone(AppLocalizations.of(context));
       context.read<RevenueCatService>().refreshPurchaseStatus();
-      _loadUnseenReflection();
     }
     if (state == AppLifecycleState.paused && mounted) {
       context.read<BackupService>().backup();
@@ -1147,17 +1118,9 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
             bottom: MediaQuery.of(context).padding.bottom + 16,
             child: _CustomTabBar(
               currentIndex: _currentIndex,
-              hasUnseenReflection: _hasUnseenReflection,
               onTap: (index) {
                 HapticFeedback.selectionClick();
                 setState(() => _currentIndex = index);
-                // Clear unseen reflection badge when navigating to Progress tab
-                if (index == 1 && _hasUnseenReflection) {
-                  setState(() => _hasUnseenReflection = false);
-                  SharedPreferences.getInstance().then(
-                    (prefs) => prefs.setBool('has_unseen_reflection', false),
-                  );
-                }
               },
             ),
           ),
@@ -1322,12 +1285,10 @@ class _WelcomeBackOverlayState extends State<WelcomeBackOverlay>
 
 class _CustomTabBar extends StatelessWidget {
   final int currentIndex;
-  final bool hasUnseenReflection;
   final ValueChanged<int> onTap;
 
   const _CustomTabBar({
     required this.currentIndex,
-    this.hasUnseenReflection = false,
     required this.onTap,
   });
 
@@ -1376,7 +1337,7 @@ class _CustomTabBar extends StatelessWidget {
                   iconSelected: CupertinoIcons.chart_bar_fill,
                   index: 1,
                   currentIndex: currentIndex,
-                  showBadge: hasUnseenReflection,
+                  showBadge: false,
                   semanticLabel: AppLocalizations.of(context).a11yTabProgress,
                   onTap: onTap),
               _TabItem(
@@ -1710,22 +1671,9 @@ class _HabitsScreenState extends State<HabitsScreen>
     // resume. One card asks them to start.
     final rescue = _rescueDismissed ? null : _rescue;
     final pinnedHabit = onboardingState.pinnedHabit;
-    // The cap keeps the *user's own* actions first: pinned, then customs,
-    // then the catalog fills what's left. A plain take() cut customs off the
-    // end because generation appends them last — someone's own words were the
-    // first thing the ceiling deleted (design review, SS3).
-    final byPriority = [
-      if (pinnedHabit != null &&
-          onboardingState.userHabits.contains(pinnedHabit))
-        pinnedHabit,
-      ...onboardingState.userHabits.where((h) =>
-          h != pinnedHabit && onboardingState.isCustomHabit(h)),
-      ...onboardingState.userHabits.where((h) =>
-          h != pinnedHabit && !onboardingState.isCustomHabit(h)),
-    ];
-    final allHabits = byPriority
-        .take(rescue == null ? OnboardingState.maxActiveHabits : 1)
-        .toList();
+    // One owner for "what's active": the same list feeds all-done detection,
+    // the widget, swap targets and the plan (review finding #3).
+    final allHabits = onboardingState.visibleHabits(rescue: rescue != null);
 
     // Detect pin/unpin transitions (for arrival animations)
     final isNewPin = pinnedHabit != null && pinnedHabit != _lastKnownPinned;
@@ -2794,7 +2742,7 @@ class _HabitCardState extends State<_HabitCard>
     if (mounted) context.read<BackupService>().backup();
 
     final monthCategories = await MomentsService.categoriesForMonth(
-      moment.completedAt,
+      moment.localWallClock,
     );
 
     if (mounted) {
@@ -2846,14 +2794,12 @@ class _HabitCardState extends State<_HabitCard>
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getBool(_firstCompletionPaywallKey) == true) return;
 
-    // Only ever the *first* moment. Anyone with history behind them has
-    // already passed this point.
-    final total = await MomentsService.getCount();
-    if (total > 1) {
-      await prefs.setBool(_firstCompletionPaywallKey, true);
-      return;
-    }
-
+    // No moment-count guard (review finding #5): counting moments burned the
+    // one-shot flag for anyone whose *first* completion came from the widget
+    // or a yesterday-log — they'd tap in-app with total == 2 and never see
+    // the Day-0 pitch at all. The flag is set only when the paywall is
+    // actually shown; the first in-app completion is the moment, however
+    // many moments arrived by other doors first.
     if (!mounted) return;
     // Nothing to pitch to someone who already subscribed — including a
     // subscription restored from their Apple ID on first launch.
@@ -2930,7 +2876,9 @@ class _HabitCardState extends State<_HabitCard>
   /// Helper: checks if every active habit has been completed today.
   Future<bool> _areAllHabitsDone() async {
     final onboarding = context.read<OnboardingState>();
-    final habits = onboarding.userHabits;
+    // All *visible* done — a habit past the cap can't be completed anywhere,
+    // so counting it kept Quiet Bloom unreachable (review finding #3).
+    final habits = onboarding.visibleHabits();
     if (habits.isEmpty) return false;
     final completedIds = await HabitTracker.allCompletedIdsForDate(DateTime.now());
     return habits.every((h) => completedIds.contains(HabitTracker.habitId(h)));
@@ -2940,7 +2888,7 @@ class _HabitCardState extends State<_HabitCard>
   /// time the user closes one out (every habit in a pack done today).
   Future<void> _maybeAskAfterPackCompletion() async {
     final onboarding = context.read<OnboardingState>();
-    final userHabits = onboarding.userHabits;
+    final userHabits = onboarding.visibleHabits();
     if (userHabits.isEmpty) return;
 
     final completedIds =
@@ -2970,7 +2918,8 @@ class _HabitCardState extends State<_HabitCard>
   /// Checks if all habits are now complete; if so, triggers Quiet Bloom.
   Future<void> _checkAllDoneAndBloom() async {
     final onboarding = context.read<OnboardingState>();
-    final habits = onboarding.userHabits;
+    // Visible, not raw — see _areAllHabitsDone (review finding #3).
+    final habits = onboarding.visibleHabits();
     debugPrint('[QuietBloom] _checkAllDoneAndBloom — ${habits.length} habits');
     if (habits.isEmpty) {
       debugPrint('[QuietBloom] ❌ No habits found, returning');
@@ -3034,7 +2983,7 @@ class _HabitCardState extends State<_HabitCard>
     // signal they read, and there was no way to add it afterwards — the tap
     // costs a second and the sheet already knows how to be skipped.
     final monthCategories = await MomentsService.categoriesForMonth(
-      moment.completedAt,
+      moment.localWallClock,
     );
     if (!mounted) return;
     await showCupertinoDialog<void>(
@@ -4920,7 +4869,7 @@ class _BrowseHabitsSheetState extends State<BrowseHabitsSheet> {
 
   void _showHabitSelection(String newHabit) {
     final onboardingState = context.read<OnboardingState>();
-    final currentHabits = onboardingState.userHabits;
+    final currentHabits = onboardingState.visibleHabits();
     final themeP = Provider.of<ThemeProvider>(context, listen: false);
     final colors = themeP.colors;
     final isDark = themeP.theme.isDark;

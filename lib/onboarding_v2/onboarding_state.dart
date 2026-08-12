@@ -32,6 +32,25 @@ class OnboardingState extends ChangeNotifier {
   /// Whether another action can be added without breaking that ceiling.
   bool get canAddHabit => userHabits.length < maxActiveHabits;
 
+  /// The actions the user actually sees, in the order they see them: pinned
+  /// first, then their own words, then the catalog fills what's left, capped
+  /// at [maxActiveHabits] (one during a rescue).
+  ///
+  /// This is the *only* definition of "active" (design review): all-done
+  /// detection, pack completion, swap targets, the plan's evidence and the
+  /// home-screen widget all read this. The bug it replaces: Today capped the
+  /// render while every checker still read the raw list, so a user with
+  /// hidden habits could never satisfy "all done" and Quiet Bloom went
+  /// unreachable.
+  List<String> visibleHabits({bool rescue = false}) {
+    final pinned = _pinnedHabit;
+    return [
+      if (pinned != null && userHabits.contains(pinned)) pinned,
+      ...userHabits.where((h) => h != pinned && _customHabits.contains(h)),
+      ...userHabits.where((h) => h != pinned && !_customHabits.contains(h)),
+    ].take(rescue ? 1 : maxActiveHabits).toList();
+  }
+
   // Intention path
   String _selectedIntentionPath = 'your_own_way';
   String? _lastPreselectedPathKey;

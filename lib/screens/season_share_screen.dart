@@ -27,12 +27,17 @@ class SeasonShareScreen extends StatefulWidget {
   const SeasonShareScreen({
     super.key,
     required this.seasonWord,
+    required this.month,
     required this.moments,
     required this.returnCount,
     required this.gapsShortening,
   });
 
   final String seasonWord;
+  /// First day of the month being shared — the pager can share past months,
+  /// so "now" is not necessarily the month on the card (review finding #10).
+  final DateTime month;
+
   final List<Moment> moments;
   final int returnCount;
   final bool gapsShortening;
@@ -235,7 +240,7 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
                 final locale = Localizations.localeOf(context).toString();
                 return SeasonShareCard(
                   monthLabel:
-                      DateFormat.yMMMM(locale).format(DateTime.now()),
+                      DateFormat.yMMMM(locale).format(widget.month),
                   seasonWord: widget.seasonWord,
                   moments: widget.moments,
                   returnCount: widget.returnCount,

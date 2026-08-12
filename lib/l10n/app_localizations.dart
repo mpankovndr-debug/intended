@@ -5609,19 +5609,19 @@ abstract class AppLocalizations {
   /// No description provided for @notifWeeklyDynamic0.
   ///
   /// In en, this message translates to:
-  /// **'Your weekly reflection is here. Every week is a fresh start.'**
+  /// **'Your week\'s page is ready. Every week is a fresh start.'**
   String get notifWeeklyDynamic0;
 
   /// No description provided for @notifWeeklyDynamic1.
   ///
   /// In en, this message translates to:
-  /// **'Your weekly reflection is here — you showed up for yourself this week.'**
+  /// **'Your week is on the page — one moment of care in it.'**
   String get notifWeeklyDynamic1;
 
   /// No description provided for @notifWeeklyDynamicN.
   ///
   /// In en, this message translates to:
-  /// **'Your weekly reflection is here — you showed up {count} times for yourself this week.'**
+  /// **'Your week is on the page — {count} moments in it.'**
   String notifWeeklyDynamicN(int count);
 
   /// No description provided for @faqSectionGettingStarted.

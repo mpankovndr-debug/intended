@@ -3288,15 +3288,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notifWeeklyDynamic0 =>
-      'Your weekly reflection is here. Every week is a fresh start.';
+      'Your week\'s page is ready. Every week is a fresh start.';
 
   @override
   String get notifWeeklyDynamic1 =>
-      'Your weekly reflection is here — you showed up for yourself this week.';
+      'Your week is on the page — one moment of care in it.';
 
   @override
   String notifWeeklyDynamicN(int count) {
-    return 'Your weekly reflection is here — you showed up $count times for yourself this week.';
+    return 'Your week is on the page — $count moments in it.';
   }
 
   @override

@@ -3318,15 +3318,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get notifWeeklyDynamic0 =>
-      'Твоя недельная рефлексия готова. Каждая неделя — новый старт.';
+      'Страница твоей недели готова. Каждая неделя — новый старт.';
 
   @override
   String get notifWeeklyDynamic1 =>
-      'Твоя недельная рефлексия готова — эта неделя не прошла без заботы о себе.';
+      'Твоя неделя на странице — в ней один момент заботы о себе.';
 
   @override
   String notifWeeklyDynamicN(int count) {
-    return 'Твоя недельная рефлексия готова: моментов заботы о себе за неделю — $count.';
+    return 'Твоя неделя на странице — в ней моментов: $count.';
   }
 
   @override
