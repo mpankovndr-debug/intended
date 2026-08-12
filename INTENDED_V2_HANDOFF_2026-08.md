@@ -7,7 +7,7 @@ Working brief from a full audit + redesign session (Aug 2026). Everything below 
 ## 0. Status — what's built, and what needs your eyes
 
 Branch: **`main`**, 31 commits ahead of `origin/main` and unpushed. `restore-point/v2-onboarding-paths` is the pre-v2 restore point, not the work — an earlier version of this section had that the wrong way round.
-`flutter analyze`: 0 errors, 0 warnings. `flutter test`: 82 passing.
+`flutter analyze`: 0 errors, 0 warnings. `flutter test`: 172 passing.
 
 ### Build order progress
 
@@ -64,7 +64,6 @@ Items 3–6 are covered by tests for *behaviour*, not appearance.
 - **"Let's begin" on habit reveal is green** while every other primary CTA is taupe.
 - **`lib/main.dart` is ~6,600 lines.**
 - **`lib/main.dart.bak`** is a stale copy still in the repo.
-- **The home-screen widget still shows a rotating affirmation**, not the intention — worth revisiting once the Today header change proves itself.
 
 ### Decisions taken, with reasons
 
