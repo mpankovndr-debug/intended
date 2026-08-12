@@ -80,22 +80,24 @@ List<_FaqCategory> _buildCategories() => [
               question: (l) => l.faqAllDone, answer: (l) => l.faqAllDoneAnswer),
         ],
       ),
+      // v2 (§12): answers objections about the month system, not the
+      // retired weekly-reflection cards it replaced.
       _FaqCategory(
         title: (l) => l.faqSectionReflections,
         icon: CupertinoIcons.waveform,
         items: [
           _FaqItem(
-              question: (l) => l.faqWeeklyReflection,
-              answer: (l) => l.faqWeeklyReflectionAnswer),
+              question: (l) => l.faqWhatIsMoment,
+              answer: (l) => l.faqWhatIsMomentAnswer),
           _FaqItem(
-              question: (l) => l.faqMonthlyReflection,
-              answer: (l) => l.faqMonthlyReflectionAnswer),
+              question: (l) => l.faqWhatAreSeasons,
+              answer: (l) => l.faqWhatAreSeasonsAnswer),
+          _FaqItem(
+              question: (l) => l.faqPlusReads,
+              answer: (l) => l.faqPlusReadsAnswer),
           _FaqItem(
               question: (l) => l.faqShareReflection,
               answer: (l) => l.faqShareReflectionAnswer),
-          _FaqItem(
-              question: (l) => l.faqNoReflection,
-              answer: (l) => l.faqNoReflectionAnswer),
           _FaqItem(
               question: (l) => l.faqHowReflectionsGenerated,
               answer: (l) => l.faqHowReflectionsGeneratedAnswer),
@@ -148,6 +150,9 @@ List<_FaqCategory> _buildCategories() => [
           _FaqItem(
               question: (l) => l.faqFreeVersion,
               answer: (l) => l.faqFreeVersionAnswer),
+          _FaqItem(
+              question: (l) => l.faqStopPaying,
+              answer: (l) => l.faqStopPayingAnswer),
           _FaqItem(
               question: (l) => l.faqRestore, answer: (l) => l.faqRestoreAnswer),
           _FaqItem(

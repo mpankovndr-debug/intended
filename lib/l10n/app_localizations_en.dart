@@ -3359,7 +3359,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faqMissedDayAnswer =>
-      'Nothing happens. No streaks break, no counters reset. Tomorrow is a new day.';
+      'Nothing happens. No streaks break, no counters reset — research on habit formation found a missed day doesn\'t materially set you back. If you were quiet a few days, the first square after is marked as a return, not the gap as a failure. And if you did the thing but didn\'t log it: long-press the card to log yesterday.';
 
   @override
   String get faqHowToPin => 'How do I pin a habit?';
@@ -3397,7 +3397,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'You\'ll see a quiet celebration — a gentle bloom moment. It\'s a small reminder that showing up matters, no matter how many habits you checked off.';
 
   @override
-  String get faqSectionReflections => 'Reflections';
+  String get faqSectionReflections => 'Your month';
 
   @override
   String get faqWeeklyReflection => 'What is a Weekly Reflection?';
@@ -3418,7 +3418,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faqShareReflectionAnswer =>
-      'Yes! Tap the share button to turn it into a beautiful card for social media.';
+      'Yes — on Your month, tap Share under your season. It becomes a story-sized card with your grid and your season word, sized for Instagram or TikTok. Habit names are never on it unless you put them there.';
 
   @override
   String get faqNoReflection => 'Why don\'t I see a reflection?';
@@ -3489,7 +3489,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faqWhatIsPlusAnswer =>
-      'Unlimited custom habits, swaps, refreshes, library access, focus area changes, all themes, monthly reflections, and deeper insights.';
+      'Intended+ is the reading of your month: the drift warning before a quiet stretch, a four-line letter, next month\'s plan built from this month\'s evidence, what actually lifts you, the season\'s explanation and archive — plus all ten themes, premium icons and widgets.';
 
   @override
   String get faqPricing => 'How much does it cost?';
@@ -3533,7 +3533,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faqDataStorageAnswer =>
-      'All data is stored locally on your device. Nothing is uploaded to any server.';
+      'Your moments live on your device first. If you sign in, they\'re also backed up to your private account so a new phone can restore them — that includes mood taps and notes. No one else can see them, and deleting your account deletes the backup.';
 
   @override
   String get faqDataSelling => 'Does Intended sell my data?';
@@ -4295,4 +4295,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get momentSheetYesterday => 'yesterday';
+
+  @override
+  String get insightsPastEmptyTitle => 'A quiet month.';
+
+  @override
+  String get insightsPastEmptyBody =>
+      'Nothing was collected here — and it kept none of your later months from happening.';
+
+  @override
+  String get faqWhatIsMoment => 'What are the squares?';
+
+  @override
+  String get faqWhatIsMomentAnswer =>
+      'Every action you complete becomes one square — a moment — in your month\'s grid. The grid only grows: there is no square for a day you skipped, because days aren\'t the unit here. Colour is the focus area; the tint is how it landed.';
+
+  @override
+  String get faqWhatAreSeasons => 'What is my season?';
+
+  @override
+  String get faqWhatAreSeasonsAnswer =>
+      'Once a month has about ten moments, Intended names its pattern — Evening, Steady, Returning. It\'s an observation about the month, never a label on you: next month reads fresh, and a closed month\'s word is frozen forever.';
+
+  @override
+  String get faqPlusReads => 'What does Intended+ actually do with my month?';
+
+  @override
+  String get faqPlusReadsAnswer =>
+      'It reads what free shows. The drift warning speaks up before a quiet stretch, while there\'s still a week to change. The letter tells the month back to you in four lines and ends on a question. The plan turns last month\'s evidence into one or two concrete changes — and four weeks later tells you honestly whether the change worked.';
+
+  @override
+  String get faqStopPaying => 'Do I lose anything if I stop paying?';
+
+  @override
+  String get faqStopPayingAnswer =>
+      'Nothing you made. Every moment, note and season stays yours, the grid keeps growing, and the gentle come-back nudge stays free forever. What pauses is the reading: drift, the letter, the plan, and what lifts you.';
 }

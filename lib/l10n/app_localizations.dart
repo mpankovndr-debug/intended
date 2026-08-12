@@ -5729,7 +5729,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqMissedDayAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Nothing happens. No streaks break, no counters reset. Tomorrow is a new day.'**
+  /// **'Nothing happens. No streaks break, no counters reset — research on habit formation found a missed day doesn\'t materially set you back. If you were quiet a few days, the first square after is marked as a return, not the gap as a failure. And if you did the thing but didn\'t log it: long-press the card to log yesterday.'**
   String get faqMissedDayAnswer;
 
   /// No description provided for @faqHowToPin.
@@ -5795,7 +5795,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqSectionReflections.
   ///
   /// In en, this message translates to:
-  /// **'Reflections'**
+  /// **'Your month'**
   String get faqSectionReflections;
 
   /// No description provided for @faqWeeklyReflection.
@@ -5831,7 +5831,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqShareReflectionAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Yes! Tap the share button to turn it into a beautiful card for social media.'**
+  /// **'Yes — on Your month, tap Share under your season. It becomes a story-sized card with your grid and your season word, sized for Instagram or TikTok. Habit names are never on it unless you put them there.'**
   String get faqShareReflectionAnswer;
 
   /// No description provided for @faqNoReflection.
@@ -5957,7 +5957,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqWhatIsPlusAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Unlimited custom habits, swaps, refreshes, library access, focus area changes, all themes, monthly reflections, and deeper insights.'**
+  /// **'Intended+ is the reading of your month: the drift warning before a quiet stretch, a four-line letter, next month\'s plan built from this month\'s evidence, what actually lifts you, the season\'s explanation and archive — plus all ten themes, premium icons and widgets.'**
   String get faqWhatIsPlusAnswer;
 
   /// No description provided for @faqPricing.
@@ -6035,7 +6035,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqDataStorageAnswer.
   ///
   /// In en, this message translates to:
-  /// **'All data is stored locally on your device. Nothing is uploaded to any server.'**
+  /// **'Your moments live on your device first. If you sign in, they\'re also backed up to your private account so a new phone can restore them — that includes mood taps and notes. No one else can see them, and deleting your account deletes the backup.'**
   String get faqDataStorageAnswer;
 
   /// No description provided for @faqDataSelling.
@@ -7255,6 +7255,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'yesterday'**
   String get momentSheetYesterday;
+
+  /// No description provided for @insightsPastEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet month.'**
+  String get insightsPastEmptyTitle;
+
+  /// No description provided for @insightsPastEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was collected here — and it kept none of your later months from happening.'**
+  String get insightsPastEmptyBody;
+
+  /// No description provided for @faqWhatIsMoment.
+  ///
+  /// In en, this message translates to:
+  /// **'What are the squares?'**
+  String get faqWhatIsMoment;
+
+  /// No description provided for @faqWhatIsMomentAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Every action you complete becomes one square — a moment — in your month\'s grid. The grid only grows: there is no square for a day you skipped, because days aren\'t the unit here. Colour is the focus area; the tint is how it landed.'**
+  String get faqWhatIsMomentAnswer;
+
+  /// No description provided for @faqWhatAreSeasons.
+  ///
+  /// In en, this message translates to:
+  /// **'What is my season?'**
+  String get faqWhatAreSeasons;
+
+  /// No description provided for @faqWhatAreSeasonsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Once a month has about ten moments, Intended names its pattern — Evening, Steady, Returning. It\'s an observation about the month, never a label on you: next month reads fresh, and a closed month\'s word is frozen forever.'**
+  String get faqWhatAreSeasonsAnswer;
+
+  /// No description provided for @faqPlusReads.
+  ///
+  /// In en, this message translates to:
+  /// **'What does Intended+ actually do with my month?'**
+  String get faqPlusReads;
+
+  /// No description provided for @faqPlusReadsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'It reads what free shows. The drift warning speaks up before a quiet stretch, while there\'s still a week to change. The letter tells the month back to you in four lines and ends on a question. The plan turns last month\'s evidence into one or two concrete changes — and four weeks later tells you honestly whether the change worked.'**
+  String get faqPlusReadsAnswer;
+
+  /// No description provided for @faqStopPaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Do I lose anything if I stop paying?'**
+  String get faqStopPaying;
+
+  /// No description provided for @faqStopPayingAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing you made. Every moment, note and season stays yours, the grid keeps growing, and the gentle come-back nudge stays free forever. What pauses is the reading: drift, the letter, the plan, and what lifts you.'**
+  String get faqStopPayingAnswer;
 }
 
 class _AppLocalizationsDelegate

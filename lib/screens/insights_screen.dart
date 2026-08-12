@@ -1,6 +1,7 @@
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -68,6 +69,29 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// Legend filter: when set, the grid recedes to this focus area.
   String? _gridFilter;
 
+  /// First day of the month on display. Browsing back is free — closed
+  /// months are frozen precisely so they can be revisited (§10) — and the
+  /// now-sections (drift, plan, so-far) simply don't exist off the current
+  /// month, the same null-until-honest rule everything already follows.
+  DateTime _anchor = DateTime(DateTime.now().year, DateTime.now().month, 1);
+
+  bool get _viewingCurrentMonth {
+    final now = DateTime.now();
+    return _anchor.year == now.year && _anchor.month == now.month;
+  }
+
+  /// The month of the oldest stored moment, as a floor for paging back.
+  DateTime _oldest = DateTime(DateTime.now().year, DateTime.now().month, 1);
+
+  void _page(int delta) {
+    HapticFeedback.selectionClick();
+    setState(() {
+      _anchor = DateTime(_anchor.year, _anchor.month + delta, 1);
+      _gridFilter = null;
+    });
+    _load();
+  }
+
   bool _showAllNudges = false;
   bool _accepting = false;
   bool _loaded = false;
@@ -88,12 +112,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Future<void> _load() async {
     final now = DateTime.now();
     final monthKey = SeasonService.monthKeyFor(now);
-    final moments = await MomentsService.momentsForMonth(now);
+    final moments = await MomentsService.momentsForMonth(_anchor);
     // DateTime normalises month 0 to December of the previous year, so this
     // holds across a January boundary.
     final lastMonth =
         await MomentsService.momentsForMonth(DateTime(now.year, now.month - 1, 1));
-    final season = await SeasonService.currentSeason();
+    // A closed month keeps its frozen word (§10); the open one is read live.
+    final season = _viewingCurrentMonth
+        ? await SeasonService.currentSeason()
+        : ((await SeasonService.archive())[SeasonService.monthKeyFor(_anchor)] ??
+            Season.read(SeasonService.monthKeyFor(_anchor), moments));
     final archive = await SeasonService.archive();
     final hour = await NotificationPreferencesService.getHour();
     final minute = await NotificationPreferencesService.getMinute();
@@ -129,6 +157,12 @@ class _InsightsScreenState extends State<InsightsScreen> {
       );
       _liftWeeksRemaining = Lift.weeksRemaining(allMoments);
       _firstWeek = FirstWeek.read(allMoments);
+      if (allMoments.isNotEmpty) {
+        final e = allMoments.last
+            .completedAt
+            .add(Duration(minutes: allMoments.last.tzOffsetMinutes));
+        _oldest = DateTime(e.year, e.month, 1);
+      }
       _reminderTime =
           '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
       _loaded = true;
@@ -146,11 +180,17 @@ class _InsightsScreenState extends State<InsightsScreen> {
 
     // Every screen draws the shared background itself; without it this one
     // rendered on bare black.
+    // iPad: the column of glass caps at a readable width and centres; on
+    // iPhone the max never binds. Line length is the whole difference between
+    // a stretched phone app and a tablet one.
+    final gutter = (MediaQuery.of(context).size.width - 680) / 2;
+    final pad = gutter > 24 ? gutter : 24.0;
+
     return AppBackground(
       child: SafeArea(
         bottom: false,
         child: ListView(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 180),
+        padding: EdgeInsets.fromLTRB(pad, 24, pad, 180),
         children: [
           Text(l10n.insightsTitle, style: AppTextStyles.h1(context)),
           const SizedBox(height: 20),
@@ -164,34 +204,47 @@ class _InsightsScreenState extends State<InsightsScreen> {
             ...[
             _shell(colors, sections: [
               _monthCard(l10n, colors, themeProvider, paid: paid),
-              // The early days, on both tiers (§12) — week one is when every
-              // pattern section is still null, so these two carry it.
-              if (_moments.isNotEmpty) ...[
-                if (_firstWeek != null) _firstWeekCard(l10n, colors, _firstWeek!),
-                if (_moments.length < Letter.minMoments)
-                  _soFarCard(l10n, colors),
-              ],
-              // Day one belongs to neither tier (§5.4): nothing is behind a
-              // lock yet, so the Day-0 window stays with the onboarding
-              // paywall.
-              if (_moments.isEmpty) ...[
-                _startingWithCard(l10n, colors, onboarding),
-                _exampleCard(l10n, colors, themeProvider),
-              ] else if (paid) ...[
-                // Free and paid share the same sections and the same quality;
-                // paid has more of them (§5.3). Each returns null when it has
-                // nothing true to say, and then simply isn't on the page.
-                if (_drift != null) _driftCard(l10n, colors, _drift!),
-                _seasonCard(l10n, colors, paid: paid),
-                if (_letter != null) _letterCard(l10n, colors, _letter!),
-                if (!plan.isEmpty || _acceptedThisMonth != null)
-                  _planCard(l10n, colors, plan),
-                if (_lift != null) _liftCard(l10n, colors, _lift!, plan),
+              // A browsed month is a record: the grid, its season, its letter.
+              // Everything that speaks in present tense — drift, the plan, so
+              // far, week one — exists only on the month being lived.
+              if (!_viewingCurrentMonth) ...[
+                if (_moments.isNotEmpty) ...[
+                  _seasonCard(l10n, colors, paid: paid),
+                  if (paid && _letter != null)
+                    _letterCard(l10n, colors, _letter!),
+                ],
               ] else ...[
-                _seasonCard(l10n, colors, paid: paid),
+                // The early days, on both tiers (§12) — week one is when every
+                // pattern section is still null, so these two carry it.
+                if (_moments.isNotEmpty) ...[
+                  if (_firstWeek != null)
+                    _firstWeekCard(l10n, colors, _firstWeek!),
+                  if (_moments.length < Letter.minMoments)
+                    _soFarCard(l10n, colors),
+                ],
+                // Day one belongs to neither tier (§5.4): nothing is behind a
+                // lock yet, so the Day-0 window stays with the onboarding
+                // paywall.
+                if (_moments.isEmpty) ...[
+                  _startingWithCard(l10n, colors, onboarding),
+                  _exampleCard(l10n, colors, themeProvider),
+                ] else if (paid) ...[
+                  // Free and paid share the same sections and the same
+                  // quality; paid has more of them (§5.3). Each returns null
+                  // when it has nothing true to say, and then simply isn't on
+                  // the page.
+                  if (_drift != null) _driftCard(l10n, colors, _drift!),
+                  _seasonCard(l10n, colors, paid: paid),
+                  if (_letter != null) _letterCard(l10n, colors, _letter!),
+                  if (!plan.isEmpty || _acceptedThisMonth != null)
+                    _planCard(l10n, colors, plan),
+                  if (_lift != null) _liftCard(l10n, colors, _lift!, plan),
+                ] else ...[
+                  _seasonCard(l10n, colors, paid: paid),
+                ],
               ],
             ]),
-            if (!paid && _moments.isNotEmpty) ...[
+            if (!paid && _moments.isNotEmpty && _viewingCurrentMonth) ...[
               const SizedBox(height: 12),
               _shell(colors, sections: [
                 _teaserCard(l10n, colors, onboarding),
@@ -211,6 +264,28 @@ class _InsightsScreenState extends State<InsightsScreen> {
   //
   // Page title (h1, 34) > season word (30) > card headline (20) > body (15)
   // > meta (13). Header font for the first three, body font for the rest.
+
+  Widget _chevron(
+    IconData icon,
+    AppColorScheme colors, {
+    required bool enabled,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: enabled ? onTap : null,
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Icon(
+          icon,
+          size: 18,
+          color: enabled
+              ? colors.textPrimary.withValues(alpha: 0.75)
+              : colors.textDisabled.withValues(alpha: 0.45),
+        ),
+      ),
+    );
+  }
 
   /// Small caps label at the top of every card: THIS MONTH, YOUR SEASON.
   Widget _eyebrow(String text, AppColorScheme colors) => Text(
@@ -303,29 +378,48 @@ class _InsightsScreenState extends State<InsightsScreen> {
     ThemeProvider themeProvider, {
     required bool paid,
   }) {
-    final now = DateTime.now();
     final monthLabel = DateFormat.yMMMM(
       Localizations.localeOf(context).toString(),
-    ).format(now);
+    ).format(_anchor);
     final empty = _moments.isEmpty;
+    final canGoBack = _anchor.isAfter(_oldest);
 
     return _card(
       colors: colors,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(monthLabel, style: _cardMeta(colors)),
+          Row(
+            children: [
+              Expanded(child: Text(monthLabel, style: _cardMeta(colors))),
+              _chevron(
+                CupertinoIcons.chevron_left,
+                colors,
+                enabled: canGoBack,
+                onTap: () => _page(-1),
+              ),
+              const SizedBox(width: 6),
+              _chevron(
+                CupertinoIcons.chevron_right,
+                colors,
+                enabled: !_viewingCurrentMonth,
+                onTap: () => _page(1),
+              ),
+            ],
+          ),
           const SizedBox(height: 12),
           _eyebrow(l10n.insightsThisMonth, colors),
           const SizedBox(height: 8),
           Text(
             empty
-                ? l10n.insightsEmptyTitle
+                ? (_viewingCurrentMonth
+                    ? l10n.insightsEmptyTitle
+                    : l10n.insightsPastEmptyTitle)
                 : l10n.insightsDidThings(
                     _moments.length,
                     DateFormat.MMMM(
                       Localizations.localeOf(context).toString(),
-                    ).format(now),
+                    ).format(_anchor),
                   ),
             style: _cardTitle(colors),
           ),
@@ -337,7 +431,9 @@ class _InsightsScreenState extends State<InsightsScreen> {
             ),
           if (empty)
             Text(
-              l10n.insightsEmptyBody,
+              _viewingCurrentMonth
+                  ? l10n.insightsEmptyBody
+                  : l10n.insightsPastEmptyBody,
               style: _cardBody(colors),
             ),
           const SizedBox(height: 18),
@@ -345,7 +441,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           // the *only* place outlines are allowed — §4.2 forbids them in the
           // real grid, where a field of empty slots reads as "look how much
           // you haven't done."
-          if (empty)
+          if (empty && _viewingCurrentMonth)
             _emptyPrimer(colors)
           else
             MomentGrid(
@@ -354,11 +450,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
               highlightCategory: _gridFilter,
               onTileTap: (i) => _showMomentSheet(_moments[i]),
             ),
-          const SizedBox(height: 12),
-          Text(
-            l10n.insightsGridCaption,
-            style: _cardMeta(colors),
-          ),
+          if (!empty || _viewingCurrentMonth) ...[
+            const SizedBox(height: 12),
+            Text(
+              l10n.insightsGridCaption,
+              style: _cardMeta(colors),
+            ),
+          ],
           if (!empty) ...[
             const SizedBox(height: 14),
             _legend(l10n, colors, themeProvider),
@@ -467,37 +565,62 @@ class _InsightsScreenState extends State<InsightsScreen> {
             for (final e in entries)
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () => setState(() =>
-                    _gridFilter = _gridFilter == e.key ? null : e.key),
-                child: AnimatedOpacity(
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  setState(() =>
+                      _gridFilter = _gridFilter == e.key ? null : e.key);
+                },
+                // A pill, not a caption (design review): bare dot-and-label
+                // read as a legend, and nobody taps a legend. The border and
+                // fill say "control"; the selected one fills in.
+                child: AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
-                  opacity: _gridFilter == null || _gridFilter == e.key
-                      ? 1.0
-                      : 0.45,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: CategoryColors.of(e.key, themeProvider.theme),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: _gridFilter == e.key
+                        ? colors.ctaPrimary.withValues(alpha: 0.14)
+                        : colors.profileCard
+                            .withValues(alpha: colors.profileCardOpacity * 0.6),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: _gridFilter == e.key
+                          ? colors.ctaPrimary.withValues(alpha: 0.55)
+                          : colors.borderCard.withValues(alpha: 0.45),
+                      width: 1,
+                    ),
+                  ),
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 180),
+                    opacity: _gridFilter == null || _gridFilter == e.key
+                        ? 1.0
+                        : 0.55,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color:
+                                CategoryColors.of(e.key, themeProvider.theme),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 7),
-                      Text(
-                        '${localizeCategoryName(e.key, l10n)} ${e.value}',
-                        style: _cardMeta(colors).copyWith(
-                          fontWeight: _gridFilter == e.key
-                              ? FontWeight.w600
-                              : FontWeight.w400,
-                          color: _gridFilter == e.key
-                              ? colors.ctaPrimary
-                              : null,
+                        const SizedBox(width: 7),
+                        Text(
+                          '${localizeCategoryName(e.key, l10n)} ${e.value}',
+                          style: _cardMeta(colors).copyWith(
+                            fontWeight: _gridFilter == e.key
+                                ? FontWeight.w600
+                                : FontWeight.w400,
+                            color: _gridFilter == e.key
+                                ? colors.ctaPrimary
+                                : null,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

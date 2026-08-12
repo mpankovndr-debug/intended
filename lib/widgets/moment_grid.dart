@@ -77,7 +77,9 @@ class MomentGrid extends StatelessWidget {
               opacity: highlightCategory == null ||
                       moments[i].category == highlightCategory
                   ? 1.0
-                  : 0.22,
+                  // Receded, still present. 0.22 read as gone (design
+                  // review); at 0.38 the month keeps its mass.
+                  : 0.38,
               child: _Tile(
                 // Hue is the focus area, tint is how it landed (§4.2).
                 color: CategoryColors.of(

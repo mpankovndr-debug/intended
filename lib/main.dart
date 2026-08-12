@@ -674,6 +674,12 @@ Future<void> refreshHomeWidget(BuildContext context) async {
   }
 }
 
+/// The two quiet doors under the list (§7) sank into the landscape at pure
+/// accent colour (SS2). A third of the way toward ink keeps them quiet but
+/// findable, on every theme, without inventing a new colour.
+Color _doorColor(AppColorScheme colors) =>
+    Color.lerp(colors.ctaPrimary, colors.textPrimary, 0.35)!;
+
 void main() {
   runZonedGuarded(
     () async {
@@ -1967,7 +1973,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                             Icon(
                                               CupertinoIcons.add,
                                               size: 18,
-                                              color: colors.ctaPrimary,
+                                              color: _doorColor(colors),
                                             ),
                                             const SizedBox(width: 8),
                                             Text(
@@ -1975,7 +1981,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w500,
-                                                color: colors.ctaPrimary,
+                                                color: _doorColor(colors),
                                                 fontFamily:
                                                     AppTextStyles.bodyFont(
                                                         context),
@@ -2177,7 +2183,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                           // Same colour as the add row: two
                                           // doors of equal standing (§7), not
                                           // a door and an afterthought.
-                                          color: colors.ctaPrimary,
+                                          color: _doorColor(colors),
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
@@ -2185,7 +2191,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500,
-                                            color: colors.ctaPrimary,
+                                            color: _doorColor(colors),
                                             fontFamily:
                                                 AppTextStyles.bodyFont(context),
                                           ),
@@ -3006,16 +3012,36 @@ class _HabitCardState extends State<_HabitCard>
     }
 
     final category = ReflectionService.categoryForHabit(widget.habitTitle);
-    await MomentsService.record(Moment.create(
+    final moment = Moment.create(
       habitName: widget.habitTitle,
       category: category,
       at: yesterday,
-    ));
+    );
+    await MomentsService.record(moment);
     MilestoneService.invalidate();
     if (!mounted) return;
     context.read<BackupService>().backup();
     HapticFeedback.lightImpact();
-    AppToast.show(context, l10n.toastKeptYesterday);
+
+    // The same two-step sheet a live completion gets. A yesterday-moment
+    // without the mood tap starved the letter and the ranking of the one
+    // signal they read, and there was no way to add it afterwards — the tap
+    // costs a second and the sheet already knows how to be skipped.
+    final monthCategories = await MomentsService.categoriesForMonth(
+      moment.completedAt,
+    );
+    if (!mounted) return;
+    await showCupertinoDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) => HabitCompletionModal(
+        habitTitle: widget.habitTitle,
+        momentId: moment.id,
+        category: category,
+        monthCategories: monthCategories,
+        completedAt: moment.completedAt,
+      ),
+    );
   }
 
   /// A fortnight without a single completion. Short enough to catch something

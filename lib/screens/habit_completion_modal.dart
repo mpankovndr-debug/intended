@@ -156,6 +156,26 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
               decoration: BoxDecoration(
                 color: colors.cardBackground,
                 borderRadius: BorderRadius.circular(28),
+                // Volume (design review): flat against the dimmed backdrop the
+                // sheet read as a label, not an object. A drop shadow below
+                // and a hairline of light along the top edge lift it off.
+                border: Border.all(
+                  color: const Color(0xFFFFFFFF).withValues(alpha: 0.55),
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF000000).withValues(alpha: 0.18),
+                    blurRadius: 36,
+                    offset: const Offset(0, 14),
+                  ),
+                  BoxShadow(
+                    color: const Color(0xFFFFFFFF).withValues(alpha: 0.30),
+                    blurRadius: 0,
+                    offset: const Offset(0, 1),
+                    blurStyle: BlurStyle.inner,
+                  ),
+                ],
               ),
               child: _showStep2
                   ? _buildStep2(l10n, colors, theme)
