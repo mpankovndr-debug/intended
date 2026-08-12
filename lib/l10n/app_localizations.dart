@@ -3023,25 +3023,25 @@ abstract class AppLocalizations {
   /// No description provided for @paywallFeature1.
   ///
   /// In en, this message translates to:
-  /// **'Monthly & weekly reflections — see how far you\'ve come'**
+  /// **'A letter about your month — four lines that end in a question worth keeping'**
   String get paywallFeature1;
 
   /// No description provided for @paywallFeature2.
   ///
   /// In en, this message translates to:
-  /// **'A home screen widget that keeps your intentions close'**
+  /// **'Next month\'s plan from this month\'s evidence — and whether it worked, measured'**
   String get paywallFeature2;
 
   /// No description provided for @paywallFeature3.
   ///
   /// In en, this message translates to:
-  /// **'10 beautiful themes & premium app icons — make it yours'**
+  /// **'The drift warning: a quiet word before the gap, not after it'**
   String get paywallFeature3;
 
   /// No description provided for @paywallFeature4.
   ///
   /// In en, this message translates to:
-  /// **'Shareable moment cards & curated routines designed for real life'**
+  /// **'All ten themes, premium icons and home-screen widgets'**
   String get paywallFeature4;
 
   /// No description provided for @paywallGroupRoom.
@@ -3269,13 +3269,13 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPaywallTitle.
   ///
   /// In en, this message translates to:
-  /// **'Try Intended+ free'**
+  /// **'Intended+ reads your months'**
   String get onboardingPaywallTitle;
 
   /// No description provided for @onboardingPaywallBody.
   ///
   /// In en, this message translates to:
-  /// **'Start your 7-day free trial of Intended+ to unlock weekly reflections and unlimited routines. Skip if you\'d rather start with Core — it\'s yours forever.'**
+  /// **'The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.'**
   String get onboardingPaywallBody;
 
   /// No description provided for @onboardingPaywallPrimaryCta.
@@ -3287,13 +3287,13 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPaywallSecondaryCta.
   ///
   /// In en, this message translates to:
-  /// **'Continue with Core'**
+  /// **'Not now — keep the free version'**
   String get onboardingPaywallSecondaryCta;
 
   /// No description provided for @onboardingPaywallDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'7 days free, then {price}. Cancel anytime.'**
+  /// **'7 days free, then {price}/year — about €3.75 a month. Cancel anytime.'**
   String onboardingPaywallDisclaimer(String price);
 
   /// No description provided for @subscriptionTitle.

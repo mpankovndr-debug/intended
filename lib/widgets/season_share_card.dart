@@ -228,6 +228,15 @@ class SeasonShareCard extends StatelessWidget {
   static String _backgroundForTheme(AppTheme theme, AppColorScheme colors) =>
       switch (theme) {
         AppTheme.iris => 'assets/images/Iris_share_bg.PNG',
+        AppTheme.clearSky => 'assets/images/clearSky_1080x1920.png',
+        AppTheme.forestFloor => 'assets/images/forestFloor_1080x1920.png',
+        AppTheme.goldenHour => 'assets/images/goldenHour_1080x1920.png',
+        AppTheme.morningSlate => 'assets/images/morningSlate_1080x1920.png',
+        AppTheme.sandDune => 'assets/images/sandDune_1080x1920.png',
+        AppTheme.softDusk => 'assets/images/softDusk_1080x1920.png',
+        AppTheme.warmClay => 'assets/images/warmClay_1080x1920.png',
+        // The two dark themes still borrow the moments-screen art until their
+        // dedicated story canvases land.
         _ => colors.backgroundMs,
       };
 

@@ -1841,19 +1841,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get paywallFeature1 =>
-      'Итоги недели и месяца — видно, как далеко ты зашёл';
+      'Письмо о твоём месяце — четыре строки, которые заканчиваются вопросом';
 
   @override
   String get paywallFeature2 =>
-      'Виджет на главном экране, который держит намерения рядом';
+      'План на следующий месяц из фактов этого — и честная проверка, сработал ли';
 
   @override
   String get paywallFeature3 =>
-      '10 красивых тем и премиум-иконки — сделай приложение своим';
+      'Предупреждение о дрейфе: тихое слово до паузы, а не после';
 
   @override
   String get paywallFeature4 =>
-      'Карточки, которыми хочется делиться, и готовые ритуалы для настоящей жизни';
+      'Все десять тем, премиум-иконки и виджеты для экрана';
 
   @override
   String get paywallGroupRoom => 'Больше пространства';
@@ -1975,21 +1975,22 @@ class AppLocalizationsRu extends AppLocalizations {
       'Новые функции добавляются регулярно. Подписка поддерживает независимую разработку.\nСоздано одним человеком, которому это так же важно, как и тебе.';
 
   @override
-  String get onboardingPaywallTitle => 'Попробуй Intended+ бесплатно';
+  String get onboardingPaywallTitle => 'Intended+ читает твои месяцы';
 
   @override
   String get onboardingPaywallBody =>
-      'Начни 7-дневный пробный период Intended+ — откроются еженедельные размышления и безлимитные ритуалы. Если пока хочешь остаться с Core, он останется с тобой навсегда.';
+      'Квадраты показывают, что было, — Intended+ говорит, что это значит. Письмо о твоём месяце в четыре строки. План на следующий — из того, что было на самом деле, с честным ответом, сработал ли он. Тихое слово перед тем, как ты начнёшь пропадать, — пока неделю ещё можно изменить. Плюс все десять тем, иконки и виджеты — твои с первого дня.';
 
   @override
   String get onboardingPaywallPrimaryCta => 'Начать пробный период';
 
   @override
-  String get onboardingPaywallSecondaryCta => 'Продолжить с Core';
+  String get onboardingPaywallSecondaryCta =>
+      'Не сейчас — остаться на бесплатной';
 
   @override
   String onboardingPaywallDisclaimer(String price) {
-    return '7 дней бесплатно, затем $price. Отмена в любой момент.';
+    return '7 дней бесплатно, дальше $price в год — около €3,75 в месяц. Отменить можно в любой момент.';
   }
 
   @override

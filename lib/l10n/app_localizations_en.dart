@@ -1811,19 +1811,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paywallFeature1 =>
-      'Monthly & weekly reflections — see how far you\'ve come';
+      'A letter about your month — four lines that end in a question worth keeping';
 
   @override
   String get paywallFeature2 =>
-      'A home screen widget that keeps your intentions close';
+      'Next month\'s plan from this month\'s evidence — and whether it worked, measured';
 
   @override
   String get paywallFeature3 =>
-      '10 beautiful themes & premium app icons — make it yours';
+      'The drift warning: a quiet word before the gap, not after it';
 
   @override
   String get paywallFeature4 =>
-      'Shareable moment cards & curated routines designed for real life';
+      'All ten themes, premium icons and home-screen widgets';
 
   @override
   String get paywallGroupRoom => 'More room';
@@ -1944,21 +1944,21 @@ class AppLocalizationsEn extends AppLocalizations {
       'New features added regularly. Your subscription supports independent development.\nBuilt by one person who cares about this as much as you do.';
 
   @override
-  String get onboardingPaywallTitle => 'Try Intended+ free';
+  String get onboardingPaywallTitle => 'Intended+ reads your months';
 
   @override
   String get onboardingPaywallBody =>
-      'Start your 7-day free trial of Intended+ to unlock weekly reflections and unlimited routines. Skip if you\'d rather start with Core — it\'s yours forever.';
+      'The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.';
 
   @override
   String get onboardingPaywallPrimaryCta => 'Start free trial';
 
   @override
-  String get onboardingPaywallSecondaryCta => 'Continue with Core';
+  String get onboardingPaywallSecondaryCta => 'Not now — keep the free version';
 
   @override
   String onboardingPaywallDisclaimer(String price) {
-    return '7 days free, then $price. Cancel anytime.';
+    return '7 days free, then $price/year — about €3.75 a month. Cancel anytime.';
   }
 
   @override
