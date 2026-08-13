@@ -280,29 +280,6 @@
   "monthOctober": "Октябрь",
   "monthNovember": "Ноябрь",
   "monthDecember": "Декабрь",
-  "dailyMessage1": "Делай то, что считаешь верным сегодня",
-  "dailyMessage2": "Сегодня новый день",
-  "dailyMessage3": "Даже одна мелочь считается",
-  "dailyMessage4": "Будь добрее к себе сегодня",
-  "dailyMessage5": "Не спеши. Ты справляешься",
-  "dailyMessage6": "Начни с малого, действуй с заботой о себе",
-  "dailyMessage7": "Твой темп — только твой",
-  "dailyMessage8": "Даже один шаг — это прогресс",
-  "dailyMessage9": "Бери то, что подходит, остальное оставь",
-  "dailyMessage10": "Не нужно делать всё сразу",
-  "dailyMessage11": "Маленькие моменты складываются в большое",
-  "dailyMessage12": "Будь здесь и сейчас",
-  "dailyMessage13": "Нет неправильного способа начать",
-  "dailyMessage14": "Прислушайся к тому, что тебе нужно сегодня",
-  "dailyMessage15": "Прогресс каждый день выглядит по-разному",
-  "dailyMessage16": "Ты имеешь право не торопиться",
-  "dailyMessage17": "Одного дела за раз достаточно",
-  "dailyMessage18": "Начни оттуда, где ты сейчас",
-  "dailyMessage19": "Не нужно быть готовым, чтобы начать",
-  "dailyMessage20": "Доверяй своему ритму",
-  "dailyMessage21": "Можно адаптироваться на ходу",
-  "dailyMessage22": "Маленькая забота о себе — тоже забота",
-  "dailyMessage23": "Ты делаешь больше, чем тебе кажется",
   "customHabitTitle": "Создать свою привычку",
   "customHabitPrompt": "Какое маленькое действие ты хочешь добавить?",
   "customHabitHint": "Просто и конкретно.",
@@ -398,7 +375,7 @@
   },
   "completionQuestion": "Ты выполнил это сегодня?",
   "completionHowDidItLand": "Как это отозвалось?",
-  "completionMoodGlad": "Рад, что сделал",
+  "completionMoodGlad": "В радость",
   "completionMoodNeutral": "Нейтрально",
   "completionMoodTookEffort": "Было непросто",
   "completionAddNote": "+ добавить заметку",
@@ -415,19 +392,6 @@
   "celebrationWayToGo": "Так держать",
   "celebrationGoodJob": "Хорошая работа",
   "celebrationLovely": "Чудесно",
-  "completionMsg1": "Маленькие шаги, как этот, важны.",
-  "completionMsg3": "Вот так и происходят перемены.",
-  "completionMsg4": "Ещё на шаг ближе.",
-  "completionMsg7": "Ещё одна маленькая победа.",
-  "completionMsg8": "У тебя получилось.",
-  "completionMsg11": "Это считается.",
-  "completionMsg12": "Обещание себе выполнено.",
-  "completionMsg13": "Поздравляю!",
-  "completionMsg14": "На это нашлось время.",
-  "completionMsg16": "Ни шагу назад.",
-  "completionMsg17": "Ещё одна привычка укрепилась.",
-  "completionMsg18": "Задумано — сделано.",
-  "completionMsg20": "Ты следуешь своему намерению.",
   "insightWater1": "Даже лёгкое обезвоживание влияет на настроение и концентрацию.",
   "insightWater2": "Мозг на 75% состоит из воды. Гидратация влияет на ясность мышления.",
   "insightWater3": "Стакан воды может снизить усталость на 14%.",
@@ -554,7 +518,7 @@
   "notifMsg60": "Вот так и выглядит забота о себе.",
   "notifWeeklyBody": "Оглянись на свою неделю. Твои привычки были рядом.",
   "notifWeeklyPathGentleMornings": "Твоя неделя мягких утренних ритуалов готова.",
-  "notifWeeklyPathAnchorsForHardDays": "Неделя, в которую ты держалась. Посмотри, как опиралась на себя.",
+  "notifWeeklyPathAnchorsForHardDays": "Неделя с опорой. Посмотри, что тебя держало.",
   "notifWeeklyPathQuietFocus": "Неделя тихого фокуса. Посмотри, что получилось.",
   "notifWeeklyPathWindingDown": "Неделя спокойных вечеров. Найди момент оглянуться.",
   "notifWeeklyPathYourOwnWay": "Твоя неделя готова. Посмотри, что было.",
@@ -562,83 +526,6 @@
   "notifDailyChannelDesc": "Мягкие ежедневные напоминания о привычках",
   "notifWeeklyChannelName": "Еженедельные напоминания",
   "notifWeeklyChannelDesc": "Напоминания для недельной рефлексии",
-  "affirmation1": "Пропущенные дни не отменяют того, что ты уже сделал.",
-  "affirmation2": "Не нужно заслуживать отдых.",
-  "affirmation3": "Три привычки или одна — обе формы достаточны.",
-  "affirmation4": "То, что ты здесь, уже говорит о тебе хорошее.",
-  "affirmation5": "Прогресс — не про совершенство, а про то, чтобы приходить.",
-  "affirmation6": "У тебя есть право на нелёгкие дни.",
-  "affirmation7": "Маленькие действия считаются, даже когда кажутся маленькими.",
-  "affirmation8": "Ты не отстаёшь. Ты именно там, где нужно.",
-  "affirmation9": "Постоянство важно, но самосострадание тоже.",
-  "affirmation10": "Твоя ценность не измеряется количеством галочек.",
-  "affirmation11": "Некоторые недели труднее. Это просто быть человеком.",
-  "affirmation12": "Не нужно делать всё, чтобы делать достаточно.",
-  "affirmation13": "Отдых — часть прогресса, а не его противоположность.",
-  "affirmation14": "Приходить несовершенным — это всё равно приходить.",
-  "affirmation15": "Ты справляешься лучше, чем тебе кажется.",
-  "affirmation16": "Можно начинать заново столько раз, сколько нужно.",
-  "affirmation17": "Твой темп — только твой. Сравнение не поможет.",
-  "affirmation18": "Каждая попытка имеет значение, даже та, что кажется мелкой.",
-  "affirmation19": "Не нужна мотивация, чтобы заслужить доброту к себе.",
-  "affirmation20": "Прогресс может выглядеть просто как «попробую завтра».",
-  "affirmation21": "Ты имеешь право пересматривать свои ожидания.",
-  "affirmation22": "Перерыв — не значит провал.",
-  "affirmation23": "Самое трудное — начать. А ты уже это сделал.",
-  "affirmation24": "Не нужно разрешение, чтобы позаботиться о себе.",
-  "affirmation25": "Твой максимум сегодня может отличаться от вчерашнего. Это нормально.",
-  "affirmation26": "Трудности не значат, что ты делаешь что-то не так.",
-  "affirmation27": "Ты уже справлялся с трудным. Справишься и с этим.",
-  "affirmation28": "Твой прогресс может не быть похож на чужой. И это нормально.",
-  "affirmation29": "Тебе не нужно никому ничего доказывать.",
-  "affirmation30": "Иногда просто пережить день — уже достаточный прогресс.",
-  "affirmation31": "Ты учишься, даже когда так не кажется.",
-  "affirmation32": "Быть мягче к себе — это не сдаваться.",
-  "affirmation33": "Тебе не нужна причина, чтобы быть к себе добрее.",
-  "affirmation34": "То, что ты делаешь прямо сейчас — достаточно.",
-  "affirmation35": "Завтра — всегда шанс попробовать снова.",
-  "progressOnboardingPrompt": "Заверши настройку, чтобы увидеть свою неделю",
-  "progressTitle": "Твоя неделя",
-  "progressWeeklySummary": "ИТОГИ НЕДЕЛИ",
-  "progressWeekBeginning": "Неделя только начинается.",
-  "progressShowedUpOnce": "Ты отметился один раз на этой неделе.",
-  "progressShowedUpCount": "Ты отметился {count} раз на этой неделе.",
-  "@progressShowedUpCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "progressMore": "+{count} ещё",
-  "@progressMore": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "progressSeeAll": "Показать все",
-  "progressShowLess": "Свернуть",
-  "progressYourMoments": "ТВОИ МОМЕНТЫ",
-  "progressEarlierToday": "Ранее сегодня",
-  "progressYesterday": "Вчера",
-  "progressDaysAgo": "{count} дн. назад",
-  "@progressDaysAgo": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "progressMomentsCollected": "{count, plural, =1{1 момент собран} few{{count} момента собрано} other{{count} моментов собрано}}",
-  "@progressMomentsCollected": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "momentsTitle": "Твои моменты",
   "momentsSubtitle": "Каждая выполненная привычка сохраняется в твою коллекцию.",
   "momentsEmptyTitle": "Здесь появятся твои моменты.",
@@ -1086,16 +973,6 @@
     }
   },
   "milestoneIdentitySubtitle": "становится твоей привычкой",
-  "boostCardTitle": "Intended Boost — €1,99",
-  "boostCardTitleDynamic": "Intended Boost — {price}",
-  "@boostCardTitleDynamic": {
-    "placeholders": {
-      "price": {
-        "type": "String"
-      }
-    }
-  },
-  "boostCardSubtitle": "Открой обе тёмные темы.",
   "boostOrDivider": "или",
   "boostGoUnlimited": "Хочешь больше? Безлимитный доступ с Intended+",
   "boostPurchaseError": "Что-то пошло не так с покупкой. Попробуй ещё раз.",
@@ -1137,94 +1014,7 @@
   "onboardingPhilosophyHeading": "Это не трекер.\nЭто возвращение к себе.",
   "onboardingPhilosophyBody": "Никаких стриков. Никакой вины за пропуск.\nТвой прогресс не обнуляется. Достаточно одного лишь намерения.",
   "onboardingPhilosophyCta": "Понятно",
-  "reflectionTitle": "Твоя неделя",
-  "reflectionAnchor7": "7 из 7. Целая неделя заботы о себе — так держать!",
-  "reflectionAnchor56": "{days} из 7 дней. Это {days} дней, когда ты выбираешь себя.",
-  "@reflectionAnchor56": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "reflectionAnchor34": "{days} дня. Это {days} дня, когда ты выбираешь себя.",
-  "@reflectionAnchor34": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "reflectionAnchor12": "{days} раз. Даже один день считается — ты не пропадаешь.",
-  "@reflectionAnchor12": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "reflectionAnchor0": "Тихая неделя. Ничего страшного. Ты здесь сейчас, и это главное.",
-  "reflectionPatternOneDay": "Похоже, {dayName} — это твой день. Уже три недели подряд.",
-  "@reflectionPatternOneDay": {
-    "placeholders": {
-      "dayName": {
-        "type": "String"
-      }
-    }
-  },
-  "reflectionPatternTwoDays": "{dayName1} и {dayName2} — похоже, это твои дни.",
-  "@reflectionPatternTwoDays": {
-    "placeholders": {
-      "dayName1": {
-        "type": "String"
-      },
-      "dayName2": {
-        "type": "String"
-      }
-    }
-  },
-  "reflectionPatternNone": "Твой ритм всё ещё формируется. Это нормально — продолжай.",
-  "reflectionFocusDominant": "На этой неделе тебя тянет к «{area}». Кажется, сейчас это важно.",
-  "@reflectionFocusDominant": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
-  "reflectionFocusBalanced": "Энергия этой недели распределилась между «{area1}» и «{area2}». Сбалансированная неделя.",
-  "@reflectionFocusBalanced": {
-    "placeholders": {
-      "area1": {
-        "type": "String"
-      },
-      "area2": {
-        "type": "String"
-      }
-    }
-  },
-  "reflectionReframeComeback": "Прошлая неделя была тише. А на этой — возвращение. В этом и смысл.",
-  "reflectionReframeRefresh": "Привычки обновились {count} раз на этой неделе — это не отказ, это адаптация.",
-  "@reflectionReframeRefresh": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "reflectionReframeSwap": "Одна привычка заменена на этой неделе. Понять, что не подходит — тоже прогресс.",
-  "reflectionShare": "Поделиться",
   "insightsGrowthHint": "Инсайты становятся точнее с каждой неделей",
-  "reflectionTeaser": "Узнай больше о своей неделе",
-  "reflectionSectionThisWeek": "ЭТА НЕДЕЛЯ",
-  "reflectionSectionYourRhythm": "ТВОЙ РИТМ",
-  "reflectionSectionYourFocus": "ТВОЙ ФОКУС",
-  "reflectionSectionNotice": "НА ЗАМЕТКУ",
-  "reflectionPreviewRhythm": "Через пару недель мы покажем, в какие дни ты стабильнее всего",
-  "reflectionPreviewFocus": "Выполняй больше привычек, чтобы увидеть, к чему тебя тянет",
-  "reflectionBlurRhythm": "Узнай, какие дни и ритмы подходят тебе лучше всего",
-  "reflectionBlurFocus": "Узнай, на что уходит твоя энергия каждую неделю",
-  "reflectionUnlockPlus": "Мои недельные инсайты",
   "tipPinHabit": "Удерживайте привычку, чтобы закрепить её сверху",
   "tipCuratedPack": "Попробуйте готовый набор привычек, который можно найти в «Все привычки»",
   "tipWidget": "Добавь Intended на главный экран — удерживай экран и добавь виджет",
@@ -1362,7 +1152,7 @@
   "coachMarkWeeklyReflectionTitle": "Твоё первое отражение готово",
   "coachMarkWeeklyReflectionBody": "Каждую неделю Intended оглядывается на твои шаблоны — мягко, без критики. Нажми, чтобы увидеть свою неделю.",
   "coachMarkSmartNotificationsTitle": "Напоминания учатся у тебя",
-  "coachMarkSmartNotificationsBody": "Intended подстраивает напоминания под твой ритм. Заходишь часто — мы отступаем. Пропадаешь — одно мягкое сообщение.",
+  "coachMarkSmartNotificationsBody": "Intended подстраивает напоминания под твой ритм. Заходишь часто — даём тебе больше пространства. Пропадаешь — одно мягкое сообщение.",
   "coachMarkMonthlyReflectionTitle": "Месяц твоего присутствия",
   "coachMarkMonthlyReflectionBody": "Месячное отражение находит закономерности между неделями, которые сложно заметить день за днём.",
   "coachMarkReflectionShareTitle": "Поделиться?",
@@ -1399,7 +1189,7 @@
   "faqHowToCheckIn": "Как отмечать привычку?",
   "faqHowToCheckInAnswer": "Нажми на любую карточку привычки на главном экране. Одно нажатие — и готово.",
   "faqMissedDay": "Что если я пропущу день?",
-  "faqMissedDayAnswer": "Ничего не происходит. Стрики не рвутся, счётчики не сбрасываются — исследования привычек показали, что один пропущенный день ничего не ломает. Если ты затихал на несколько дней, первый квадрат после отмечается как возвращение, а не пропуск как провал. А если дело было сделано, но не отмечено — подержи карточку и запиши за вчера.",
+  "faqMissedDayAnswer": "Ничего не происходит. Стрики не рвутся, счётчики не сбрасываются — исследования привычек показали, что один пропущенный день ничего не ломает. Если случилась тихая полоса, первый квадрат после неё отмечается как возвращение — не как провал. А если дело было сделано, но не отмечено — подержи карточку и запиши за вчера.",
   "faqHowToPin": "Как закрепить привычку?",
   "faqHowToPinAnswer": "Долгое нажатие на карточку закрепит её наверху. Можно закрепить одну привычку.",
   "faqCustomHabits": "Можно добавить свои привычки?",
@@ -1416,7 +1206,7 @@
   "faqMonthlyReflection": "Что такое месячная рефлексия?",
   "faqMonthlyReflectionAnswer": "Через 30 дней месячная рефлексия находит закономерности между неделями. Доступно с Intended+.",
   "faqShareReflection": "Можно поделиться рефлексией?",
-  "faqShareReflectionAnswer": "Да — на «Твоём месяце» нажми «Поделиться» под сезоном. Получится карточка в формате сторис — с сеткой и словом сезона, под Instagram или TikTok. Названий привычек на ней нет, если сам их не добавишь.",
+  "faqShareReflectionAnswer": "Да — на «Твоём месяце» нажми «Поделиться» под сезоном. Получится карточка в формате сторис — с сеткой и словом сезона, под Instagram или TikTok. Названия привычек попадают на карточку только по твоему выбору.",
   "faqNoReflection": "Почему я не вижу рефлексию?",
   "faqNoReflectionAnswer": "Недельная рефлексия появляется через 7 дней. Месячная — через 30. Чем чаще отмечаетесь, тем богаче рефлексия.",
   "faqHowReflectionsGenerated": "Как создаются рефлексии?",
@@ -1440,8 +1230,6 @@
   "faqWhatIsPlusAnswer": "Intended+ — это чтение твоего месяца: предупреждение о дрейфе перед тихой полосой, письмо в четыре строки, план на следующий месяц из фактов этого, «что тебя поддерживает», объяснение сезона и архив — плюс все десять тем, премиум-иконки и виджеты.",
   "faqPricing": "Сколько стоит?",
   "faqPricingAnswer": "Ежемесячно: €6.99. Годовой: €49.99 (5 месяцев бесплатно). Навсегда: €89.99. Все включают 7 дней пробного периода.",
-  "faqBoost": "Что такое Intended Boost?",
-  "faqBoostAnswer": "Разовая покупка за €0.99. Дополнительные темы, +1 своя привычка, карточки достижений, +1 область фокуса, 5 замен в месяц.",
   "faqFreeVersion": "Можно пользоваться бесплатно?",
   "faqFreeVersionAnswer": "Да. Бесплатно: пути намерений, 2 свои привычки, 2 области фокуса, недельная рефлексия, умные уведомления и виджеты.",
   "faqRestore": "Как восстановить покупку?",
@@ -1489,140 +1277,40 @@
   "notifPathWindingDown1": "День почти закончился. Отпусти его мягко.",
   "notifPathWindingDown2": "Пора расслабиться. Ты достаточно нёс(ла) сегодня.",
   "notifPathWindingDown3": "Вечер — для отпускания, не для догоняния.",
-  "notifPathWindingDown4": "Ты был(а) здесь сегодня. Это стоит того, чтобы отдохнуть.",
+  "notifPathWindingDown4": "Сегодня ты здесь. Это стоит отдыха.",
   "notifPathWindingDown5": "Ночь твоя. Отдыхай без вины.",
   "notifPathWindingDown6": "Замедлись. Завтра подождёт.",
   "notifPathYourOwnWay1": "Твоя практика, твой темп. Что сегодня по душе?",
   "notifPathYourOwnWay2": "Ты знаешь, что тебе нужно. Мы просто напоминаем.",
-  "notifPathYourOwnWay3": "Отметься, когда будешь готов(а). Без расписания, без давления.",
+  "notifPathYourOwnWay3": "Отметься, когда захочешь. Без расписания, без давления.",
   "notifPathYourOwnWay4": "Твой путь — твой собственный. Приходи как хочешь.",
   "notifPathYourOwnWay5": "Одно намерение. Это всё. Остальное — за тобой.",
   "notifPathYourOwnWay6": "Ты создал(а) эту практику. Доверяй, куда она ведёт.",
-  "warmthPathGentleMornings1": "Не каждое утро должно быть новым началом. Иногда — просто тишина.",
-  "warmthPathGentleMornings2": "Даже у утра бывают медленные дни. Это нормально.",
-  "warmthPathGentleMornings3": "Твоё утро по-прежнему твоё, даже когда пропускаешь.",
-  "warmthPathGentleMornings4": "Завтрашнее утро придёт мягко. Оно всегда так.",
-  "warmthPathGentleMornings5": "Отдыхай. Рассвет не ведёт счёт.",
-  "warmthPathGentleMornings6": "Тихое утро — это тоже хорошо проведённое утро.",
-  "warmthPathAnchorsForHardDays1": "Когда день шумный, хватит одной маленькой вещи.",
-  "warmthPathAnchorsForHardDays2": "Ты не опаздываешь. Ты здесь.",
-  "warmthPathAnchorsForHardDays3": "Тяжёлый момент не портит весь день.",
-  "warmthPathAnchorsForHardDays4": "Маленькое и устойчивое сильнее большого и хрупкого.",
-  "warmthPathAnchorsForHardDays5": "Ты пришла. Это и есть практика.",
-  "warmthPathAnchorsForHardDays6": "Мягкое восстановление — тоже восстановление.",
-  "warmthPathQuietFocus1": "Медленно — значит надолго.",
-  "warmthPathQuietFocus2": "Одно маленькое дело — это уже движение.",
-  "warmthPathQuietFocus3": "Не обязательно сегодня сделать всё.",
-  "warmthPathQuietFocus4": "Фокус — это доброта к себе.",
-  "warmthPathQuietFocus5": "Работа подождёт. Паузы разрешены.",
-  "warmthPathQuietFocus6": "Тихие усилия тоже считаются.",
-  "warmthPathWindingDown1": "Сегодня вечером просто отдыхай. Вот и весь план.",
-  "warmthPathWindingDown2": "Не нужно идеально завершать день. Просто остановись.",
-  "warmthPathWindingDown3": "Отпусти день. Ты нёс(ла) достаточно.",
-  "warmthPathWindingDown4": "Некоторые вечера просто для существования. Этот — один из них.",
-  "warmthPathWindingDown5": "Ночи не нужен ритуал. Ей нужно, чтобы ты просто отпустил(а).",
-  "warmthPathWindingDown6": "Спи спокойно. Завтра уже мягче, чем ты думаешь.",
-  "warmthPathYourOwnWay1": "Твой путь включает отдых. Всегда включал.",
-  "warmthPathYourOwnWay2": "Пропуск — часть ритма, который ты строишь.",
-  "warmthPathYourOwnWay3": "Ты выбрал(а) этот путь. Ты можешь и остановиться на нём.",
-  "warmthPathYourOwnWay4": "Никто не ведёт счёт. Тем более мы.",
-  "warmthPathYourOwnWay5": "Доверяй себе. Ты вернёшься, когда будет время.",
-  "warmthPathYourOwnWay6": "Твой темп. Твои правила. Всегда.",
-  "reflectionPathGentleMorningsIntro": "Ещё одна неделя мягких утр — или хотя бы попыток.",
-  "reflectionPathAnchorsForHardDaysIntro": "На этой неделе ты держалась за опоры.",
-  "reflectionPathQuietFocusIntro": "На этой неделе ты держала фокус — мягко.",
-  "reflectionPathWindingDownIntro": "Ещё одна неделя вечернего расслабления, по-своему.",
-  "reflectionPathYourOwnWayIntro": "Ещё одна неделя на своих условиях.",
-  "reflectionPathGentleMorningsQuiet": "Тихая неделя для утр. Некоторые недели — чтобы поспать подольше.",
-  "reflectionPathAnchorsForHardDaysQuiet": "Тихая неделя. Опоры остаются, даже маленькие.",
-  "reflectionPathQuietFocusQuiet": "Тихая неделя. Фокусу тоже нужен отдых.",
-  "reflectionPathWindingDownQuiet": "Тихая неделя. Иногда лучший вечерний ритуал — ничего не делать.",
-  "reflectionPathYourOwnWayQuiet": "Тихая неделя. Твой путь включает паузы.",
-  "monthlyReflectionTitle": "Твой месяц",
-  "monthlyReflectionSectionOverview": "ЭТОТ МЕСЯЦ",
-  "monthlyReflectionSectionTrends": "ТЕНДЕНЦИИ",
-  "monthlyReflectionSectionGrowth": "РОСТ",
-  "monthlyReflectionMonthRange": "{month} {year}",
-  "@monthlyReflectionMonthRange": {
-    "placeholders": {
-      "month": {
-        "type": "String"
-      },
-      "year": {
-        "type": "int"
-      }
-    }
-  },
-  "monthlyReflectionOverview": "Ты отмечался(лась) {days} дней из {total} в этом месяце.",
-  "@monthlyReflectionOverview": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
-  "monthlyReflectionBestWeek": "Самая активная неделя — {weekRange}, {days} активных дней.",
-  "@monthlyReflectionBestWeek": {
-    "placeholders": {
-      "weekRange": {
-        "type": "String"
-      },
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "monthlyReflectionConsistentHabit": "{habit} — твоя самая стабильная привычка в этом месяце.",
-  "@monthlyReflectionConsistentHabit": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
-  "monthlyReflectionGrowthUp": "Этот месяц активнее предыдущего. Ты находишь свой ритм.",
-  "monthlyReflectionGrowthSteady": "Стабильный месяц. Ты поддерживаешь то, что важно.",
-  "monthlyReflectionGrowthDown": "Тише, чем в прошлом месяце. Это нормально — некоторые сезоны для отдыха.",
-  "monthlyReflectionFirstMonth": "Твой первый полный месяц. Всё здесь — начало.",
-  "monthlyReflectionNoData": "Пока недостаточно данных. Продолжай — твой месячный обзор скоро появится.",
-  "monthlyReflectionUnlock": "Увидеть месячные инсайты",
-  "monthlyReflectionSectionNotice": "ОБРАТИТЬ ВНИМАНИЕ",
-  "monthlyReflectionTopArea": "Тебя тянуло к {area} в этом месяце. Похоже, это сейчас важно.",
-  "@monthlyReflectionTopArea": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
-  "adaptiveNotifReducedTitle": "Мы отступаем",
+  "adaptiveNotifReducedTitle": "Даём тебе больше пространства",
   "adaptiveNotifReducedBody": "Ты регулярно отмечаешься — мы будем напоминать реже.",
   "adaptiveNotifReengageBody": "Прошло немного времени. Просто мягкий привет.",
-  "adaptiveNotifSilentBody": "Мы заметили, что тебя давно не было. Без давления — мы будем здесь.",
+  "adaptiveNotifSilentBody": "Мы заметили, что тебя давно не было. Не переживай, мы подождём.",
   "bloomGentleMornings1": "Полное утро. Это кое-что значит.",
-  "bloomGentleMornings2": "Каждое — мягко сделано.",
-  "bloomGentleMornings3": "Утро завершено. Ты пришёл(а) тихо.",
+  "bloomGentleMornings2": "Каждое дело сделано с заботой.",
+  "bloomGentleMornings3": "Утро закрыто. Тихо и вовремя.",
   "bloomGentleMornings4": "Всё здесь. Утро было твоим.",
   "bloomGentleMornings5": "Нежно и готово. Этого достаточно.",
-  "bloomAnchorsForHardDays1": "Опора удержала.",
-  "bloomAnchorsForHardDays2": "Сегодня ты осталась.",
-  "bloomAnchorsForHardDays3": "Даже в шуме ты вернулась.",
+  "bloomAnchorsForHardDays1": "Опора удержана.",
+  "bloomAnchorsForHardDays2": "Даже когда тяжело, ты — здесь.",
+  "bloomAnchorsForHardDays3": "Даже в шуме ты снова здесь.",
   "bloomAnchorsForHardDays4": "Маленькая устойчивая победа в трудный день.",
-  "bloomAnchorsForHardDays5": "Ты не пропала. Ты здесь.",
+  "bloomAnchorsForHardDays5": "Ты здесь. Это главное.",
   "bloomQuietFocus1": "Сфокусировалась. Закончила.",
   "bloomQuietFocus2": "Тихая работа сделана.",
   "bloomQuietFocus3": "Одно дело — целиком.",
   "bloomQuietFocus4": "Устойчивый фокус, реальный прогресс.",
-  "bloomQuietFocus5": "Ты пришла к работе.",
+  "bloomQuietFocus5": "Работа дождалась тебя.",
   "bloomWindingDown1": "Вечер теперь твой. Отдыхай.",
-  "bloomWindingDown2": "Всё улеглось. Пусть ночь придёт.",
+  "bloomWindingDown2": "Всё улеглось. Отдыхай.",
   "bloomWindingDown3": "Мягко завершено. Завтра подождёт.",
-  "bloomWindingDown4": "Всё на месте. Ты сделал(а) достаточно.",
-  "bloomWindingDown5": "Нежно закрыто. Спи спокойно.",
-  "bloomYourOwnWay1": "Ты пришёл(а) ко всему сегодня.",
+  "bloomWindingDown4": "Всё на месте. Сделано достаточно.",
+  "bloomWindingDown5": "Намерения выполнены. Спи спокойно.",
+  "bloomYourOwnWay1": "Сегодня всё — твоим путём.",
   "bloomYourOwnWay2": "Всё готово, по-твоему. Вот что важно.",
   "bloomYourOwnWay3": "Каждое — на твоих условиях.",
   "bloomYourOwnWay4": "Готово. Никому больше не нужно было это видеть.",
@@ -1638,7 +1326,7 @@
       }
     }
   },
-  "a11yHabitCardTodo": "{habit}, нажать, чтобы отметить",
+  "a11yHabitCardTodo": "{habit}, нажми, чтобы отметить",
   "@a11yHabitCardTodo": {
     "placeholders": {
       "habit": {
@@ -1646,7 +1334,7 @@
       }
     }
   },
-  "a11yHabitCardPinned": "{habit}, закреплено, нажать, чтобы отметить",
+  "a11yHabitCardPinned": "{habit}, закреплено, нажми, чтобы завершить",
   "@a11yHabitCardPinned": {
     "placeholders": {
       "habit": {

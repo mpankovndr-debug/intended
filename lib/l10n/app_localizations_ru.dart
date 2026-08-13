@@ -815,75 +815,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get monthDecember => 'Декабрь';
 
   @override
-  String get dailyMessage1 => 'Делай то, что считаешь верным сегодня';
-
-  @override
-  String get dailyMessage2 => 'Сегодня новый день';
-
-  @override
-  String get dailyMessage3 => 'Даже одна мелочь считается';
-
-  @override
-  String get dailyMessage4 => 'Будь добрее к себе сегодня';
-
-  @override
-  String get dailyMessage5 => 'Не спеши. Ты справляешься';
-
-  @override
-  String get dailyMessage6 => 'Начни с малого, действуй с заботой о себе';
-
-  @override
-  String get dailyMessage7 => 'Твой темп — только твой';
-
-  @override
-  String get dailyMessage8 => 'Даже один шаг — это прогресс';
-
-  @override
-  String get dailyMessage9 => 'Бери то, что подходит, остальное оставь';
-
-  @override
-  String get dailyMessage10 => 'Не нужно делать всё сразу';
-
-  @override
-  String get dailyMessage11 => 'Маленькие моменты складываются в большое';
-
-  @override
-  String get dailyMessage12 => 'Будь здесь и сейчас';
-
-  @override
-  String get dailyMessage13 => 'Нет неправильного способа начать';
-
-  @override
-  String get dailyMessage14 => 'Прислушайся к тому, что тебе нужно сегодня';
-
-  @override
-  String get dailyMessage15 => 'Прогресс каждый день выглядит по-разному';
-
-  @override
-  String get dailyMessage16 => 'Ты имеешь право не торопиться';
-
-  @override
-  String get dailyMessage17 => 'Одного дела за раз достаточно';
-
-  @override
-  String get dailyMessage18 => 'Начни оттуда, где ты сейчас';
-
-  @override
-  String get dailyMessage19 => 'Не нужно быть готовым, чтобы начать';
-
-  @override
-  String get dailyMessage20 => 'Доверяй своему ритму';
-
-  @override
-  String get dailyMessage21 => 'Можно адаптироваться на ходу';
-
-  @override
-  String get dailyMessage22 => 'Маленькая забота о себе — тоже забота';
-
-  @override
-  String get dailyMessage23 => 'Ты делаешь больше, чем тебе кажется';
-
-  @override
   String get customHabitTitle => 'Создать свою привычку';
 
   @override
@@ -1014,7 +945,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get completionHowDidItLand => 'Как это отозвалось?';
 
   @override
-  String get completionMoodGlad => 'Рад, что сделал';
+  String get completionMoodGlad => 'В радость';
 
   @override
   String get completionMoodNeutral => 'Нейтрально';
@@ -1066,45 +997,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get celebrationLovely => 'Чудесно';
-
-  @override
-  String get completionMsg1 => 'Маленькие шаги, как этот, важны.';
-
-  @override
-  String get completionMsg3 => 'Вот так и происходят перемены.';
-
-  @override
-  String get completionMsg4 => 'Ещё на шаг ближе.';
-
-  @override
-  String get completionMsg7 => 'Ещё одна маленькая победа.';
-
-  @override
-  String get completionMsg8 => 'У тебя получилось.';
-
-  @override
-  String get completionMsg11 => 'Это считается.';
-
-  @override
-  String get completionMsg12 => 'Обещание себе выполнено.';
-
-  @override
-  String get completionMsg13 => 'Поздравляю!';
-
-  @override
-  String get completionMsg14 => 'На это нашлось время.';
-
-  @override
-  String get completionMsg16 => 'Ни шагу назад.';
-
-  @override
-  String get completionMsg17 => 'Ещё одна привычка укрепилась.';
-
-  @override
-  String get completionMsg18 => 'Задумано — сделано.';
-
-  @override
-  String get completionMsg20 => 'Ты следуешь своему намерению.';
 
   @override
   String get insightWater1 =>
@@ -1552,7 +1444,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get notifWeeklyPathAnchorsForHardDays =>
-      'Неделя, в которую ты держалась. Посмотри, как опиралась на себя.';
+      'Неделя с опорой. Посмотри, что тебя держало.';
 
   @override
   String get notifWeeklyPathQuietFocus =>
@@ -1578,186 +1470,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get notifWeeklyChannelDesc => 'Напоминания для недельной рефлексии';
-
-  @override
-  String get affirmation1 =>
-      'Пропущенные дни не отменяют того, что ты уже сделал.';
-
-  @override
-  String get affirmation2 => 'Не нужно заслуживать отдых.';
-
-  @override
-  String get affirmation3 => 'Три привычки или одна — обе формы достаточны.';
-
-  @override
-  String get affirmation4 => 'То, что ты здесь, уже говорит о тебе хорошее.';
-
-  @override
-  String get affirmation5 =>
-      'Прогресс — не про совершенство, а про то, чтобы приходить.';
-
-  @override
-  String get affirmation6 => 'У тебя есть право на нелёгкие дни.';
-
-  @override
-  String get affirmation7 =>
-      'Маленькие действия считаются, даже когда кажутся маленькими.';
-
-  @override
-  String get affirmation8 => 'Ты не отстаёшь. Ты именно там, где нужно.';
-
-  @override
-  String get affirmation9 => 'Постоянство важно, но самосострадание тоже.';
-
-  @override
-  String get affirmation10 =>
-      'Твоя ценность не измеряется количеством галочек.';
-
-  @override
-  String get affirmation11 =>
-      'Некоторые недели труднее. Это просто быть человеком.';
-
-  @override
-  String get affirmation12 => 'Не нужно делать всё, чтобы делать достаточно.';
-
-  @override
-  String get affirmation13 =>
-      'Отдых — часть прогресса, а не его противоположность.';
-
-  @override
-  String get affirmation14 =>
-      'Приходить несовершенным — это всё равно приходить.';
-
-  @override
-  String get affirmation15 => 'Ты справляешься лучше, чем тебе кажется.';
-
-  @override
-  String get affirmation16 =>
-      'Можно начинать заново столько раз, сколько нужно.';
-
-  @override
-  String get affirmation17 => 'Твой темп — только твой. Сравнение не поможет.';
-
-  @override
-  String get affirmation18 =>
-      'Каждая попытка имеет значение, даже та, что кажется мелкой.';
-
-  @override
-  String get affirmation19 =>
-      'Не нужна мотивация, чтобы заслужить доброту к себе.';
-
-  @override
-  String get affirmation20 =>
-      'Прогресс может выглядеть просто как «попробую завтра».';
-
-  @override
-  String get affirmation21 => 'Ты имеешь право пересматривать свои ожидания.';
-
-  @override
-  String get affirmation22 => 'Перерыв — не значит провал.';
-
-  @override
-  String get affirmation23 => 'Самое трудное — начать. А ты уже это сделал.';
-
-  @override
-  String get affirmation24 => 'Не нужно разрешение, чтобы позаботиться о себе.';
-
-  @override
-  String get affirmation25 =>
-      'Твой максимум сегодня может отличаться от вчерашнего. Это нормально.';
-
-  @override
-  String get affirmation26 =>
-      'Трудности не значат, что ты делаешь что-то не так.';
-
-  @override
-  String get affirmation27 =>
-      'Ты уже справлялся с трудным. Справишься и с этим.';
-
-  @override
-  String get affirmation28 =>
-      'Твой прогресс может не быть похож на чужой. И это нормально.';
-
-  @override
-  String get affirmation29 => 'Тебе не нужно никому ничего доказывать.';
-
-  @override
-  String get affirmation30 =>
-      'Иногда просто пережить день — уже достаточный прогресс.';
-
-  @override
-  String get affirmation31 => 'Ты учишься, даже когда так не кажется.';
-
-  @override
-  String get affirmation32 => 'Быть мягче к себе — это не сдаваться.';
-
-  @override
-  String get affirmation33 =>
-      'Тебе не нужна причина, чтобы быть к себе добрее.';
-
-  @override
-  String get affirmation34 => 'То, что ты делаешь прямо сейчас — достаточно.';
-
-  @override
-  String get affirmation35 => 'Завтра — всегда шанс попробовать снова.';
-
-  @override
-  String get progressOnboardingPrompt =>
-      'Заверши настройку, чтобы увидеть свою неделю';
-
-  @override
-  String get progressTitle => 'Твоя неделя';
-
-  @override
-  String get progressWeeklySummary => 'ИТОГИ НЕДЕЛИ';
-
-  @override
-  String get progressWeekBeginning => 'Неделя только начинается.';
-
-  @override
-  String get progressShowedUpOnce => 'Ты отметился один раз на этой неделе.';
-
-  @override
-  String progressShowedUpCount(int count) {
-    return 'Ты отметился $count раз на этой неделе.';
-  }
-
-  @override
-  String progressMore(int count) {
-    return '+$count ещё';
-  }
-
-  @override
-  String get progressSeeAll => 'Показать все';
-
-  @override
-  String get progressShowLess => 'Свернуть';
-
-  @override
-  String get progressYourMoments => 'ТВОИ МОМЕНТЫ';
-
-  @override
-  String get progressEarlierToday => 'Ранее сегодня';
-
-  @override
-  String get progressYesterday => 'Вчера';
-
-  @override
-  String progressDaysAgo(int count) {
-    return '$count дн. назад';
-  }
-
-  @override
-  String progressMomentsCollected(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count моментов собрано',
-      few: '$count момента собрано',
-      one: '1 момент собран',
-    );
-    return '$_temp0';
-  }
 
   @override
   String get momentsTitle => 'Твои моменты';
@@ -2737,17 +2449,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get milestoneIdentitySubtitle => 'становится твоей привычкой';
 
   @override
-  String get boostCardTitle => 'Intended Boost — €1,99';
-
-  @override
-  String boostCardTitleDynamic(String price) {
-    return 'Intended Boost — $price';
-  }
-
-  @override
-  String get boostCardSubtitle => 'Открой обе тёмные темы.';
-
-  @override
   String get boostOrDivider => 'или';
 
   @override
@@ -2887,107 +2588,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingPhilosophyCta => 'Понятно';
 
   @override
-  String get reflectionTitle => 'Твоя неделя';
-
-  @override
-  String get reflectionAnchor7 =>
-      '7 из 7. Целая неделя заботы о себе — так держать!';
-
-  @override
-  String reflectionAnchor56(int days) {
-    return '$days из 7 дней. Это $days дней, когда ты выбираешь себя.';
-  }
-
-  @override
-  String reflectionAnchor34(int days) {
-    return '$days дня. Это $days дня, когда ты выбираешь себя.';
-  }
-
-  @override
-  String reflectionAnchor12(int days) {
-    return '$days раз. Даже один день считается — ты не пропадаешь.';
-  }
-
-  @override
-  String get reflectionAnchor0 =>
-      'Тихая неделя. Ничего страшного. Ты здесь сейчас, и это главное.';
-
-  @override
-  String reflectionPatternOneDay(String dayName) {
-    return 'Похоже, $dayName — это твой день. Уже три недели подряд.';
-  }
-
-  @override
-  String reflectionPatternTwoDays(String dayName1, String dayName2) {
-    return '$dayName1 и $dayName2 — похоже, это твои дни.';
-  }
-
-  @override
-  String get reflectionPatternNone =>
-      'Твой ритм всё ещё формируется. Это нормально — продолжай.';
-
-  @override
-  String reflectionFocusDominant(String area) {
-    return 'На этой неделе тебя тянет к «$area». Кажется, сейчас это важно.';
-  }
-
-  @override
-  String reflectionFocusBalanced(String area1, String area2) {
-    return 'Энергия этой недели распределилась между «$area1» и «$area2». Сбалансированная неделя.';
-  }
-
-  @override
-  String get reflectionReframeComeback =>
-      'Прошлая неделя была тише. А на этой — возвращение. В этом и смысл.';
-
-  @override
-  String reflectionReframeRefresh(int count) {
-    return 'Привычки обновились $count раз на этой неделе — это не отказ, это адаптация.';
-  }
-
-  @override
-  String get reflectionReframeSwap =>
-      'Одна привычка заменена на этой неделе. Понять, что не подходит — тоже прогресс.';
-
-  @override
-  String get reflectionShare => 'Поделиться';
-
-  @override
   String get insightsGrowthHint => 'Инсайты становятся точнее с каждой неделей';
-
-  @override
-  String get reflectionTeaser => 'Узнай больше о своей неделе';
-
-  @override
-  String get reflectionSectionThisWeek => 'ЭТА НЕДЕЛЯ';
-
-  @override
-  String get reflectionSectionYourRhythm => 'ТВОЙ РИТМ';
-
-  @override
-  String get reflectionSectionYourFocus => 'ТВОЙ ФОКУС';
-
-  @override
-  String get reflectionSectionNotice => 'НА ЗАМЕТКУ';
-
-  @override
-  String get reflectionPreviewRhythm =>
-      'Через пару недель мы покажем, в какие дни ты стабильнее всего';
-
-  @override
-  String get reflectionPreviewFocus =>
-      'Выполняй больше привычек, чтобы увидеть, к чему тебя тянет';
-
-  @override
-  String get reflectionBlurRhythm =>
-      'Узнай, какие дни и ритмы подходят тебе лучше всего';
-
-  @override
-  String get reflectionBlurFocus =>
-      'Узнай, на что уходит твоя энергия каждую неделю';
-
-  @override
-  String get reflectionUnlockPlus => 'Мои недельные инсайты';
 
   @override
   String get tipPinHabit => 'Удерживайте привычку, чтобы закрепить её сверху';
@@ -3284,7 +2885,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get coachMarkSmartNotificationsBody =>
-      'Intended подстраивает напоминания под твой ритм. Заходишь часто — мы отступаем. Пропадаешь — одно мягкое сообщение.';
+      'Intended подстраивает напоминания под твой ритм. Заходишь часто — даём тебе больше пространства. Пропадаешь — одно мягкое сообщение.';
 
   @override
   String get coachMarkMonthlyReflectionTitle => 'Месяц твоего присутствия';
@@ -3390,7 +2991,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get faqMissedDayAnswer =>
-      'Ничего не происходит. Стрики не рвутся, счётчики не сбрасываются — исследования привычек показали, что один пропущенный день ничего не ломает. Если ты затихал на несколько дней, первый квадрат после отмечается как возвращение, а не пропуск как провал. А если дело было сделано, но не отмечено — подержи карточку и запиши за вчера.';
+      'Ничего не происходит. Стрики не рвутся, счётчики не сбрасываются — исследования привычек показали, что один пропущенный день ничего не ломает. Если случилась тихая полоса, первый квадрат после неё отмечается как возвращение — не как провал. А если дело было сделано, но не отмечено — подержи карточку и запиши за вчера.';
 
   @override
   String get faqHowToPin => 'Как закрепить привычку?';
@@ -3449,7 +3050,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get faqShareReflectionAnswer =>
-      'Да — на «Твоём месяце» нажми «Поделиться» под сезоном. Получится карточка в формате сторис — с сеткой и словом сезона, под Instagram или TikTok. Названий привычек на ней нет, если сам их не добавишь.';
+      'Да — на «Твоём месяце» нажми «Поделиться» под сезоном. Получится карточка в формате сторис — с сеткой и словом сезона, под Instagram или TikTok. Названия привычек попадают на карточку только по твоему выбору.';
 
   @override
   String get faqNoReflection => 'Почему я не вижу рефлексию?';
@@ -3528,13 +3129,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get faqPricingAnswer =>
       'Ежемесячно: €6.99. Годовой: €49.99 (5 месяцев бесплатно). Навсегда: €89.99. Все включают 7 дней пробного периода.';
-
-  @override
-  String get faqBoost => 'Что такое Intended Boost?';
-
-  @override
-  String get faqBoostAnswer =>
-      'Разовая покупка за €0.99. Дополнительные темы, +1 своя привычка, карточки достижений, +1 область фокуса, 5 замен в месяц.';
 
   @override
   String get faqFreeVersion => 'Можно пользоваться бесплатно?';
@@ -3628,10 +3222,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bloomGentleMornings1 => 'Полное утро. Это кое-что значит.';
 
   @override
-  String get bloomGentleMornings2 => 'Каждое — мягко сделано.';
+  String get bloomGentleMornings2 => 'Каждое дело сделано с заботой.';
 
   @override
-  String get bloomGentleMornings3 => 'Утро завершено. Ты пришёл(а) тихо.';
+  String get bloomGentleMornings3 => 'Утро закрыто. Тихо и вовремя.';
 
   @override
   String get bloomGentleMornings4 => 'Всё здесь. Утро было твоим.';
@@ -3640,20 +3234,20 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bloomGentleMornings5 => 'Нежно и готово. Этого достаточно.';
 
   @override
-  String get bloomAnchorsForHardDays1 => 'Опора удержала.';
+  String get bloomAnchorsForHardDays1 => 'Опора удержана.';
 
   @override
-  String get bloomAnchorsForHardDays2 => 'Сегодня ты осталась.';
+  String get bloomAnchorsForHardDays2 => 'Даже когда тяжело, ты — здесь.';
 
   @override
-  String get bloomAnchorsForHardDays3 => 'Даже в шуме ты вернулась.';
+  String get bloomAnchorsForHardDays3 => 'Даже в шуме ты снова здесь.';
 
   @override
   String get bloomAnchorsForHardDays4 =>
       'Маленькая устойчивая победа в трудный день.';
 
   @override
-  String get bloomAnchorsForHardDays5 => 'Ты не пропала. Ты здесь.';
+  String get bloomAnchorsForHardDays5 => 'Ты здесь. Это главное.';
 
   @override
   String get bloomQuietFocus1 => 'Сфокусировалась. Закончила.';
@@ -3668,25 +3262,25 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bloomQuietFocus4 => 'Устойчивый фокус, реальный прогресс.';
 
   @override
-  String get bloomQuietFocus5 => 'Ты пришла к работе.';
+  String get bloomQuietFocus5 => 'Работа дождалась тебя.';
 
   @override
   String get bloomWindingDown1 => 'Вечер теперь твой. Отдыхай.';
 
   @override
-  String get bloomWindingDown2 => 'Всё улеглось. Пусть ночь придёт.';
+  String get bloomWindingDown2 => 'Всё улеглось. Отдыхай.';
 
   @override
   String get bloomWindingDown3 => 'Мягко завершено. Завтра подождёт.';
 
   @override
-  String get bloomWindingDown4 => 'Всё на месте. Ты сделал(а) достаточно.';
+  String get bloomWindingDown4 => 'Всё на месте. Сделано достаточно.';
 
   @override
-  String get bloomWindingDown5 => 'Нежно закрыто. Спи спокойно.';
+  String get bloomWindingDown5 => 'Намерения выполнены. Спи спокойно.';
 
   @override
-  String get bloomYourOwnWay1 => 'Ты пришёл(а) ко всему сегодня.';
+  String get bloomYourOwnWay1 => 'Сегодня всё — твоим путём.';
 
   @override
   String get bloomYourOwnWay2 => 'Всё готово, по-твоему. Вот что важно.';
@@ -3780,8 +3374,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Вечер — для отпускания, не для догоняния.';
 
   @override
-  String get notifPathWindingDown4 =>
-      'Ты был(а) здесь сегодня. Это стоит того, чтобы отдохнуть.';
+  String get notifPathWindingDown4 => 'Сегодня ты здесь. Это стоит отдыха.';
 
   @override
   String get notifPathWindingDown5 => 'Ночь твоя. Отдыхай без вины.';
@@ -3799,7 +3392,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get notifPathYourOwnWay3 =>
-      'Отметься, когда будешь готов(а). Без расписания, без давления.';
+      'Отметься, когда захочешь. Без расписания, без давления.';
 
   @override
   String get notifPathYourOwnWay4 =>
@@ -3814,218 +3407,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Ты создал(а) эту практику. Доверяй, куда она ведёт.';
 
   @override
-  String get warmthPathGentleMornings1 =>
-      'Не каждое утро должно быть новым началом. Иногда — просто тишина.';
-
-  @override
-  String get warmthPathGentleMornings2 =>
-      'Даже у утра бывают медленные дни. Это нормально.';
-
-  @override
-  String get warmthPathGentleMornings3 =>
-      'Твоё утро по-прежнему твоё, даже когда пропускаешь.';
-
-  @override
-  String get warmthPathGentleMornings4 =>
-      'Завтрашнее утро придёт мягко. Оно всегда так.';
-
-  @override
-  String get warmthPathGentleMornings5 => 'Отдыхай. Рассвет не ведёт счёт.';
-
-  @override
-  String get warmthPathGentleMornings6 =>
-      'Тихое утро — это тоже хорошо проведённое утро.';
-
-  @override
-  String get warmthPathAnchorsForHardDays1 =>
-      'Когда день шумный, хватит одной маленькой вещи.';
-
-  @override
-  String get warmthPathAnchorsForHardDays2 => 'Ты не опаздываешь. Ты здесь.';
-
-  @override
-  String get warmthPathAnchorsForHardDays3 =>
-      'Тяжёлый момент не портит весь день.';
-
-  @override
-  String get warmthPathAnchorsForHardDays4 =>
-      'Маленькое и устойчивое сильнее большого и хрупкого.';
-
-  @override
-  String get warmthPathAnchorsForHardDays5 => 'Ты пришла. Это и есть практика.';
-
-  @override
-  String get warmthPathAnchorsForHardDays6 =>
-      'Мягкое восстановление — тоже восстановление.';
-
-  @override
-  String get warmthPathQuietFocus1 => 'Медленно — значит надолго.';
-
-  @override
-  String get warmthPathQuietFocus2 => 'Одно маленькое дело — это уже движение.';
-
-  @override
-  String get warmthPathQuietFocus3 => 'Не обязательно сегодня сделать всё.';
-
-  @override
-  String get warmthPathQuietFocus4 => 'Фокус — это доброта к себе.';
-
-  @override
-  String get warmthPathQuietFocus5 => 'Работа подождёт. Паузы разрешены.';
-
-  @override
-  String get warmthPathQuietFocus6 => 'Тихие усилия тоже считаются.';
-
-  @override
-  String get warmthPathWindingDown1 =>
-      'Сегодня вечером просто отдыхай. Вот и весь план.';
-
-  @override
-  String get warmthPathWindingDown2 =>
-      'Не нужно идеально завершать день. Просто остановись.';
-
-  @override
-  String get warmthPathWindingDown3 => 'Отпусти день. Ты нёс(ла) достаточно.';
-
-  @override
-  String get warmthPathWindingDown4 =>
-      'Некоторые вечера просто для существования. Этот — один из них.';
-
-  @override
-  String get warmthPathWindingDown5 =>
-      'Ночи не нужен ритуал. Ей нужно, чтобы ты просто отпустил(а).';
-
-  @override
-  String get warmthPathWindingDown6 =>
-      'Спи спокойно. Завтра уже мягче, чем ты думаешь.';
-
-  @override
-  String get warmthPathYourOwnWay1 =>
-      'Твой путь включает отдых. Всегда включал.';
-
-  @override
-  String get warmthPathYourOwnWay2 =>
-      'Пропуск — часть ритма, который ты строишь.';
-
-  @override
-  String get warmthPathYourOwnWay3 =>
-      'Ты выбрал(а) этот путь. Ты можешь и остановиться на нём.';
-
-  @override
-  String get warmthPathYourOwnWay4 => 'Никто не ведёт счёт. Тем более мы.';
-
-  @override
-  String get warmthPathYourOwnWay5 =>
-      'Доверяй себе. Ты вернёшься, когда будет время.';
-
-  @override
-  String get warmthPathYourOwnWay6 => 'Твой темп. Твои правила. Всегда.';
-
-  @override
-  String get reflectionPathGentleMorningsIntro =>
-      'Ещё одна неделя мягких утр — или хотя бы попыток.';
-
-  @override
-  String get reflectionPathAnchorsForHardDaysIntro =>
-      'На этой неделе ты держалась за опоры.';
-
-  @override
-  String get reflectionPathQuietFocusIntro =>
-      'На этой неделе ты держала фокус — мягко.';
-
-  @override
-  String get reflectionPathWindingDownIntro =>
-      'Ещё одна неделя вечернего расслабления, по-своему.';
-
-  @override
-  String get reflectionPathYourOwnWayIntro =>
-      'Ещё одна неделя на своих условиях.';
-
-  @override
-  String get reflectionPathGentleMorningsQuiet =>
-      'Тихая неделя для утр. Некоторые недели — чтобы поспать подольше.';
-
-  @override
-  String get reflectionPathAnchorsForHardDaysQuiet =>
-      'Тихая неделя. Опоры остаются, даже маленькие.';
-
-  @override
-  String get reflectionPathQuietFocusQuiet =>
-      'Тихая неделя. Фокусу тоже нужен отдых.';
-
-  @override
-  String get reflectionPathWindingDownQuiet =>
-      'Тихая неделя. Иногда лучший вечерний ритуал — ничего не делать.';
-
-  @override
-  String get reflectionPathYourOwnWayQuiet =>
-      'Тихая неделя. Твой путь включает паузы.';
-
-  @override
-  String get monthlyReflectionTitle => 'Твой месяц';
-
-  @override
-  String get monthlyReflectionSectionOverview => 'ЭТОТ МЕСЯЦ';
-
-  @override
-  String get monthlyReflectionSectionTrends => 'ТЕНДЕНЦИИ';
-
-  @override
-  String get monthlyReflectionSectionGrowth => 'РОСТ';
-
-  @override
-  String monthlyReflectionMonthRange(String month, int year) {
-    return '$month $year';
-  }
-
-  @override
-  String monthlyReflectionOverview(int days, int total) {
-    return 'Ты отмечался(лась) $days дней из $total в этом месяце.';
-  }
-
-  @override
-  String monthlyReflectionBestWeek(String weekRange, int days) {
-    return 'Самая активная неделя — $weekRange, $days активных дней.';
-  }
-
-  @override
-  String monthlyReflectionConsistentHabit(String habit) {
-    return '$habit — твоя самая стабильная привычка в этом месяце.';
-  }
-
-  @override
-  String get monthlyReflectionGrowthUp =>
-      'Этот месяц активнее предыдущего. Ты находишь свой ритм.';
-
-  @override
-  String get monthlyReflectionGrowthSteady =>
-      'Стабильный месяц. Ты поддерживаешь то, что важно.';
-
-  @override
-  String get monthlyReflectionGrowthDown =>
-      'Тише, чем в прошлом месяце. Это нормально — некоторые сезоны для отдыха.';
-
-  @override
-  String get monthlyReflectionFirstMonth =>
-      'Твой первый полный месяц. Всё здесь — начало.';
-
-  @override
-  String get monthlyReflectionNoData =>
-      'Пока недостаточно данных. Продолжай — твой месячный обзор скоро появится.';
-
-  @override
-  String get monthlyReflectionUnlock => 'Увидеть месячные инсайты';
-
-  @override
-  String get monthlyReflectionSectionNotice => 'ОБРАТИТЬ ВНИМАНИЕ';
-
-  @override
-  String monthlyReflectionTopArea(String area) {
-    return 'Тебя тянуло к $area в этом месяце. Похоже, это сейчас важно.';
-  }
-
-  @override
-  String get adaptiveNotifReducedTitle => 'Мы отступаем';
+  String get adaptiveNotifReducedTitle => 'Даём тебе больше пространства';
 
   @override
   String get adaptiveNotifReducedBody =>
@@ -4037,7 +3419,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get adaptiveNotifSilentBody =>
-      'Мы заметили, что тебя давно не было. Без давления — мы будем здесь.';
+      'Мы заметили, что тебя давно не было. Не переживай, мы подождём.';
 
   @override
   String get a11yTabHabits => 'Привычки';
@@ -4055,12 +3437,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String a11yHabitCardTodo(String habit) {
-    return '$habit, нажать, чтобы отметить';
+    return '$habit, нажми, чтобы отметить';
   }
 
   @override
   String a11yHabitCardPinned(String habit) {
-    return '$habit, закреплено, нажать, чтобы отметить';
+    return '$habit, закреплено, нажми, чтобы завершить';
   }
 
   @override

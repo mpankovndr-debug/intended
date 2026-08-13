@@ -505,29 +505,6 @@
   "monthOctober": "October",
   "monthNovember": "November",
   "monthDecember": "December",
-  "dailyMessage1": "Do what feels right today",
-  "dailyMessage2": "Today is a fresh start",
-  "dailyMessage3": "Just one small thing counts",
-  "dailyMessage4": "Be kind to yourself today",
-  "dailyMessage5": "No rush. You're doing well",
-  "dailyMessage6": "Start small, stay gentle",
-  "dailyMessage7": "Your pace is your own",
-  "dailyMessage8": "Even one step is progress",
-  "dailyMessage9": "Take what works, leave the rest",
-  "dailyMessage10": "You don't have to do it all",
-  "dailyMessage11": "Small moments add up",
-  "dailyMessage12": "Be where you are right now",
-  "dailyMessage13": "There's no wrong way to begin",
-  "dailyMessage14": "Listen to what you need today",
-  "dailyMessage15": "Progress looks different every day",
-  "dailyMessage16": "You're allowed to take your time",
-  "dailyMessage17": "One thing at a time is enough",
-  "dailyMessage18": "Start wherever you are",
-  "dailyMessage19": "You don't need to be ready",
-  "dailyMessage20": "Trust your own rhythm",
-  "dailyMessage21": "It's okay to adjust as you go",
-  "dailyMessage22": "Small acts of care matter",
-  "dailyMessage23": "You're doing more than you think",
   "customHabitTitle": "Create custom habit",
   "customHabitPrompt": "What small action would you like to take?",
   "customHabitHint": "Keep it simple and specific.",
@@ -647,19 +624,6 @@
   "celebrationWayToGo": "Way to go",
   "celebrationGoodJob": "Good job",
   "celebrationLovely": "Lovely",
-  "completionMsg1": "Small steps like this matter.",
-  "completionMsg3": "This is how change happens.",
-  "completionMsg4": "One step closer.",
-  "completionMsg7": "Another small victory.",
-  "completionMsg8": "You made it happen.",
-  "completionMsg11": "This counts.",
-  "completionMsg12": "You kept your word to yourself.",
-  "completionMsg13": "Well done.",
-  "completionMsg14": "You made time for this.",
-  "completionMsg16": "You pushed through.",
-  "completionMsg17": "Another habit built.",
-  "completionMsg18": "You committed and you did it.",
-  "completionMsg20": "You honored your intention.",
   "insightWater1": "Even mild dehydration can affect mood and concentration.",
   "insightWater2": "Your brain is 75% water. Hydration affects cognitive function.",
   "insightWater3": "Drinking water can reduce fatigue by up to 14%.",
@@ -794,83 +758,6 @@
   "notifDailyChannelDesc": "Gentle daily habit reminders",
   "notifWeeklyChannelName": "Weekly Reminders",
   "notifWeeklyChannelDesc": "Weekly reflection reminders",
-  "affirmation1": "Missing days doesn't erase what you've already done.",
-  "affirmation2": "You don't need to earn rest.",
-  "affirmation3": "Three habits or one — both are enough.",
-  "affirmation4": "The fact that you're here says something good about you.",
-  "affirmation5": "Progress isn't about perfection, it's about showing up.",
-  "affirmation6": "You're allowed to have off days.",
-  "affirmation7": "Small actions count, even when they feel small.",
-  "affirmation8": "You're not behind. You're exactly where you need to be.",
-  "affirmation9": "Consistency is important, but so is self-compassion.",
-  "affirmation10": "Your worth isn't measured by what you check off.",
-  "affirmation11": "Some weeks are harder than others. That's just being human.",
-  "affirmation12": "You don't need to do everything to be doing enough.",
-  "affirmation13": "Rest is part of progress, not the opposite of it.",
-  "affirmation14": "Showing up imperfectly is still showing up.",
-  "affirmation15": "You're doing better than you think you are.",
-  "affirmation16": "It's okay to start over as many times as you need.",
-  "affirmation17": "Your pace is your own. Comparison won't help.",
-  "affirmation18": "Every attempt matters, even the ones that feel small.",
-  "affirmation19": "You don't have to feel motivated to deserve kindness.",
-  "affirmation20": "Progress can look like simply trying again tomorrow.",
-  "affirmation21": "You're allowed to adjust your expectations.",
-  "affirmation22": "Taking breaks doesn't mean you've failed.",
-  "affirmation23": "The hardest part is often just beginning. You did that.",
-  "affirmation24": "You don't need permission to take care of yourself.",
-  "affirmation25": "Your best today might look different than yesterday. That's okay.",
-  "affirmation26": "Struggling doesn't mean you're doing it wrong.",
-  "affirmation27": "You've already done hard things. You can do this too.",
-  "affirmation28": "It's okay if your progress doesn't look like anyone else's.",
-  "affirmation29": "You don't have to prove anything to anyone.",
-  "affirmation30": "Sometimes just surviving the day is progress enough.",
-  "affirmation31": "You're learning, even when it doesn't feel like it.",
-  "affirmation32": "Being gentle with yourself is not giving up.",
-  "affirmation33": "You don't need a reason to be kind to yourself.",
-  "affirmation34": "What you're doing right now is enough.",
-  "affirmation35": "Tomorrow is always a chance to try again.",
-  "progressOnboardingPrompt": "Complete onboarding to see your week",
-  "progressTitle": "Your week",
-  "progressWeeklySummary": "WEEKLY SUMMARY",
-  "progressWeekBeginning": "Your week is just beginning.",
-  "progressShowedUpOnce": "You showed up once this week.",
-  "progressShowedUpCount": "You showed up {count} times this week.",
-  "@progressShowedUpCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "progressMore": "+{count} more",
-  "@progressMore": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "progressSeeAll": "See all",
-  "progressShowLess": "Show less",
-  "progressYourMoments": "YOUR MOMENTS",
-  "progressEarlierToday": "Earlier today",
-  "progressYesterday": "Yesterday",
-  "progressDaysAgo": "{count} days ago",
-  "@progressDaysAgo": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "progressMomentsCollected": "{count, plural, =1{1 moment collected} other{{count} moments collected}}",
-  "@progressMomentsCollected": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "momentsTitle": "Your moments",
   "momentsSubtitle": "Every habit you complete is saved to your collection.",
   "momentsEmptyTitle": "Your moments will appear here.",
@@ -1325,16 +1212,6 @@
     }
   },
   "milestoneIdentitySubtitle": "is becoming your thing",
-  "boostCardTitle": "Intended Boost — €1.99",
-  "boostCardTitleDynamic": "Intended Boost — {price}",
-  "@boostCardTitleDynamic": {
-    "placeholders": {
-      "price": {
-        "type": "String"
-      }
-    }
-  },
-  "boostCardSubtitle": "Unlock both dark themes.",
   "boostOrDivider": "or",
   "boostGoUnlimited": "Want more? Go unlimited with Intended+",
   "boostPurchaseError": "Something went wrong with the purchase. Please try again.",
@@ -1376,94 +1253,7 @@
   "onboardingPhilosophyHeading": "This isn't a tracker.\nIt's a return to yourself.",
   "onboardingPhilosophyBody": "No streaks to maintain. No guilt for skipping.\nYour progress never resets. One small intention is enough.",
   "onboardingPhilosophyCta": "Got it",
-  "reflectionTitle": "Your week",
-  "reflectionAnchor7": "You showed up every single day this week. Not perfect — present.",
-  "reflectionAnchor56": "You showed up {days} out of 7 days this week. That's {days} days you chose to try.",
-  "@reflectionAnchor56": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "reflectionAnchor34": "You showed up {days} days this week. That's {days} days you chose to try.",
-  "@reflectionAnchor34": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "reflectionAnchor12": "You checked in {days, plural, =1{1 time} other{{days} times}} this week. Even one day counts — you didn't disappear.",
-  "@reflectionAnchor12": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "reflectionAnchor0": "Quiet week. That's okay. You're here now, and that's what matters.",
-  "reflectionPatternOneDay": "Looks like {dayName} is when you really show up. Three weeks in a row now.",
-  "@reflectionPatternOneDay": {
-    "placeholders": {
-      "dayName": {
-        "type": "String"
-      }
-    }
-  },
-  "reflectionPatternTwoDays": "{dayName1} and {dayName2} seem to be your days.",
-  "@reflectionPatternTwoDays": {
-    "placeholders": {
-      "dayName1": {
-        "type": "String"
-      },
-      "dayName2": {
-        "type": "String"
-      }
-    }
-  },
-  "reflectionPatternNone": "Your rhythm is still finding its shape. That's normal — keep going.",
-  "reflectionFocusDominant": "You've been drawn to {area} habits lately. That seems important to you right now.",
-  "@reflectionFocusDominant": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
-  "reflectionFocusBalanced": "You spread your energy across {area1} and {area2} this week. A balanced week.",
-  "@reflectionFocusBalanced": {
-    "placeholders": {
-      "area1": {
-        "type": "String"
-      },
-      "area2": {
-        "type": "String"
-      }
-    }
-  },
-  "reflectionReframeComeback": "Last week was quieter. This week you came back. That's the whole point.",
-  "reflectionReframeRefresh": "You refreshed your habits {count} time(s) this week — that's not quitting, that's adapting.",
-  "@reflectionReframeRefresh": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "reflectionReframeSwap": "You swapped out a habit this week. Knowing what doesn't work is progress too.",
-  "reflectionShare": "Share",
   "insightsGrowthHint": "Insights get sharper every week",
-  "reflectionTeaser": "There's more to your week",
-  "reflectionSectionThisWeek": "THIS WEEK",
-  "reflectionSectionYourRhythm": "YOUR RHYTHM",
-  "reflectionSectionYourFocus": "YOUR FOCUS",
-  "reflectionSectionNotice": "SOMETHING TO NOTICE",
-  "reflectionPreviewRhythm": "After a few weeks, we'll show you which days you're most consistent",
-  "reflectionPreviewFocus": "Complete more habits to see what you're drawn to",
-  "reflectionBlurRhythm": "See which days and patterns work best for you",
-  "reflectionBlurFocus": "Discover where your energy goes each week",
-  "reflectionUnlockPlus": "See my weekly insights",
   "tipPinHabit": "Long press on a habit to pin it to the top",
   "tipCuratedPack": "Try a curated pack — find them in Browse all habits",
   "tipWidget": "Add Intended to your home screen — long press your wallpaper and add a widget",
@@ -1686,8 +1476,6 @@
   "faqWhatIsPlusAnswer": "Intended+ is the reading of your month: the drift warning before a quiet stretch, a four-line letter, next month's plan built from this month's evidence, what actually lifts you, the season's explanation and archive — plus all ten themes, premium icons and widgets.",
   "faqPricing": "How much does it cost?",
   "faqPricingAnswer": "Monthly: €6.99. Yearly: €49.99 (5 months free). Lifetime: €89.99. All include a 7-day free trial.",
-  "faqBoost": "What is Intended Boost?",
-  "faqBoostAnswer": "A one-time €0.99 purchase. Extra themes, +1 custom habit, milestone cards, +1 focus area, 5 swaps per month.",
   "faqFreeVersion": "Can I use it for free?",
   "faqFreeVersionAnswer": "Yes. Free includes intention paths, 2 custom habits, 2 focus areas, weekly reflections, smart notifications, and widgets.",
   "faqRestore": "How do I restore my purchase?",
@@ -1720,7 +1508,7 @@
   "bloomGentleMornings4": "All here. The morning was yours.",
   "bloomGentleMornings5": "Gentle and done. That's enough.",
   "bloomAnchorsForHardDays1": "An anchor held.",
-  "bloomAnchorsForHardDays2": "Today, you stayed.",
+  "bloomAnchorsForHardDays2": "Even when hard, you're here.",
   "bloomAnchorsForHardDays3": "Even when loud, you returned.",
   "bloomAnchorsForHardDays4": "A small steady win on a hard day.",
   "bloomAnchorsForHardDays5": "You're not gone. You're here.",
@@ -1769,106 +1557,6 @@
   "notifPathYourOwnWay4": "Your path is your own. Show up however you want.",
   "notifPathYourOwnWay5": "One intention. That's all. The rest is up to you.",
   "notifPathYourOwnWay6": "You built this practice. Trust where it takes you.",
-  "warmthPathGentleMornings1": "Not every morning needs to be a fresh start. Some just need quiet.",
-  "warmthPathGentleMornings2": "Even mornings have slow days. That's allowed.",
-  "warmthPathGentleMornings3": "Your morning is still yours, even when you skip this.",
-  "warmthPathGentleMornings4": "Tomorrow morning will come gently. It always does.",
-  "warmthPathGentleMornings5": "Rest now. The sunrise doesn't keep score.",
-  "warmthPathGentleMornings6": "A quiet morning is still a morning well spent.",
-  "warmthPathAnchorsForHardDays1": "When the day feels loud, one small thing is enough.",
-  "warmthPathAnchorsForHardDays2": "You're not behind. You're here.",
-  "warmthPathAnchorsForHardDays3": "A hard moment doesn't ruin the whole day.",
-  "warmthPathAnchorsForHardDays4": "Small and steady beats big and brittle.",
-  "warmthPathAnchorsForHardDays5": "You showed up. That's the practice.",
-  "warmthPathAnchorsForHardDays6": "Soft repairs are still repairs.",
-  "warmthPathQuietFocus1": "Slow is steady. Steady is far.",
-  "warmthPathQuietFocus2": "One small task done is real progress.",
-  "warmthPathQuietFocus3": "You don't have to do it all today.",
-  "warmthPathQuietFocus4": "Focus is a kindness you give yourself.",
-  "warmthPathQuietFocus5": "The work waits. You're allowed pauses.",
-  "warmthPathQuietFocus6": "Quiet effort still counts.",
-  "warmthPathWindingDown1": "Tonight, just rest. That's the whole plan.",
-  "warmthPathWindingDown2": "You don't need to wind down perfectly. Just stop.",
-  "warmthPathWindingDown3": "Let the day go. You held enough.",
-  "warmthPathWindingDown4": "Some evenings are just for existing. This is one of them.",
-  "warmthPathWindingDown5": "The night doesn't need a routine. It just needs you to let go.",
-  "warmthPathWindingDown6": "Sleep well. Tomorrow is already gentler than you think.",
-  "warmthPathYourOwnWay1": "Your own way includes rest. Always has.",
-  "warmthPathYourOwnWay2": "Skipping is part of the rhythm you're building.",
-  "warmthPathYourOwnWay3": "You chose this path. You also get to pause on it.",
-  "warmthPathYourOwnWay4": "No one's keeping score. Especially not us.",
-  "warmthPathYourOwnWay5": "Trust yourself. You'll come back when it's time.",
-  "warmthPathYourOwnWay6": "Your pace. Your rules. Always.",
-  "reflectionPathGentleMorningsIntro": "Another week of gentle mornings — or at least trying for them.",
-  "reflectionPathAnchorsForHardDaysIntro": "This week, you anchored yourself.",
-  "reflectionPathQuietFocusIntro": "This week, you stayed focused — gently.",
-  "reflectionPathWindingDownIntro": "Another week of winding down, your way.",
-  "reflectionPathYourOwnWayIntro": "Another week on your own terms.",
-  "reflectionPathGentleMorningsQuiet": "A quiet week for mornings. Some weeks are for sleeping in.",
-  "reflectionPathAnchorsForHardDaysQuiet": "A quiet week. Anchors stay even when small.",
-  "reflectionPathQuietFocusQuiet": "A quiet week. Focus is allowed to rest.",
-  "reflectionPathWindingDownQuiet": "A quiet week. Sometimes the best evening ritual is doing nothing at all.",
-  "reflectionPathYourOwnWayQuiet": "Quiet week. Your path includes pauses too.",
-  "monthlyReflectionTitle": "Your month",
-  "monthlyReflectionSectionOverview": "THIS MONTH",
-  "monthlyReflectionSectionTrends": "TRENDS",
-  "monthlyReflectionSectionGrowth": "GROWTH",
-  "monthlyReflectionMonthRange": "{month} {year}",
-  "@monthlyReflectionMonthRange": {
-    "placeholders": {
-      "month": {
-        "type": "String"
-      },
-      "year": {
-        "type": "int"
-      }
-    }
-  },
-  "monthlyReflectionOverview": "You showed up {days} days out of {total} this month.",
-  "@monthlyReflectionOverview": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
-  "monthlyReflectionBestWeek": "Your strongest week was {weekRange} with {days} active days.",
-  "@monthlyReflectionBestWeek": {
-    "placeholders": {
-      "weekRange": {
-        "type": "String"
-      },
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "monthlyReflectionConsistentHabit": "{habit} was your most consistent habit this month.",
-  "@monthlyReflectionConsistentHabit": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
-  "monthlyReflectionGrowthUp": "This month was more active than last month. You're finding your rhythm.",
-  "monthlyReflectionGrowthSteady": "Steady month. You're maintaining what matters.",
-  "monthlyReflectionGrowthDown": "Quieter month than last. That's okay — some seasons are for resting.",
-  "monthlyReflectionFirstMonth": "Your first full month. Everything here is a beginning.",
-  "monthlyReflectionNoData": "Not enough data yet. Keep going — your monthly reflection will arrive soon.",
-  "monthlyReflectionUnlock": "See my monthly insights",
-  "monthlyReflectionSectionNotice": "SOMETHING TO NOTICE",
-  "monthlyReflectionTopArea": "You gravitated toward {area} this month. That seems to matter to you right now.",
-  "@monthlyReflectionTopArea": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
   "adaptiveNotifReducedTitle": "We're stepping back",
   "adaptiveNotifReducedBody": "You've been checking in regularly — we'll remind you less often.",
   "adaptiveNotifReengageBody": "It's been a little while. Just a gentle hello.",
