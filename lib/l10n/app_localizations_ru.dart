@@ -945,7 +945,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get completionHowDidItLand => 'Как это отозвалось?';
 
   @override
-  String get completionMoodGlad => 'В радость';
+  String get completionMoodGlad => 'Не зря';
 
   @override
   String get completionMoodNeutral => 'Нейтрально';
@@ -1444,7 +1444,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get notifWeeklyPathAnchorsForHardDays =>
-      'Неделя с опорой. Посмотри, что тебя держало.';
+      'Неделя с опорой. Посмотри, что тебе помогло.';
 
   @override
   String get notifWeeklyPathQuietFocus =>
@@ -2991,7 +2991,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get faqMissedDayAnswer =>
-      'Ничего не происходит. Стрики не рвутся, счётчики не сбрасываются — исследования привычек показали, что один пропущенный день ничего не ломает. Если случилась тихая полоса, первый квадрат после неё отмечается как возвращение — не как провал. А если дело было сделано, но не отмечено — подержи карточку и запиши за вчера.';
+      'Ничего не происходит. Стрики не прерываются, счётчики не сбрасываются — исследования привычек показали, что один пропущенный день ничего не ломает. Если случилась тихая полоса, первый квадрат после неё отмечается как возвращение — не как провал. А если дело было сделано, но не отмечено — удержи карточку подольше и запиши за вчера.';
 
   @override
   String get faqHowToPin => 'Как закрепить привычку?';
@@ -3260,9 +3260,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get bloomQuietFocus4 => 'Устойчивый фокус, реальный прогресс.';
-
-  @override
-  String get bloomQuietFocus5 => 'Работа дождалась тебя.';
 
   @override
   String get bloomWindingDown1 => 'Вечер теперь твой. Отдыхай.';

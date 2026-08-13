@@ -5534,12 +5534,6 @@ abstract class AppLocalizations {
   /// **'Steady focus. Real progress.'**
   String get bloomQuietFocus4;
 
-  /// No description provided for @bloomQuietFocus5.
-  ///
-  /// In en, this message translates to:
-  /// **'You showed up to the work.'**
-  String get bloomQuietFocus5;
-
   /// No description provided for @bloomWindingDown1.
   ///
   /// In en, this message translates to:

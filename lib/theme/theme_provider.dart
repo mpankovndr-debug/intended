@@ -4,7 +4,11 @@ import '../services/analytics_service.dart';
 import 'app_colors.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  AppTheme _theme = AppTheme.warmClay;
+  // Iris is the default for fresh installs: the store page, the share
+  // canvases and every marketing surface are Iris, and a stranger should
+  // open the app they saw. Saved choices are untouched — this is only the
+  // value before the first pick.
+  AppTheme _theme = AppTheme.iris;
 
   AppTheme get theme => _theme;
   AppColorScheme get colors => AppColors.of(_theme);

@@ -3222,9 +3222,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bloomQuietFocus4 => 'Steady focus. Real progress.';
 
   @override
-  String get bloomQuietFocus5 => 'You showed up to the work.';
-
-  @override
   String get bloomWindingDown1 => 'The evening is yours now. Rest.';
 
   @override

@@ -235,12 +235,13 @@ class _QuietBloomOverlayState extends State<QuietBloomOverlay>
         4 => l10n.bloomAnchorsForHardDays4,
         _ => l10n.bloomAnchorsForHardDays5,
       },
+      // Four, not five: the fifth ("You showed up to the work") read as a
+      // performance review and was cut in the founder's proofread.
       IntentionPathId.quietFocus => switch (index) {
-        1 => l10n.bloomQuietFocus1,
         2 => l10n.bloomQuietFocus2,
         3 => l10n.bloomQuietFocus3,
         4 => l10n.bloomQuietFocus4,
-        _ => l10n.bloomQuietFocus5,
+        _ => l10n.bloomQuietFocus1,
       },
       IntentionPathId.windingDown => switch (index) {
         1 => l10n.bloomWindingDown1,
