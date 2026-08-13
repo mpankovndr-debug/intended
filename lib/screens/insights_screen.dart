@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/moment.dart';
@@ -18,6 +19,7 @@ import '../onboarding_v2/onboarding_state.dart';
 import '../services/moments_service.dart';
 import '../services/notification_preferences_service.dart';
 import '../services/notification_scheduler.dart';
+import '../services/analytics_service.dart';
 import '../services/plan_service.dart';
 import 'paywall_screen.dart';
 import 'season_share_screen.dart';
@@ -72,6 +74,12 @@ class _InsightsScreenState extends State<InsightsScreen> {
   PlanProof? _proof;
   /// Legend filter: when set, the grid recedes to this focus area.
   String? _gridFilter;
+
+  /// Whether the user has ever used the legend filter. Until they have, a
+  /// one-line caption under the chips teaches the tap — the same way the
+  /// grid teaches itself — and then retires permanently (§5.6: discovery
+  /// happens inline, next to the thing, and is never announced twice).
+  bool _filterHintDone = true;
 
   /// First day of the month on display. Browsing back is free — closed
   /// months are frozen precisely so they can be revisited (§10) — and the
@@ -142,6 +150,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final declined = await PlanService.declinedFor(monthKey);
     final accepted = await PlanService.acceptedFor(monthKey);
     final proof = await PlanService.proof();
+    final prefs = await SharedPreferences.getInstance();
+    final filterHintDone = prefs.getBool('grid_filter_hint_done') ?? false;
     if (!mounted) return;
     setState(() {
       _moments = moments;
@@ -161,6 +171,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       _declinedNudges = declined;
       _acceptedThisMonth = accepted;
       _proof = proof;
+      _filterHintDone = filterHintDone;
       // Ranked from the full history, not the month: eight weeks of taps
       // straddle a month boundary by definition.
       _lift = Lift.read(
@@ -586,8 +597,15 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
                   HapticFeedback.selectionClick();
-                  setState(() =>
-                      _gridFilter = _gridFilter == e.key ? null : e.key);
+                  setState(() {
+                    _gridFilter = _gridFilter == e.key ? null : e.key;
+                    _filterHintDone = true;
+                  });
+                  SharedPreferences.getInstance().then(
+                      (p) => p.setBool('grid_filter_hint_done', true));
+                  // The number that decides whether the caption is enough or
+                  // the chips need a louder cue. Data before escalation.
+                  AnalyticsService.logGridFilterUsed();
                 },
                 // A pill, not a caption (design review): bare dot-and-label
                 // read as a legend, and nobody taps a legend. The border and
@@ -645,6 +663,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
               ),
           ],
         ),
+        if (!_filterHintDone && _gridFilter == null) ...[
+          const SizedBox(height: 10),
+          Text(l10n.insightsFilterHint, style: _cardMeta(colors)),
+        ],
         // The observation the filter earns: count and spread, told as fact.
         // "Across 7 days" and never "7 of 12 days" — a denominator would
         // rebuild the target the grid exists to remove.

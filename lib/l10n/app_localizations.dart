@@ -6307,6 +6307,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export didn\'t finish — try again.'**
   String get profileExportFailed;
+
+  /// No description provided for @insightsFilterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'tap a colour = see just those'**
+  String get insightsFilterHint;
 }
 
 class _AppLocalizationsDelegate

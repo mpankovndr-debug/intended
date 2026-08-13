@@ -1775,5 +1775,6 @@
   "yearInSeasonsTitle": "Your months",
   "widgetCatchupEyebrow": "FROM YOUR WIDGET",
   "profileExportData": "Export my data (JSON)",
-  "profileExportFailed": "Export didn't finish — try again."
+  "profileExportFailed": "Export didn't finish — try again.",
+  "insightsFilterHint": "tap a colour = see just those"
 }

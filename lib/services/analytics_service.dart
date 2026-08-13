@@ -8,6 +8,15 @@ class AnalyticsService {
 
   // ── Launch-decision metrics ───────────────────────────────────
 
+  /// First-and-repeated use of the grid's legend filter. If this stays near
+  /// zero, the inline caption wasn't enough and the chips need a louder cue.
+  static Future<void> logGridFilterUsed() async {
+    try {
+      await _analytics.logEvent(name: 'grid_filter_used');
+    } catch (_) {}
+  }
+
+
   /// The one number the paid tier lives or dies on: whether people take the
   /// mood tap or skip it. The letter's mood line, all of what-lifts-you and
   /// the plan's texture starve on skips — this event is how we find out

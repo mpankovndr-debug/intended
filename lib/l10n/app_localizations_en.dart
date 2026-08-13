@@ -3713,4 +3713,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileExportFailed => 'Export didn\'t finish — try again.';
+
+  @override
+  String get insightsFilterHint => 'tap a colour = see just those';
 }

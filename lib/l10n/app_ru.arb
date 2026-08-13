@@ -1419,5 +1419,6 @@
   "yearInSeasonsTitle": "Твои месяцы",
   "widgetCatchupEyebrow": "ИЗ ВИДЖЕТА",
   "profileExportData": "Экспорт данных (JSON)",
-  "profileExportFailed": "Экспорт не получился — попробуй ещё раз."
+  "profileExportFailed": "Экспорт не получился — попробуй ещё раз.",
+  "insightsFilterHint": "нажми на цвет = только эти квадраты"
 }

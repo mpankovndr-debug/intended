@@ -3778,4 +3778,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileExportFailed => 'Экспорт не получился — попробуй ещё раз.';
+
+  @override
+  String get insightsFilterHint => 'нажми на цвет = только эти квадраты';
 }
