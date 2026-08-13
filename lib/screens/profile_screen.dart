@@ -104,6 +104,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final credential = await AuthService.signInWithGoogle();
       if (credential?.user != null && context.mounted) {
         await context.read<RevenueCatService>().logIn(credential!.user!.uid);
+        // Signing in has to be worth something: pull the account's backup
+        // straight away. Restore is a fill-and-union merge, so this can only
+        // add — a rich local device never loses to an old backup.
+        if (context.mounted) {
+          final restored = await context.read<BackupService>().restore();
+          if (restored && context.mounted) {
+            await context.read<OnboardingState>().loadUserHabits();
+          }
+        }
       }
     } catch (e) {
       if (context.mounted) {
@@ -120,6 +129,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final credential = await AuthService.signInWithApple();
       if (credential?.user != null && context.mounted) {
         await context.read<RevenueCatService>().logIn(credential!.user!.uid);
+        // Signing in has to be worth something: pull the account's backup
+        // straight away. Restore is a fill-and-union merge, so this can only
+        // add — a rich local device never loses to an old backup.
+        if (context.mounted) {
+          final restored = await context.read<BackupService>().restore();
+          if (restored && context.mounted) {
+            await context.read<OnboardingState>().loadUserHabits();
+          }
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('Sign in with Apple error: $e');

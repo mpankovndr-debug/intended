@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -121,6 +123,51 @@ class BackupService extends ChangeNotifier {
     }
   }
 
+  /// Union of two moments_collection JSON blobs, newest first, local winning
+  /// on id conflicts. Both sides may be malformed independently; a side that
+  /// fails to parse contributes nothing rather than failing the restore.
+  static String _mergeMoments(String? localRaw, String remoteRaw) {
+    List<dynamic> parse(String? raw) {
+      if (raw == null) return const [];
+      try {
+        final v = jsonDecode(raw);
+        return v is List ? v : const [];
+      } catch (_) {
+        return const [];
+      }
+    }
+
+    final byId = <String, dynamic>{};
+    for (final m in parse(remoteRaw)) {
+      final id = m is Map<String, dynamic> ? m['id'] : null;
+      if (id is String) byId[id] = m;
+    }
+    for (final m in parse(localRaw)) {
+      final id = m is Map<String, dynamic> ? m['id'] : null;
+      if (id is String) byId[id] = m; // local wins
+    }
+    final merged = byId.values.toList()
+      ..sort((a, b) => ((b['completedAt'] as String?) ?? '')
+          .compareTo((a['completedAt'] as String?) ?? ''));
+    return jsonEncode(merged);
+  }
+
+  /// Union of two string-keyed JSON maps (frozen seasons), local winning —
+  /// a season frozen on this device is never replaced by an older reading.
+  static String _mergeByKey(String? localRaw, String remoteRaw) {
+    Map<String, dynamic> parse(String? raw) {
+      if (raw == null) return {};
+      try {
+        final v = jsonDecode(raw);
+        return v is Map<String, dynamic> ? v : {};
+      } catch (_) {
+        return {};
+      }
+    }
+
+    return jsonEncode({...parse(remoteRaw), ...parse(localRaw)});
+  }
+
   /// Restore SharedPreferences from a Firestore backup.
   Future<bool> restore() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -140,13 +187,33 @@ class BackupService extends ChangeNotifier {
 
       final prefs = await SharedPreferences.getInstance();
 
+      // Restore fills what's missing; it never overwrites what exists.
+      //
+      // The old version blind-set every key, which made signing in *lossy*:
+      // a device with 200 local moments joining an account whose backup held
+      // an old 20 would wake up with the 20. Now scalar keys only land where
+      // the local side has nothing, and the two irreplaceable collections —
+      // moments and frozen seasons — are merged as unions, local winning on
+      // conflict. Signing in can only ever add.
       for (final entry in data.entries) {
         // Restore original key name if it was sanitized
         final originalKey = keyMap[entry.key] as String? ?? entry.key;
         final value = entry.value;
 
         try {
-          if (value is bool) {
+          if (originalKey == 'moments_collection' && value is String) {
+            await prefs.setString(
+              originalKey,
+              _mergeMoments(prefs.getString(originalKey), value),
+            );
+          } else if (originalKey == 'seasons_by_month' && value is String) {
+            await prefs.setString(
+              originalKey,
+              _mergeByKey(prefs.getString(originalKey), value),
+            );
+          } else if (prefs.containsKey(originalKey)) {
+            continue;
+          } else if (value is bool) {
             await prefs.setBool(originalKey, value);
           } else if (value is int) {
             await prefs.setInt(originalKey, value);
@@ -164,6 +231,10 @@ class BackupService extends ChangeNotifier {
           debugPrint('BackupService: failed to restore key $originalKey: $e');
         }
       }
+
+      // The union this device now holds is richer than either side was;
+      // push it up so the next device to sign in gets everything too.
+      backup();
 
       final backupTime = doc.data()?['backupTime'] as String?;
       if (backupTime != null) {

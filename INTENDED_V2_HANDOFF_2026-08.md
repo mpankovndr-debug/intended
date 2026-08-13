@@ -31,7 +31,7 @@ Branch: **`main`**, 31 commits ahead of `origin/main` and unpushed. `restore-poi
 
 A ten-finding code review (Aug 13) was fixed in full — the largest: `momentsForMonth` double-shifted its anchor by the UTC offset, which showed every user west of UTC the previous month and froze seasons under wrong archive keys; onboarding left routes under MainTabs that stray pops could land on; and the paid gap intervals printed reversed. `visibleHabits()` on OnboardingState is now the single definition of "active" — Today, the widget, all-done detection, packs, swaps and the plan all read it. The orphaned pre-v2 reflection cluster (ten files) is deleted, and **Boost is retired from sale** (entitlement still honoured; the ceiling sheet only opens the real paywall now).
 
-**Notifications, current state:** adaptive *cadence* exists (normal / reduced / re-engage tiers), the weekly summary exists and now points at the month page. Not yet built, in priority order: the paywall surface rewrite (stale copy, $39.99 fallback — the audit's top funnel issue), the plan nudge on the 1st, drift-as-notification, and the consented adaptive-timing toggle.
+**Notifications, current state:** adaptive *cadence* exists (normal / reduced / re-engage tiers), the weekly summary exists and now points at the month page. The Day-0 paywall surface was rewritten Aug 13 (v2 offer, founder-proofread RU, per-month anchoring; the "$39.99" was the App Store sandbox default — the code prefers the live RevenueCat price). Still queued, in priority order: the plan nudge on the 1st, drift-as-notification, and the consented adaptive-timing toggle.
 
 Four design-review rounds were applied against live simulator screenshots (share story card on the theme background, one-card Insights, done-card treatment, nine paths with fixed starter actions, path adoption end-to-end). The letter's rewritten voice, the two-group plan, the moved paywall and the rescue screen have been verified by tests and the analyzer; the rest has had eyes on it.
 
@@ -42,6 +42,8 @@ The plan's four nudges each write a real setting — move the reminder, set asid
 §6.3 compares equal windows, four weeks either side, and reports a fall as plainly as a rise. The proof line does not appear until a full four weeks have passed since the change.
 
 ### ⚠️ Needs you — cannot be done or seen from a dev machine
+
+0. **Correction (2026-08-13):** account deletion was believed missing in the readiness audit — it exists and is complete (reauth both providers, Apple token revocation, backup doc + auth user deleted). Row relabelled "Delete account & data". Restore is now a fill-and-union merge; profile sign-in restores immediately. Version corrected to 2.0.0+13 — pubspec had drifted below the last submitted build.
 
 1. **Set Lifetime to €49.99 in App Store Connect.** The in-app value is only the pre-load fallback; RevenueCat supplies the real price. Until you change it there, users still see €69.99. *The only outstanding item with money attached.*
 2. **The review prompt → App Store redirect**, on a real device. Neither in-app review nor App Store links work in the Simulator.

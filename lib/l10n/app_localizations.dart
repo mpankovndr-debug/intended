@@ -3557,7 +3557,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileDeleteData.
   ///
   /// In en, this message translates to:
-  /// **'Delete profile data'**
+  /// **'Delete account & data'**
   String get profileDeleteData;
 
   /// No description provided for @profileVersion.

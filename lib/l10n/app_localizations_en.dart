@@ -2103,7 +2103,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSignOut => 'Sign out';
 
   @override
-  String get profileDeleteData => 'Delete profile data';
+  String get profileDeleteData => 'Delete account & data';
 
   @override
   String get profileVersion => 'Intended v1.0.1';

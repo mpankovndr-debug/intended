@@ -1979,7 +1979,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get onboardingPaywallBody =>
-      'Квадраты показывают, что было, — Intended+ говорит, что это значит. Письмо о твоём месяце в четыре строки. План на следующий — из того, что было на самом деле, с честным ответом, сработал ли он. Тихое слово перед тем, как ты начнёшь пропадать, — пока неделю ещё можно изменить. Плюс все десять тем, иконки и виджеты — твои с первого дня.';
+      'Мозаика показывает, что было, а Intended+ говорит, что это значит. Послание о твоём месяце в четыре строки, а также план на следующий — из того, что было на самом деле, с честным ответом, сработал ли он. Тихое напоминание перед тем, как ты начнёшь пропадать, пока неделю ещё можно изменить. Плюс все десять тем, иконки и виджеты твои с первого дня.';
 
   @override
   String get onboardingPaywallPrimaryCta => 'Начать пробный период';
@@ -2136,7 +2136,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileSignOut => 'Выйти';
 
   @override
-  String get profileDeleteData => 'Удалить мои данные';
+  String get profileDeleteData => 'Удалить аккаунт и данные';
 
   @override
   String get profileVersion => 'Intended v1.0.1';
