@@ -945,7 +945,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get completionHowDidItLand => 'Как это отозвалось?';
 
   @override
-  String get completionMoodGlad => 'Не зря';
+  String get completionMoodGlad => 'Стоило того';
 
   @override
   String get completionMoodNeutral => 'Нейтрально';
@@ -3546,7 +3546,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String rescueTitle(int count) {
-    return '$count дней. Так можно.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count тихих дня',
+      many: '$count тихих дней',
+      few: '$count тихих дня',
+      one: '$count тихий день',
+    );
+    return '$_temp0. Так можно.';
   }
 
   @override

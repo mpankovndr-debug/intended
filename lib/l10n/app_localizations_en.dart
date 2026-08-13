@@ -3502,7 +3502,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String rescueTitle(int count) {
-    return '$count days. That\'s allowed.';
+    return '$count quiet days. That\'s allowed.';
   }
 
   @override

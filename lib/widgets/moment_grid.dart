@@ -92,6 +92,7 @@ class MomentGrid extends StatelessWidget {
                 // came back here." The only decoration the grid carries.
                 isReturn: returnIndices.contains(i),
                 lightenReturn: lightenReturns,
+                dimHalo: theme.isDark,
               ),
             ),
           ),
@@ -136,6 +137,7 @@ class _Tile extends StatelessWidget {
     this.isReturn = false,
     this.flat = false,
     this.lightenReturn = false,
+    this.dimHalo = false,
   });
 
   final Color color;
@@ -152,6 +154,10 @@ class _Tile extends StatelessWidget {
 
   /// See [MomentGrid.lightenReturns].
   final bool lightenReturn;
+
+  /// On dark themes the full-strength white halo reads as a flashlight
+  /// (design review, SS2); it drops to a softer bloom there.
+  final bool dimHalo;
 
   @override
   Widget build(BuildContext context) {
@@ -188,9 +194,10 @@ class _Tile extends StatelessWidget {
         boxShadow: isReturn && !lightenReturn
             ? [
                 BoxShadow(
-                  color: const Color(0xFFFFFFFF).withValues(alpha: 0.95),
+                  color: const Color(0xFFFFFFFF)
+                      .withValues(alpha: dimHalo ? 0.38 : 0.95),
                   blurRadius: size * 0.30,
-                  spreadRadius: size * 0.06,
+                  spreadRadius: size * (dimHalo ? 0.03 : 0.06),
                 ),
               ]
             : null,

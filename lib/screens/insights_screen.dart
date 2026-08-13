@@ -255,6 +255,11 @@ class _InsightsScreenState extends State<InsightsScreen> {
                   _seasonCard(l10n, colors, paid: paid),
                 ],
               ],
+              // Always the last section (design review, SS3/SS4): Share
+              // serves the whole page, so it follows whatever the tier and
+              // the month put above it.
+              if (_shareWord(l10n) != null)
+                _shareRow(l10n, colors, _shareWord(l10n)!),
             ]),
             if (!paid && _moments.isNotEmpty && _viewingCurrentMonth) ...[
               const SizedBox(height: 12),
@@ -1147,41 +1152,49 @@ class _InsightsScreenState extends State<InsightsScreen> {
               Text(_pastSeasons(l10n), style: _cardMeta(colors)),
             ],
           ],
-          // Free on purpose (§4.4): the word is the shareable thing, and the
-          // explanation and the archive are what's paid for. A month still
-          // forming has no word yet, so there is nothing to share.
-          if (!forming) ...[
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.center,
-              child: CupertinoButton(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                minimumSize: Size.zero,
-                onPressed: () => _shareSeason(word),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      CupertinoIcons.share,
-                      size: 17,
-                      color: colors.ctaPrimary,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      l10n.shareButton,
-                      style: _cardBody(colors).copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: colors.ctaPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
         ],
       ),
     );
+  }
+
+  /// The Share row, always the last section of the sheet (design review,
+  /// SS3/SS4): it shares the page the user just read, so it follows whatever
+  /// the tier and the month put above it instead of stranding mid-scroll.
+  Widget _shareRow(AppLocalizations l10n, AppColorScheme colors, String word) {
+    return Align(
+      alignment: Alignment.center,
+      child: CupertinoButton(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        minimumSize: Size.zero,
+        onPressed: () => _shareSeason(word),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              CupertinoIcons.share,
+              size: 17,
+              color: colors.ctaPrimary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              l10n.shareButton,
+              style: _cardBody(colors).copyWith(
+                fontWeight: FontWeight.w500,
+                color: colors.ctaPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// The localized season word when the month has one — the thing Share
+  /// puts on the story. Null while forming, which is also when the row hides.
+  String? _shareWord(AppLocalizations l10n) {
+    final season = _season;
+    if (season == null || season.pole == Season.beginning) return null;
+    return _seasonWord(l10n, season.pole);
   }
 
   /// Opens the monthly card (§5.5).

@@ -1667,7 +1667,7 @@
   },
   "todayAdoptIntention": "Adopt a different intention",
   "todaySwapHint": "Not landing? Hold to swap.",
-  "rescueTitle": "{count} days. That's allowed.",
+  "rescueTitle": "{count} quiet days. That's allowed.",
   "rescueBody": "Just this one today?",
   "rescueLongTitle": "It's been a while. That's allowed.",
   "rescueLongBody": "Nothing here kept score while you were gone.",

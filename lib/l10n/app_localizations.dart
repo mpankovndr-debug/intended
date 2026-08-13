@@ -5981,7 +5981,7 @@ abstract class AppLocalizations {
   /// No description provided for @rescueTitle.
   ///
   /// In en, this message translates to:
-  /// **'{count} days. That\'s allowed.'**
+  /// **'{count} quiet days. That\'s allowed.'**
   String rescueTitle(int count);
 
   /// No description provided for @rescueBody.

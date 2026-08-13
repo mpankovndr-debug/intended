@@ -1864,6 +1864,18 @@ class _HabitsScreenState extends State<HabitsScreen>
                               children: [
                                 // Today's Suggestions section
                                 if (unpinned.isNotEmpty) ...[
+                                  // The rescue frames the single card from
+                                  // above (design review, SS1): the headline
+                                  // explains why there is one card before the
+                                  // card appears, instead of trailing it as a
+                                  // stray caption.
+                                  if (rescue != null) ...[
+                                    _RescueCard(
+                                      rescue: rescue,
+                                      colors: colors,
+                                    ),
+                                    const SizedBox(height: 14),
+                                  ],
                                   ...unpinned.asMap().entries.map((entry) {
                                     final habit = entry.value;
                                     final habitCard = _HabitCard(
@@ -1899,9 +1911,35 @@ class _HabitsScreenState extends State<HabitsScreen>
                                       child: habitCard,
                                     );
                                   }),
+                                  // The way back to the full list: one tap,
+                                  // after the card — never between the
+                                  // message and the thing it frames.
+                                  if (rescue != null)
+                                    GestureDetector(
+                                      onTap: () => setState(
+                                          () => _rescueDismissed = true),
+                                      behavior: HitTestBehavior.opaque,
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            16, 14, 16, 4),
+                                        child: Text(
+                                          l10n.rescueShowAll,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                            color: _doorColor(colors),
+                                            fontFamily: AppTextStyles.bodyFont(
+                                                context),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                 ],
 
                                 // CREATE CUSTOM HABIT BUTTON / LOCKED SLOT
+                                // Hidden during a rescue: a reduced home
+                                // screen does not offer to grow the list.
+                                if (rescue == null) ...[
                                 const SizedBox(height: 16),
 
                                 Builder(builder: (context) {
@@ -2101,15 +2139,6 @@ class _HabitsScreenState extends State<HabitsScreen>
                                   );
                                 }),
 
-                                if (rescue != null) ...[
-                                  _RescueCard(
-                                    rescue: rescue,
-                                    colors: colors,
-                                    onShowAll: () => setState(
-                                        () => _rescueDismissed = true),
-                                  ),
-                                  const SizedBox(height: 4),
-                                ],
 
                                 // §7 killed the store. "Browse all habits"
                                 // was a shop whose implied verb was *acquire*
@@ -2162,6 +2191,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                   ),
                                 ),
                                 const SizedBox(height: 4),
+                                ],
 
                                 // Upgrade nudge banner (one-shot, free users only)
                                 const UpgradeNudgeBanner(),
@@ -6711,12 +6741,10 @@ class _RescueCard extends StatelessWidget {
   const _RescueCard({
     required this.rescue,
     required this.colors,
-    required this.onShowAll,
   });
 
   final Rescue rescue;
   final AppColorScheme colors;
-  final VoidCallback onShowAll;
 
   @override
   Widget build(BuildContext context) {
@@ -6750,25 +6778,6 @@ class _RescueCard extends StatelessWidget {
               height: 1.45,
               color: colors.textSecondary,
               fontFamily: AppTextStyles.bodyFont(context),
-            ),
-          ),
-          const SizedBox(height: 14),
-          // The way back to the full list is always one tap away and never
-          // the thing being asked for.
-          GestureDetector(
-            onTap: onShowAll,
-            behavior: HitTestBehavior.opaque,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Text(
-                l10n.rescueShowAll,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: colors.ctaPrimary,
-                  fontFamily: AppTextStyles.bodyFont(context),
-                ),
-              ),
             ),
           ),
         ],
