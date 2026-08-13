@@ -45,6 +45,11 @@ class Moment {
   /// Optional free text, capped at [maxNoteLength].
   final String? note;
 
+  /// Where the completion came from: null for in-app, 'widget' for the home
+  /// screen widget. Widget moments skip the mood tap at creation, so the
+  /// catch-up sheet finds them by this tag and offers the tap later.
+  final String? source;
+
   /// Hour (0-23) and weekday (1-7, Mon=1) on the user's own clock at the
   /// time of completion, plus the UTC offset that produced them.
   ///
@@ -80,6 +85,7 @@ class Moment {
     this.category,
     this.mood,
     this.note,
+    this.source,
   });
 
   /// Builds a moment for *now* (or [at]), capturing the local-clock fields.
@@ -92,6 +98,7 @@ class Moment {
     String? category,
     MomentMood? mood,
     String? note,
+    String? source,
     DateTime? at,
     String? id,
   }) {
@@ -106,6 +113,7 @@ class Moment {
       category: category,
       mood: mood,
       note: _clampNote(note),
+      source: source,
       localHour: local.hour,
       localWeekday: local.weekday,
       tzOffsetMinutes: local.timeZoneOffset.inMinutes,
@@ -126,6 +134,7 @@ class Moment {
       category: category ?? this.category,
       mood: mood ?? this.mood,
       note: clearNote ? null : _clampNote(note) ?? this.note,
+      source: source,
       localHour: localHour,
       localWeekday: localWeekday,
       tzOffsetMinutes: tzOffsetMinutes,
@@ -149,6 +158,7 @@ class Moment {
     if (category != null) 'category': category,
     if (mood != null) 'mood': mood!.key,
     if (note != null) 'note': note,
+    if (source != null) 'source': source,
     'localHour': localHour,
     'localWeekday': localWeekday,
     'tzOffsetMinutes': tzOffsetMinutes,
@@ -175,6 +185,7 @@ class Moment {
       category: json['category'] as String?,
       mood: MomentMood.fromKey(json['mood'] as String?),
       note: json['note'] as String?,
+      source: json['source'] as String?,
       localHour: json['localHour'] as int? ?? local.hour,
       localWeekday: json['localWeekday'] as int? ?? local.weekday,
       tzOffsetMinutes: json['tzOffsetMinutes'] as int? ??

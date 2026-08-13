@@ -6,6 +6,34 @@ class AnalyticsService {
 
   static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
+  // ── Launch-decision metrics ───────────────────────────────────
+
+  /// The one number the paid tier lives or dies on: whether people take the
+  /// mood tap or skip it. The letter's mood line, all of what-lifts-you and
+  /// the plan's texture starve on skips — this event is how we find out
+  /// before month four does.
+  static Future<void> logMoodResponse(String? moodKey) async {
+    try {
+      await _analytics.logEvent(
+        name: 'mood_response',
+        parameters: {'mood': moodKey ?? 'skipped'},
+      );
+    } catch (_) {}
+  }
+
+  /// §4.1's own test, finally wired: intention-as-header was the least
+  /// evidence-backed decision in the doc, and it asked to be graded on Day-7
+  /// retention. Segmenting Firebase's retention cohorts by this property is
+  /// what grades it.
+  static Future<void> setIntentionPath(String pathKey) async {
+    try {
+      await _analytics.setUserProperty(
+        name: 'intention_path',
+        value: pathKey,
+      );
+    } catch (_) {}
+  }
+
   // ── Screen Views ──────────────────────────────────────────────
 
   static void logScreenView(String screenName) {

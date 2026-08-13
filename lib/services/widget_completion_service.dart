@@ -76,6 +76,7 @@ class WidgetCompletionService {
             habitName: habitName,
             category: ReflectionService.categoryForHabit(habitName),
             at: completedAt,
+            source: 'widget',
           ));
 
           // Keep total-completed counter in sync for coach marks

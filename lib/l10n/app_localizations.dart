@@ -7321,6 +7321,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your months'**
   String get yearInSeasonsTitle;
+
+  /// No description provided for @widgetCatchupEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'FROM YOUR WIDGET'**
+  String get widgetCatchupEyebrow;
+
+  /// No description provided for @profileExportData.
+  ///
+  /// In en, this message translates to:
+  /// **'Export my data (JSON)'**
+  String get profileExportData;
+
+  /// No description provided for @profileExportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Export didn\'t finish — try again.'**
+  String get profileExportFailed;
 }
 
 class _AppLocalizationsDelegate

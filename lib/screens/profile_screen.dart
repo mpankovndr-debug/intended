@@ -4,6 +4,14 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show CircleAvatar, Colors, NetworkImage;
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../services/plan_service.dart';
+import '../services/season_service.dart';
 import '../widgets/app_toast.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/services.dart';
@@ -850,6 +858,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } catch (_) {
       if (mounted) _showDeleteError(l10n);
       return false;
+    }
+  }
+
+  /// Everything the app knows, as one JSON file into the share sheet.
+  ///
+  /// Plain export, no lock-in: moments with their moods and notes, frozen
+  /// seasons, accepted plan changes, and the current setup. Local-first
+  /// privacy is only credible when the data has a door.
+  Future<void> _exportData() async {
+    final l10n = AppLocalizations.of(context);
+    try {
+      final onboarding = context.read<OnboardingState>();
+      final moments = await MomentsService.getAll();
+      final seasons = await SeasonService.archive();
+      final accepted = await PlanService.acceptedNudges();
+
+      final payload = const JsonEncoder.withIndent('  ').convert({
+        'app': 'Intended',
+        'exportedAt': DateTime.now().toUtc().toIso8601String(),
+        'intentionPath': onboarding.selectedIntentionPath,
+        'focusAreas': onboarding.focusAreas,
+        'actions': onboarding.userHabits,
+        'customActions': onboarding.customHabits,
+        'moments': [for (final m in moments) m.toJson()],
+        'seasons': seasons.map((k, v) => MapEntry(k, v.toJson())),
+        'acceptedPlanChanges': [for (final a in accepted) a.toJson()],
+      });
+
+      final dir = await getTemporaryDirectory();
+      final file = File(
+          '${dir.path}/intended_export_${DateTime.now().millisecondsSinceEpoch}.json');
+      await file.writeAsString(payload);
+      await Share.shareXFiles([XFile(file.path, mimeType: 'application/json')]);
+    } catch (e) {
+      debugPrint('Export failed: $e');
+      if (mounted) AppToast.show(context, l10n.profileExportFailed);
     }
   }
 
@@ -2478,6 +2522,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
 
                         const SizedBox(height: 32),
+
+                        // Export — "your moments are yours" needs a door,
+                        // not a promise (§2 table stakes; review flag #5).
+                        CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: _exportData,
+                          child: Text(
+                            l10n.profileExportData,
+                            style: TextStyle(
+                              fontFamily: AppTextStyles.bodyFont(context),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: colors.textSecondary,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
 
                         // Delete Profile Data Link (always visible)
                         CupertinoButton(

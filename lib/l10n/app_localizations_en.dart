@@ -4333,4 +4333,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get yearInSeasonsTitle => 'Your months';
+
+  @override
+  String get widgetCatchupEyebrow => 'FROM YOUR WIDGET';
+
+  @override
+  String get profileExportData => 'Export my data (JSON)';
+
+  @override
+  String get profileExportFailed => 'Export didn\'t finish — try again.';
 }

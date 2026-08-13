@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/intention_path.dart';
+import '../services/analytics_service.dart';
 import '../services/reflection_service.dart';
 
 class OnboardingState extends ChangeNotifier {
@@ -226,6 +227,7 @@ class OnboardingState extends ChangeNotifier {
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('selected_intention_path', pathKey);
+    AnalyticsService.setIntentionPath(pathKey);
   }
 
   Future<void> loadSelectedIntentionPath() async {
@@ -233,6 +235,9 @@ class OnboardingState extends ChangeNotifier {
     _selectedIntentionPath =
         prefs.getString('selected_intention_path') ?? 'your_own_way';
     notifyListeners();
+    // Re-assert on every launch: user properties don't survive reinstall,
+    // and the D7 segmentation is only as good as the property being there.
+    AnalyticsService.setIntentionPath(_selectedIntentionPath);
   }
 
   void markWelcomeSeen() {

@@ -4382,4 +4382,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get yearInSeasonsTitle => 'Твои месяцы';
+
+  @override
+  String get widgetCatchupEyebrow => 'ИЗ ВИДЖЕТА';
+
+  @override
+  String get profileExportData => 'Экспорт данных (JSON)';
+
+  @override
+  String get profileExportFailed => 'Экспорт не получился — попробуй ещё раз.';
 }

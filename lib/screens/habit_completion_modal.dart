@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/moment.dart';
+import '../services/analytics_service.dart';
 import '../services/moments_service.dart';
 import '../theme/theme_provider.dart';
 import '../theme/app_colors.dart';
@@ -102,6 +103,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
   Future<void> _selectMood(MomentMood? mood) async {
     if (_showStep2) return;
     HapticFeedback.mediumImpact();
+    AnalyticsService.logMoodResponse(mood?.key);
     setState(() {
       _mood = mood;
       _showStep2 = true;

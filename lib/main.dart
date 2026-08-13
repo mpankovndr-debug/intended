@@ -57,6 +57,7 @@ import 'services/coach_mark_service.dart';
 import 'services/review_request_service.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'widgets/quiet_bloom_overlay.dart';
+import 'widgets/widget_mood_catchup.dart';
 import 'widgets/upgrade_nudge_banner.dart';
 
 // ✅ ADD THIS HELPER HERE (before the main() function):
@@ -1015,6 +1016,9 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
       _userState = context.read<UserState>();
       _lastPremiumStatus = _userState!.hasSubscription;
       _userState!.addListener(_onSubscriptionChanged);
+      // Cold-start path: bootstrap synced widget completions before any UI
+      // existed, so the mood catch-up runs here, not in the resume hook.
+      WidgetMoodCatchup.maybeShow(context);
     });
   }
 
@@ -1060,6 +1064,9 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
         if (!mounted) return;
         if (synced > 0) setState(() {}); // Rebuild to reflect synced completions
         refreshHomeWidget(context); // Refresh widget AFTER sync
+        // Widget completions arrive without the mood tap; offer it now, or
+        // the most convenient path quietly produces the worst data.
+        if (synced > 0) WidgetMoodCatchup.maybeShow(context);
       });
       NotificationScheduler.refreshTimezone(AppLocalizations.of(context));
       context.read<RevenueCatService>().refreshPurchaseStatus();

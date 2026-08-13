@@ -16,7 +16,12 @@ class MomentsService {
   static Future<void> record(Moment moment) async {
     final prefs = await SharedPreferences.getInstance();
     final all = await getAll();
-    all.insert(0, moment); // newest first
+    all.insert(0, moment);
+    // Retro-logs and widget syncs arrive out of order, so newest-first is
+    // re-established by sorting, not assumed from insertion — the cap trim
+    // below drops the oldest, and before this sort a heavy retro-logger
+    // could silently lose *recent* moments off a mis-ordered tail.
+    all.sort((a, b) => b.completedAt.compareTo(a.completedAt));
     if (all.length > _maxMoments) {
       all.removeRange(_maxMoments, all.length);
     }
