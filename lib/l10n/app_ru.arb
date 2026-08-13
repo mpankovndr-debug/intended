@@ -693,7 +693,7 @@
   "signOutWarningMessage": "Данные хранятся только на этом устройстве. Они не будут доступны на других устройствах или после переустановки.",
   "profileSignOut": "Выйти",
   "profileDeleteData": "Удалить аккаунт и данные",
-  "profileVersion": "Intended v1.0.1",
+  "profileVersion": "Intended v2.0.0",
   "profileCannotOpenEmail": "Не удалось открыть почту",
   "profileEmailFallback": "Напиши нам на\nsupport@intendedapp.com",
   "profileChangeFocusTitle": "Изменить направления?",

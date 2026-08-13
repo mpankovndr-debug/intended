@@ -1851,7 +1851,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileDeleteData => 'Удалить аккаунт и данные';
 
   @override
-  String get profileVersion => 'Intended v1.0.1';
+  String get profileVersion => 'Intended v2.0.0';
 
   @override
   String get profileCannotOpenEmail => 'Не удалось открыть почту';
