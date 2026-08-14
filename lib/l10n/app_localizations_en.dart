@@ -3750,4 +3750,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingPaywallLoop => '…and the next month begins';
+
+  @override
+  String letterQuestionStillFits(String path) {
+    return 'Is “$path” still what you\'re after?';
+  }
 }

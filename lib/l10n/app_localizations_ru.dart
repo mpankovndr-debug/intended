@@ -3814,4 +3814,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get onboardingPaywallLoop => '…и начинается новый месяц';
+
+  @override
+  String letterQuestionStillFits(String path) {
+    return '«$path» — это всё ещё про тебя?';
+  }
 }

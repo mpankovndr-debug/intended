@@ -6367,6 +6367,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'…and the next month begins'**
   String get onboardingPaywallLoop;
+
+  /// No description provided for @letterQuestionStillFits.
+  ///
+  /// In en, this message translates to:
+  /// **'Is “{path}” still what you\'re after?'**
+  String letterQuestionStillFits(String path);
 }
 
 class _AppLocalizationsDelegate

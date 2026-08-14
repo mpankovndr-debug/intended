@@ -41,8 +41,14 @@ List<Moment> _daily(
 
 /// Reminder defaults to 09:00 and moments default to 09:00, so the closing
 /// question is only about the day's shape where a test says so.
-Letter? _read(List<Moment> m, {String? season, int? reminderHour = 9}) =>
-    Letter.read(m, seasonPole: season, reminderHour: reminderHour);
+Letter? _read(List<Moment> m,
+        {String? season,
+        int? reminderHour = 9,
+        List<String> pathAreas = const []}) =>
+    Letter.read(m,
+        seasonPole: season,
+        reminderHour: reminderHour,
+        pathAreas: pathAreas);
 
 LetterLine? _lineOf(Letter letter, LetterLineKind kind) {
   for (final line in letter.lines) {
@@ -52,6 +58,7 @@ LetterLine? _lineOf(Letter letter, LetterLineKind kind) {
 }
 
 void main() {
+  _driftTests();
   group('when there is nothing to write', () {
     test('a month under the threshold gets no letter', () {
       expect(_read(_daily(7)), isNull);
@@ -256,6 +263,52 @@ void main() {
         _lineOf(_read(moments)!, LetterLineKind.showedUp)!.count,
         9,
       );
+    });
+  });
+}
+
+void _driftTests() {
+  group('the intention that stopped fitting', () {
+    test('asks when the month was mostly lived outside the path', () {
+      // Chose a sleep path; spent the month on Productivity.
+      final moments = [
+        ..._daily(9, category: 'Productivity'),
+        ..._daily(4, startDay: 10, category: 'Health'),
+      ];
+      final letter = _read(moments, pathAreas: ['Health', 'Self-care'])!;
+
+      expect(letter.question, LetterQuestion.intentionStillFits);
+    });
+
+    test('stays quiet when the intention still describes the month', () {
+      final moments = [
+        ..._daily(9, category: 'Health'),
+        ..._daily(4, startDay: 10, category: 'Self-care'),
+      ];
+      final letter = _read(moments, pathAreas: ['Health', 'Self-care'])!;
+
+      expect(letter.question, isNot(LetterQuestion.intentionStillFits));
+    });
+
+    test('a busy fortnight elsewhere is not a change of direction', () {
+      // Outside the path, but only just over half — and too few moments.
+      final moments = [
+        ..._daily(6, category: 'Creativity'),
+        ..._daily(5, startDay: 7, category: 'Health'),
+      ];
+      final letter = _read(moments, pathAreas: ['Health', 'Self-care'])!;
+
+      expect(letter.question, isNot(LetterQuestion.intentionStillFits));
+    });
+
+    test('your own way never drifts — it claims to describe nobody', () {
+      final moments = [
+        ..._daily(9, category: 'Productivity'),
+        ..._daily(4, startDay: 10, category: 'Health'),
+      ];
+      final letter = _read(moments, pathAreas: const [])!;
+
+      expect(letter.question, isNot(LetterQuestion.intentionStillFits));
     });
   });
 }

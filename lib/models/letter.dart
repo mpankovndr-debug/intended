@@ -36,6 +36,11 @@ enum LetterQuestion {
   /// They went quiet and came back more than once.
   shorterQuiet,
 
+  /// The intention chosen at onboarding no longer describes the life being
+  /// lived. Outranks the others: nothing else the letter could ask matters
+  /// as much as whether the thing at the top of Today is still true.
+  intentionStillFits,
+
   /// Nothing sharper to ask.
   moreOfWhat,
 }
@@ -112,6 +117,7 @@ class Letter {
     List<Moment> moments, {
     String? seasonPole,
     int? reminderHour,
+    List<String> pathAreas = const [],
   }) {
     if (moments.length < minMoments) return null;
 
@@ -129,6 +135,16 @@ class Letter {
     if (candidates.length < 2) return null;
 
     final lines = candidates.take(maxLines).toList();
+
+    // Asked before anything else, because an intention that has stopped
+    // describing someone turns the top of Today into a stale promise they
+    // scroll past — worse than a neutral date, which cannot be wrong about
+    // them. The letter only ever asks; the redirect stays one tap away on
+    // Today, where it already lives.
+    if (_hasDrifted(moments, pathAreas)) {
+      return Letter(lines: lines, question: LetterQuestion.intentionStillFits);
+    }
+
     final lived = _dominantPart(moments);
     final planned = reminderHour == null ? null : _partOf(reminderHour);
 
@@ -247,6 +263,37 @@ class Letter {
   /// Always available, and last for exactly that reason.
   static LetterLine _showedUp(List<Moment> moments) =>
       LetterLine(LetterLineKind.showedUp, count: _activeDays(moments).length);
+
+  /// True when the month was mostly spent outside the areas the chosen
+  /// intention is made of.
+  ///
+  /// Deliberately strict. Most people's intentions fit fine, and asking
+  /// someone whether they still mean it — when they plainly do — is the app
+  /// second-guessing a person about their own life. So: an empty [pathAreas]
+  /// (the "your own way" path, which makes no claim to describe anyone) never
+  /// drifts, and the lived area has to both sit outside the intention and
+  /// carry most of the month.
+  static bool _hasDrifted(List<Moment> moments, List<String> pathAreas) {
+    if (pathAreas.isEmpty) return false;
+    if (moments.length < _minMomentsForDrift) return false;
+
+    final counts = <String, int>{};
+    for (final m in moments) {
+      final key = m.category;
+      if (key != null) counts[key] = (counts[key] ?? 0) + 1;
+    }
+    if (counts.isEmpty) return false;
+
+    final top = counts.entries.reduce((a, b) => a.value >= b.value ? a : b);
+    if (pathAreas.contains(top.key)) return false;
+    return top.value / moments.length >= _minDriftShare;
+  }
+
+  /// A fortnight of moments is not a life changing direction.
+  static const int _minMomentsForDrift = 12;
+
+  /// And it has to be most of the month, not a busy week elsewhere.
+  static const double _minDriftShare = 0.55;
 
   /// The part of day most moments fall in, or null when nothing dominates.
   static DayPart? _dominantPart(List<Moment> moments) {

@@ -10,6 +10,7 @@ import '../l10n/app_localizations.dart';
 import '../models/moment.dart';
 import '../models/drift.dart';
 import '../models/first_week.dart';
+import '../models/intention_path.dart';
 import '../models/letter.dart';
 import '../models/lift.dart';
 import '../models/month_plan.dart';
@@ -165,6 +166,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
         moments,
         seasonPole: season.pole,
         reminderHour: hour,
+        // The areas the chosen intention is made of, so the letter can ask
+        // whether it still describes the life being lived.
+        pathAreas: IntentionPath.getById(
+          IntentionPathId.fromKey(
+            context.read<OnboardingState>().selectedIntentionPath,
+          ),
+        ).defaultFocusAreas,
       );
       _reminderHour = hour;
       _remindersEnabled = remindersEnabled;
@@ -1364,6 +1372,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
           month,
           _partName(l10n, letter.part!.lived),
           _partName(l10n, letter.part!.planned),
+        ),
+      LetterQuestion.intentionStillFits => l10n.letterQuestionStillFits(
+          IntentionPath.getById(
+            IntentionPathId.fromKey(
+              context.read<OnboardingState>().selectedIntentionPath,
+            ),
+          ).title(l10n),
         ),
       LetterQuestion.shorterQuiet => l10n.letterQuestionShorterQuiet(month),
       LetterQuestion.moreOfWhat => l10n.letterQuestionMoreOfWhat(month),
