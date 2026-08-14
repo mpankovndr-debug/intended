@@ -43,6 +43,30 @@ class AnalyticsService {
     } catch (_) {}
   }
 
+  /// Someone redirected their whole practice — the sharpest available signal
+  /// that §4.1's framing is real to them. Nobody changes decoration.
+  ///
+  /// [daysOnPrevious] is the half that matters: a change on day 2 is someone
+  /// still shopping, a change on day 60 is the intention having drifted out
+  /// of their life and them noticing. The first tells you onboarding picked
+  /// wrong; the second tells you the app needs to ask.
+  static Future<void> logIntentionChanged({
+    required String from,
+    required String to,
+    required int daysOnPrevious,
+  }) async {
+    try {
+      await _analytics.logEvent(
+        name: 'intention_changed',
+        parameters: {
+          'from_path': from,
+          'to_path': to,
+          'days_on_previous': daysOnPrevious,
+        },
+      );
+    } catch (_) {}
+  }
+
   // ── Screen Views ──────────────────────────────────────────────
 
   static void logScreenView(String screenName) {

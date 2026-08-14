@@ -223,10 +223,29 @@ class OnboardingState extends ChangeNotifier {
   }
 
   Future<void> setSelectedIntentionPath(String pathKey) async {
+    final previous = _selectedIntentionPath;
     _selectedIntentionPath = pathKey;
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
+
+    // A *change* — not the onboarding pick — is the event worth counting.
+    // Somebody who redirects their whole practice is somebody for whom the
+    // intention is a real object rather than a header they scroll past.
+    if (_onboardingComplete && previous != pathKey) {
+      final setAt = prefs.getString('intention_path_set_at');
+      final days = setAt == null
+          ? 0
+          : DateTime.now().difference(DateTime.parse(setAt)).inDays;
+      AnalyticsService.logIntentionChanged(
+        from: previous,
+        to: pathKey,
+        daysOnPrevious: days,
+      );
+    }
+
     await prefs.setString('selected_intention_path', pathKey);
+    await prefs.setString(
+        'intention_path_set_at', DateTime.now().toIso8601String());
     AnalyticsService.setIntentionPath(pathKey);
   }
 
