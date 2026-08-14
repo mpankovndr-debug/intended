@@ -1112,7 +1112,7 @@
   "tellUsAboutFocusHeadline": "Что сейчас важно?",
   "tellUsAboutFocusSubtext": "Выбери до 2. Начнём с них.",
   "commitmentTitle": "Маленькое обещание.",
-  "commitmentBody": "Это займёт всего 2 минуты в день.",
+  "commitmentBody": "Две минуты в день. Больше ничего не нужно.",
   "commitmentEchoFull": "Твой путь: {path}  ·  Фокус: {areas}",
   "@commitmentEchoFull": {
     "placeholders": {
@@ -1420,5 +1420,13 @@
   "widgetCatchupEyebrow": "ИЗ ВИДЖЕТА",
   "profileExportData": "Экспорт данных (JSON)",
   "profileExportFailed": "Экспорт не получился — попробуй ещё раз.",
-  "insightsFilterHint": "нажми на цвет = только эти квадраты"
+  "insightsFilterHint": "нажми на цвет = только эти квадраты",
+  "onboardingPaywallStep1": "Оставляй маленькие намерения — каждое ложится квадратом в твой месяц",
+  "onboardingPaywallStep2": "Читай свой месяц — письмо, сезон, план на следующий",
+  "onboardingPaywallStep3": "Смотри, что сработало, — честная проверка через четыре недели",
+  "focusAreasFromPath": "«{path}» начинается с этих двух. Поменяй, если важнее что-то другое.",
+  "focusAreasLimitToast": "Две — это фокус. Сначала отпусти одну.",
+  "insightsExampleSeason": "Возвращение",
+  "insightsExampleLetter": "Прошло шесть дней — и ты снова здесь.",
+  "insightsExamplePlan": "Перенеси напоминание на 21:00 — именно там жил этот месяц."
 }

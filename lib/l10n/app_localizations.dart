@@ -4793,7 +4793,7 @@ abstract class AppLocalizations {
   /// No description provided for @commitmentBody.
   ///
   /// In en, this message translates to:
-  /// **'Building this takes 2 minutes a day. That\'s it.'**
+  /// **'Two minutes a day. That\'s the whole ask.'**
   String get commitmentBody;
 
   /// No description provided for @commitmentEchoFull.
@@ -6313,6 +6313,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'tap a colour = see just those'**
   String get insightsFilterHint;
+
+  /// No description provided for @onboardingPaywallStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep small intentions — each one lands as a square in your month'**
+  String get onboardingPaywallStep1;
+
+  /// No description provided for @onboardingPaywallStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Read your month — the letter, your season, next month\'s plan'**
+  String get onboardingPaywallStep2;
+
+  /// No description provided for @onboardingPaywallStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'See what worked — measured honestly, four weeks on'**
+  String get onboardingPaywallStep3;
+
+  /// No description provided for @focusAreasFromPath.
+  ///
+  /// In en, this message translates to:
+  /// **'{path} starts with these two. Swap them if something else matters more.'**
+  String focusAreasFromPath(String path);
+
+  /// No description provided for @focusAreasLimitToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Two keeps the focus — set one down first.'**
+  String get focusAreasLimitToast;
+
+  /// No description provided for @insightsExampleSeason.
+  ///
+  /// In en, this message translates to:
+  /// **'Returning'**
+  String get insightsExampleSeason;
+
+  /// No description provided for @insightsExampleLetter.
+  ///
+  /// In en, this message translates to:
+  /// **'Six days passed, and then you came back.'**
+  String get insightsExampleLetter;
+
+  /// No description provided for @insightsExamplePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Move your reminder to 9 PM — that\'s where this month lived.'**
+  String get insightsExamplePlan;
 }
 
 class _AppLocalizationsDelegate

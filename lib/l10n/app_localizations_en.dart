@@ -2795,8 +2795,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commitmentTitle => 'One small promise.';
 
   @override
-  String get commitmentBody =>
-      'Building this takes 2 minutes a day. That\'s it.';
+  String get commitmentBody => 'Two minutes a day. That\'s the whole ask.';
 
   @override
   String commitmentEchoFull(String path, String areas) {
@@ -3716,4 +3715,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get insightsFilterHint => 'tap a colour = see just those';
+
+  @override
+  String get onboardingPaywallStep1 =>
+      'Keep small intentions — each one lands as a square in your month';
+
+  @override
+  String get onboardingPaywallStep2 =>
+      'Read your month — the letter, your season, next month\'s plan';
+
+  @override
+  String get onboardingPaywallStep3 =>
+      'See what worked — measured honestly, four weeks on';
+
+  @override
+  String focusAreasFromPath(String path) {
+    return '$path starts with these two. Swap them if something else matters more.';
+  }
+
+  @override
+  String get focusAreasLimitToast =>
+      'Two keeps the focus — set one down first.';
+
+  @override
+  String get insightsExampleSeason => 'Returning';
+
+  @override
+  String get insightsExampleLetter =>
+      'Six days passed, and then you came back.';
+
+  @override
+  String get insightsExamplePlan =>
+      'Move your reminder to 9 PM — that\'s where this month lived.';
 }

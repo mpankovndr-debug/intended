@@ -1368,7 +1368,7 @@
   "tellUsAboutFocusHeadline": "What feels important right now?",
   "tellUsAboutFocusSubtext": "Pick up to 2. We'll start there.",
   "commitmentTitle": "One small promise.",
-  "commitmentBody": "Building this takes 2 minutes a day. That's it.",
+  "commitmentBody": "Two minutes a day. That's the whole ask.",
   "commitmentEchoFull": "Your path: {path}  ·  Your focus: {areas}",
   "@commitmentEchoFull": {
     "placeholders": {
@@ -1776,5 +1776,20 @@
   "widgetCatchupEyebrow": "FROM YOUR WIDGET",
   "profileExportData": "Export my data (JSON)",
   "profileExportFailed": "Export didn't finish — try again.",
-  "insightsFilterHint": "tap a colour = see just those"
+  "insightsFilterHint": "tap a colour = see just those",
+  "onboardingPaywallStep1": "Keep small intentions — each one lands as a square in your month",
+  "onboardingPaywallStep2": "Read your month — the letter, your season, next month's plan",
+  "onboardingPaywallStep3": "See what worked — measured honestly, four weeks on",
+  "focusAreasFromPath": "{path} starts with these two. Swap them if something else matters more.",
+  "@focusAreasFromPath": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "focusAreasLimitToast": "Two keeps the focus — set one down first.",
+  "insightsExampleSeason": "Returning",
+  "insightsExampleLetter": "Six days passed, and then you came back.",
+  "insightsExamplePlan": "Move your reminder to 9 PM — that's where this month lived."
 }

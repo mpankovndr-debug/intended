@@ -2837,7 +2837,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get commitmentTitle => 'Маленькое обещание.';
 
   @override
-  String get commitmentBody => 'Это займёт всего 2 минуты в день.';
+  String get commitmentBody => 'Две минуты в день. Больше ничего не нужно.';
 
   @override
   String commitmentEchoFull(String path, String areas) {
@@ -3781,4 +3781,34 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get insightsFilterHint => 'нажми на цвет = только эти квадраты';
+
+  @override
+  String get onboardingPaywallStep1 =>
+      'Оставляй маленькие намерения — каждое ложится квадратом в твой месяц';
+
+  @override
+  String get onboardingPaywallStep2 =>
+      'Читай свой месяц — письмо, сезон, план на следующий';
+
+  @override
+  String get onboardingPaywallStep3 =>
+      'Смотри, что сработало, — честная проверка через четыре недели';
+
+  @override
+  String focusAreasFromPath(String path) {
+    return '«$path» начинается с этих двух. Поменяй, если важнее что-то другое.';
+  }
+
+  @override
+  String get focusAreasLimitToast => 'Две — это фокус. Сначала отпусти одну.';
+
+  @override
+  String get insightsExampleSeason => 'Возвращение';
+
+  @override
+  String get insightsExampleLetter => 'Прошло шесть дней — и ты снова здесь.';
+
+  @override
+  String get insightsExamplePlan =>
+      'Перенеси напоминание на 21:00 — именно там жил этот месяц.';
 }

@@ -201,21 +201,70 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
                     ),
                     const SizedBox(height: 16),
 
+                    // Three steps, not a wall (device review, SS1). Six
+                    // sentences at the exact moment someone wants to get back
+                    // to their first kept moment were being skipped whole;
+                    // a journey reads at a glance. Still one CTA and no plan
+                    // pickers — the wallet decision stays on the full paywall,
+                    // this screen only opens the door.
                     FadeTransition(
                       opacity: _fadeIn,
                       child: SlideTransition(
                         position: _slideUp,
-                        child: Text(
-                          l10n.onboardingPaywallBody,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: AppTextStyles.bodyFont(context),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            color:
-                                colors.textPrimary.withValues(alpha: 0.78),
-                            height: 1.55,
-                          ),
+                        child: Column(
+                          children: [
+                            for (final (i, step) in [
+                              l10n.onboardingPaywallStep1,
+                              l10n.onboardingPaywallStep2,
+                              l10n.onboardingPaywallStep3,
+                            ].indexed) ...[
+                              if (i > 0) const SizedBox(height: 14),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 26,
+                                    height: 26,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: colors.ctaPrimary
+                                          .withValues(alpha: 0.14),
+                                      border: Border.all(
+                                        color: colors.ctaPrimary
+                                            .withValues(alpha: 0.5),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      '${i + 1}',
+                                      style: TextStyle(
+                                        fontFamily:
+                                            AppTextStyles.bodyFont(context),
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: colors.ctaPrimary,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      step,
+                                      style: TextStyle(
+                                        fontFamily:
+                                            AppTextStyles.bodyFont(context),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
+                                        color: colors.textPrimary
+                                            .withValues(alpha: 0.85),
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ],
                         ),
                       ),
                     ),

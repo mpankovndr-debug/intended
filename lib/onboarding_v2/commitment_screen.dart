@@ -231,11 +231,13 @@ class _CommitmentScreenState extends State<CommitmentScreen>
                                   style: TextStyle(
                                     fontFamily:
                                         AppTextStyles.bodyFont(context),
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
+                                    // 13 at low alpha was nearly invisible on
+                                    // device (SS4) — and this line is the
+                                    // "we heard you" beat, not a footnote.
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
                                     fontStyle: FontStyle.italic,
-                                    color: colors.textTertiary
-                                        .withValues(alpha: 0.85),
+                                    color: colors.textPrimary.withValues(alpha: 0.72),
                                     height: 1.5,
                                   ),
                                 ),

@@ -212,11 +212,20 @@ class _InsightsScreenState extends State<InsightsScreen> {
     return AppBackground(
       child: SafeArea(
         bottom: false,
-        child: ListView(
-        padding: EdgeInsets.fromLTRB(pad, 24, pad, 180),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Fixed, like Profile's (device review, SS5/SS6): a page title
+            // that scrolls up behind the clock reads as broken chrome.
+            Padding(
+              padding: EdgeInsets.fromLTRB(pad, 24, pad, 16),
+              child:
+                  Text(l10n.insightsTitle, style: AppTextStyles.h1(context)),
+            ),
+            Expanded(
+              child: ListView(
+        padding: EdgeInsets.fromLTRB(pad, 4, pad, 180),
         children: [
-          Text(l10n.insightsTitle, style: AppTextStyles.h1(context)),
-          const SizedBox(height: 20),
           if (!_loaded)
             const SizedBox.shrink()
           else
@@ -250,7 +259,6 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 // paywall.
                 if (_moments.isEmpty) ...[
                   _startingWithCard(l10n, colors, onboarding),
-                  _exampleCard(l10n, colors, themeProvider),
                 ] else if (paid) ...[
                   // Free and paid share the same sections and the same
                   // quality; paid has more of them (§5.3). Each returns null
@@ -272,6 +280,14 @@ class _InsightsScreenState extends State<InsightsScreen> {
               if (_shareWord(l10n) != null)
                 _shareRow(l10n, colors, _shareWord(l10n)!),
             ]),
+            // The example stands apart (device review, SS7): inside the
+            // user's own sheet it read as their data wearing a costume. Out
+            // here, at reduced strength and tagged EXAMPLE, it is clearly a
+            // postcard from a month that hasn't happened yet.
+            if (_moments.isEmpty && _viewingCurrentMonth) ...[
+              const SizedBox(height: 12),
+              _exampleCard(l10n, colors, themeProvider),
+            ],
             if (!paid && _moments.isNotEmpty && _viewingCurrentMonth) ...[
               const SizedBox(height: 12),
               _shell(colors, sections: [
@@ -280,6 +296,9 @@ class _InsightsScreenState extends State<InsightsScreen> {
             ],
             ],
         ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -1088,6 +1107,26 @@ class _InsightsScreenState extends State<InsightsScreen> {
             Text(
               l10n.insightsExampleReturns,
               style: _cardBody(colors),
+            ),
+            const SizedBox(height: 14),
+            // A taste of each paid reading, so the example sells the page it
+            // becomes rather than the grid the free tier already gets.
+            _eyebrow(l10n.seasonLabel, colors),
+            const SizedBox(height: 4),
+            Text(
+              l10n.insightsExampleSeason,
+              style: AppTextStyles.h2(context)
+                  .copyWith(fontSize: 22, color: colors.textPrimary),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              l10n.insightsExampleLetter,
+              style: _cardBody(colors).copyWith(fontStyle: FontStyle.italic),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              l10n.insightsExamplePlan,
+              style: _cardBody(colors).copyWith(color: colors.textPrimary),
             ),
             const SizedBox(height: 14),
             Container(height: 1, color: colors.textDisabled.withValues(alpha: 0.25)),

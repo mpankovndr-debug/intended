@@ -10,6 +10,7 @@ import '../services/analytics_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
+import '../widgets/app_toast.dart';
 import '../widgets/focus_area_card.dart';
 import '../widgets/onboarding_progress_bar.dart';
 import 'commitment_screen.dart';
@@ -115,9 +116,10 @@ class _TellUsAboutYouScreenState extends State<TellUsAboutYouScreen> {
     final state = context.read<OnboardingState>();
     if (!state.isSelected(area) &&
         state.focusAreas.length >= FocusAreasScreen.maxSelections) {
-      // Silent rejection — a haptic is gentler than a dialog mid-onboarding,
-      // and the visual state of the selected cards already explains the cap.
+      // A haptic alone read as "nothing happened" on device (SS3). The toast
+      // names the rule and the way past it, without a dialog mid-onboarding.
       HapticFeedback.lightImpact();
+      AppToast.show(context, AppLocalizations.of(context).focusAreasLimitToast);
       return;
     }
     HapticFeedback.selectionClick();
@@ -562,7 +564,17 @@ class _PhaseFocus extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                l10n.tellUsAboutFocusSubtext,
+                // "Pick up to 2" was a lie by omission when the path had
+                // already picked them (SS3): the screen now says who chose
+                // and hands over the swap.
+                switch (context.watch<OnboardingState>().lastPreselectedPathKey) {
+                  final String key
+                      when key != IntentionPathId.yourOwnWay.key =>
+                    l10n.focusAreasFromPath(
+                        IntentionPath.getById(IntentionPathId.fromKey(key))
+                            .title(l10n)),
+                  _ => l10n.tellUsAboutFocusSubtext,
+                },
                 style: TextStyle(
                   fontFamily: AppTextStyles.bodyFont(context),
                   fontSize: 15,
