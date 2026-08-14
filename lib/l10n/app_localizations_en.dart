@@ -3708,7 +3708,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get widgetCatchupEyebrow => 'FROM YOUR WIDGET';
 
   @override
-  String get profileExportData => 'Export my data (JSON)';
+  String get profileExportData => 'Export my data';
 
   @override
   String get profileExportFailed => 'Export didn\'t finish — try again.';
@@ -3755,4 +3755,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String letterQuestionStillFits(String path) {
     return 'Is “$path” still what you\'re after?';
   }
+
+  @override
+  String get profileExportSubject => 'My Intended moments';
+
+  @override
+  String get profileExportEmpty => 'Nothing to export yet.';
 }

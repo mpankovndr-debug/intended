@@ -1418,7 +1418,7 @@
   "faqStopPayingAnswer": "Ничего из сделанного. Все моменты, заметки и сезоны остаются твоими, сетка продолжает расти, а мягкое «возвращайся» бесплатно навсегда. На паузу встаёт только чтение: дрейф, письмо, план и «что тебя поддерживает».",
   "yearInSeasonsTitle": "Твои месяцы",
   "widgetCatchupEyebrow": "ИЗ ВИДЖЕТА",
-  "profileExportData": "Экспорт данных (JSON)",
+  "profileExportData": "Выгрузить мои данные",
   "profileExportFailed": "Экспорт не получился — попробуй ещё раз.",
   "insightsFilterHint": "нажми на цвет = только эти квадраты",
   "onboardingPaywallStep1": "Оставляй маленькие намерения — каждое ложится квадратом в твой месяц",
@@ -1430,5 +1430,7 @@
   "insightsExampleLetter": "Прошло шесть дней — и ты снова здесь.",
   "insightsExamplePlan": "Перенеси напоминание на 21:00 — именно там жил этот месяц.",
   "onboardingPaywallLoop": "…и начинается новый месяц",
-  "letterQuestionStillFits": "«{path}» — это всё ещё про тебя?"
+  "letterQuestionStillFits": "«{path}» — это всё ещё про тебя?",
+  "profileExportSubject": "Мои моменты в Intended",
+  "profileExportEmpty": "Пока нечего выгружать."
 }

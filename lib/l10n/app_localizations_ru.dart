@@ -3774,7 +3774,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get widgetCatchupEyebrow => 'ИЗ ВИДЖЕТА';
 
   @override
-  String get profileExportData => 'Экспорт данных (JSON)';
+  String get profileExportData => 'Выгрузить мои данные';
 
   @override
   String get profileExportFailed => 'Экспорт не получился — попробуй ещё раз.';
@@ -3819,4 +3819,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String letterQuestionStillFits(String path) {
     return '«$path» — это всё ещё про тебя?';
   }
+
+  @override
+  String get profileExportSubject => 'Мои моменты в Intended';
+
+  @override
+  String get profileExportEmpty => 'Пока нечего выгружать.';
 }

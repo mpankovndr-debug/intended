@@ -6299,7 +6299,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileExportData.
   ///
   /// In en, this message translates to:
-  /// **'Export my data (JSON)'**
+  /// **'Export my data'**
   String get profileExportData;
 
   /// No description provided for @profileExportFailed.
@@ -6373,6 +6373,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Is “{path}” still what you\'re after?'**
   String letterQuestionStillFits(String path);
+
+  /// No description provided for @profileExportSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'My Intended moments'**
+  String get profileExportSubject;
+
+  /// No description provided for @profileExportEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to export yet.'**
+  String get profileExportEmpty;
 }
 
 class _AppLocalizationsDelegate

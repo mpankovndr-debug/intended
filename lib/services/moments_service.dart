@@ -114,6 +114,39 @@ class MomentsService {
     );
   }
 
+  /// Every moment as JSON, for the user to take away (§2 lists export as
+  /// table stakes, and "computed on your device, yours" is a hollow claim
+  /// while the only way out is a screenshot).
+  ///
+  /// The full record, not a summary: each moment's action, focus area, how it
+  /// landed, any note, and the wall clock it happened on. Readable by a
+  /// person and parseable by anything — because data you cannot open is not
+  /// data you own.
+  static Future<String> exportJson() async {
+    final all = await getAll();
+    final ordered = [...all]
+      ..sort((a, b) => a.completedAt.compareTo(b.completedAt));
+    return const JsonEncoder.withIndent('  ').convert({
+      'app': 'Intended',
+      'exportedAt': DateTime.now().toIso8601String(),
+      'momentCount': ordered.length,
+      'moments': [
+        for (final m in ordered)
+          {
+            'action': m.habitName,
+            'focusArea': m.category,
+            'landed': m.mood?.key,
+            'note': m.note,
+            'completedAtUtc': m.completedAt.toUtc().toIso8601String(),
+            'localDate': m.localDay.toIso8601String().split('T').first,
+            'localHour': m.localHour,
+            'localWeekday': m.localWeekday,
+            'tzOffsetMinutes': m.tzOffsetMinutes,
+          },
+      ],
+    });
+  }
+
   /// Returns all moments, newest first.
   static Future<List<Moment>> getAll() async {
     final prefs = await SharedPreferences.getInstance();
