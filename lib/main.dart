@@ -672,6 +672,15 @@ Future<void> refreshHomeWidget(BuildContext context) async {
   }
 }
 
+/// Horizontal page padding that caps the content column at 680pt on wide
+/// screens (iPad). 24 on phones; the surplus becomes symmetric gutters.
+/// The same rule Insights and the archive already apply — Today was the
+/// one surface still stretching edge to edge on a 13" iPad.
+double _pagePad(BuildContext context) {
+  final gutter = (MediaQuery.of(context).size.width - 680) / 2;
+  return gutter > 24 ? gutter : 24.0;
+}
+
 /// The two quiet doors under the list (§7) sank into the landscape at pure
 /// accent colour (SS2). A third of the way toward ink keeps them quiet but
 /// findable, on every theme, without inventing a new colour.
@@ -1731,7 +1740,10 @@ class _HabitsScreenState extends State<HabitsScreen>
                     child: Padding(
                       key: _homeTopKey,
                       padding: EdgeInsets.fromLTRB(
-                          24, MediaQuery.of(context).padding.top + 24, 24, 32),
+                          _pagePad(context),
+                          MediaQuery.of(context).padding.top + 24,
+                          _pagePad(context),
+                          32),
                       child: Column(
                         // Full width, otherwise the parent Column centres this
                         // block and the start-alignment below does nothing.
@@ -1788,7 +1800,8 @@ class _HabitsScreenState extends State<HabitsScreen>
                       FadeTransition(
                         opacity: _fadeMiddle,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                          padding: EdgeInsets.fromLTRB(
+                              _pagePad(context), 16, _pagePad(context), 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -1856,9 +1869,9 @@ class _HabitsScreenState extends State<HabitsScreen>
                           position: _slideContent,
                           child: ListView(
                               padding: EdgeInsets.fromLTRB(
-                                24,
+                                _pagePad(context),
                                 pinned.isNotEmpty ? 12 : 16,
-                                24,
+                                _pagePad(context),
                                 140,
                               ),
                               children: [
