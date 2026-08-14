@@ -1791,5 +1791,6 @@
   "focusAreasLimitToast": "Two keeps the focus — set one down first.",
   "insightsExampleSeason": "Returning",
   "insightsExampleLetter": "Six days passed, and then you came back.",
-  "insightsExamplePlan": "Move your reminder to 9 PM — that's where this month lived."
+  "insightsExamplePlan": "Move your reminder to 9 PM — that's where this month lived.",
+  "onboardingPaywallLoop": "…and the next month begins"
 }

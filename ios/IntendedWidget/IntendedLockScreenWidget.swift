@@ -103,7 +103,7 @@ struct AccessoryRectangularView: View {
     var body: some View {
         if content.totalCount == 0 {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Intended")
+                Text(content.greeting)
                     .font(.headline)
                     .widgetAccentable()
                 Text(strings.noHabits)
@@ -112,7 +112,7 @@ struct AccessoryRectangularView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         } else if allDone {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Intended")
+                Text(content.greeting)
                     .font(.headline)
                     .widgetAccentable()
                 HStack(spacing: 4) {

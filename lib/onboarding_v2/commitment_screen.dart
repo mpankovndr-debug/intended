@@ -259,7 +259,12 @@ class _CommitmentScreenState extends State<CommitmentScreen>
                             ),
                           ),
 
-                          const SizedBox(height: 32),
+                          // Clears the home indicator plus a thumb's reach —
+                          // the flat 32 sat inside the unsafe zone and left
+                          // the button hugging the screen edge (device note).
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).padding.bottom + 28),
                         ],
                       ),
                     ),

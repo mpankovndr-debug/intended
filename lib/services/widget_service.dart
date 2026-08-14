@@ -34,6 +34,7 @@ class WidgetService {
     required String greeting,
     String locale = 'en',
     AppLocalizations? l10n,
+    List<String> monthTileHexes = const [],
   }) async {
     await initialize();
 
@@ -91,6 +92,8 @@ class WidgetService {
       HomeWidget.saveWidgetData<int>('widget_total_count', totalCount),
       HomeWidget.saveWidgetData<String>('widget_greeting', greeting),
       HomeWidget.saveWidgetData<bool>('widget_is_premium', isPremium),
+      HomeWidget.saveWidgetData<String>(
+          'widget_month_tiles', jsonEncode(monthTileHexes)),
       HomeWidget.saveWidgetData<String>('widget_theme', jsonEncode(themeData)),
       HomeWidget.saveWidgetData<String>('widget_locale', locale),
     ]);

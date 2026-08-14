@@ -3811,4 +3811,7 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get insightsExamplePlan =>
       'Перенеси напоминание на 21:00 — именно там жил этот месяц.';
+
+  @override
+  String get onboardingPaywallLoop => '…и начинается новый месяц';
 }

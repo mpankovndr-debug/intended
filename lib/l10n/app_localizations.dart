@@ -6361,6 +6361,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Move your reminder to 9 PM — that\'s where this month lived.'**
   String get insightsExamplePlan;
+
+  /// No description provided for @onboardingPaywallLoop.
+  ///
+  /// In en, this message translates to:
+  /// **'…and the next month begins'**
+  String get onboardingPaywallLoop;
 }
 
 class _AppLocalizationsDelegate

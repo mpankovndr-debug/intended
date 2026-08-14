@@ -54,6 +54,9 @@ struct WidgetContent {
     let totalCount: Int
     let greeting: String
     let isPremium: Bool
+    /// This month's moments as ARGB hex colours, oldest first — the mosaic
+    /// the premium widget grows in its spare space.
+    let monthTiles: [String]
     let theme: ThemeData
     let locale: String
 
@@ -67,6 +70,7 @@ struct WidgetContent {
         totalCount: 4,
         greeting: "Do what feels right today",
         isPremium: false,
+        monthTiles: [],
         theme: ThemeData(
             id: "warmClay",
             isDark: false,
@@ -107,6 +111,11 @@ func loadWidgetContent() -> WidgetContent {
     let totalCount = defaults.integer(forKey: "widget_total_count")
     let greeting = defaults.string(forKey: "widget_greeting") ?? "Do what feels right today"
     let isPremium = defaults.bool(forKey: "widget_is_premium")
+    var monthTiles: [String] = []
+    if let tilesJson = defaults.string(forKey: "widget_month_tiles"),
+       let tilesData = tilesJson.data(using: .utf8) {
+        monthTiles = (try? JSONDecoder().decode([String].self, from: tilesData)) ?? []
+    }
     let locale = defaults.string(forKey: "widget_locale") ?? "en"
 
     // Parse theme
@@ -122,9 +131,32 @@ func loadWidgetContent() -> WidgetContent {
         totalCount: totalCount,
         greeting: greeting,
         isPremium: isPremium,
+        monthTiles: monthTiles,
         theme: theme,
         locale: locale
     )
+}
+
+// MARK: - Shared views
+
+/// The month in miniature: one rounded square per moment, wrapping is not
+/// needed at widget scale — the newest tiles matter, so overflow drops the
+/// oldest from the front.
+struct TileRow: View {
+    let hexes: [String]
+    var size: CGFloat = 10
+    var spacing: CGFloat = 3
+    var maxTiles: Int = 12
+
+    var body: some View {
+        HStack(spacing: spacing) {
+            ForEach(Array(hexes.suffix(maxTiles).enumerated()), id: \.offset) { _, hex in
+                RoundedRectangle(cornerRadius: size * 0.28)
+                    .fill(Color(argbHex: hex))
+                    .frame(width: size, height: size)
+            }
+        }
+    }
 }
 
 // MARK: - Color helpers

@@ -658,6 +658,18 @@ Future<void> refreshHomeWidget(BuildContext context) async {
     // The same four actions Today shows, in the same order — pinned, then
     // the user's own, then the catalog. The widget previously got the raw
     // uncapped list, which put customs off the end of a 4-slot widget.
+    // This month as colours, for the premium mosaic row. Same source of
+    // truth as the Insights grid: hue is the focus area, tint is the mood.
+    final monthMoments = await MomentsService.momentsForMonth(DateTime.now());
+    final tiles = [
+      for (final m in monthMoments)
+        CategoryColors.of(m.category, themeProvider.theme, mood: m.mood)
+            .toARGB32()
+            .toRadixString(16)
+            .padLeft(8, '0')
+            .toUpperCase(),
+    ];
+
     await WidgetService.updateWidget(
       userHabits: onboarding.visibleHabits(),
       customHabitFocusAreas: onboarding.customHabitFocusAreas,
@@ -666,6 +678,7 @@ Future<void> refreshHomeWidget(BuildContext context) async {
       greeting: greeting,
       locale: locale.languageCode,
       l10n: l10n,
+      monthTileHexes: tiles,
     );
   } catch (_) {
     // Widget update is non-critical — never crash the app for it.

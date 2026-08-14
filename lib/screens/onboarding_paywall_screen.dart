@@ -129,6 +129,36 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
     Navigator.of(context).pop(false);
   }
 
+  /// The thread between steps: a short line and a soft chevron, centered
+  /// under the numbered ring. Vertical on purpose — a radial cycle diagram
+  /// dies on Russian line lengths, and the loop row closes the circle
+  /// without one.
+  Widget _connector(dynamic colors) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: SizedBox(
+        width: 26,
+        child: Column(
+          children: [
+            Container(
+              width: 2,
+              height: 8,
+              color: colors.ctaPrimary.withValues(alpha: 0.35),
+            ),
+            Icon(
+              CupertinoIcons.chevron_down,
+              size: 9,
+              color: colors.ctaPrimary.withValues(alpha: 0.5),
+            ),
+          ],
+        ),
+      ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.watch<ThemeProvider>().colors;
@@ -218,7 +248,7 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
                               l10n.onboardingPaywallStep2,
                               l10n.onboardingPaywallStep3,
                             ].indexed) ...[
-                              if (i > 0) const SizedBox(height: 14),
+                              if (i > 0) _connector(colors),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -264,6 +294,50 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
                                 ],
                               ),
                             ],
+                            _connector(colors),
+                            // The cycle closes: what worked feeds the next
+                            // month's intentions. The loop is the pitch —
+                            // this is the screen's way of saying "month
+                            // seven exists".
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 26,
+                                  height: 26,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: colors.ctaPrimary
+                                        .withValues(alpha: 0.14),
+                                    border: Border.all(
+                                      color: colors.ctaPrimary
+                                          .withValues(alpha: 0.5),
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    CupertinoIcons.arrow_2_circlepath,
+                                    size: 13,
+                                    color: colors.ctaPrimary,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    l10n.onboardingPaywallLoop,
+                                    style: TextStyle(
+                                      fontFamily:
+                                          AppTextStyles.bodyFont(context),
+                                      fontSize: 14,
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.w400,
+                                      color: colors.textPrimary
+                                          .withValues(alpha: 0.6),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),

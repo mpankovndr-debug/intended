@@ -1428,5 +1428,6 @@
   "focusAreasLimitToast": "Две — это фокус. Сначала отпусти одну.",
   "insightsExampleSeason": "Возвращение",
   "insightsExampleLetter": "Прошло шесть дней — и ты снова здесь.",
-  "insightsExamplePlan": "Перенеси напоминание на 21:00 — именно там жил этот месяц."
+  "insightsExamplePlan": "Перенеси напоминание на 21:00 — именно там жил этот месяц.",
+  "onboardingPaywallLoop": "…и начинается новый месяц"
 }

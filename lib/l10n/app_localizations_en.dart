@@ -3747,4 +3747,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get insightsExamplePlan =>
       'Move your reminder to 9 PM — that\'s where this month lived.';
+
+  @override
+  String get onboardingPaywallLoop => '…and the next month begins';
 }

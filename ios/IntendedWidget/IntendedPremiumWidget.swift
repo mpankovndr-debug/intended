@@ -214,6 +214,12 @@ struct PremiumMediumView: View {
                             .foregroundColor(textSecondary)
                             .padding(.top, 2)
                     }
+
+                    // The month growing under the day (the premium reading).
+                    if !content.monthTiles.isEmpty {
+                        TileRow(hexes: content.monthTiles, size: 10, spacing: 3, maxTiles: 12)
+                            .padding(.top, 6)
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -401,6 +407,11 @@ struct PremiumLargeView: View {
                 }
 
                 Spacer(minLength: 10)
+
+                if !content.monthTiles.isEmpty {
+                    TileRow(hexes: content.monthTiles, size: 12, spacing: 4, maxTiles: 16)
+                        .padding(.bottom, 6)
+                }
 
                 Text(formattedDate())
                     .font(.system(size: 12, weight: .medium))

@@ -165,12 +165,31 @@ struct BasicMediumView: View {
                         Text(content.greeting)
                             .font(.system(size: 15, weight: .medium))
                             .foregroundColor(textPrimary)
-                            .lineLimit(2)
+                            .lineLimit(1)
+
+                        Spacer(minLength: 4)
+
+                        // The list is the widget's job, free (§4.5: what you
+                        // chose is "what happened"). The locked teaser that
+                        // used to stand here was an ad on someone's wallpaper.
+                        VStack(alignment: .leading, spacing: 4) {
+                            ForEach(Array(content.habits.prefix(4).enumerated()), id: \.offset) { _, habit in
+                                HStack(spacing: 6) {
+                                    Circle()
+                                        .fill(habit.done ? accent : textSecondary.opacity(0.35))
+                                        .frame(width: 5, height: 5)
+                                    Text(habit.name)
+                                        .font(.system(size: 12, weight: .regular))
+                                        .foregroundColor(habit.done ? textSecondary : textPrimary)
+                                        .lineLimit(1)
+                                }
+                            }
+                        }
 
                         Spacer(minLength: 4)
 
                         Text(formattedDate())
-                            .font(.system(size: 12, weight: .medium))
+                            .font(.system(size: 11, weight: .medium))
                             .foregroundColor(textSecondary)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
