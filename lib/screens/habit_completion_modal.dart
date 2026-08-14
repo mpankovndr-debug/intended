@@ -58,6 +58,10 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
 
   bool _showStep2 = false;
   bool _noteOpen = false;
+
+  /// Set once the mood tap has written mood + note. Guards the dispose-time
+  /// save below from writing a second time.
+  bool _annotated = false;
   MomentMood? _mood;
   final _noteController = TextEditingController();
 
@@ -95,6 +99,13 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
 
   @override
   void dispose() {
+    // A note typed and then dismissed by tapping the barrier used to vanish:
+    // the moment was already recorded, so there was no second chance to
+    // attach it. Fire-and-forget is safe here — annotate only touches
+    // storage, never this context.
+    if (!_annotated && _noteController.text.trim().isNotEmpty) {
+      MomentsService.annotate(widget.momentId, note: _noteController.text);
+    }
     _tileController.dispose();
     _noteController.dispose();
     super.dispose();
@@ -109,6 +120,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
       _showStep2 = true;
     });
 
+    _annotated = true;
     await MomentsService.annotate(
       widget.momentId,
       mood: mood,
@@ -152,7 +164,11 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
 
     return CupertinoPopupSurface(
       isSurfacePainted: false,
-      child: Center(
+      child: GestureDetector(
+        // Anywhere in the sheet, not just the return key — the iOS habit.
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.opaque,
+        child: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28),
           child: AnimatedSize(
@@ -191,6 +207,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
             ),
           ),
         ),
+      ),
       ),
     );
   }
@@ -239,6 +256,12 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
             maxLines: 3,
             minLines: 1,
             autofocus: true,
+            // Return closes the keyboard instead of adding a line. Without
+            // this the field had no exit at all: the keyboard covered Skip,
+            // and the only way out was tapping a mood — which submits. A
+            // 280-character note doesn't need paragraphs; it needs a door.
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) => FocusScope.of(context).unfocus(),
             placeholder: l10n.completionNoteHint,
             style: AppTextStyles.body(context),
             decoration: BoxDecoration(
