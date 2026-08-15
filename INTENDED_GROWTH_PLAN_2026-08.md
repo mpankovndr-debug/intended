@@ -615,6 +615,10 @@ Do not schedule your vaste lasten against it. If €1,500/month is needed *this 
 - [ ] Create TikTok, Instagram, YouTube accounts. Same handle everywhere. Bio: *"It doesn't count streaks. It counts how many times you came back."* + App Store link with `?ct=`
 - [ ] Film eight videos on Monday from the hooks in §3.4. Start with #6 as your pin.
 
+### Week 3, once posting has started
+
+- [ ] Create **one** Custom Product Page (§2) with "Four small actions. No streaks." as its lead screenshot. Submit for review before the first video goes up, and put its `?ppid=` URL in your TikTok bio.
+
 The rest is doing it every week for a year.
 
 ---
