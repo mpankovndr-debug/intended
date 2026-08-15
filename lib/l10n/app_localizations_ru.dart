@@ -356,53 +356,53 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get seasonMorning => 'Ранний';
+  String get seasonMorning => 'Утро';
 
   @override
   String get seasonMorningLine =>
       'Ты приходишь сюда рано. День начинается с тебя.';
 
   @override
-  String get seasonEvening => 'Вечерний';
+  String get seasonEvening => 'Вечер';
 
   @override
   String get seasonEveningLine => 'Ты приходишь сюда, когда день затих.';
 
   @override
-  String get seasonSteady => 'Ровный';
+  String get seasonSteady => 'Постоянство';
 
   @override
   String get seasonSteadyLine =>
       'Понемногу, почти каждый день. Вот и весь узор.';
 
   @override
-  String get seasonBursts => 'Порывистый';
+  String get seasonBursts => 'Всплески';
 
   @override
   String get seasonBurstsLine => 'Ты приходишь волнами, и волны возвращаются.';
 
   @override
-  String get seasonReturning => 'Возвращающийся';
+  String get seasonReturning => 'Возвращение';
 
   @override
   String get seasonReturningLine => 'Ты затихаешь — и находишь дорогу обратно.';
 
   @override
-  String get seasonContinuous => 'Непрерывный';
+  String get seasonContinuous => 'Нить';
 
   @override
   String get seasonContinuousLine =>
       'Ты держишь нить весь месяц — она ни разу не прервалась.';
 
   @override
-  String get seasonFocused => 'Сосредоточенный';
+  String get seasonFocused => 'Фокус';
 
   @override
   String get seasonFocusedLine =>
       'Одно занимало большую часть твоего внимания.';
 
   @override
-  String get seasonWandering => 'Блуждающий';
+  String get seasonWandering => 'Блуждание';
 
   @override
   String get seasonWanderingLine =>

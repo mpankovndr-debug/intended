@@ -87,9 +87,15 @@ class SeasonShareCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Text(
+                // Shrinks rather than clips: the word is a different length in
+                // every language, and a hero that runs off the card is worse
+                // than one a few points smaller.
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
                   seasonWord,
                   textAlign: TextAlign.center,
+                  maxLines: 1,
                   style: TextStyle(
                     fontFamily: 'Sora',
                     fontSize: 46,
@@ -97,6 +103,7 @@ class SeasonShareCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     color: colors.textPrimary,
                   ),
+                ),
                 ),
                 if (gapsShortening) ...[
                   const SizedBox(height: 8),
