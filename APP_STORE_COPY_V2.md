@@ -70,6 +70,134 @@ Terms of Use: https://intendedapp.com/terms
 
 ---
 
+## Promotional text — Russian
+
+```
+Девять дней тишины — и оно просит одно маленькое дело, а не извинения. Четыре маленьких дела в день. Ничего не рвётся, ничего не обнуляется. Оно считает возвращения.
+```
+
+---
+
+## Description — Russian
+
+Every path name, focus area, season word and mood label below is **the app's own string**, copied from `app_ru.arb` — not retranslated. The listing and the screen say the same words.
+
+```
+Никаких серий, которые надо беречь. Никаких очков, за которыми надо гнаться. Никакой вины, когда жизнь вмешивается.
+
+Intended считает другое: сколько раз ты возвращаешься.
+
+Каждое маленькое дело становится квадратом, и квадратов становится только больше. Здесь нет пустой клетки для пропущенного дня — дни никогда не были единицей измерения. Пропади на неделю: ничего не обнулится. Вернись — и приложение заметит именно это.
+
+КАК ЭТО РАБОТАЕТ
+— Выбери намерение: «Мягкое утро», «Спокойный вечер», «Сквозь трудный сезон» и ещё шесть. Или собери свой путь.
+— Под ним живут четыре маленьких дела. Любое можно заменить или добавить своё.
+— Отметь дело, когда сделаешь, и скажи, как оно прошло: стоило того, нейтрально, было непросто.
+— Это всё. Здесь нечего поддерживать.
+
+ТВОЙ МЕСЯЦ, ПРОЧИТАННЫЙ ТЕБЕ
+— Мозаика всех твоих дел, раскрашенная по направлениям
+— Сколько раз ты затихаешь и сколько раз возвращаешься
+— Слово для месяца: «Вечернее», «Ровное», «Возвращение» — из того, что было на самом деле. Это не характер, и в следующем месяце оно будет другим.
+
+КОГДА ЖИЗНЬ ВМЕШИВАЕТСЯ
+— Пропади на время, и Intended не станет тебя отчитывать. Главный экран сократится до одного дела и спросит, не сегодня ли.
+— Вчерашнее можно добавить задним числом.
+— Эта часть бесплатна и такой останется: дорога обратно нужнее всего тем, кого не было девять дней, — и именно они платят реже всего.
+
+INTENDED+
+— Письмо о твоём месяце: четыре строки, в конце вопрос, а не утешение
+— План на следующий месяц из того, что было на самом деле, с честным ответом, сработало ли прошлое изменение
+— Тихое слово перед тем, как ты начнёшь пропадать, пока неделю ещё можно изменить
+— Что тебя правда поддерживает: какие дела были в радость, а какие нет
+— Объяснение твоего сезона и архив всех прошлых
+— Десять тем, включая тёмную, виджеты на экране «Домой» и на экране блокировки, свои иконки
+
+Восемь направлений: Здоровье, Настроение, Забота о себе, Продуктивность, Отношения, Творчество, Дом и порядок, Финансы.
+
+Твои моменты принадлежат тебе — их можно выгрузить в любой момент.
+
+Создано одним человеком, которому это так же важно, как и тебе.
+
+Условия использования: https://intendedapp.com/terms
+```
+
+### The constraint that shaped the Russian
+
+**Russian past tense is gendered, and this copy has none of it.** "Сколько раз ты вернулся" tells three quarters of the likely audience the app wasn't written for them.
+
+Every line therefore uses the present tense (`возвращаешься`, `затихаешь`), a noun (`возвращения`, `Мозаика твоих дел`), an infinitive, or the plural (`именно они платят реже всего`). The app already solves this the same way — `letterCameBack` ends *"и ты снова здесь"* rather than a gendered verb, and the mood pills are *«Стоило того» / «Было непросто»*, both neutral.
+
+This is worth protecting if anyone edits the copy later. It is the easiest thing to break by accident.
+
+---
+
+## What's New in This Version — English
+
+```
+Intended 2.0 — your month, read back to you.
+
+The largest update since launch, and most of it lives on a page that didn't exist before.
+
+THE MOSAIC
+Every small thing you do is now a square. The squares only ever grow, and there's no empty slot for a day you missed — days were never the unit.
+
+RETURNS, NOT STREAKS
+Intended now counts how many times you went quiet, and how many times you came back. The first square after a gap gets a soft ring around it.
+
+SEASONS
+Once a month has enough in it, Intended names it — Evening, Steady, Returning — from what actually happened. It's different next month. It was never a personality.
+
+CHECKING IN
+Completing an action now takes two taps and asks one question: how did that land? Glad I did, neutral, took effort. The "Did you do this today?" dialog is gone — nobody taps a card by accident.
+
+WHEN YOU DISAPPEAR
+Go quiet for a while and the home screen clears down to a single action, and asks whether today might be the day. Free, and always will be.
+
+ALSO NEW
+- Nine intentions to choose from, up from four, each with its own starting actions
+- Hold any action for the menu: swap it, pin it, edit it, or log that you did it yesterday
+- Export your moments from your profile
+
+WITH INTENDED+
+A letter about your month — four lines, ending in a question. Next month's plan, built from what actually happened, with an honest answer to whether the last change worked. And a quiet word before you drift, while the week can still change.
+```
+
+---
+
+## What's New in This Version — Russian
+
+```
+Intended 2.0 — твой месяц, прочитанный тебе.
+
+Самое большое обновление с запуска, и почти всё оно живёт на странице, которой раньше не было.
+
+МОЗАИКА
+Каждое маленькое дело теперь становится квадратом. Квадратов становится только больше, и для пропущенного дня здесь нет пустой клетки — дни никогда не были единицей измерения.
+
+ВОЗВРАЩЕНИЯ ВМЕСТО СЕРИЙ
+Intended считает, сколько раз ты затихаешь и сколько раз возвращаешься. Первый квадрат после паузы получает мягкое кольцо.
+
+СЕЗОНЫ
+Когда в месяце набирается достаточно, Intended даёт ему слово — «Вечернее», «Ровное», «Возвращение» — из того, что было на самом деле. В следующем месяце оно будет другим. Это никогда не было характером.
+
+КАК ОТМЕЧАТЬ
+Отметить дело — два касания и один вопрос: как оно прошло? Стоило того, нейтрально, было непросто. Подтверждающий диалог исчез — никто не нажимает на карточку случайно.
+
+КОГДА ТЫ ПРОПАДАЕШЬ
+Пропади на время, и главный экран сократится до одного дела и спросит, не сегодня ли. Бесплатно — и так будет всегда.
+
+ЕЩЁ
+— Девять намерений вместо четырёх, у каждого свои дела для начала
+— Задержи палец на деле, чтобы открыть меню: заменить, закрепить, изменить или отметить, что оно было вчера
+— Выгрузить свои моменты можно из профиля
+
+С INTENDED+
+Письмо о твоём месяце: четыре строки, в конце вопрос. План на следующий месяц из того, что было на самом деле, с честным ответом, сработало ли прошлое изменение. И тихое слово перед тем, как ты начнёшь пропадать, пока неделю ещё можно изменить.
+```
+
+---
+
 ## What changed, and why
 
 **Cut — these were false or off-brand:**
@@ -97,11 +225,15 @@ the mosaic and what makes it different from every other grid · returns ("how ma
 
 | Field | Limit | This copy |
 |---|---|---|
-| Promotional text A | 170 | **165** |
-| Promotional text B | 170 | **160** |
-| Description | 4,000 | **2,179** |
+| Promotional text A (EN) | 170 | **163** |
+| Promotional text B (EN) | 170 | **160** |
+| Promotional text (RU) | 170 | **165** |
+| Description (EN) | 4,000 | **2,166** |
+| Description (RU) | 4,000 | **2,171** |
+| What's New (EN) | 4,000 | **1,477** |
+| What's New (RU) | 4,000 | **1,487** |
 
-Counted with `wc -m`, not by eye — Apple counts characters, and the em dashes are one character each but three bytes, which is what makes hand-counting go wrong.
+Counted in Python against the actual code blocks in this file, not by eye and not with `wc`. Two traps, both of which produced wrong numbers on earlier passes here: em dashes are one character but three bytes, and Cyrillic is one character but two — so `wc -m` outside a UTF-8 locale reports roughly double for the Russian.
 
 ## Checked before writing
 
