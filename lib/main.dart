@@ -58,6 +58,7 @@ import 'services/review_request_service.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'widgets/quiet_bloom_overlay.dart';
 import 'widgets/widget_mood_catchup.dart';
+import 'widgets/stale_action_nudge.dart';
 import 'widgets/upgrade_nudge_banner.dart';
 
 // ✅ ADD THIS HELPER HERE (before the main() function):
@@ -1844,6 +1845,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                   habitTitle: habit,
                                   isPinned: true,
                                   accentColor: colors.accentPinned,
+                                  duringRescue: rescue != null,
                                   onAllDone: () => QuietBloomOverlay.show(context),
                                 );
                                 if (!isNewPin) return habitCard;
@@ -1914,6 +1916,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                       habitTitle: habit,
                                       accentColor:
                                           colors.accentRegular, // Warm taupe
+                                      duringRescue: rescue != null,
                                       onAllDone: () => QuietBloomOverlay.show(context),
                                     );
                                     if (habit != unpinnedHabit) {
@@ -2682,12 +2685,20 @@ class _HabitCard extends StatefulWidget {
   final Color? accentColor;
   final VoidCallback? onAllDone;
 
+  /// True while the reduced home screen is showing. Silences both the stale
+  /// hint and the nudge: the rescue has just said nothing here kept score
+  /// while you were gone, and "this doesn't seem to fit — change your
+  /// intention" underneath it takes that back in the same breath. Someone who
+  /// has been away for a fortnight trips both at once, and the rescue wins.
+  final bool duringRescue;
+
   const _HabitCard({
     super.key,
     required this.habitTitle,
     this.isPinned = false,
     this.accentColor, // Default resolved from theme in build
     this.onAllDone,
+    this.duringRescue = false,
   });
 
   @override
@@ -2704,13 +2715,10 @@ class _HabitCardState extends State<_HabitCard>
   bool _isDoneToday = false;
   bool _isAnimating = false;
 
-  /// True when this action hasn't been reached for in a fortnight.
-  ///
-  /// The just-in-time replacement for the pinning coach mark (§5.1, §5.6).
-  /// Long-press is undiscoverable on its own, so it is backed by a hint that
-  /// appears on the one card where swapping is actually the right idea — and
-  /// nowhere else, and never as an overlay.
-  bool _isStale = false;
+  /// True on the *one* quiet card allowed to ask the whole question (§5.1,
+  /// §5.6). Every other card stays silent — there is no longer a quieter
+  /// fallback line under the others.
+  bool _showStaleNudge = false;
 
   String _lastCheckedDate = '';
   late AnimationController _scaleController;
@@ -3075,25 +3083,33 @@ class _HabitCardState extends State<_HabitCard>
     );
   }
 
-  /// A fortnight without a single completion. Short enough to catch something
-  /// that isn't working, long enough that an ordinary quiet week never trips
-  /// it — nothing else in this app treats a slow fortnight as failure.
-  static const int _staleAfterDays = 14;
-
   Future<void> _checkStaleness() async {
+    // Read before the first await: the order the user actually sees, pinned
+    // first, is what decides which stale card gets the full nudge.
+    final visible = context.read<OnboardingState>().visibleHabits();
     final moments = await MomentsService.getAll();
-    if (moments.isEmpty) return;
-    final cutoff = DateTime.now().toUtc().subtract(
-          const Duration(days: _staleAfterDays),
-        );
-    final recent = moments.any(
-      (m) => m.habitName == widget.habitTitle && m.completedAt.isAfter(cutoff),
+    final now = DateTime.now();
+
+    // Both rules are pure statics in stale_action_nudge.dart, and tested
+    // there — this method only reads state and paints the answer.
+    final stale = StaleAction.isStale(
+      habit: widget.habitTitle,
+      moments: moments,
+      now: now,
     );
-    // Silent while the user's whole history is younger than the window: an
-    // action two days old has not failed to land, it has not been tried.
-    final oldEnough = moments.last.completedAt.isBefore(cutoff);
+    final primary = stale &&
+        StaleAction.primary(visible: visible, moments: moments, now: now) ==
+            widget.habitTitle;
+
+    final dismissed = primary &&
+        (await StaleNudgeDismissals.read()).contains(widget.habitTitle);
+
+    // A dismissal covers this quiet stretch, not the action forever: once it
+    // is being reached for again, the answer is spent.
+    if (!stale) await StaleNudgeDismissals.clear(widget.habitTitle);
+
     if (!mounted) return;
-    setState(() => _isStale = !recent && oldEnough);
+    setState(() => _showStaleNudge = primary && !dismissed);
   }
 
   void _handleLongPress() {
@@ -4773,29 +4789,26 @@ class _HabitCardState extends State<_HabitCard>
           : card,
     );
 
-    // The hint sits under the card it is about, not over the screen (§5.6).
-    if (!_isStale || _isDoneToday) {
+    // The one quiet action gets the whole question, framed around its own card
+    // rather than floating above the screen (§5.6). Every other card says
+    // nothing: the bare "Not landing? Hold to swap it." line this replaces is
+    // gone, so a quiet action is either worth a card or worth silence.
+    //
+    // Never during a rescue, which is the one screen whose whole job is to ask
+    // nothing of the person reading it.
+    if (!_showStaleNudge || _isDoneToday || widget.duringRescue) {
       return KeyedSubtree(key: _cardKey, child: wrappedCard);
     }
 
     return KeyedSubtree(
       key: _cardKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          wrappedCard,
-          Padding(
-            padding: const EdgeInsets.fromLTRB(18, 6, 0, 0),
-            child: Text(
-              l10n.todaySwapHint,
-              style: TextStyle(
-                fontSize: 12,
-                color: colors.textSecondary,
-                fontFamily: AppTextStyles.bodyFont(context),
-              ),
-            ),
-          ),
-        ],
+      child: StaleActionNudge(
+        card: wrappedCard,
+        onKeep: () async {
+          HapticFeedback.lightImpact();
+          await StaleNudgeDismissals.add(widget.habitTitle);
+          if (mounted) setState(() => _showStaleNudge = false);
+        },
       ),
     );
   }

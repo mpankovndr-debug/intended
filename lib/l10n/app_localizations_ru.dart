@@ -356,53 +356,53 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get seasonMorning => 'Раннее';
+  String get seasonMorning => 'Ранний';
 
   @override
   String get seasonMorningLine =>
       'Ты приходишь сюда рано. День начинается с тебя.';
 
   @override
-  String get seasonEvening => 'Вечернее';
+  String get seasonEvening => 'Вечерний';
 
   @override
   String get seasonEveningLine => 'Ты приходишь сюда, когда день затих.';
 
   @override
-  String get seasonSteady => 'Ровное';
+  String get seasonSteady => 'Ровный';
 
   @override
   String get seasonSteadyLine =>
       'Понемногу, почти каждый день. Вот и весь узор.';
 
   @override
-  String get seasonBursts => 'Всплески';
+  String get seasonBursts => 'Порывистый';
 
   @override
   String get seasonBurstsLine => 'Ты приходишь волнами, и волны возвращаются.';
 
   @override
-  String get seasonReturning => 'Возвращение';
+  String get seasonReturning => 'Возвращающийся';
 
   @override
   String get seasonReturningLine => 'Ты затихаешь — и находишь дорогу обратно.';
 
   @override
-  String get seasonContinuous => 'Непрерывное';
+  String get seasonContinuous => 'Непрерывный';
 
   @override
   String get seasonContinuousLine =>
       'Ты держишь нить весь месяц — она ни разу не прервалась.';
 
   @override
-  String get seasonFocused => 'Сосредоточенное';
+  String get seasonFocused => 'Сосредоточенный';
 
   @override
   String get seasonFocusedLine =>
       'Одно занимало большую часть твоего внимания.';
 
   @override
-  String get seasonWandering => 'Блуждание';
+  String get seasonWandering => 'Блуждающий';
 
   @override
   String get seasonWanderingLine =>
@@ -2618,7 +2618,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get insightsGrowthHint => 'Инсайты становятся точнее с каждой неделей';
 
   @override
-  String get tipPinHabit => 'Удерживайте привычку, чтобы закрепить её сверху';
+  String get tipPinHabit => 'Удерживай привычку, чтобы закрепить её сверху';
 
   @override
   String get tipCuratedPack =>
@@ -3571,7 +3571,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get todayAdoptIntention => 'Выбрать другое намерение';
 
   @override
-  String get todaySwapHint => 'Не заходит? Удерживайте, чтобы заменить.';
+  String get staleNudgeTitle => 'Кажется, это пока не подходит';
+
+  @override
+  String get staleNudgeBody =>
+      'За последние десять дней здесь не было ни одного момента. Хочешь попробовать другое намерение?';
+
+  @override
+  String get staleNudgeChange => 'Изменить намерение';
+
+  @override
+  String get staleNudgeKeep => 'Оставить как есть';
 
   @override
   String rescueTitle(int count) {

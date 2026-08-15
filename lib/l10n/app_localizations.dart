@@ -5973,11 +5973,29 @@ abstract class AppLocalizations {
   /// **'Adopt a different intention'**
   String get todayAdoptIntention;
 
-  /// No description provided for @todaySwapHint.
+  /// No description provided for @staleNudgeTitle.
   ///
   /// In en, this message translates to:
-  /// **'Not landing? Hold to swap.'**
-  String get todaySwapHint;
+  /// **'This one doesn\'t seem to fit'**
+  String get staleNudgeTitle;
+
+  /// No description provided for @staleNudgeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No moments here in the last ten days. Want to try a different intention?'**
+  String get staleNudgeBody;
+
+  /// No description provided for @staleNudgeChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change my intention'**
+  String get staleNudgeChange;
+
+  /// No description provided for @staleNudgeKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave it as is'**
+  String get staleNudgeKeep;
 
   /// No description provided for @rescueTitle.
   ///

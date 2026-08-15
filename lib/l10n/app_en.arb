@@ -1705,7 +1705,10 @@
     }
   },
   "todayAdoptIntention": "Adopt a different intention",
-  "todaySwapHint": "Not landing? Hold to swap.",
+  "staleNudgeTitle": "This one doesn't seem to fit",
+  "staleNudgeBody": "No moments here in the last ten days. Want to try a different intention?",
+  "staleNudgeChange": "Change my intention",
+  "staleNudgeKeep": "Leave it as is",
   "rescueTitle": "{count} quiet days. That's allowed.",
   "rescueBody": "Just this one today?",
   "rescueLongTitle": "It's been a while. That's allowed.",

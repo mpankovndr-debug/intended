@@ -3520,7 +3520,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todayAdoptIntention => 'Adopt a different intention';
 
   @override
-  String get todaySwapHint => 'Not landing? Hold to swap.';
+  String get staleNudgeTitle => 'This one doesn\'t seem to fit';
+
+  @override
+  String get staleNudgeBody =>
+      'No moments here in the last ten days. Want to try a different intention?';
+
+  @override
+  String get staleNudgeChange => 'Change my intention';
+
+  @override
+  String get staleNudgeKeep => 'Leave it as is';
 
   @override
   String rescueTitle(int count) {
