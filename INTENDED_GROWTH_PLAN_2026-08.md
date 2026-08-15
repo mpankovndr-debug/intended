@@ -54,18 +54,46 @@ So the bigger ambition is **~1,300 simultaneous subscribers**, not 730. Nearly d
 
 ### The finding that matters more than any of this
 
-Here is the LTV of a subscriber: €31.60/year proceeds × roughly 1.8 years average life (H&F annual retention runs 40–50% year-on-year) ≈ **€50–57 lifetime**.
+*(Every figure below is sourced in §9. An earlier draft of this document used my own estimates here and they were wrong in both directions — I had retention too optimistic and CPI too cheap. These are the published 2026 benchmarks.)*
 
-Now divide by installs. At the 3.5% install→paid you're benchmarked at, **each install is worth €1.75 to you.** Meta CPI in health & fitness is €2–5. Apple Search Ads €1.50–4.
+**Lifetime value of a subscriber.** Annual plans in Health & Fitness renew year-1→year-2 at **25–44%**, clustering around 30%. At 30%:
 
-**You would be paying more for an install than it returns.** Not marginally — structurally.
+> €31.60 ÷ (1 − 0.30) ≈ **€45 lifetime per subscriber**
 
-| Your install→paid | Value per install | Max CPI you can pay (1.5× ROAS) | What that unlocks |
+**Sanity check that the model is right:** published install-LTV for subscription H&F apps is **$1.21 over 12 months** — the highest of any category. My model says 3.5% × €31.60 = €1.11 in year one. Those agree, which means the arithmetic here is describing something real.
+
+**Value per install** at 3.5% install→paid: **€1.58.**
+
+**Now the prices.** Average iOS CPI in Q1 2026 was **$5.84, up 19% year over year.** By channel:
+
+| Channel | CPI | € equivalent |
+|---|---|---|
+| TikTok Ads | $2.45 | ~€2.27 — cheapest available |
+| Apple Search Ads (global avg) | $2.96 | ~€2.74 |
+| Apple Search Ads, competitive fitness keywords | $4–15 | €3.70–13.90 |
+| iOS blended average | $5.84 | ~€5.41 |
+
+**You would be paying at minimum €2.27 for something worth €1.58.** Not marginally underwater — structurally, on the cheapest channel that exists.
+
+| Your install→paid | Value per install | Max CPI at 1.5× ROAS | What that unlocks |
 |---|---|---|---|
-| 3.5% | €1.75 | €1.17 | Nothing. No channel is this cheap. |
-| 5% | €2.50 | €1.67 | Apple Search Ads long-tail only |
-| **7%** | **€3.50** | **€2.33** | **Creator Spark Ads become viable** |
-| 9% | €4.50 | €3.00 | Meta/TikTok paid becomes possible |
+| 3.5% | €1.58 | €1.05 | **Nothing.** Nothing on earth is this cheap. |
+| 5% | €2.25 | €1.50 | Still nothing. |
+| 7% | €3.15 | €2.10 | TikTok, marginally |
+| **7.8%** | **€3.51** | **€2.34** | **TikTok yes; Apple Search Ads at ~1.28× — thin but positive** |
+| 9% | €4.05 | €2.70 | TikTok + ASA both work |
+
+### The one channel that may work sooner than the rest
+
+Buried in those benchmarks is something that changes the recommendation: **Apple Search Ads converts Health & Fitness traffic to paid at 7.80%** — more than double the 3.5% blended rate.
+
+Not because it's cheap. Because someone typing "habit tracker no streaks" has already told you they want what you built. Intent converts.
+
+So the paid channel to test first is Apple Search Ads on long-tail terms — and the reason is **conversion quality, not price.** It is still thin (~1.28× ROAS) and the competitive fitness head terms at $4–15 CPI would destroy it. Long-tail only.
+
+### What this does to the priority order
+
+**The highest-leverage work available to you is raising install→paid from 3.5% toward 7–8%, not acquiring more traffic.** Published range for fitness apps is 3–8%, so the top of the band is achievable, not fantasy. One percentage point of conversion is worth more than any amount of ad optimisation — and it's the difference between a marketing budget that compounds and one that burns.
 
 **This is the whole answer to your question.** €1,500/month of marketing budget is not a growth strategy until your install→paid conversion is above roughly 5%, and comfortable above 7%. Below that, every euro you spend destroys value faster the more of it you spend.
 
@@ -102,19 +130,39 @@ This is the single biggest ASO finding, so it gets its own heading.
 
 The **App Name** field (30 characters) is the highest-weighted keyword field on the App Store. Yours currently reads "Intended." Nobody types "intended" into App Store search. You are spending 100% of your strongest ranking field on a term with zero search volume.
 
-Change it to carry the category:
+**But don't call yourself a habit tracker.** An earlier draft of this document suggested `Intended: Habit Tracker`, and that was wrong — not on philosophical grounds but on commercial ones. Three real costs:
 
-- `Intended: Habits, Gently` — 24 chars
-- `Intended — Gentle Habit Log` — 27 chars
-- `Intended: Habit Tracker` — 23 chars
+1. You compete head-on with Streaks, Habitica and Way of Life on their own word, where a small app ranks near the bottom
+2. You set the wrong expectation, which hurts conversion *and* retention — people arrive wanting a checklist
+3. It contradicts every one of your screenshots
 
-The third ranks best; the first is most on-brand. Pick one and don't agonise — you can change it with any release.
+You don't need *that word*. You need **a searched word**:
+
+> ### `Intended: Habits, No Streaks`
+> 28 of your 30 characters
+
+- **"habits"** is the high-volume search term, so you still get found
+- **"no streaks"** is your actual differentiator, sitting exactly where a human reads it
+- You never claim to be a tracker
+- The hidden keyword field carries "tracker" so your name doesn't have to
+
+The App Name field does double duty — it ranks *and* it gets read. This spends both halves well.
 
 ---
 
 ## 2. ASO — the floor that compounds while you sleep
 
-Handoff §12 flags the App Store page as *"the only channel that compounds while you're not working on it"* and notes it's probably still launch-day defaults. This is a one-weekend job and then a quarterly review.
+### What ASO actually is
+
+**App Store Optimization** — making your App Store listing (a) rank higher when someone searches, and (b) convert more of the people who land on it. Two halves that get constantly conflated:
+
+**Getting found (ranking).** Driven by three text fields — App Name, Subtitle, and a hidden 100-character keyword field — plus download velocity and ratings. Apple matches what people type against those fields.
+
+**Getting downloaded (conversion).** Driven by screenshots, preview video, ratings, and the first three lines of your description. They searched, saw ten results, tapped yours — this decides whether they install.
+
+**Why it's first in this plan:** search is **65% of all iOS app discovery**, ahead of browse (18%), referrer (12%) and ads (5%). It's free, and it's the only channel that keeps working while you're asleep.
+
+Handoff §12 calls the App Store page *"the only channel that compounds while you're not working on it."* This is a one-weekend job and then a quarterly review.
 
 ### The fields, in order of ranking weight
 
@@ -140,15 +188,38 @@ A starting set:
 routine,daily,mood,journal,selfcare,mindful,ritual,adhd,anxiety,calm,streak,reminder,checklist,wellbeing,intention,gentle,burnout,consistency
 ```
 
-**4. Screenshots** — 90% of viewers see only the first two or three, and most never swipe. Handoff §5.4 found the **"What you're starting with"** card was the strongest thing on the day-one page, and §12 recommends it as the lead. Do that. Suggested order:
+**4. Screenshots — you already have good ones.** An earlier draft of this assumed launch-day defaults. Wrong: the six that exist are considered, coherent, and better than most of the category.
 
-1. "What you're starting with" — their intention, actions, focus areas. Explains the app to a stranger in one glance.
-2. The grid, with the caption **"one square = one thing you did"** rendered large in the screenshot caption, not just in-app.
-3. The line that is your actual differentiator: **"It doesn't count streaks. It counts how many times you came back."**
-4. The letter.
-5. The widget in situ.
+**What's working, and shouldn't be touched:**
 
-Put a **text caption above each screenshot** in the image itself. Screenshots without captions convert measurably worse — people don't decode UI, they read.
+- One colour per screen, consistent system. Distinctive rather than templated.
+- Headlines large enough to read at thumbnail size — most indie apps fail exactly this.
+- Every headline is a **claim**, not a feature name. *"Going quiet is allowed"* is the best line in the set and nothing else in the category says it.
+- The serif display face separates you from the Inter/SF default everyone else uses.
+- Caption above, device below. Correct pattern.
+
+**What to change, in priority order:**
+
+**a) The order is costing you.** 90% of viewers see the first two or three. Right now #1 asks a stranger to decode a mosaic before they know what the app *is*.
+
+Reorder to **3 → 4 → 1 → 2 → 5 → 6**:
+
+| Slot | Screenshot | Job |
+|---|---|---|
+| 1 | "Four small actions. No streaks." | What it is + why it's different |
+| 2 | "Going quiet is allowed." | The emotional hook, your strongest line |
+| 3 | "Your month, not your score." | Your visual signature — now with context |
+| 4–6 | Letter, plan, share card | For the people who swipe |
+
+**b) Screenshot 1's device frame is broken.** No top bezel, content runs to the image edge, tab bar floating over text. Beside five clean full devices with status bars, it reads as a mistake.
+
+**c) Screenshots 2 and 5 open mid-sentence.** #2 starts on a cut-off "YOUR FIRST WEEK", #5 on a half-visible "2 days passed, and then you came back." At full size that reads as *scrolled*. At App Store thumbnail size it reads as *broken rendering*.
+
+**d) "What you're starting with" is missing.** Handoff §5.4 found it *"tested as the strongest thing on the page"* and §12 names it as the lead. It's the only surface that explains the app to a stranger in one glance, and it isn't in the set.
+
+**e) Steal your own line.** *"Nine days away — and it asks for one small thing, not an apology"* is better than anything in your subtitle. Move it to promotional text.
+
+**f) Localise them.** Screenshots are per-language. If you add the RU listing, RU screenshots are a large and cheap conversion lever.
 
 **5. App Preview video** (up to 3, 15–30s each) — autoplays muted in search results. This is the highest-leverage conversion asset on the page and most solo devs skip it. First 3 seconds must land without sound. Show the tile animating into the grid (handoff §5.2: *"the animation is not optional"*) — it's the most visually explicable idea in the product.
 
@@ -176,9 +247,21 @@ That is the whole lesson. Indie-hacker content reaches indie hackers. Your buyer
 
 ### 3.2 Who actually downloads this
 
-The gentle-habit-tracker audience, from Finch's demographics and the category generally: **overwhelmingly women, 18–34**, and heavily overrepresented for ADHD, anxiety, depression, and burnout recovery. The recurring self-description is *"I have downloaded and abandoned eleven habit trackers."*
+**Finch's audience is 75% women, primarily 25–35**, with neurodivergent users (ADHD, anxiety, PTSD) reporting they stuck with it when nothing else took. The recurring self-description in this category is *"I have downloaded and abandoned eleven habit trackers."*
 
 They are not looking for productivity. They are looking for permission.
+
+Worth knowing as a ceiling: **Finch reached $30M ARR with no VC money.** This category can carry a solo-built app to a real business.
+
+### 3.2b Is it a men's app?
+
+The 75% figure is Finch's, not yours, and it describes *the incumbent* — not the market.
+
+**The case that men are an opening:** the gentle/self-care wing is saturated with female-coded design — Finch has a pet bird and pastels. Yours doesn't. It's restrained, typographic, no mascot. *"Steadier on hard days"* is not a gendered sentence. Men are dramatically underserved in permission-giving self-care, and an underserved audience is a wedge, not a consolation prize.
+
+**The case against:** the constraint is distribution, not product. The ADHD and mental-health creator ecosystem does skew female, so reaching men there means thinner communities and fewer obvious creators.
+
+**Don't resolve this by argument.** Firebase gives you inferred age and gender for your actual installs. Go look. If you're already near 50/50, the paragraph above this one is wrong about *your* app, and your content should follow your real users rather than the incumbent's.
 
 ### 3.3 The positioning line
 
@@ -233,13 +316,29 @@ The failure mode is not producing bad videos. It's producing five videos in week
 |---|---|---|
 | **Monday** | 90 min | Film 6–8 videos in one sitting. One outfit, one setup, one energy. Don't edit yet. |
 | **Monday** | 60 min | Edit all of them. Captions burned in — most people watch muted. |
-| **Tue–Sat** | 20 min/day | Post one to TikTok + Reels + Shorts. Then **stay in the comments for 20 minutes** — early engagement is what the algorithm reads. This is not optional and it is the step people skip. |
+| **Tue–Sat** | 20 min/day | Post one to TikTok + Reels + Shorts, then spend 20 minutes **commenting on other people's videos** (see below). |
 | **Saturday** | 60 min | Look at what performed. Write next week's eight hooks from the winners. |
 | **Sunday** | — | Off. Seriously. |
 
 ≈ 5.5 hours. Your remaining 1–4 hours go to ASO, Reddit, and creator outreach.
 
 **Post the same video to all three platforms.** Zero extra cost. TikTok and Reels behave differently enough that a flop on one can hit on the other.
+
+**About those 20 minutes — nobody will comment on your first twenty videos.** That's expected, and the step isn't really about your own comments.
+
+Spend the 20 minutes leaving genuinely useful, non-promotional comments on *other people's* videos in your niche — ADHD, burnout, gentle productivity — ones posted in the last few hours with 10k–500k views. Early on, **a good comment on someone else's big video will out-reach your own video.** People click the profile.
+
+When comments do start arriving: reply to every one within the first hour, and when a question is good, answer it *as a video*. That's free content with demand already proven.
+
+### 3.5b Text posts — the hook laboratory
+
+An earlier draft of this said video only. That was too narrow.
+
+**A line that dies as a text post will die as a video too** — and text costs two minutes instead of twenty. So: post ten hooks as text, film the two that land. Text is where you find out what works, cheaply.
+
+**Threads is your best-fit text platform.** It currently rewards personal, first-person, vulnerable writing with unusually high organic reach — which is precisely your app's voice. The letter copy would work on Threads nearly verbatim.
+
+**The honest limit:** text drives far fewer installs per unit of reach, because nobody sees the product. So divide the labour: **text builds audience and tests hooks; video drives installs.** Do both, and don't let text become the comfortable one you hide in.
 
 ### 3.6 Craft notes for someone who has never done this
 
@@ -279,16 +378,29 @@ The only exception worth €50–100/month: **Apple Search Ads on long-tail inte
 
 Revenue at this stage is €200–700/month. All of it goes back into marketing. You take home nothing. This is the investment phase and it is the part most solo founders skip, because taking the €400 feels like progress and reinvesting it feels like standing still.
 
-What that €200–700/month buys:
+**What €400 actually buys — the correction.** An earlier draft claimed €150–400 gets you a 20k–150k creator. It doesn't, and you were right to laugh. The published 2026 rates:
 
-- **Paid creator posts** at €150–400 each from accounts in the 20k–150k range. Two to three a month.
-- **Spark Ads / Partnership Ads** — the professional playbook, and the reason this phase works. When a creator's post performs organically, you pay to run *that exact post, from their handle*, as an ad. It doesn't look like an ad, so CPIs run 40–60% below brand-made creative. This is the single most efficient paid mechanism available to an app your size, and it's only available once organic has told you which post to boost.
+| Tier | TikTok video / IG Reel | Note |
+|---|---|---|
+| 10k–100k followers | **$150–$1,500** | and **health & wellness adds 40–80% on top** |
+| 10k–100k, Instagram Reel | $250–$2,500 | Reels price above feed posts |
+
+So at €150–400, with the health premium applied, you are realistically reaching **5k–25k follower accounts** — nano and micro. Not what I wrote.
+
+**The genuinely good news:** nano creators often convert better per follower. Higher trust, less ad fatigue, audiences that actually read the comments. It's a different game, not a worse one.
+
+**Which means the mechanics for a bootstrapped app are not flat-fee sponsorships:**
+
+1. **Gifting** — free lifetime, no obligation, no script. Costs €0. This is how you discover who converts before paying anyone.
+2. **Affiliate / bounty** — pay per install or per subscriber rather than per post. Many small creators accept this. Apple has no native IAP affiliate programme, so track via unique `?ct=` links and pay manually. Clunky; fine at your scale.
+3. **Spark Ads / Partnership Ads** — when a creator's post performs organically, you pay to run *that exact post from their handle* as an ad. It doesn't read as an ad. This is the most efficient paid mechanism available to an app your size, and it only exists once organic has told you which post to boost.
+4. **Telegram** — see §5b. Your €100 buys more real reach there than anywhere else available to you.
 
 ### Phase C — months 13+: €1,000–1,500/month, funded by the app
 
 **Only enter this phase if install→paid is above 5%.** That gate is not negotiable — see §0. Below it you are converting revenue into losses at scale.
 
-What €1,500/month realistically buys with proven creative at a ~€2.50 blended CPI: **roughly 600 installs/month.**
+What €1,500/month realistically buys with proven creative at a ~€3.00 blended CPI (TikTok's €2.27 is the floor; creator fees blend it upward): **roughly 500 installs/month.**
 
 Set against organic short-form at a working format (500–2,000 installs/month), paid roughly **doubles** you. That's the honest expectation. It is not a step change and it does not replace the content engine — it compresses the timeline from ~24 months to ~14.
 
@@ -298,7 +410,7 @@ Allocation at €1,500:
 |---|---|---|
 | Spark Ads on winning creator posts | €800 | Best CPI available to you. Scales with proven creative. |
 | Paid creator posts (4–6/month) | €500 | The pipeline that feeds the line above. Assume half flop. |
-| Apple Search Ads | €200 | **Hard ceiling.** Long-tail volume runs out around here; past it you're bidding on "habit tracker" against funded competitors at €5–8 CPI. |
+| Apple Search Ads | €200 | **Hard ceiling.** Long-tail volume runs out around here; past it you're bidding on competitive fitness terms at $4–15 CPI, where the maths dies. |
 
 Note that ceiling on Apple Search Ads. It's the reason you *cannot* simply deploy €1,500 into ads even if you have it — there is not enough high-intent search volume in your niche to absorb it. The money has to go through creators, which means creator relationships are the real bottleneck, not budget.
 
@@ -330,6 +442,38 @@ The subreddits: `r/ADHD`, `r/adhdwomen`, `r/getdisciplined`, `r/selfimprovement`
 4. One "I made this" post in the subs that permit it, at most.
 
 Expect a few hundred installs a year from this, not thousands. It's worth the hour a week mostly because it's where you'll learn how your buyer actually talks — which feeds better hooks.
+
+---
+
+## 5b. The Russian-speaking audience — Telegram, and it's your best-value channel
+
+The app already speaks Russian. This is the cheapest reach available to you, by a wide margin.
+
+### Why Telegram and not Instagram
+
+**Telegram delivers 10–20× the organic reach of Instagram and Facebook, at a CPM 3–4× lower.** For a Russian-speaking audience it isn't one option among several — it's where the audience actually lives.
+
+### How to buy it
+
+**Direct channel sponsorships, not the official ad platform.** Telegram's own self-serve Ads platform has minimum budgets around $2,000 (and direct platform access is gated behind a €2M commitment). Ignore it entirely.
+
+Instead, DM channel admins directly, or use a marketplace like Telega.in. **Direct channel advertising is testable on a budget under $200** — that is genuinely within your €100/month, which is true of no Western channel.
+
+Two mechanics worth knowing:
+- **Native collaborations** (the admin writes it in their own voice) cost 2–3× a standard sponsored post but convert **4–6× better**. Take the native one.
+- **Pinning for 24 hours** adds a 50–100% premium. Skip it at your budget.
+
+### Run your own channel
+
+Costs nothing, and Telegram builds more durable audiences than any Western platform — subscribers see essentially every post, with no algorithm deciding otherwise. Write the philosophy, in Russian, in your own voice. This is the single best fit between your app's writing and a platform's format.
+
+### The constraint you must design around
+
+**Apple removed in-app purchases from the Russian storefront in 2022. Someone in Russia physically cannot subscribe.**
+
+So the target is the diaspora — the largest Russian-speaking populations on storefronts that still take payments: **Germany, Israel, Kazakhstan, Georgia, Armenia, the Baltics, the US, Turkey, Serbia, and the Netherlands.** Choose channels whose audience is emigrant-skewed, and tag every link `?ct=telegram_<channelname>` so you can tell what actually landed rather than guessing.
+
+Also worth doing, since it's free: **VK** (older skew), Russian-language **YouTube Shorts**, and Russian-language **TikTok**, which works fine for the diaspora.
 
 ---
 
@@ -401,11 +545,48 @@ Do not schedule your vaste lasten against it. If €1,500/month is needed *this 
 - [ ] Set Lifetime to €49.99 in App Store Connect
 - [ ] Turn on a 14-day intro trial in App Store Connect — **now genuinely zero code.** The trial length is read from the live intro offer (`RevenueCatService.trialDays`) and every string that quotes it takes it as a placeholder, in both languages. Flip it in ASC and the app follows.
 - [ ] Ship v2, if it isn't live
-- [ ] Change the App Name to include a searched term
+- [ ] Change the App Name to `Intended: Habits, No Streaks`
 - [ ] Rewrite subtitle + keyword field
-- [ ] Rebuild screenshots, leading with "What you're starting with", captions burned in
+- [ ] **Reorder the existing screenshots to 3 → 4 → 1 → 2 → 5 → 6.** Ten minutes, and it's the highest-value ten minutes in this list. Then fix #1's broken device frame and the mid-sentence crops on #2 and #5.
+- [ ] Check Firebase for your actual age/gender split before writing any content
 - [ ] Add the Russian App Store listing localisation
 - [ ] Create TikTok, Instagram, YouTube accounts. Same handle everywhere. Bio: *"It doesn't count streaks. It counts how many times you came back."* + App Store link with `?ct=`
 - [ ] Film eight videos on Monday from the hooks in §3.4. Start with #6 as your pin.
 
 The rest is doing it every week for a year.
+
+---
+
+## 9. Where the numbers come from
+
+Read this section before trusting any figure above. The claims in this document come from three different places and they do not deserve equal confidence.
+
+### Tier 1 — your own handoff, §3
+
+Not researched here; taken as given because you researched it. Trial start 5–7% of installs · trial→paid ~62% · 90% of trial starts and 44.5% of purchases on Day 0 · paywalls after a value moment 2.1× · Lally et al. 2010 · high-priced apps 3× LTV · H&F annual = 60.6% of category revenue.
+
+### Tier 2 — arithmetic, checkable in ten seconds
+
+The VAT and commission maths (`44.99 ÷ 1.21 = 37.18`, `× 0.85 = 31.60`), the subscriber counts, the LTV and CPI tables. Everything downstream of Tier 1 and Tier 3 is division. Check it.
+
+### Tier 3 — published 2026 benchmarks, verified August 2026
+
+| Claim used above | Source |
+|---|---|
+| Annual renewal Y1→Y2 in H&F: 25–44%, clustering ~30% | [RevenueCat](https://www.revenuecat.com/blog/growth/average-subscription-renewal-rates-by-app-category/) · [Adapty](https://adapty.io/blog/health-fitness-app-subscription-benchmarks/) |
+| Install LTV $1.21 over 12 months, highest of any category | [Airbridge](https://www.airbridge.io/en/blog/subscription-app-pricing-by-category-2026-benchmark) |
+| Install→paid for fitness apps: 3–8% | [Adwave](https://adwave.com/resources/fitness-app-advertising) |
+| **Apple Search Ads H&F install→paid: 7.80%** | [Adapty](https://adapty.io/blog/apple-ads-install-to-paid-rate-benchmarks/) |
+| iOS CPI $5.84 Q1 2026, +19% YoY; TikTok $2.45; ASA $2.96; fitness keywords $4–15 | [Admiral Media](https://admiral.media/mobile-app-marketing-benchmarks-2026/) · [The Social Outline](https://thesocialoutline.com/blog/mobile-app-cpi-benchmarks-2026) |
+| Search = 65% of iOS discovery (browse 18%, referrer 12%, ads 5%) | [Digital Applied](https://www.digitalapplied.com/blog/app-store-optimization-aso-statistics-2026-data) · [Searchlab](https://searchlab.nl/en/statistics/app-marketing-aso-statistics-2026) |
+| Finch: 75% women, primarily 25–35; $30M ARR without VC | [Sparrow Apps](https://blog.sparrowapps.io/p/finch-how-a-self-care-app-hit-30m-arr-without-vc-money) |
+| Micro creator rates $150–$1,500; health niche +40–80% | [Influencer Marketing Hub](https://influencermarketinghub.com/influencer-rates/micro-influencer-rates/) · [ContentGrip](https://www.contentgrip.com/influencer-marketing-rate-card/) |
+| Telegram: 10–20× organic reach vs Meta, CPM 3–4× lower; direct channel testing under $200 | [Marketing Agent](https://marketingagent.blog/2026/01/08/the-complete-telegram-marketing-strategy-for-2026-direct-encrypted-and-highly-profitable/) · [CRMChat](https://crmchat.ai/blog/telegram-ads-vs-telegram-outreach-2026-guide) |
+
+### Tier 4 — still estimates, flagged as such
+
+The €3.00 blended CPI in Phase C, the ~€200/month Apple Search Ads volume ceiling in your niche, the Spark Ads discount versus brand creative, and every row of the §7 timeline. These are judgement, not data.
+
+### The number that replaces all of this
+
+**Your own.** RevenueCat knows your real retention and LTV; App Store Connect knows your real conversion. Every benchmark above is a stand-in for a number you will have in week two. When yours disagrees with a table in this document, yours is right.
