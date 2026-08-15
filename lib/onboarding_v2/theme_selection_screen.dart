@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'habit_reveal_screen.dart';
 import '../l10n/app_localizations.dart';
 import '../services/analytics_service.dart';
+import '../services/revenue_cat_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
@@ -139,7 +140,9 @@ class _ThemeSelectionScreenState extends State<ThemeSelectionScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              l10n.themeSelectionPremiumHint,
+                              l10n.themeSelectionPremiumHint(
+                                context.watch<RevenueCatService>().trialDays,
+                              ),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: AppTextStyles.bodyFont(context),

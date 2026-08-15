@@ -111,7 +111,14 @@
   "themeSelectionTitle": "Choose your space",
   "themeSelectionSubtitle": "You can always change this later.",
   "themeSelectionConfirm": "This feels right",
-  "themeSelectionPremiumHint": "Deep Focus and more themes are available with Intended+. Try it free for 7 days after setup.",
+  "themeSelectionPremiumHint": "Deep Focus and more themes are available with Intended+. Try it free for {days, plural, =1{1 day} other{{days} days}} after setup.",
+  "@themeSelectionPremiumHint": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "habitRevealTitle": "Here's what we picked for you",
   "habitRevealSubtitleDefault": "Based on your preferences",
   "habitRevealSubtitleOneArea": "Based on {area}",
@@ -851,11 +858,21 @@
   "paywallLifetimePrice": "€49.99",
   "paywallLifetimePeriod": "one-time",
   "paywallLifetimeBadge": "Launch price",
-  "paywallCtaTrial": "Start 7-day free trial",
+  "paywallCtaTrial": "Start {days}-day free trial",
+  "@paywallCtaTrial": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "paywallCtaLifetime": "Get lifetime access",
-  "paywallTrialHint": "7 days free, then {price}. Cancel anytime.",
+  "paywallTrialHint": "{days, plural, =1{1 day} other{{days} days}} free, then {price}. Cancel anytime.",
   "@paywallTrialHint": {
     "placeholders": {
+      "days": {
+        "type": "int"
+      },
       "price": {
         "type": "String"
       }
@@ -873,10 +890,16 @@
   "onboardingPaywallBody": "The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.",
   "onboardingPaywallPrimaryCta": "Start free trial",
   "onboardingPaywallSecondaryCta": "Not now — keep the free version",
-  "onboardingPaywallDisclaimer": "7 days free, then {price}/year — about €3.75 a month. Cancel anytime.",
+  "onboardingPaywallDisclaimer": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Cancel anytime.",
   "@onboardingPaywallDisclaimer": {
     "placeholders": {
+      "days": {
+        "type": "int"
+      },
       "price": {
+        "type": "String"
+      },
+      "perMonth": {
         "type": "String"
       }
     }
@@ -1475,7 +1498,23 @@
   "faqWhatIsPlus": "What is Intended+?",
   "faqWhatIsPlusAnswer": "Intended+ is the reading of your month: the drift warning before a quiet stretch, a four-line letter, next month's plan built from this month's evidence, what actually lifts you, the season's explanation and archive — plus all ten themes, premium icons and widgets.",
   "faqPricing": "How much does it cost?",
-  "faqPricingAnswer": "Monthly: €6.99. Yearly: €49.99 (5 months free). Lifetime: €89.99. All include a 7-day free trial.",
+  "faqPricingAnswer": "Monthly: {monthly}. Yearly: {yearly}. Lifetime: {lifetime}, one-time. Both subscriptions start with a {days}-day free trial.",
+  "@faqPricingAnswer": {
+    "placeholders": {
+      "monthly": {
+        "type": "String"
+      },
+      "yearly": {
+        "type": "String"
+      },
+      "lifetime": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "faqFreeVersion": "Can I use it for free?",
   "faqFreeVersionAnswer": "Yes. Free includes intention paths, 2 custom habits, 2 focus areas, weekly reflections, smart notifications, and widgets.",
   "faqRestore": "How do I restore my purchase?",

@@ -696,7 +696,11 @@ class _PaywallScreenState extends State<PaywallScreen>
                 : Text(
                     _selectedPlan == 'lifetime'
                         ? l10n.paywallCtaLifetime
-                        : l10n.paywallCtaTrial,
+                        : l10n.paywallCtaTrial(
+                            context
+                                .read<RevenueCatService>()
+                                .trialDaysForPlan(_selectedPlan),
+                          ),
                     style: TextStyle(
                       fontFamily: AppTextStyles.bodyFont(context),
                       fontSize: 17,
@@ -719,7 +723,7 @@ class _PaywallScreenState extends State<PaywallScreen>
       final price = _selectedPlan == 'yearly'
           ? '${rc.yearlyPriceString ?? l10n.paywallYearlyPrice}/${l10n.paywallYearly.toLowerCase()}'
           : '${rc.monthlyPriceString ?? l10n.paywallMonthlyPrice}/${l10n.paywallMonthly.toLowerCase()}';
-      text = l10n.paywallTrialHint(price);
+      text = l10n.paywallTrialHint(rc.trialDaysForPlan(_selectedPlan), price);
     }
     return Text(
       text,

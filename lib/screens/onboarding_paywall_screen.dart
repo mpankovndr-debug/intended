@@ -165,6 +165,9 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
     final l10n = AppLocalizations.of(context);
     final rc = context.watch<RevenueCatService>();
     final yearlyPrice = rc.yearlyPriceString ?? l10n.paywallYearlyPrice;
+    final yearlyPerMonth =
+        rc.yearlyPerMonthString ?? l10n.paywallYearlyPerMonth;
+    final trialDays = rc.trialDaysForPlan('yearly');
 
     // Block the system back gesture / hardware back. The user must choose
     // one of the two CTAs — there is no implicit dismiss.
@@ -382,7 +385,8 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
                     FadeTransition(
                       opacity: _fadeIn,
                       child: Text(
-                        l10n.onboardingPaywallDisclaimer(yearlyPrice),
+                        l10n.onboardingPaywallDisclaimer(
+                            trialDays, yearlyPrice, yearlyPerMonth),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: AppTextStyles.bodyFont(context),

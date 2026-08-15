@@ -224,8 +224,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeSelectionConfirm => 'This feels right';
 
   @override
-  String get themeSelectionPremiumHint =>
-      'Deep Focus and more themes are available with Intended+. Try it free for 7 days after setup.';
+  String themeSelectionPremiumHint(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return 'Deep Focus and more themes are available with Intended+. Try it free for $_temp0 after setup.';
+  }
 
   @override
   String get habitRevealTitle => 'Here\'s what we picked for you';
@@ -1617,14 +1624,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallLifetimeBadge => 'Launch price';
 
   @override
-  String get paywallCtaTrial => 'Start 7-day free trial';
+  String paywallCtaTrial(int days) {
+    return 'Start $days-day free trial';
+  }
 
   @override
   String get paywallCtaLifetime => 'Get lifetime access';
 
   @override
-  String paywallTrialHint(String price) {
-    return '7 days free, then $price. Cancel anytime.';
+  String paywallTrialHint(int days, String price) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0 free, then $price. Cancel anytime.';
   }
 
   @override
@@ -1666,8 +1681,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingPaywallSecondaryCta => 'Not now — keep the free version';
 
   @override
-  String onboardingPaywallDisclaimer(String price) {
-    return '7 days free, then $price/year — about €3.75 a month. Cancel anytime.';
+  String onboardingPaywallDisclaimer(int days, String price, String perMonth) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0 free, then $price/year — about $perMonth a month. Cancel anytime.';
   }
 
   @override
@@ -3087,8 +3108,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faqPricing => 'How much does it cost?';
 
   @override
-  String get faqPricingAnswer =>
-      'Monthly: €6.99. Yearly: €49.99 (5 months free). Lifetime: €89.99. All include a 7-day free trial.';
+  String faqPricingAnswer(
+      String monthly, String yearly, String lifetime, int days) {
+    return 'Monthly: $monthly. Yearly: $yearly. Lifetime: $lifetime, one-time. Both subscriptions start with a $days-day free trial.';
+  }
 
   @override
   String get faqFreeVersion => 'Can I use it for free?';

@@ -111,7 +111,7 @@
   "themeSelectionTitle": "Выбери своё пространство",
   "themeSelectionSubtitle": "Это всегда можно изменить позже.",
   "themeSelectionConfirm": "Мне это подходит",
-  "themeSelectionPremiumHint": "«Глубокий фокус» и другие темы доступны с Intended+. Попробуй бесплатно 7 дней после настройки.",
+  "themeSelectionPremiumHint": "«Глубокий фокус» и другие темы доступны с Intended+. Попробуй бесплатно {days, plural, one{{days} день} few{{days} дня} many{{days} дней} other{{days} дня}} после настройки.",
   "habitRevealTitle": "Вот, что мы подобрали для тебя",
   "habitRevealSubtitleDefault": "На основе твоих предпочтений",
   "habitRevealSubtitleOneArea": "На основе направления «{area}»",
@@ -612,16 +612,9 @@
   "paywallLifetimePrice": "€49,99",
   "paywallLifetimePeriod": "один раз",
   "paywallLifetimeBadge": "Цена запуска",
-  "paywallCtaTrial": "Начать 7-дневный пробный период",
+  "paywallCtaTrial": "Начать {days}-дневный пробный период",
   "paywallCtaLifetime": "Получить навсегда",
-  "paywallTrialHint": "7 дней бесплатно, затем {price}. Отмена в любое время.",
-  "@paywallTrialHint": {
-    "placeholders": {
-      "price": {
-        "type": "String"
-      }
-    }
-  },
+  "paywallTrialHint": "{days, plural, one{{days} день} few{{days} дня} many{{days} дней} other{{days} дня}} бесплатно, затем {price}. Отмена в любое время.",
   "paywallLifetimeHint": "Разовая покупка. Без подписки.",
   "paywallContinueFree": "Продолжить с Core",
   "paywallRestorePurchases": "Восстановить покупки",
@@ -634,14 +627,7 @@
   "onboardingPaywallBody": "Мозаика показывает, что было, а Intended+ говорит, что это значит. Послание о твоём месяце в четыре строки, а также план на следующий — из того, что было на самом деле, с честным ответом, сработал ли он. Тихое напоминание перед тем, как ты начнёшь пропадать, пока неделю ещё можно изменить. Плюс все десять тем, иконки и виджеты твои с первого дня.",
   "onboardingPaywallPrimaryCta": "Начать пробный период",
   "onboardingPaywallSecondaryCta": "Не сейчас — остаться на бесплатной",
-  "onboardingPaywallDisclaimer": "7 дней бесплатно, дальше {price} в год — около €3,75 в месяц. Отменить можно в любой момент.",
-  "@onboardingPaywallDisclaimer": {
-    "placeholders": {
-      "price": {
-        "type": "String"
-      }
-    }
-  },
+  "onboardingPaywallDisclaimer": "{days, plural, one{{days} день} few{{days} дня} many{{days} дней} other{{days} дня}} бесплатно, дальше {price} в год — около {perMonth} в месяц. Отменить можно в любой момент.",
   "subscriptionTitle": "Intended+",
   "subscriptionSupporter": "Спасибо, что ты с нами ♥",
   "subscriptionPlan": "Тариф",
@@ -1229,7 +1215,7 @@
   "faqWhatIsPlus": "Что такое Intended+?",
   "faqWhatIsPlusAnswer": "Intended+ — это чтение твоего месяца: предупреждение о дрейфе перед тихой полосой, письмо в четыре строки, план на следующий месяц из фактов этого, «что тебя поддерживает», объяснение сезона и архив — плюс все десять тем, премиум-иконки и виджеты.",
   "faqPricing": "Сколько стоит?",
-  "faqPricingAnswer": "Ежемесячно: €6.99. Годовой: €49.99 (5 месяцев бесплатно). Навсегда: €89.99. Все включают 7 дней пробного периода.",
+  "faqPricingAnswer": "Ежемесячно: {monthly}. Годовой: {yearly}. Навсегда: {lifetime}, разовая покупка. Обе подписки начинаются с {days}-дневного бесплатного периода.",
   "faqFreeVersion": "Можно пользоваться бесплатно?",
   "faqFreeVersionAnswer": "Да. Бесплатно: пути намерений, 2 свои привычки, 2 области фокуса, недельная рефлексия, умные уведомления и виджеты.",
   "faqRestore": "Как восстановить покупку?",

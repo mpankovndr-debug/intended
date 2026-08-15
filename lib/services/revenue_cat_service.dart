@@ -61,6 +61,55 @@ class RevenueCatService extends ChangeNotifier {
     return ((1.0 - y / (m * 12)) * 100).round();
   }
 
+  // ---------------------------------------------------------------------------
+  // Free-trial length (from the live App Store intro offer)
+  // ---------------------------------------------------------------------------
+
+  /// Shown only until the store answers, exactly like the `paywall*Price`
+  /// strings in the ARB files. Mirrors the intro offer configured in App Store
+  /// Connect — if you change the trial there, change this one line too.
+  static const int defaultTrialDays = 7;
+
+  /// The introductory period expressed in whole days.
+  ///
+  /// Returns null for month/year units on purpose: a calendar month is 28–31
+  /// days, so a day count for one would be a number we can't stand behind.
+  /// The app sells day- and week-based trials, where this is exact.
+  @visibleForTesting
+  static int? introPeriodInDays(PeriodUnit unit, int numberOfUnits) {
+    if (numberOfUnits <= 0) return null;
+    switch (unit) {
+      case PeriodUnit.day:
+        return numberOfUnits;
+      case PeriodUnit.week:
+        return numberOfUnits * 7;
+      case PeriodUnit.month:
+      case PeriodUnit.year:
+      case PeriodUnit.unknown:
+        return null;
+    }
+  }
+
+  int? _trialDaysFor(String id) {
+    final intro = _findProduct(id)?.introductoryPrice;
+    if (intro == null) return null;
+    return introPeriodInDays(intro.periodUnit, intro.periodNumberOfUnits);
+  }
+
+  int? get yearlyTrialDays => _trialDaysFor('com.intendedapp.plus.yearly');
+  int? get monthlyTrialDays => _trialDaysFor('com.intendedapp.plus.monthly');
+
+  /// Trial length to print in copy. Prefers the yearly plan (the hero), falls
+  /// back to monthly, then to [defaultTrialDays] while products load.
+  int get trialDays =>
+      yearlyTrialDays ?? monthlyTrialDays ?? defaultTrialDays;
+
+  /// Trial length for a specific plan, so the paywall's disclaimer matches the
+  /// plan the user actually has selected.
+  int trialDaysForPlan(String plan) =>
+      (plan == 'monthly' ? monthlyTrialDays : yearlyTrialDays) ??
+      defaultTrialDays;
+
   StoreProduct? _findProduct(String id) {
     for (final p in getPackages()) {
       if (p.storeProduct.identifier == id) return p.storeProduct;

@@ -225,8 +225,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get themeSelectionConfirm => 'Мне это подходит';
 
   @override
-  String get themeSelectionPremiumHint =>
-      '«Глубокий фокус» и другие темы доступны с Intended+. Попробуй бесплатно 7 дней после настройки.';
+  String themeSelectionPremiumHint(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days дня',
+      many: '$days дней',
+      few: '$days дня',
+      one: '$days день',
+    );
+    return '«Глубокий фокус» и другие темы доступны с Intended+. Попробуй бесплатно $_temp0 после настройки.';
+  }
 
   @override
   String get habitRevealTitle => 'Вот, что мы подобрали для тебя';
@@ -1650,14 +1659,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paywallLifetimeBadge => 'Цена запуска';
 
   @override
-  String get paywallCtaTrial => 'Начать 7-дневный пробный период';
+  String paywallCtaTrial(int days) {
+    return 'Начать $days-дневный пробный период';
+  }
 
   @override
   String get paywallCtaLifetime => 'Получить навсегда';
 
   @override
-  String paywallTrialHint(String price) {
-    return '7 дней бесплатно, затем $price. Отмена в любое время.';
+  String paywallTrialHint(int days, String price) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days дня',
+      many: '$days дней',
+      few: '$days дня',
+      one: '$days день',
+    );
+    return '$_temp0 бесплатно, затем $price. Отмена в любое время.';
   }
 
   @override
@@ -1701,8 +1720,16 @@ class AppLocalizationsRu extends AppLocalizations {
       'Не сейчас — остаться на бесплатной';
 
   @override
-  String onboardingPaywallDisclaimer(String price) {
-    return '7 дней бесплатно, дальше $price в год — около €3,75 в месяц. Отменить можно в любой момент.';
+  String onboardingPaywallDisclaimer(int days, String price, String perMonth) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days дня',
+      many: '$days дней',
+      few: '$days дня',
+      one: '$days день',
+    );
+    return '$_temp0 бесплатно, дальше $price в год — около $perMonth в месяц. Отменить можно в любой момент.';
   }
 
   @override
@@ -3127,8 +3154,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get faqPricing => 'Сколько стоит?';
 
   @override
-  String get faqPricingAnswer =>
-      'Ежемесячно: €6.99. Годовой: €49.99 (5 месяцев бесплатно). Навсегда: €89.99. Все включают 7 дней пробного периода.';
+  String faqPricingAnswer(
+      String monthly, String yearly, String lifetime, int days) {
+    return 'Ежемесячно: $monthly. Годовой: $yearly. Навсегда: $lifetime, разовая покупка. Обе подписки начинаются с $days-дневного бесплатного периода.';
+  }
 
   @override
   String get faqFreeVersion => 'Можно пользоваться бесплатно?';

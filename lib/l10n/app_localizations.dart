@@ -497,8 +497,8 @@ abstract class AppLocalizations {
   /// No description provided for @themeSelectionPremiumHint.
   ///
   /// In en, this message translates to:
-  /// **'Deep Focus and more themes are available with Intended+. Try it free for 7 days after setup.'**
-  String get themeSelectionPremiumHint;
+  /// **'Deep Focus and more themes are available with Intended+. Try it free for {days, plural, =1{1 day} other{{days} days}} after setup.'**
+  String themeSelectionPremiumHint(int days);
 
   /// No description provided for @habitRevealTitle.
   ///
@@ -2693,8 +2693,8 @@ abstract class AppLocalizations {
   /// No description provided for @paywallCtaTrial.
   ///
   /// In en, this message translates to:
-  /// **'Start 7-day free trial'**
-  String get paywallCtaTrial;
+  /// **'Start {days}-day free trial'**
+  String paywallCtaTrial(int days);
 
   /// No description provided for @paywallCtaLifetime.
   ///
@@ -2705,8 +2705,8 @@ abstract class AppLocalizations {
   /// No description provided for @paywallTrialHint.
   ///
   /// In en, this message translates to:
-  /// **'7 days free, then {price}. Cancel anytime.'**
-  String paywallTrialHint(String price);
+  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}. Cancel anytime.'**
+  String paywallTrialHint(int days, String price);
 
   /// No description provided for @paywallLifetimeHint.
   ///
@@ -2783,8 +2783,8 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPaywallDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'7 days free, then {price}/year — about €3.75 a month. Cancel anytime.'**
-  String onboardingPaywallDisclaimer(String price);
+  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Cancel anytime.'**
+  String onboardingPaywallDisclaimer(int days, String price, String perMonth);
 
   /// No description provided for @subscriptionTitle.
   ///
@@ -5291,8 +5291,9 @@ abstract class AppLocalizations {
   /// No description provided for @faqPricingAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Monthly: €6.99. Yearly: €49.99 (5 months free). Lifetime: €89.99. All include a 7-day free trial.'**
-  String get faqPricingAnswer;
+  /// **'Monthly: {monthly}. Yearly: {yearly}. Lifetime: {lifetime}, one-time. Both subscriptions start with a {days}-day free trial.'**
+  String faqPricingAnswer(
+      String monthly, String yearly, String lifetime, int days);
 
   /// No description provided for @faqFreeVersion.
   ///

@@ -6,11 +6,39 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../main.dart' show showIntendedModal, AppBackground;
+import '../../services/revenue_cat_service.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/theme_provider.dart';
 import '../../utils/text_styles.dart';
 
 // ─── Data ────────────────────────────────────────────────────────────────────
+
+/// The live App Store figures the pricing answer quotes. Resolved once in
+/// [FaqScreen.build] and captured by the answer closure, so the FAQ can never
+/// drift from the paywall the way it did when these were typed into the ARB.
+class _FaqPricing {
+  final String monthly;
+  final String yearly;
+  final String lifetime;
+  final int trialDays;
+
+  const _FaqPricing({
+    required this.monthly,
+    required this.yearly,
+    required this.lifetime,
+    required this.trialDays,
+  });
+
+  /// Falls back to the same ARB constants the paywall uses when products
+  /// haven't loaded yet — one set of numbers, one place to change them.
+  factory _FaqPricing.from(RevenueCatService rc, AppLocalizations l) =>
+      _FaqPricing(
+        monthly: rc.monthlyPriceString ?? l.paywallMonthlyPrice,
+        yearly: rc.yearlyPriceString ?? l.paywallYearlyPrice,
+        lifetime: rc.lifetimePriceString ?? l.paywallLifetimePrice,
+        trialDays: rc.trialDays,
+      );
+}
 
 class _FaqItem {
   final String Function(AppLocalizations) question;
@@ -29,7 +57,7 @@ class _FaqCategory {
   });
 }
 
-List<_FaqCategory> _buildCategories() => [
+List<_FaqCategory> _buildCategories(_FaqPricing pricing) => [
       _FaqCategory(
         title: (l) => l.faqSectionGettingStarted,
         icon: CupertinoIcons.lightbulb_fill,
@@ -144,7 +172,14 @@ List<_FaqCategory> _buildCategories() => [
               question: (l) => l.faqWhatIsPlus,
               answer: (l) => l.faqWhatIsPlusAnswer),
           _FaqItem(
-              question: (l) => l.faqPricing, answer: (l) => l.faqPricingAnswer),
+            question: (l) => l.faqPricing,
+            answer: (l) => l.faqPricingAnswer(
+              pricing.monthly,
+              pricing.yearly,
+              pricing.lifetime,
+              pricing.trialDays,
+            ),
+          ),
           _FaqItem(
               question: (l) => l.faqFreeVersion,
               answer: (l) => l.faqFreeVersionAnswer),
@@ -277,7 +312,11 @@ class FaqScreen extends StatelessWidget {
     final themeP = Provider.of<ThemeProvider>(context);
     final colors = themeP.colors;
     final isDark = themeP.theme.isDark;
-    final categories = _buildCategories();
+    // watch, not read: products resolve asynchronously after launch, and the
+    // pricing answer must pick up the real numbers when they land.
+    final categories = _buildCategories(
+      _FaqPricing.from(context.watch<RevenueCatService>(), l10n),
+    );
     final topPadding = MediaQuery.of(context).padding.top;
 
     return CupertinoPageScaffold(
