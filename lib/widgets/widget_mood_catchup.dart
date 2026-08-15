@@ -26,17 +26,28 @@ class WidgetMoodCatchup {
   static const Duration lookback = Duration(hours: 48);
   static bool _showing = false;
 
-  static Future<void> maybeShow(BuildContext context) async {
-    if (_showing) return;
-    final cutoff = DateTime.now().toUtc().subtract(lookback);
-    final all = await MomentsService.getAll();
-    final unrated = all
+  /// Which moments still owe an answer, oldest first.
+  ///
+  /// Pulled out of [maybeShow] so it can be tested at all: the rest of that
+  /// method needs a BuildContext and a Navigator, which meant the one part
+  /// with real rules in it — the source, the lookback, the ordering — had no
+  /// way to be checked.
+  static List<Moment> pending(List<Moment> all, {DateTime? now}) {
+    final cutoff = (now ?? DateTime.now()).toUtc().subtract(lookback);
+    return all
         .where((m) =>
             m.source == 'widget' &&
             m.mood == null &&
             m.completedAt.isAfter(cutoff))
         .toList()
+      // Oldest first: asked in the order they happened, so the answers line
+      // up with the day the person is remembering.
       ..sort((a, b) => a.completedAt.compareTo(b.completedAt));
+  }
+
+  static Future<void> maybeShow(BuildContext context) async {
+    if (_showing) return;
+    final unrated = pending(await MomentsService.getAll());
     if (unrated.isEmpty) return;
 
     _showing = true;
