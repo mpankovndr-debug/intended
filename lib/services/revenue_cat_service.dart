@@ -68,7 +68,7 @@ class RevenueCatService extends ChangeNotifier {
   /// Shown only until the store answers, exactly like the `paywall*Price`
   /// strings in the ARB files. Mirrors the intro offer configured in App Store
   /// Connect — if you change the trial there, change this one line too.
-  static const int defaultTrialDays = 7;
+  static const int defaultTrialDays = 14;
 
   /// The introductory period expressed in whole days.
   ///

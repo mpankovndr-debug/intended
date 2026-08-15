@@ -132,6 +132,6 @@ void main() {
   test('defaultTrialDays matches what App Store Connect currently sells', () {
     // If you change the intro offer in ASC, change this constant to match.
     // It is only ever shown in the window before products resolve.
-    expect(RevenueCatService.defaultTrialDays, 7);
+    expect(RevenueCatService.defaultTrialDays, 14);
   });
 }
