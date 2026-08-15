@@ -239,8 +239,10 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
                 final themeProvider = context.watch<ThemeProvider>();
                 final locale = Localizations.localeOf(context).toString();
                 return SeasonShareCard(
-                  monthLabel:
-                      DateFormat.yMMMM(locale).format(widget.month),
+                  // Standalone month + year, not yMMMM: Russian's yMMMM ends
+                  // in « г.», which uppercases to a stray "Г." in a headline.
+                  monthLabel: '${DateFormat.LLLL(locale).format(widget.month)} '
+                      '${widget.month.year}',
                   seasonWord: widget.seasonWord,
                   moments: widget.moments,
                   returnCount: widget.returnCount,

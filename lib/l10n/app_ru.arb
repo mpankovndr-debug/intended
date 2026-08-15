@@ -1347,7 +1347,7 @@
   "planPreviewLabel": "ЧТО ПРЕДЛОЖИЛ БЫ INTENDED+",
   "insightsReturnGaps": "с промежутками в {gaps} дней.",
   "shareSeasonMoments": "{count, plural, one{{count} момент} few{{count} момента} many{{count} моментов} other{{count} момента}}",
-  "shareSeasonReturns": "{count, plural, one{Я возвращался {count} раз} few{Я возвращался {count} раза} many{Я возвращался {count} раз} other{Я возвращался {count} раза}}",
+  "shareSeasonReturns": "{count, plural, one{{count} возвращение} few{{count} возвращения} many{{count} возвращений} other{{count} возвращения}}",
   "shareIncludeHabitNames": "Показывать названия привычек",
   "todayAdoptIntention": "Выбрать другое намерение",
   "staleNudgeTitle": "Кажется, это пока не подходит",
