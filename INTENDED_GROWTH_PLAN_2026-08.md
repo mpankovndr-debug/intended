@@ -95,9 +95,7 @@ So the paid channel to test first is Apple Search Ads on long-tail terms — and
 
 **The highest-leverage work available to you is raising install→paid from 3.5% toward 7–8%, not acquiring more traffic.** Published range for fitness apps is 3–8%, so the top of the band is achievable, not fantasy. One percentage point of conversion is worth more than any amount of ad optimisation — and it's the difference between a marketing budget that compounds and one that burns.
 
-**This is the whole answer to your question.** €1,500/month of marketing budget is not a growth strategy until your install→paid conversion is above roughly 5%, and comfortable above 7%. Below that, every euro you spend destroys value faster the more of it you spend.
-
-Which reframes the priority completely: **the highest-leverage work available to you is raising conversion from 3.5% toward 7%, not acquiring more traffic.** One percentage point of conversion is worth more than any amount of ad optimisation — and it makes the €1,500 budget go from destructive to accelerating.
+**Which is the whole answer to "can I use a bigger budget?"** €1,500/month is not a growth strategy until install→paid is above roughly 5%, and comfortable above 7%. Below that, every euro you spend destroys value faster the more of it you spend.
 
 The good news: the handoff already contains the levers, and two need no code.
 
@@ -115,6 +113,20 @@ You need 700 subscribers at €44.99. You'd need 580 at €54.99. Price is the l
 ## 1. Week 1 — stop the leaks
 
 Four hours of work here is worth more than a month of content. Do this before anything else.
+
+### 1.0 You have zero ratings — this outranks everything else here
+
+Read from the live listing (`id6759798275`, Aug 2026):
+
+> *"This app hasn't received enough ratings or reviews to display an overview."*
+
+**No star block appears on your page at all.** Not a bad rating — no rating, because Apple needs a handful before it will show one.
+
+This is the single worst conversion problem on the listing, and it sits upstream of everything in §2. Ratings are both a ranking signal and the thing a stranger checks before installing. An app showing no stars, next to a competitor showing 4.9 from 700k, has lost before the screenshots finish loading. Traffic driven to this page converts worse than the benchmarks in §0 assume — which means every install you buy or earn is worth less than the model says until it's fixed.
+
+The fix is already queued in the handoff: **the in-app review prompt, which needs a real-device pass** ("Needs you" item 2 — neither in-app review nor App Store links work in the Simulator).
+
+That device test is now the highest-priority item in this document. Above the name. Above the screenshots. It is the difference between traffic converting and traffic bouncing, and it gates the value of all the work below it.
 
 ### 1.1 The Lifetime price is still wrong — €69.99 in App Store Connect
 
@@ -138,15 +150,26 @@ The **App Name** field (30 characters) is the highest-weighted keyword field on 
 
 You don't need *that word*. You need **a searched word**:
 
-> ### `Intended: Habits, No Streaks`
-> 28 of your 30 characters
+> ### `Intended: No Streaks Habits`
+> 27 of your 30 characters
 
 - **"habits"** is the high-volume search term, so you still get found
-- **"no streaks"** is your actual differentiator, sitting exactly where a human reads it
+- **"no streaks"** is your actual differentiator
 - You never claim to be a tracker
-- The hidden keyword field carries "tracker" so your name doesn't have to
+- The hidden keyword field carries "tracker", and Apple combines across fields, so "habit tracker" is still indexed without the name spending characters on it
 
-The App Name field does double duty — it ranks *and* it gets read. This spends both halves well.
+**Why "No Streaks" leads.** App names truncate in search results around 22–25 characters. Word position doesn't affect ranking — Apple indexes the whole field — but it decides what a human sees in a list of ten results:
+
+| Name | Survives truncation | Cut |
+|---|---|---|
+| `Intended: No Streaks Habits` | **the differentiator** | the generic word |
+| `Intended: No Streaks Habits` | the generic word | **the differentiator** |
+
+An earlier draft had these the other way round.
+
+**Don't add "App".** It costs 4 characters, buys nothing — everything here is an app — and Apple's own guidance discourages generic filler in the name.
+
+`Intended: No-Streak Habits` (26) is the alternative if the noun-pile phrasing grates; the only unknown is how Apple tokenizes the hyphen.
 
 ---
 
@@ -168,11 +191,14 @@ Handoff §12 calls the App Store page *"the only channel that compounds while yo
 
 **1. App Name** (30 chars) — see §1.3 above.
 
-**2. Subtitle** (30 chars) — second-highest weight, and it is *also* the line a human reads. Both jobs at once:
+**2. Subtitle** (30 chars) — second-highest weight, and *also* the line a human reads.
 
-- `Habit tracker without streaks` (29)
-- `Gentle habits, no streaks` (25)
-- `Habits you can miss a day of` (28)
+Your current one is **`A kinder way to build habits.`** (29). It is not a default — it's warm and it contains "habits". An earlier draft of this document assumed worse.
+
+But it breaks one rule once the name changes: **the name and subtitle must not share a word.** Apple already indexes the name, so "habits" appearing in both spends 30 characters buying nothing.
+
+- `Gentle daily self-care & mood` (29) — **recommended.** Four new terms, none duplicated from the name.
+- `Small steps, at your own pace` (29) — reads better, ranks for almost nothing. Affordable now that the name carries the hook.
 
 **3. Keyword field** (100 chars, hidden from users). Rules people get wrong:
 
@@ -182,11 +208,21 @@ Handoff §12 calls the App Store page *"the only channel that compounds while yo
 - Apple **auto-combines** words across all fields, so "habit" + "tracker" as separate entries covers "habit tracker"
 - Competitor brand names are against guidelines. Don't.
 
-A starting set:
+Given the name and subtitle above — which between them already cover *habits, streaks, gentle, daily, self-care, mood* — the keyword field carries everything else. 98 of 100 characters:
 
 ```
-routine,daily,mood,journal,selfcare,mindful,ritual,adhd,anxiety,calm,streak,reminder,checklist,wellbeing,intention,gentle,burnout,consistency
+tracker,journal,ritual,adhd,anxiety,calm,reminder,wellbeing,intention,burnout,mindful,evening,rest
 ```
+
+### The three fields as one system
+
+| Field | Value | Covers |
+|---|---|---|
+| **Name** (28) | `Intended: No Streaks Habits` | habits, streaks |
+| **Subtitle** (29) | `Gentle daily self-care & mood` | gentle, daily, self-care, mood |
+| **Keywords** (98) | *as above* | everything else |
+
+No word appears twice, and Apple auto-combines across all three — so this ranks for "gentle habit tracker", "daily self-care journal", "habits adhd", "calm evening ritual" and dozens more you never typed.
 
 **4. Screenshots — you already have good ones.** An earlier draft of this assumed launch-day defaults. Wrong: the six that exist are considered, coherent, and better than most of the category.
 
@@ -238,6 +274,26 @@ A store listing should show the app full, not empty; a screenshot whose copy rea
 **5. App Preview video** (up to 3, 15–30s each) — autoplays muted in search results. This is the highest-leverage conversion asset on the page and most solo devs skip it. First 3 seconds must land without sound. Show the tile animating into the grid (handoff §5.2: *"the animation is not optional"*) — it's the most visually explicable idea in the product.
 
 **6. Russian localisation of the store listing.** The app already speaks Russian. Adding an RU App Store localisation gets you indexed in Russian-language keyword searches across every storefront where Russian speakers shop. This is free installs sitting on the table. (Note: no IAP inside the Russian storefront itself since 2022 — the money comes from the diaspora storefronts: DE, IL, KZ, GE, the Baltics, US.)
+
+### Your description repeats itself in its first two sentences
+
+The live opening:
+
+> "A kinder way to build habits. No streaks, no guilt - just small steps **that bring you closer to yourself**. Intended is a gentle space for building small habits **that bring you closer to yourself**."
+
+The same phrase twice inside thirty words — and sentence one **is your subtitle**, which the reader saw two inches higher. Those first ~3 lines are the only description anyone reads before tapping "more", and roughly half of them are currently duplicates.
+
+Rewrite so line one earns the space:
+
+> No streaks to protect. No scores to chase. No guilt when life gets in the way.
+> Four small things a day, and a warm place to come back to whenever you're ready.
+
+### Two things on the live listing that contradict your own decisions
+
+Both read from the public page in August 2026; only App Store Connect can confirm them.
+
+- **Intended Boost is still purchasable** — listed at $1.99, though the handoff records it as *"retired from sale (entitlement still honoured)."* Either it was never withdrawn in ASC, or the page is cached.
+- **The prices on the listing** ($39.99 lifetime, $4.99) don't match the §8 pricing table. Nothing has been changed in ASC yet, so this is expected — noted here only so the eventual change is checked against the live page rather than against a document.
 
 ### The field nobody knows exists — promotional text
 
@@ -601,11 +657,14 @@ Do not schedule your vaste lasten against it. If €1,500/month is needed *this 
 
 ## 8. This week
 
-- [ ] **Find your actual install→paid conversion rate in RevenueCat.** This decides whether a marketing budget is ever usable. Do it first.
+Everything with a ⬆ ships **with the v2 submission**, not after it — name, subtitle, keywords, screenshots and description are all part of the version and go through the same review as the binary. Doing them afterwards costs an extra review cycle for nothing.
+
+- [ ] **Test the in-app review prompt on a real device (§1.0).** You have zero ratings and no star block. Highest-value item here.
+- [ ] **Find your actual install→paid conversion rate in RevenueCat.** This decides whether a marketing budget is ever usable.
 - [ ] Set Lifetime to €49.99 in App Store Connect
 - [ ] Turn on a 14-day intro trial in App Store Connect — **now genuinely zero code.** The trial length is read from the live intro offer (`RevenueCatService.trialDays`) and every string that quotes it takes it as a placeholder, in both languages. Flip it in ASC and the app follows.
 - [ ] Ship v2, if it isn't live
-- [ ] Change the App Name to `Intended: Habits, No Streaks`
+- [ ] Change the App Name to `Intended: No Streaks Habits`
 - [ ] Rewrite subtitle + keyword field
 - [ ] **Reorder the existing screenshots to 3 → 4 → 1 → 2 → 5 → 6.** Ten minutes, and it's the highest-value ten minutes in this list. Nothing needs redrawing.
 - [ ] Optional, ~10 min: fade the top edge on #2 and #5, and nudge #1's scroll so the tab bar isn't sitting on a word
