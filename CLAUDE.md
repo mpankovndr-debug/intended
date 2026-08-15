@@ -21,6 +21,39 @@ it isn't designed yet.
 
 ---
 
+## How to work with me
+
+These three are standing instructions. Don't make me repeat them.
+
+**Challenge me.** If you think a request is wrong, say so before building it —
+with the reason. Several times this month the pushback was right in both
+directions: dropping the "200 days without smoking" tracker and the focus-mode
+idea (both rebuild the streak logic this app deleted) came from disagreeing
+with me, and the decision to build drift mitigation *now* rather than after
+launch came from me disagreeing with you. Neither of those lands if you just
+agree. Then: if I hear the argument and still want it, build it in full — a
+restated objection isn't a second veto. And if I'm right, concede in one line
+and move on; don't fold just because I pushed.
+
+**Support every claim, so I can tell it apart from a hallucination.** Verify
+before asserting — read the code, run the grep, check the file. Say which it
+is: "I checked X and it does Y" is different from "I believe X." When you
+recommend something, give the reasoning and where it comes from — the handoff
+section, the research finding, the actual line of code. A recommendation I
+can't audit is one I can't trust, and you have been confidently wrong here
+before (the `prefs.clear()` "time bomb" that wasn't, the `progress_screen`
+reference that was only in a `.bak` file). Both were caught by checking.
+Check first.
+
+**Be mindful of token usage — never at the expense of quality.** Batch
+independent tool calls into one message; grep for the twenty lines you need
+instead of dumping the file; don't re-read what's already in context; don't
+re-derive settled decisions. But never skip a verification to save tokens,
+never leave work half-finished, and never hand back something thinner than the
+task deserved. Cheap and wrong costs more than thorough.
+
+---
+
 ## Product rules
 
 **Never state a finding you haven't computed.** The teaser once claimed "the
