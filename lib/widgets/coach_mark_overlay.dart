@@ -11,6 +11,7 @@ class CoachMarkOverlay extends StatefulWidget {
   final String title;
   final String body;
   final VoidCallback onDismiss;
+
   /// Optional icon rendered inline after the title text.
   final Widget? titleIcon;
 
@@ -138,8 +139,8 @@ class _CoachMarkOverlayState extends State<CoachMarkOverlay>
         : targetRect.top - distanceFromTarget - arrowSize - 120;
 
     // Arrow horizontal position relative to card
-    final double arrowCenterX =
-        (targetRect.center.dx - cardLeft).clamp(arrowSize + 8, cardMaxWidth - arrowSize - 8);
+    final double arrowCenterX = (targetRect.center.dx - cardLeft)
+        .clamp(arrowSize + 8, cardMaxWidth - arrowSize - 8);
 
     // Opaque card colour — clamp to at least 0.88 so the card is always
     // clearly legible against the dimmed overlay.
@@ -149,7 +150,9 @@ class _CoachMarkOverlayState extends State<CoachMarkOverlay>
     return Positioned(
       left: cardLeft,
       top: placeBelow ? cardTop : null,
-      bottom: placeBelow ? null : screenSize.height - targetRect.top + distanceFromTarget + arrowSize,
+      bottom: placeBelow
+          ? null
+          : screenSize.height - targetRect.top + distanceFromTarget + arrowSize,
       child: GestureDetector(
         // Prevent taps on the card from bubbling to the dismiss handler.
         onTap: () {},
@@ -374,9 +377,7 @@ class _ArrowPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_ArrowPainter old) =>
-      old.pointUp != pointUp ||
-      old.offsetX != offsetX ||
-      old.color != color;
+      old.pointUp != pointUp || old.offsetX != offsetX || old.color != color;
 }
 
 // ── Dimmed overlay with rectangular cutout ─────────────────────────────────────
