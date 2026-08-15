@@ -147,6 +147,39 @@ class MomentsService {
     });
   }
 
+  /// Gives a focus area to moments recorded before their custom action had
+  /// one (the static map was loaded at launch and never refreshed, so any
+  /// custom made mid-session recorded `category: null`).
+  ///
+  /// Not invention: the mapping existed the whole time in the user's own
+  /// prefs — it simply wasn't consulted at the moment of writing. This
+  /// applies it retroactively so those squares rejoin their colour, their
+  /// legend and their chip.
+  static Future<int> backfillCustomCategories(
+    Map<String, String> customAreas,
+  ) async {
+    if (customAreas.isEmpty) return 0;
+    final all = await getAll();
+    var repaired = 0;
+    for (var i = 0; i < all.length; i++) {
+      final m = all[i];
+      if (m.category != null) continue;
+      final area = customAreas[m.habitName];
+      if (area == null) continue;
+      all[i] = m.copyWith(category: area);
+      repaired++;
+    }
+    if (repaired == 0) return 0;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _key,
+      jsonEncode(all.map((m) => m.toJson()).toList()),
+    );
+    await _writeRollup(prefs, all);
+    return repaired;
+  }
+
   /// Returns all moments, newest first.
   static Future<List<Moment>> getAll() async {
     final prefs = await SharedPreferences.getInstance();

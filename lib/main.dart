@@ -752,6 +752,11 @@ void main() {
       // archive worth anything (§10).
       await SeasonService.closeIfNeeded();
       await ReflectionService.loadCustomHabitFocusAreas();
+      // One-off repair for squares recorded before the map was refreshed on
+      // write. Cheap, idempotent, and it only ever fills a blank.
+      await MomentsService.backfillCustomCategories(
+        ReflectionService.customHabitFocusAreas,
+      );
 
       // Sync the saved name to OnboardingState
       if (savedName != null &&
@@ -2289,11 +2294,19 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
     final navigator = Navigator.of(context);
     final navContext = navigator.context;
 
-    await onboardingState.addCustomHabit(habitTitle,
+    final added = await onboardingState.addCustomHabit(habitTitle,
         focusArea: _selectedFocusArea);
-    AnalyticsService.logCustomHabitCreated(habitTitle);
-
     if (!mounted) return;
+
+    // A full list is said out loud. Before, the write simply didn't happen
+    // and the celebration fired anyway — the user was congratulated for an
+    // intention that was never added.
+    if (!added) {
+      final l10nFull = AppLocalizations.of(context);
+      AppToast.show(context, l10nFull.customHabitLimitMessage);
+      return;
+    }
+    AnalyticsService.logCustomHabitCreated(habitTitle);
 
     navigator.pop();
 

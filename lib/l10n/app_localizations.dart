@@ -1073,7 +1073,7 @@ abstract class AppLocalizations {
   /// No description provided for @habitsCreateCustom.
   ///
   /// In en, this message translates to:
-  /// **'Create custom habit'**
+  /// **'Write your own intention'**
   String get habitsCreateCustom;
 
   /// No description provided for @habitsBrowseAll.
@@ -1283,7 +1283,7 @@ abstract class AppLocalizations {
   /// No description provided for @customHabitTitle.
   ///
   /// In en, this message translates to:
-  /// **'Create custom habit'**
+  /// **'Write your own intention'**
   String get customHabitTitle;
 
   /// No description provided for @customHabitPrompt.
@@ -1349,13 +1349,13 @@ abstract class AppLocalizations {
   /// No description provided for @customHabitLimitTitle.
   ///
   /// In en, this message translates to:
-  /// **'Create more habits?'**
+  /// **'Your list is full'**
   String get customHabitLimitTitle;
 
   /// No description provided for @customHabitLimitMessage.
   ///
   /// In en, this message translates to:
-  /// **'Core: 2 custom habits\nIntended+: Unlimited custom habits'**
+  /// **'Six intentions at a time — four from your path and two of your own. Set one aside to make room.'**
   String get customHabitLimitMessage;
 
   /// No description provided for @menuUnpin.

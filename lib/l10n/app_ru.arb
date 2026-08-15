@@ -238,7 +238,7 @@
   "insightsExampleLabel": "ПРИМЕР",
   "insightsExampleHeader": "ЧЕРЕЗ МЕСЯЦ ЭТА СТРАНИЦА БУДЕТ ТАКОЙ",
   "insightsUnlockNote": "✦ Intended+ читает твой месяц и подсказывает, что изменить. Откроется, когда будет что читать.",
-  "habitsCreateCustom": "Создать свою привычку",
+  "habitsCreateCustom": "Напиши своё намерение",
   "habitsBrowseAll": "Все привычки",
   "habitsMoreAvailable": "Ещё {count} доступно",
   "@habitsMoreAvailable": {
@@ -280,7 +280,7 @@
   "monthOctober": "Октябрь",
   "monthNovember": "Ноябрь",
   "monthDecember": "Декабрь",
-  "customHabitTitle": "Создать свою привычку",
+  "customHabitTitle": "Напиши своё намерение",
   "customHabitPrompt": "Какое маленькое действие ты хочешь добавить?",
   "customHabitHint": "Просто и конкретно.",
   "customHabitPlaceholder": "Например: прогулка 5 минут",
@@ -305,8 +305,8 @@
       }
     }
   },
-  "customHabitLimitTitle": "Создать ещё?",
-  "customHabitLimitMessage": "Core: 2 свои привычки\nIntended+: без ограничений",
+  "customHabitLimitTitle": "Список полон",
+  "customHabitLimitMessage": "Шесть намерений сразу — четыре из твоего пути и два своих. Отложи одно, чтобы освободить место.",
   "menuUnpin": "Открепить",
   "menuPinToTop": "Закрепить",
   "menuSwap": "Заменить",

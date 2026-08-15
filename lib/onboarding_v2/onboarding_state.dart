@@ -28,14 +28,21 @@ class OnboardingState extends ChangeNotifier {
   /// list with no limit, and nothing enforced it. §7 is explicit that neither
   /// contextual door should grow the list: swap refines, adopt redirects. A
   /// fifth card is how a gentle app becomes a checklist.
-  static const int maxActiveHabits = 4;
+  /// Six: four the path generates, plus the two anyone can write themselves.
+  /// Raised from four after a habit the user had been completing silently
+  /// vanished when a custom pushed the list past the cap — see
+  /// [visibleHabits], which no longer truncates anything.
+  static const int maxActiveHabits = 6;
 
   /// Whether another action can be added without breaking that ceiling.
   bool get canAddHabit => userHabits.length < maxActiveHabits;
 
   /// The actions the user actually sees, in the order they see them: pinned
   /// first, then their own words, then the catalog fills what's left, capped
-  /// at [maxActiveHabits] (one during a rescue).
+  /// Everything the user has, pinned first and their own words next — and
+  /// never fewer. The cap belongs on *adding*, not on rendering: truncating
+  /// here hid a habit that was still in storage, still being completed, and
+  /// reachable from nowhere in the app.
   ///
   /// This is the *only* definition of "active" (design review): all-done
   /// detection, pack completion, swap targets, the plan's evidence and the
@@ -49,7 +56,7 @@ class OnboardingState extends ChangeNotifier {
       if (pinned != null && userHabits.contains(pinned)) pinned,
       ...userHabits.where((h) => h != pinned && _customHabits.contains(h)),
       ...userHabits.where((h) => h != pinned && !_customHabits.contains(h)),
-    ].take(rescue ? 1 : maxActiveHabits).toList();
+    ].take(rescue ? 1 : userHabits.length).toList();
   }
 
   // Intention path
@@ -781,11 +788,16 @@ class OnboardingState extends ChangeNotifier {
     return _customHabits.length < maxCustomHabits();
   }
 
-  Future<void> addCustomHabit(String habitTitle, {String? focusArea}) async {
+  /// False when the list is already full — the caller shows the swap door
+  /// rather than the habit quietly failing to appear.
+  Future<bool> addCustomHabit(String habitTitle, {String? focusArea}) async {
+    if (!canAddHabit) return false;
     // Tier limits live at the entry point (_createCustomHabit shows the
     // paywall at the free cap). Guarding again here silently blocked *paid*
     // users at two, because this layer cannot see the subscription.
-    if (userHabits.any((h) => h.toLowerCase() == habitTitle.toLowerCase())) return;
+    if (userHabits.any((h) => h.toLowerCase() == habitTitle.toLowerCase())) {
+      return false;
+    }
 
     _customHabits.add(habitTitle);
     userHabits.add(habitTitle);
@@ -800,8 +812,13 @@ class OnboardingState extends ChangeNotifier {
     await prefs.setStringList('custom_habits', _customHabits);
     await prefs.setStringList('user_habits', userHabits);
     await _saveCustomHabitFocusAreas(prefs);
+    // The recorder reads a static map loaded once at launch. Without this,
+    // a custom made mid-session is recorded with no focus area at all —
+    // a grey tile, absent from the legend, matched by no colour chip.
+    await ReflectionService.loadCustomHabitFocusAreas();
 
     notifyListeners();
+    return true;
   }
 
   Future<void> removeCustomHabit(String habitTitle) async {

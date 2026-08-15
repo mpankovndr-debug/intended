@@ -347,6 +347,10 @@ class ReflectionService {
 
   static Map<String, String> _customHabitFocusAreas = {};
 
+  /// The custom action → focus area map, for repairs and lookups elsewhere.
+  static Map<String, String> get customHabitFocusAreas =>
+      Map.unmodifiable(_customHabitFocusAreas);
+
   /// Public accessor for the habit → focus-area mapping. Used when recording
   /// a moment, so its category is captured at completion time rather than
   /// re-derived later from a habit that may since have been swapped away.

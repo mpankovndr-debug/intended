@@ -672,7 +672,7 @@ class AppLocalizationsEn extends AppLocalizations {
       '✦ Intended+ reads your month and suggests what to change. It unlocks once you have something to read.';
 
   @override
-  String get habitsCreateCustom => 'Create custom habit';
+  String get habitsCreateCustom => 'Write your own intention';
 
   @override
   String get habitsBrowseAll => 'Browse all habits';
@@ -779,7 +779,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get monthDecember => 'December';
 
   @override
-  String get customHabitTitle => 'Create custom habit';
+  String get customHabitTitle => 'Write your own intention';
 
   @override
   String get customHabitPrompt => 'What small action would you like to take?';
@@ -816,11 +816,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get customHabitLimitTitle => 'Create more habits?';
+  String get customHabitLimitTitle => 'Your list is full';
 
   @override
   String get customHabitLimitMessage =>
-      'Core: 2 custom habits\nIntended+: Unlimited custom habits';
+      'Six intentions at a time — four from your path and two of your own. Set one aside to make room.';
 
   @override
   String get menuUnpin => 'Unpin';

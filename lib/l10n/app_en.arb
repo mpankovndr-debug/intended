@@ -463,7 +463,7 @@
       }
     }
   },
-  "habitsCreateCustom": "Create custom habit",
+  "habitsCreateCustom": "Write your own intention",
   "habitsBrowseAll": "Browse all habits",
   "habitsMoreAvailable": "{count} more available",
   "@habitsMoreAvailable": {
@@ -505,7 +505,7 @@
   "monthOctober": "October",
   "monthNovember": "November",
   "monthDecember": "December",
-  "customHabitTitle": "Create custom habit",
+  "customHabitTitle": "Write your own intention",
   "customHabitPrompt": "What small action would you like to take?",
   "customHabitHint": "Keep it simple and specific.",
   "customHabitPlaceholder": "e.g., Take a 5-minute walk",
@@ -530,8 +530,8 @@
       }
     }
   },
-  "customHabitLimitTitle": "Create more habits?",
-  "customHabitLimitMessage": "Core: 2 custom habits\nIntended+: Unlimited custom habits",
+  "customHabitLimitTitle": "Your list is full",
+  "customHabitLimitMessage": "Six intentions at a time — four from your path and two of your own. Set one aside to make room.",
   "menuUnpin": "Unpin",
   "menuPinToTop": "Pin to top",
   "menuSwap": "Swap for another",

@@ -708,7 +708,7 @@ class AppLocalizationsRu extends AppLocalizations {
       '✦ Intended+ читает твой месяц и подсказывает, что изменить. Откроется, когда будет что читать.';
 
   @override
-  String get habitsCreateCustom => 'Создать свою привычку';
+  String get habitsCreateCustom => 'Напиши своё намерение';
 
   @override
   String get habitsBrowseAll => 'Все привычки';
@@ -815,7 +815,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get monthDecember => 'Декабрь';
 
   @override
-  String get customHabitTitle => 'Создать свою привычку';
+  String get customHabitTitle => 'Напиши своё намерение';
 
   @override
   String get customHabitPrompt =>
@@ -853,11 +853,11 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get customHabitLimitTitle => 'Создать ещё?';
+  String get customHabitLimitTitle => 'Список полон';
 
   @override
   String get customHabitLimitMessage =>
-      'Core: 2 свои привычки\nIntended+: без ограничений';
+      'Шесть намерений сразу — четыре из твоего пути и два своих. Отложи одно, чтобы освободить место.';
 
   @override
   String get menuUnpin => 'Открепить';
