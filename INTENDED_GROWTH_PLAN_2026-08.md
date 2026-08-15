@@ -211,13 +211,27 @@ Reorder to **3 → 4 → 1 → 2 → 5 → 6**:
 | 3 | "Your month, not your score." | Your visual signature — now with context |
 | 4–6 | Letter, plan, share card | For the people who swipe |
 
-**b) Screenshot 1's device frame is broken.** No top bezel, content runs to the image edge, tab bar floating over text. Beside five clean full devices with status bars, it reads as a mistake.
+**b) Screenshot 1's cropped device — a smaller note than the first draft made.** Bleeding a device off the top edge is a legitimate technique and was done deliberately; calling it "broken" was an overcall. Two narrower things survive:
 
-**c) Screenshots 2 and 5 open mid-sentence.** #2 starts on a cut-off "YOUR FIRST WEEK", #5 on a half-visible "2 days passed, and then you came back." At full size that reads as *scrolled*. At App Store thumbnail size it reads as *broken rendering*.
+- **The floating tab bar lands on a word.** It sits over "YOUR SEASON / Evening" and cuts the line beneath it. That's real app UI, but in a static frame an overlapping pill reads as a rendering artifact rather than a crop. Shift the scroll position a few pixels so the bar sits in a gap instead of on type.
+- **It's the only caption-below-device layout in the set.** One outlier in six reads as the odd one out rather than as rhythm. A taste call, and it matters less once it isn't in slot 1.
 
-**d) "What you're starting with" is missing.** Handoff §5.4 found it *"tested as the strongest thing on the page"* and §12 names it as the lead. It's the only surface that explains the app to a stranger in one glance, and it isn't in the set.
+Low stakes. The ordering above is worth ten times this.
 
-**e) Steal your own line.** *"Nine days away — and it asks for one small thing, not an apology"* is better than anything in your subtitle. Move it to promotional text.
+**c) The mid-sentence crops on 2 and 5 — a real constraint, with a third way out.** The month page genuinely doesn't fit one screen, and the analytics depth is the point of those two frames. The first draft treated that constraint as a mistake.
+
+Worth knowing: **App Store screenshots don't have to be literal device captures.** Two options that keep the intent and lose the artifact:
+
+1. **Composite them.** Crop and stack the sections in an image editor so the frame *starts* at "YOUR LETTER" rather than at half a line of the section above. Same depth, you choose where the top edge falls.
+2. **Fade the top edge.** A soft gradient over the first ~40px reads as *"there's more above this."* A hard cut reads as *"something went wrong."* Same information, opposite signal. About ten minutes.
+
+**d) "What you're starting with" — retracted.** An earlier draft called for adding it, citing handoff §5.4 and §12. That was deference to the doc rather than a look at the actual screenshots.
+
+**Screenshot 3 already does that job.** It shows "Steadier on hard days" as the header plus four named actions — the intention, the actions, and the model, all visible. That's most of what "What you're starting with" carries, **and it shows the app in use rather than at zero.**
+
+A store listing should show the app full, not empty; a screenshot whose copy reads *"Nothing here yet"* would be worse than what exists. §5.4's finding was about the strongest card *on the day-one page inside the app*, and that doesn't transfer automatically to a listing seen by strangers. The set is complete as it stands.
+
+**e) Steal your own line for promotional text.** *"Nine days away — and it asks for one small thing, not an apology"* is stronger than anything currently in the listing. See the promotional-text section below for the field and a draft.
 
 **f) Localise them.** Screenshots are per-language. If you add the RU listing, RU screenshots are a large and cheap conversion lever.
 
@@ -225,11 +239,57 @@ Reorder to **3 → 4 → 1 → 2 → 5 → 6**:
 
 **6. Russian localisation of the store listing.** The app already speaks Russian. Adding an RU App Store localisation gets you indexed in Russian-language keyword searches across every storefront where Russian speakers shop. This is free installs sitting on the table. (Note: no IAP inside the Russian storefront itself since 2022 — the money comes from the diaspora storefronts: DE, IL, KZ, GE, the Baltics, US.)
 
-### Two ASC features worth knowing
+### The field nobody knows exists — promotional text
 
-**Custom Product Pages** — up to 35 alternate pages, each with its own screenshots and its own URL. When a video's hook is "it doesn't count streaks," send that video's link to a product page whose lead screenshot says exactly that. Message-match roughly doubles conversion.
+Three pieces of store copy, and they behave completely differently:
 
-**Product Page Optimization** — Apple's built-in A/B test, up to 3 treatments. Genuinely useful, but it needs traffic to reach significance. At near-zero traffic it will never conclude. Park this until you're over ~1,000 product page views/month.
+| Field | Length | Indexed for search? | Changeable without a new build? |
+|---|---|---|---|
+| Subtitle | 30 | **Yes** | No — needs a version |
+| **Promotional text** | **170** | **No** | **Yes — any day** |
+| Description | 4,000 | No (on iOS) | No — needs a version |
+
+Promotional text sits *above* the description. Because it's the only store copy you can change on a whim, it's where campaign-matched or seasonal messaging goes — and it's free to experiment with.
+
+Draft, 161 characters, using your own best line:
+
+> Nine days away, and it asks for one small thing — not an apology. Four small actions a day. Nothing breaks, nothing resets. It counts how many times you came back.
+
+---
+
+### The two App Store Connect features — what to actually do
+
+**ASC = App Store Connect**, Apple's dashboard for pricing, builds and your listing.
+
+#### Custom Product Pages
+
+**The problem it solves:** someone watches a TikTok about *"it doesn't count streaks"*, taps the link, and lands on a generic page whose first screenshot is about mosaics. The promise and the page don't match, so they bounce.
+
+**What you do:**
+
+1. App Store Connect → your app → **Custom Product Pages** in the left sidebar
+2. **+**, and give it an internal name — `no-streaks`
+3. Upload its screenshots. **Reuse your existing six in a different order** — no new artwork needed. Put "Four small actions. No streaks." first.
+4. Submit it. It needs Apple review, usually quick.
+5. Apple returns a URL ending `?ppid=…`
+6. **That** URL goes in your TikTok bio — not your normal App Store link
+
+**Make one. Not thirty-five.** And not this week: do it in week 3, when you start posting, so review is finished before the first video goes up.
+
+#### Product Page Optimization
+
+**What you do: nothing. Not yet.**
+
+It's an A/B test on your *main* page. It needs roughly 1,000+ product page views a month to conclude; below that it runs indefinitely and tells you nothing. Revisit around month 6. It's listed here only so you recognise it in the sidebar and know to walk past it.
+
+#### Side by side
+
+| | Custom Product Pages | Product Page Optimization |
+|---|---|---|
+| Changes | Extra pages with their own URLs | Your main page |
+| Purpose | Match the page to the campaign | Find which version converts better |
+| Needs traffic? | No | **Yes, a lot** |
+| When | Week 3 — make one | Month 6, or later |
 
 ---
 
@@ -547,7 +607,9 @@ Do not schedule your vaste lasten against it. If €1,500/month is needed *this 
 - [ ] Ship v2, if it isn't live
 - [ ] Change the App Name to `Intended: Habits, No Streaks`
 - [ ] Rewrite subtitle + keyword field
-- [ ] **Reorder the existing screenshots to 3 → 4 → 1 → 2 → 5 → 6.** Ten minutes, and it's the highest-value ten minutes in this list. Then fix #1's broken device frame and the mid-sentence crops on #2 and #5.
+- [ ] **Reorder the existing screenshots to 3 → 4 → 1 → 2 → 5 → 6.** Ten minutes, and it's the highest-value ten minutes in this list. Nothing needs redrawing.
+- [ ] Optional, ~10 min: fade the top edge on #2 and #5, and nudge #1's scroll so the tab bar isn't sitting on a word
+- [ ] Paste the promotional text (§2). It's the one field you can change again tomorrow if you don't like it.
 - [ ] Check Firebase for your actual age/gender split before writing any content
 - [ ] Add the Russian App Store listing localisation
 - [ ] Create TikTok, Instagram, YouTube accounts. Same handle everywhere. Bio: *"It doesn't count streaks. It counts how many times you came back."* + App Store link with `?ct=`
