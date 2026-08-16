@@ -321,7 +321,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get insightsTeaserNoGap =>
-      'Под этими квадратами есть «почему». Intended+ находит его — и превращает в план на следующий месяц.';
+      'Под этими квадратами есть «почему». Intended+ находит его и превращает в план на следующий месяц.';
 
   @override
   String get driftLabel => 'ПРЯМО СЕЙЧАС';
@@ -638,7 +638,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'В этом месяце есть закономерность, которую пока не видно: фокус, который выбран, и фокус, которым ты живёшь, не совпадают.';
 
   @override
-  String get insightsTeaserCta => 'Посмотреть, что заметил Intended+';
+  String get insightsTeaserCta => 'Узнать, что заметил Intended+';
 
   @override
   String get insightsExampleSummary => '37 маленьких дел для себя.';
@@ -690,7 +690,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String insightsDidThings(int count, String month) {
-    return 'За $month — $count маленьких дел для себя.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count маленьких дела',
+      many: '$count маленьких дел',
+      few: '$count маленьких дела',
+      one: '$count маленькое дело',
+    );
+    return 'За $month $_temp0 для себя.';
   }
 
   @override
@@ -3522,7 +3530,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get planRhythmHeader => 'ТВОЙ РИТМ';
 
   @override
-  String get planUse => 'Взять этот план';
+  String get planUse => 'Выбрать этот план';
 
   @override
   String get planAdjust => 'Изменить';

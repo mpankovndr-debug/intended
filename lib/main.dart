@@ -1479,6 +1479,11 @@ class _HabitsScreenState extends State<HabitsScreen>
   /// Set when the user has been away long enough that the full list is the
   /// wrong thing to greet them with (§4.6, §5.1). Free forever.
   Rescue? _rescue;
+
+  /// The action the reduced screen should offer, chosen from what the user
+  /// actually lived before the gap. Null when nothing has ever been completed,
+  /// where [OnboardingState.visibleHabits] keeps its own ordering.
+  String? _rescueHabit;
   bool _rescueDismissed = false;
 
   // Unified entrance animation (staggered, like welcome screen)
@@ -1575,7 +1580,16 @@ class _HabitsScreenState extends State<HabitsScreen>
   Future<void> _checkForGap() async {
     final moments = await MomentsService.getAll();
     if (!mounted) return;
-    setState(() => _rescue = Rescue.read(moments));
+    // Picked here, off the same read, rather than in build: the one card a
+    // returning user sees is the action they lived most, not item #1.
+    final habit = Rescue.mostLived(
+      among: context.read<OnboardingState>().visibleHabits(),
+      moments: moments,
+    );
+    setState(() {
+      _rescue = Rescue.read(moments);
+      _rescueHabit = habit;
+    });
   }
 
   @override
@@ -1708,7 +1722,10 @@ class _HabitsScreenState extends State<HabitsScreen>
     final pinnedHabit = onboardingState.pinnedHabit;
     // One owner for "what's active": the same list feeds all-done detection,
     // the widget, swap targets and the plan (review finding #3).
-    final allHabits = onboardingState.visibleHabits(rescue: rescue != null);
+    final allHabits = onboardingState.visibleHabits(
+      rescue: rescue != null,
+      preferred: _rescueHabit,
+    );
 
     // Detect pin/unpin transitions (for arrival animations)
     final isNewPin = pinnedHabit != null && pinnedHabit != _lastKnownPinned;

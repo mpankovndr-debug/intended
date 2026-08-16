@@ -50,13 +50,22 @@ class OnboardingState extends ChangeNotifier {
   /// render while every checker still read the raw list, so a user with
   /// hidden habits could never satisfy "all done" and Quiet Bloom went
   /// unreachable.
-  List<String> visibleHabits({bool rescue = false}) {
+  /// [preferred] is consulted only during a rescue: the single card a
+  /// returning user sees should be the action they actually lived, not
+  /// whatever sorts first (see [Rescue.mostLived]). Ignored when it is no
+  /// longer one of their habits, so a removed action can never strand the
+  /// reduced screen on nothing.
+  List<String> visibleHabits({bool rescue = false, String? preferred}) {
     final pinned = _pinnedHabit;
-    return [
+    final ordered = [
       if (pinned != null && userHabits.contains(pinned)) pinned,
       ...userHabits.where((h) => h != pinned && _customHabits.contains(h)),
       ...userHabits.where((h) => h != pinned && !_customHabits.contains(h)),
-    ].take(rescue ? 1 : userHabits.length).toList();
+    ];
+    if (rescue && preferred != null && ordered.contains(preferred)) {
+      return [preferred];
+    }
+    return ordered.take(rescue ? 1 : ordered.length).toList();
   }
 
   // Intention path

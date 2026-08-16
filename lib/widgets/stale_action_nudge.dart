@@ -57,9 +57,9 @@ class StaleAction {
   /// in it wins. An explicit, stable tiebreak, not a ranking: two actions
   /// equally quiet must not swap places between visits.
   ///
-  /// Every other stale action keeps the one-line hint. Four "your intention
-  /// may not fit" cards on one screen is a dashboard demanding optimisation,
-  /// which is the pressure this app exists to remove.
+  /// Every other quiet action says nothing at all. Four "your intention may
+  /// not fit" cards on one screen is a dashboard demanding optimisation, which
+  /// is the pressure this app exists to remove.
   static String? primary({
     required List<String> visible,
     required List<Moment> moments,
@@ -195,33 +195,49 @@ class StaleActionNudge extends StatelessWidget {
               ),
               child: Row(
                 children: [
+                  // Capped, not just Expanded. On a 13" iPad the panel is wide
+                  // enough that the body ran a single ~90-character line and
+                  // the sprout was stranded against the far edge; a paragraph
+                  // stops being readable long before it stops fitting. 420
+                  // holds both languages to roughly the phone's own measure,
+                  // and on a phone the constraint never binds.
+                  // The Align is load-bearing: Expanded hands down a *tight*
+                  // width, and a ConstrainedBox cannot shrink below an
+                  // incoming minWidth, so the cap silently did nothing without
+                  // it. Align passes loose constraints through.
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.staleNudgeTitle,
-                          style: TextStyle(
-                            fontSize: 16.5,
-                            height: 1.3,
-                            fontWeight: FontWeight.w600,
-                            color: colors.textPrimary,
-                            // Not 'Sora': the display face has no Cyrillic,
-                            // and this string is shown in both languages.
-                            fontFamily: bodyFont,
-                          ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 420),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.staleNudgeTitle,
+                              style: TextStyle(
+                                fontSize: 16.5,
+                                height: 1.3,
+                                fontWeight: FontWeight.w600,
+                                color: colors.textPrimary,
+                                // Not 'Sora': the display face has no Cyrillic,
+                                // and this string is shown in both languages.
+                                fontFamily: bodyFont,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              l10n.staleNudgeBody,
+                              style: TextStyle(
+                                fontSize: 13.5,
+                                height: 1.45,
+                                color: colors.textSecondary,
+                                fontFamily: bodyFont,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          l10n.staleNudgeBody,
-                          style: TextStyle(
-                            fontSize: 13.5,
-                            height: 1.45,
-                            color: colors.textSecondary,
-                            fontFamily: bodyFont,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
