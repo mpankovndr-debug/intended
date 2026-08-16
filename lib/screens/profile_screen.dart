@@ -1506,7 +1506,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Expanded(
                                 child: Text(
                                   l10n.profileDailyReminders,
-                                  maxLines: 1,
+                                  // Two lines, not one: Russian runs longer
+                                  // than English here and "Ежедневные
+                                  // напоминания" was losing its second word to
+                                  // an ellipsis. The row has the height.
+                                  maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontFamily: AppTextStyles.bodyFont(context),
@@ -1813,7 +1817,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     const SizedBox(height: 2),
                                     Text(
                                       l10n.profileWeeklySubtitle,
-                                      maxLines: 1,
+                                      maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontFamily:

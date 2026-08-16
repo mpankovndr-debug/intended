@@ -32,6 +32,7 @@ import '../utils/season_l10n.dart';
 import '../utils/text_styles.dart';
 import '../main.dart' show AppBackground;
 import '../theme/category_colors.dart';
+import '../widgets/dashed_border_box.dart';
 import '../widgets/moment_grid.dart';
 
 /// The month view (§5.3, §5.4). Replaces the old progress screen.
@@ -1061,10 +1062,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
       'Health',
     ];
 
-    return Opacity(
-      opacity: 0.72,
-      child: _card(
-        colors: colors,
+    // The dashed frame sits outside the Opacity so the sample fades while its
+    // boundary stays legible — §5.4's warning is that at full strength, and
+    // with no frame at all, someone screenshots this believing it's their own
+    // month.
+    return DashedBorderBox(
+      color: colors.textSecondary.withValues(alpha: 0.45),
+      child: Opacity(
+        opacity: 0.72,
+        child: _card(
+          colors: colors,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1144,6 +1151,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
               style: _cardMeta(colors).copyWith(height: 1.45),
             ),
           ],
+          ),
         ),
       ),
     );

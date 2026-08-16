@@ -2843,7 +2843,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get intentionPathSubtext =>
-      'Это задаст тон ближайшим 30 дням. Выбери то, что подходит сегодня — будущая ты скажет спасибо.';
+      'Это задаст тон ближайшим 30 дням. Выбери то, что подходит сегодня — потом скажешь себе спасибо.';
 
   @override
   String intentionPathUpdateFocusAreas(String pathName) {
@@ -3189,7 +3189,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Настройки iPhone → твоё имя → Подписки → Intended → Отменить.';
 
   @override
-  String get faqSectionPrivacy => 'Конфиденциальность';
+  String get faqSectionPrivacy => 'Приватность';
 
   @override
   String get faqDataStorage => 'Где хранятся мои данные?';
