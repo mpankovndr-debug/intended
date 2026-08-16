@@ -1034,6 +1034,12 @@ abstract class AppLocalizations {
   /// **'{areas} · a reminder at {time}'**
   String insightsStartingMeta(String areas, String time);
 
+  /// Joins the last two entries of a list. The caller joins anything before them with commas, so this only ever sees the final pair.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} and {second}'**
+  String commonListAnd(String first, String second);
+
   /// No description provided for @insightsThisMonth.
   ///
   /// In en, this message translates to:
@@ -3097,12 +3103,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'• Intended+: Unlimited'**
   String get profileFocusLimitOptions;
-
-  /// No description provided for @profilePayAmount.
-  ///
-  /// In en, this message translates to:
-  /// **'Pay €0.99'**
-  String get profilePayAmount;
 
   /// No description provided for @profilePaymentTitle.
   ///
@@ -5372,6 +5372,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Data is local, so deleting removes everything. Subscriptions can be restored through the App Store.'**
   String get faqDeleteAppAnswer;
+
+  /// Count hint under each FAQ category card. Live counts run 3-7, so Russian needs few/many, not a single form.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 question} other{{count} questions}}'**
+  String faqQuestionCount(int count);
 
   /// No description provided for @faqSectionTroubleshooting.
   ///

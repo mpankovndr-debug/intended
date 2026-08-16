@@ -870,7 +870,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     OnboardingState onboarding,
   ) {
     final habits = onboarding.userHabits.take(3).toList();
-    final areas = onboarding.focusAreas.join(' and ');
+    final areas = localizeCategoryList(onboarding.focusAreas, l10n);
 
     return _card(
       colors: colors,
@@ -895,7 +895,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    habit,
+                    localizeHabitName(habit, l10n),
                     style: AppTextStyles.body(context)
                         .copyWith(color: colors.textPrimary),
                   ),

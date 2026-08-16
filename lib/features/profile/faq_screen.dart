@@ -531,7 +531,9 @@ class _CategoryCardState extends State<_CategoryCard>
                     const SizedBox(height: 4),
                     // Question count hint
                     Text(
-                      '${widget.category.items.length} questions',
+                      widget.l10n.faqQuestionCount(
+                        widget.category.items.length,
+                      ),
                       style: TextStyle(
                         fontFamily: AppTextStyles.bodyFont(context),
                         fontSize: 12,

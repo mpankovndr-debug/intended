@@ -15,6 +15,24 @@ String localizeCategoryName(String englishName, AppLocalizations l10n) {
   return englishName;
 }
 
+/// Translates a list of stored English category names and joins them into one
+/// phrase in the reader's language.
+///
+/// The joiner belongs here beside the resolver, not in the screen that needs
+/// it: `join(' and ')` in a screen is how a Russian reader ended up with
+/// "Health and Mindfulness" inside an otherwise Russian sentence. Anything
+/// before the final pair is joined with commas, which both languages share.
+String localizeCategoryList(List<String> englishNames, AppLocalizations l10n) {
+  final names =
+      englishNames.map((n) => localizeCategoryName(n, l10n)).toList();
+  if (names.isEmpty) return '';
+  if (names.length == 1) return names.first;
+  return l10n.commonListAnd(
+    names.sublist(0, names.length - 1).join(', '),
+    names.last,
+  );
+}
+
 typedef _L10nGetter = String Function(AppLocalizations);
 
 const Map<String, _L10nGetter> _categoryNameGetters = {

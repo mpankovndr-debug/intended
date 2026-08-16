@@ -656,6 +656,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String commonListAnd(String first, String second) {
+    return '$first and $second';
+  }
+
+  @override
   String get insightsThisMonth => 'THIS MONTH';
 
   @override
@@ -1861,9 +1866,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileFocusLimitOptions => '• Intended+: Unlimited';
-
-  @override
-  String get profilePayAmount => 'Pay €0.99';
 
   @override
   String get profilePaymentTitle => 'Payment';
@@ -3156,6 +3158,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get faqDeleteAppAnswer =>
       'Data is local, so deleting removes everything. Subscriptions can be restored through the App Store.';
+
+  @override
+  String faqQuestionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count questions',
+      one: '1 question',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get faqSectionTroubleshooting => 'Troubleshooting';

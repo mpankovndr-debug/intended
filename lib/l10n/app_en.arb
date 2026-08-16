@@ -437,6 +437,18 @@
   },
   "insightsStartingWith": "WHAT YOU'RE STARTING WITH",
   "insightsStartingMeta": "{areas} · a reminder at {time}",
+  "commonListAnd": "{first} and {second}",
+  "@commonListAnd": {
+    "description": "Joins the last two entries of a list. The caller joins anything before them with commas, so this only ever sees the final pair.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
   "insightsThisMonth": "THIS MONTH",
   "insightsDidThings": "You did {count} small things for yourself in {month}.",
   "insightsReturns": "{count} times you went quiet for a few days. {count} times you came back.",
@@ -963,7 +975,6 @@
   "profileChangeAreas": "Change areas",
   "profileFocusLimitMessage": "You've used your free change this month.",
   "profileFocusLimitOptions": "• Intended+: Unlimited",
-  "profilePayAmount": "Pay €0.99",
   "profilePaymentTitle": "Payment",
   "profileChangeSpace": "Change your space",
   "profileRefreshTitle": "Refresh habits?",
@@ -1528,6 +1539,15 @@
   "faqDataSellingAnswer": "No. We use anonymous crash reports to fix bugs. Never your habit data.",
   "faqDeleteApp": "What if I delete the app?",
   "faqDeleteAppAnswer": "Data is local, so deleting removes everything. Subscriptions can be restored through the App Store.",
+  "faqQuestionCount": "{count, plural, =1{1 question} other{{count} questions}}",
+  "@faqQuestionCount": {
+    "description": "Count hint under each FAQ category card. Live counts run 3-7, so Russian needs few/many, not a single form.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "faqSectionTroubleshooting": "Troubleshooting",
   "faqCrash": "The app crashed.",
   "faqCrashAnswer": "Try closing and reopening. Make sure you have the latest version.",

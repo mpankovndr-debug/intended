@@ -686,6 +686,11 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String commonListAnd(String first, String second) {
+    return '$first и $second';
+  }
+
+  @override
   String get insightsThisMonth => 'В ЭТОМ МЕСЯЦЕ';
 
   @override
@@ -1910,9 +1915,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileFocusLimitOptions => '• Intended+: без ограничений';
-
-  @override
-  String get profilePayAmount => 'Оплатить €0,99';
 
   @override
   String get profilePaymentTitle => 'Оплата';
@@ -3210,6 +3212,19 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get faqDeleteAppAnswer =>
       'Данные локальные, поэтому удаление стирает всё. Подписки можно восстановить через App Store.';
+
+  @override
+  String faqQuestionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count вопроса',
+      many: '$count вопросов',
+      few: '$count вопроса',
+      one: '$count вопрос',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get faqSectionTroubleshooting => 'Устранение неполадок';
