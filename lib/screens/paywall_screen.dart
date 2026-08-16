@@ -212,7 +212,7 @@ class _PaywallScreenState extends State<PaywallScreen>
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: Column(
                             children: [
-                              _buildAnimatedBullet(0, CupertinoIcons.chart_bar_alt_fill, l10n.paywallFeature1),
+                              _buildAnimatedBullet(0, CupertinoIcons.envelope_fill, l10n.paywallFeature1),
                               const SizedBox(height: 10),
                               _buildAnimatedBullet(1, CupertinoIcons.square_grid_2x2_fill, l10n.paywallFeature2),
                               const SizedBox(height: 10),
