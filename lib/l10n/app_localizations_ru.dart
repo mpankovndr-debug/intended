@@ -564,7 +564,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String planMore(int count) {
-    return 'Ещё $count — когда будете готовы';
+    return 'Ещё $count — когда захочешь';
   }
 
   @override
@@ -2630,7 +2630,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tipCuratedPack =>
-      'Попробуйте готовый набор привычек, который можно найти в «Все привычки»';
+      'Попробуй готовый набор привычек, который можно найти в «Все привычки»';
 
   @override
   String get tipWidget =>
@@ -2789,7 +2789,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get legalDisclaimerPrefix =>
-      'Нажимая «Продолжить», вы соглашаетесь с нашими ';
+      'Нажимая «Продолжить», ты соглашаешься с нашими ';
 
   @override
   String get legalDisclaimerTerms => 'Условиями';
@@ -2835,7 +2835,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pathYourOwnWaySubtitle =>
-      'Я знаю, что мне нужно — просто дайте инструменты';
+      'Я знаю, что мне нужно — просто дай инструменты';
 
   @override
   String get intentionPathHeadline => 'Что привело тебя сюда?';
@@ -3219,7 +3219,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get faqCrashAnswer =>
-      'Закройте и откройте снова. Убедитесь, что установлена последняя версия.';
+      'Закрой и открой снова. Убедись, что установлена последняя версия.';
 
   @override
   String get faqHabitsGone => 'Мои привычки пропали.';
