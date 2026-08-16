@@ -4,6 +4,46 @@ Ships **with** the v2 submission. Description and promotional text are both vers
 
 ---
 
+## Name, subtitle and keywords — both languages
+
+The three ranking fields. Apple combines words **across** all three, so no word should appear twice — a repeat spends characters on coverage you already have.
+
+### English
+
+| Field | Value | Chars |
+|---|---|---|
+| Name | `Intended: No Streaks Habits` | 27/30 |
+| Subtitle | `Gentle daily self-care & mood` | 29/30 |
+| Keywords | `tracker,journal,ritual,adhd,anxiety,calm,reminder,wellbeing,intention,burnout,mindful,evening,rest` | 98/100 |
+
+Reasoning in the growth plan §1.3 and §2. Short version: "No Streaks" leads because names truncate around 22–25 characters in search results, and that's the half worth keeping.
+
+### Russian
+
+| Field | Value | Chars |
+|---|---|---|
+| Name | `Intended: Привычки без стриков` | 30/30 |
+| Subtitle | `Забота о себе и настроение` | 26/30 |
+| Keywords | `трекер,дневник,рутина,ритуал,цели,осознанность,тревога,выгорание,сдвг,отдых,вечер,спокойствие,сон` | 97/100 |
+
+**Keep "Intended" in Latin.** It's the brand and it's on the icon; mixed Latin/Cyrillic names are standard in the Russian App Store, and «Интендед» would read as a knock-off.
+
+**The English trade-off doesn't arise here.** In English the differentiator has to lead because truncation eats the tail. Russian «привычки» is 8 characters against «habits»' 6, but at 28 total the cut lands near «Intended: привычки без сер…» — so the search term *and* the hook both survive. No choice required.
+
+**No «трекер» in the name**, for the same three reasons as English. It sits in the keyword field, where cross-field combining still yields «трекер привычек».
+
+**«сдвг» is deliberate** — ADHD is a real Russian search term and how a large part of this audience self-describes.
+
+**«стриков», not «серий».** An earlier draft here proposed «без серий». «Серия» is the dictionary-correct word for a streak, but out of context it also reads as *TV episodes* — and neither word carries meaningful App Store search volume, so the only job the word has left is **being instantly understood by a human**. «Стрик» can mean exactly one thing to an app-literate Russian speaker, and that settles it. The anglicism is the feature, not the flaw.
+
+**Where the emotional line goes.** «Привычки без чувства вины» is the better *sentence* and the worse *subtitle*: it repeats привычки and без from the name — which Apple already indexes — leaving 26 characters of the second-highest-weighted ranking field buying only «чувства» and «вины», neither of which anyone searches.
+
+That line belongs in **promotional text**, which isn't indexed at all, is free to be poetry, and can be changed any day without a review. The division: **subtitle earns rankings, promotional text does the talking.**
+
+**Coverage note.** An RU localisation is served to Russian-language users in *every* storefront, not only Russia — which is exactly the diaspora in growth plan §5b, where they can actually pay.
+
+---
+
 ## Promotional text (170 max)
 
 The only field you can change any day without a new build. Two options.
