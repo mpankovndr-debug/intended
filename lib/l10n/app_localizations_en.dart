@@ -1637,14 +1637,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallCtaLifetime => 'Get lifetime access';
 
   @override
-  String paywallTrialHint(int days, String price) {
+  String paywallTrialHintYearly(int days, String price) {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
       other: '$days days',
       one: '1 day',
     );
-    return '$_temp0 free, then $price. Cancel anytime.';
+    return '$_temp0 free, then $price/year. Cancel anytime.';
+  }
+
+  @override
+  String paywallTrialHintMonthly(int days, String price) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0 free, then $price/month. Cancel anytime.';
   }
 
   @override
@@ -1805,6 +1816,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileHelpSupport => 'Help & Support';
+
+  @override
+  String get profileRateApp => 'Rate Intended';
 
   @override
   String get profilePrivacy => 'Privacy Policy';
@@ -2883,16 +2897,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get coachMarkReflectionShareBody =>
       'Tap the share button to turn this into a card you can send to someone or post. Your data stays private — only the summary is shared.';
-
-  @override
-  String get reviewPromptMessage =>
-      'Enjoying Intended? A quick rating helps others find a gentler way to build habits.';
-
-  @override
-  String get reviewPromptRate => 'Rate now';
-
-  @override
-  String get reviewPromptNotYet => 'Not yet';
 
   @override
   String get upgradeNudgeBody =>

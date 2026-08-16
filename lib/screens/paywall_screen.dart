@@ -720,10 +720,18 @@ class _PaywallScreenState extends State<PaywallScreen>
     if (_selectedPlan == 'lifetime') {
       text = l10n.paywallLifetimeHint;
     } else {
-      final price = _selectedPlan == 'yearly'
-          ? '${rc.yearlyPriceString ?? l10n.paywallYearlyPrice}/${l10n.paywallYearly.toLowerCase()}'
-          : '${rc.monthlyPriceString ?? l10n.paywallMonthlyPrice}/${l10n.paywallMonthly.toLowerCase()}';
-      text = l10n.paywallTrialHint(rc.trialDaysForPlan(_selectedPlan), price);
+      // The billing period belongs to the sentence, not to the price: Russian
+      // can't take «/ежегодно» after a slash, so each locale spells its own.
+      final days = rc.trialDaysForPlan(_selectedPlan);
+      text = _selectedPlan == 'yearly'
+          ? l10n.paywallTrialHintYearly(
+              days,
+              rc.yearlyPriceString ?? l10n.paywallYearlyPrice,
+            )
+          : l10n.paywallTrialHintMonthly(
+              days,
+              rc.monthlyPriceString ?? l10n.paywallMonthlyPrice,
+            );
     }
     return Text(
       text,

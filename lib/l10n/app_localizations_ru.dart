@@ -1564,7 +1564,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get paywallDescription =>
-      'Intended+ превращает ежедневную практику в настоящее понимание себя.';
+      'Intended+ превращает твою ежедневную практику в глубокое понимание себя.';
 
   @override
   String get paywallCeilingTitle => 'Ты строишь что-то хорошее';
@@ -1575,19 +1575,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get paywallFeature1 =>
-      'Письмо о твоём месяце — четыре строки, которые заканчиваются вопросом';
+      'Письмо о твоём месяце: четыре строки, последняя — вопрос, который хочется сохранить';
 
   @override
   String get paywallFeature2 =>
-      'План на следующий месяц из фактов этого — и честная проверка, сработал ли';
+      'План на следующий месяц из того, что показал этот — и честная проверка, сработал ли он';
 
   @override
   String get paywallFeature3 =>
-      'Предупреждение о дрейфе: тихое слово до паузы, а не после';
+      'Предупреждение о дрейфе: тихое слово до паузы, а не после неё';
 
   @override
   String get paywallFeature4 =>
-      'Все десять тем, премиум-иконки и виджеты для экрана';
+      'Все десять тем, премиум-иконки и виджеты для главного экрана';
 
   @override
   String get paywallGroupRoom => 'Больше пространства';
@@ -1623,7 +1623,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paywallGroupYouA => '10 красивых тем и иконки';
 
   @override
-  String get paywallGroupYouB => 'Премиум-виджеты для домашнего экрана';
+  String get paywallGroupYouB => 'Премиум-виджеты для главного экрана';
 
   @override
   String get paywallMonthly => 'Ежемесячно';
@@ -1680,7 +1680,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paywallCtaLifetime => 'Получить навсегда';
 
   @override
-  String paywallTrialHint(int days, String price) {
+  String paywallTrialHintYearly(int days, String price) {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
@@ -1689,7 +1689,20 @@ class AppLocalizationsRu extends AppLocalizations {
       few: '$days дня',
       one: '$days день',
     );
-    return '$_temp0 бесплатно, затем $price. Отмена в любое время.';
+    return '$_temp0 бесплатно, затем $price в год. Отмена в любое время.';
+  }
+
+  @override
+  String paywallTrialHintMonthly(int days, String price) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days дня',
+      many: '$days дней',
+      few: '$days дня',
+      one: '$days день',
+    );
+    return '$_temp0 бесплатно, затем $price в месяц. Отмена в любое время.';
   }
 
   @override
@@ -1855,6 +1868,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileHelpSupport => 'Помощь и поддержка';
+
+  @override
+  String get profileRateApp => 'Оценить Intended';
 
   @override
   String get profilePrivacy => 'Политика конфиденциальности';
@@ -2936,16 +2952,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get coachMarkReflectionShareBody =>
       'Нажми «Поделиться», чтобы превратить это в карточку для друзей. Твои данные остаются приватными — передаётся только итог.';
-
-  @override
-  String get reviewPromptMessage =>
-      'Нравится Intended? Быстрая оценка поможет другим найти мягкий подход к привычкам.';
-
-  @override
-  String get reviewPromptRate => 'Оценить';
-
-  @override
-  String get reviewPromptNotYet => 'Не сейчас';
 
   @override
   String get upgradeNudgeBody =>

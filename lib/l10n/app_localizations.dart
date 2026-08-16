@@ -2708,11 +2708,17 @@ abstract class AppLocalizations {
   /// **'Get lifetime access'**
   String get paywallCtaLifetime;
 
-  /// No description provided for @paywallTrialHint.
+  /// Billing period is spelled per locale — never glue the price to the plan label.
   ///
   /// In en, this message translates to:
-  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}. Cancel anytime.'**
-  String paywallTrialHint(int days, String price);
+  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/year. Cancel anytime.'**
+  String paywallTrialHintYearly(int days, String price);
+
+  /// Billing period is spelled per locale — never glue the price to the plan label.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/month. Cancel anytime.'**
+  String paywallTrialHintMonthly(int days, String price);
 
   /// No description provided for @paywallLifetimeHint.
   ///
@@ -2989,6 +2995,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Help & Support'**
   String get profileHelpSupport;
+
+  /// No description provided for @profileRateApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Intended'**
+  String get profileRateApp;
 
   /// No description provided for @profilePrivacy.
   ///
@@ -4897,24 +4909,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap the share button to turn this into a card you can send to someone or post. Your data stays private — only the summary is shared.'**
   String get coachMarkReflectionShareBody;
-
-  /// No description provided for @reviewPromptMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Enjoying Intended? A quick rating helps others find a gentler way to build habits.'**
-  String get reviewPromptMessage;
-
-  /// No description provided for @reviewPromptRate.
-  ///
-  /// In en, this message translates to:
-  /// **'Rate now'**
-  String get reviewPromptRate;
-
-  /// No description provided for @reviewPromptNotYet.
-  ///
-  /// In en, this message translates to:
-  /// **'Not yet'**
-  String get reviewPromptNotYet;
 
   /// No description provided for @upgradeNudgeBody.
   ///

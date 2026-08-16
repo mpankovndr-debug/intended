@@ -879,8 +879,21 @@
     }
   },
   "paywallCtaLifetime": "Get lifetime access",
-  "paywallTrialHint": "{days, plural, =1{1 day} other{{days} days}} free, then {price}. Cancel anytime.",
-  "@paywallTrialHint": {
+  "paywallTrialHintYearly": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year. Cancel anytime.",
+  "@paywallTrialHintYearly": {
+    "description": "Billing period is spelled per locale — never glue the price to the plan label.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallTrialHintMonthly": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/month. Cancel anytime.",
+  "@paywallTrialHintMonthly": {
+    "description": "Billing period is spelled per locale — never glue the price to the plan label.",
     "placeholders": {
       "days": {
         "type": "int"
@@ -956,6 +969,7 @@
   "profileAppearance": "Appearance",
   "profileSupport": "SUPPORT",
   "profileHelpSupport": "Help & Support",
+  "profileRateApp": "Rate Intended",
   "profilePrivacy": "Privacy Policy",
   "profileTerms": "Terms of Use",
   "profileConnectAccount": "CONNECT ACCOUNT",
@@ -1437,9 +1451,6 @@
   "coachMarkMonthlyReflectionBody": "Your monthly reflection finds patterns across weeks that you might not notice day-to-day. It's here whenever you want it.",
   "coachMarkReflectionShareTitle": "Worth sharing?",
   "coachMarkReflectionShareBody": "Tap the share button to turn this into a card you can send to someone or post. Your data stays private — only the summary is shared.",
-  "reviewPromptMessage": "Enjoying Intended? A quick rating helps others find a gentler way to build habits.",
-  "reviewPromptRate": "Rate now",
-  "reviewPromptNotYet": "Not yet",
   "upgradeNudgeBody": "Your practice is growing. Intended+ gives you room to grow with it.",
   "upgradeNudgeLearnMore": "Learn more",
   "notifWeeklyDynamic0": "Your week's page is ready. Every week is a fresh start.",

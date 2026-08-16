@@ -2959,19 +2959,15 @@ class _HabitCardState extends State<_HabitCard>
     await Future.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
     final allDone = await _areAllHabitsDone();
-    if (!mounted) return;
     await ReviewRequestService.checkAndPrompt(
-      context,
       totalCompletions: count,
       allDoneToday: allDone,
     );
 
-    // Curated-pack peak moment: if today's completion just closed out every
-    // habit in any active pack, fire a separate trigger. The review service
-    // de-dupes per pack ID and applies the shared 30-day cooldown, so this
-    // is safe to call alongside the habit-completion check above.
-    if (!mounted) return;
-    await _maybeAskAfterPackCompletion();
+    // The curated-pack trigger that used to follow is gone. §7 turned packs
+    // into adoptable intentions, so "closed out a pack" and "finished today"
+    // became the same moment — and all_done_today above already has it, for a
+    // fraction of the I/O this did.
   }
 
   /// Helper: checks if every active habit has been completed today.
@@ -2983,37 +2979,6 @@ class _HabitCardState extends State<_HabitCard>
     if (habits.isEmpty) return false;
     final completedIds = await HabitTracker.allCompletedIdsForDate(DateTime.now());
     return habits.every((h) => completedIds.contains(HabitTracker.habitId(h)));
-  }
-
-  /// Helper: scans curated packs and triggers the review prompt the first
-  /// time the user closes one out (every habit in a pack done today).
-  Future<void> _maybeAskAfterPackCompletion() async {
-    final onboarding = context.read<OnboardingState>();
-    final userHabits = onboarding.visibleHabits();
-    if (userHabits.isEmpty) return;
-
-    final completedIds =
-        await HabitTracker.allCompletedIdsForDate(DateTime.now());
-
-    for (final pack in CuratedPacks.all) {
-      // A pack is "active" only if every one of its habits is in the user's
-      // active list — otherwise we'd fire on packs the user never adopted.
-      final isActive = pack.habitIds.every(userHabits.contains);
-      if (!isActive) continue;
-
-      final allDoneToday = pack.habitIds.every(
-        (h) => completedIds.contains(HabitTracker.habitId(h)),
-      );
-      if (!allDoneToday) continue;
-
-      if (!mounted) return;
-      await ReviewRequestService.onCuratedPackCompleted(
-        context,
-        packId: pack.id,
-      );
-      // Only fire for the first matching pack — review service handles dedupe.
-      break;
-    }
   }
 
   /// Checks if all habits are now complete; if so, triggers Quiet Bloom.

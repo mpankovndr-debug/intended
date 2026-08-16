@@ -15,6 +15,7 @@ import '../models/letter.dart';
 import '../models/lift.dart';
 import '../models/month_plan.dart';
 import '../models/season.dart';
+import '../services/review_request_service.dart';
 import '../services/season_service.dart';
 import '../onboarding_v2/onboarding_state.dart';
 import '../services/moments_service.dart';
@@ -200,6 +201,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
           '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
       _loaded = true;
     });
+
+    // The peak moment in v2. A season is a sentence about who you were and the
+    // letter ends in a question — both land harder than the seventh tick of a
+    // box, which is where every other review trigger used to sit. Gated on the
+    // month having actually resolved: a "Beginning" season is the app saying
+    // it doesn't know you yet, and that is the worst moment to ask for stars.
+    await ReviewRequestService.onMonthRead(
+      seasonResolved: season.pole != Season.beginning,
+      letterShown: _letter != null,
+    );
   }
 
   @override

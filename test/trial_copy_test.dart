@@ -46,13 +46,13 @@ void main() {
       expect(l.paywallCtaTrial(7), 'Start 7-day free trial');
       expect(l.paywallCtaTrial(14), 'Start 14-day free trial');
 
-      expect(l.paywallTrialHint(14, '€44.99/yearly'),
-          '14 days free, then €44.99/yearly. Cancel anytime.');
+      expect(l.paywallTrialHintYearly(14, '€44.99'),
+          '14 days free, then €44.99/year. Cancel anytime.');
     });
 
     test('singular does not read "1 days"', () {
-      expect(l.paywallTrialHint(1, '€5.99/monthly'),
-          '1 day free, then €5.99/monthly. Cancel anytime.');
+      expect(l.paywallTrialHintMonthly(1, '€5.99'),
+          '1 day free, then €5.99/month. Cancel anytime.');
       expect(
         l.themeSelectionPremiumHint(1),
         contains('Try it free for 1 day after setup'),
@@ -76,11 +76,29 @@ void main() {
     final l = AppLocalizationsRu();
 
     test('one / few / many forms', () {
-      expect(l.paywallTrialHint(1, 'X'), startsWith('1 день'));
-      expect(l.paywallTrialHint(3, 'X'), startsWith('3 дня'));
-      expect(l.paywallTrialHint(7, 'X'), startsWith('7 дней'));
-      expect(l.paywallTrialHint(14, 'X'), startsWith('14 дней'));
-      expect(l.paywallTrialHint(21, 'X'), startsWith('21 день'));
+      expect(l.paywallTrialHintYearly(1, 'X'), startsWith('1 день'));
+      expect(l.paywallTrialHintYearly(3, 'X'), startsWith('3 дня'));
+      expect(l.paywallTrialHintYearly(7, 'X'), startsWith('7 дней'));
+      expect(l.paywallTrialHintYearly(14, 'X'), startsWith('14 дней'));
+      expect(l.paywallTrialHintYearly(21, 'X'), startsWith('21 день'));
+      expect(l.paywallTrialHintMonthly(3, 'X'), startsWith('3 дня'));
+    });
+
+    test('the billing period is a Russian phrase, never a slashed adverb', () {
+      // The bug this replaces: the screen composed the price by gluing it to
+      // the lowercased plan label, so Russian read «€44,99/ежегодно» — an
+      // adverb where a period belongs, which no native reader can parse.
+      expect(l.paywallTrialHintYearly(14, '€44,99'), contains('€44,99 в год'));
+      expect(l.paywallTrialHintMonthly(14, '€5,99'), contains('€5,99 в месяц'));
+
+      for (final text in [
+        l.paywallTrialHintYearly(14, '€44,99'),
+        l.paywallTrialHintMonthly(14, '€5,99'),
+      ]) {
+        expect(text, isNot(contains('ежегодно')));
+        expect(text, isNot(contains('ежемесячно')));
+        expect(text, isNot(contains('/')));
+      }
     });
 
     test('the CTA adjective is invariant across lengths', () {

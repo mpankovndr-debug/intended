@@ -37,6 +37,7 @@ import 'paywall_screen.dart';
 import 'subscription_management_modal.dart';
 import '../widgets/theme_picker.dart';
 import '../services/auth_service.dart';
+import '../services/review_request_service.dart';
 import '../services/revenue_cat_service.dart';
 import '../services/moments_service.dart';
 import '../services/notification_scheduler.dart';
@@ -2055,6 +2056,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   builder: (_) => const FaqScreen(),
                                 ),
                               ),
+                            ),
+                          ),
+                          Container(
+                            height: 1,
+                            color: colors.ctaPrimary.withOpacity(0.1),
+                          ),
+                          // The reliable half of the review flow. Apple's sheet
+                          // is opportunistic — it declines to render more often
+                          // than not — so someone who decides to rate needs a
+                          // door that always opens.
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: _ProfileButton(
+                              iconContainer: Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: colors.accentRegular.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: Icon(
+                                  CupertinoIcons.star,
+                                  size: 20,
+                                  color: colors.textMutedBrown,
+                                ),
+                              ),
+                              title: l10n.profileRateApp,
+                              onTap: ReviewRequestService.openStoreListing,
                             ),
                           ),
                           Container(
