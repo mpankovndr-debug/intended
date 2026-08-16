@@ -6114,8 +6114,62 @@ abstract class AppLocalizations {
   /// No description provided for @shareSeasonGaps.
   ///
   /// In en, this message translates to:
-  /// **'My gaps are getting shorter.'**
+  /// **'and the gaps are getting shorter'**
   String get shareSeasonGaps;
+
+  /// No description provided for @shareSeasonLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'MY SEASON'**
+  String get shareSeasonLabel;
+
+  /// No description provided for @shareSeasonMorningLine.
+  ///
+  /// In en, this message translates to:
+  /// **'I come to this before the day starts.'**
+  String get shareSeasonMorningLine;
+
+  /// No description provided for @shareSeasonEveningLine.
+  ///
+  /// In en, this message translates to:
+  /// **'I come to this once the day has quieted.'**
+  String get shareSeasonEveningLine;
+
+  /// No description provided for @shareSeasonSteadyLine.
+  ///
+  /// In en, this message translates to:
+  /// **'A little, most days.'**
+  String get shareSeasonSteadyLine;
+
+  /// No description provided for @shareSeasonBurstsLine.
+  ///
+  /// In en, this message translates to:
+  /// **'I arrive in waves, and they come back.'**
+  String get shareSeasonBurstsLine;
+
+  /// No description provided for @shareSeasonReturningLine.
+  ///
+  /// In en, this message translates to:
+  /// **'I go quiet, and I find my way back.'**
+  String get shareSeasonReturningLine;
+
+  /// No description provided for @shareSeasonContinuousLine.
+  ///
+  /// In en, this message translates to:
+  /// **'I keep a thread running all month.'**
+  String get shareSeasonContinuousLine;
+
+  /// No description provided for @shareSeasonFocusedLine.
+  ///
+  /// In en, this message translates to:
+  /// **'One thing has most of my attention.'**
+  String get shareSeasonFocusedLine;
+
+  /// No description provided for @shareSeasonWanderingLine.
+  ///
+  /// In en, this message translates to:
+  /// **'I follow what I need.'**
+  String get shareSeasonWanderingLine;
 
   /// No description provided for @pathMoreIntentions.
   ///

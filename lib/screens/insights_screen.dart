@@ -28,6 +28,7 @@ import '../state/user_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/habit_l10n.dart';
+import '../utils/season_l10n.dart';
 import '../utils/text_styles.dart';
 import '../main.dart' show AppBackground;
 import '../theme/category_colors.dart';
@@ -285,8 +286,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
               // Always the last section (design review, SS3/SS4): Share
               // serves the whole page, so it follows whatever the tier and
               // the month put above it.
-              if (_shareWord(l10n) != null)
-                _shareRow(l10n, colors, _shareWord(l10n)!),
+              if (_sharePole != null) _shareRow(l10n, colors, _sharePole!),
             ]),
             // The example stands apart (device review, SS7): inside the
             // user's own sheet it read as their data wearing a costume. Out
@@ -1164,20 +1164,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
     if (season == null) return const SizedBox.shrink();
 
     final forming = season.pole == Season.beginning;
-    final (word, line) = switch (season.pole) {
-      Season.morning => (l10n.seasonMorning, l10n.seasonMorningLine),
-      Season.evening => (l10n.seasonEvening, l10n.seasonEveningLine),
-      Season.steady => (l10n.seasonSteady, l10n.seasonSteadyLine),
-      Season.bursts => (l10n.seasonBursts, l10n.seasonBurstsLine),
-      Season.returning => (l10n.seasonReturning, l10n.seasonReturningLine),
-      Season.continuous => (l10n.seasonContinuous, l10n.seasonContinuousLine),
-      Season.focused => (l10n.seasonFocused, l10n.seasonFocusedLine),
-      Season.wandering => (l10n.seasonWandering, l10n.seasonWanderingLine),
-      _ => (
-          l10n.seasonBeginning,
-          l10n.seasonBeginningLine(season.sampleSize),
-        ),
-    };
+    final word = SeasonL10n.word(season.pole, l10n);
+    final line = SeasonL10n.line(season.pole, l10n, season.sampleSize);
 
     return _card(
       colors: colors,
@@ -1229,13 +1217,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// The Share row, always the last section of the sheet (design review,
   /// SS3/SS4): it shares the page the user just read, so it follows whatever
   /// the tier and the month put above it instead of stranding mid-scroll.
-  Widget _shareRow(AppLocalizations l10n, AppColorScheme colors, String word) {
+  Widget _shareRow(AppLocalizations l10n, AppColorScheme colors, String pole) {
     return Align(
       alignment: Alignment.center,
       child: CupertinoButton(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         minimumSize: Size.zero,
-        onPressed: () => _shareSeason(word),
+        onPressed: () => _shareSeason(l10n, pole),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -1258,12 +1246,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
     );
   }
 
-  /// The localized season word when the month has one — the thing Share
-  /// puts on the story. Null while forming, which is also when the row hides.
-  String? _shareWord(AppLocalizations l10n) {
+  /// The pole when the month has one. Null while forming, which is also when
+  /// the Share row hides.
+  ///
+  /// The pole travels rather than the word: the card needs both the word and
+  /// the first-person line, and resolving them from one key in one place is
+  /// what stops the two from drifting apart.
+  String? get _sharePole {
     final season = _season;
     if (season == null || season.pole == Season.beginning) return null;
-    return _seasonWord(l10n, season.pole);
+    return season.pole;
   }
 
   /// Opens the monthly card (§5.5).
@@ -1272,7 +1264,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// grid, the count, the wordmark, and "intention, not perfection" at a size
   /// that survives a thumbnail. What is worth reading in the app and what is
   /// worth posting are not the same picture.
-  Future<void> _shareSeason(String seasonWord) async {
+  Future<void> _shareSeason(AppLocalizations l10n, String pole) async {
     // The paywall's presentation exactly (design review): a modal over the
     // live page, which stays visible behind it — dimmed and blurred. A pushed
     // route would repaint its own background instead, and no amount of filter
@@ -1282,7 +1274,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
       barrierColor: const Color(0x80000000),
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
       builder: (_) => SeasonShareScreen(
-        seasonWord: seasonWord,
+        seasonWord: SeasonL10n.word(pole, l10n),
+        seasonPole: pole,
         month: _anchor,
         moments: _moments,
         returnCount: _returnCount,
@@ -1733,17 +1726,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// a history page.
   static const int _archiveMonths = 4;
 
-  String _seasonWord(AppLocalizations l10n, String pole) => switch (pole) {
-        Season.morning => l10n.seasonMorning,
-        Season.evening => l10n.seasonEvening,
-        Season.steady => l10n.seasonSteady,
-        Season.bursts => l10n.seasonBursts,
-        Season.returning => l10n.seasonReturning,
-        Season.continuous => l10n.seasonContinuous,
-        Season.focused => l10n.seasonFocused,
-        Season.wandering => l10n.seasonWandering,
-        _ => l10n.seasonBeginning,
-      };
+  String _seasonWord(AppLocalizations l10n, String pole) =>
+      SeasonL10n.word(pole, l10n);
 
   /// The so-far card: every moment named in full, while that is possible.
   ///

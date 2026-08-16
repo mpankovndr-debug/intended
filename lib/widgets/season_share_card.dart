@@ -5,6 +5,8 @@ import '../models/moment.dart';
 import '../theme/app_colors.dart';
 import '../theme/category_colors.dart';
 import '../utils/habit_l10n.dart';
+import '../utils/season_l10n.dart';
+import '../utils/text_styles.dart';
 import 'moment_grid.dart';
 
 /// The monthly card (§5.5) — a story, literally.
@@ -22,6 +24,7 @@ class SeasonShareCard extends StatelessWidget {
     super.key,
     required this.monthLabel,
     required this.seasonWord,
+    required this.seasonPole,
     required this.moments,
     required this.returnCount,
     required this.gapsShortening,
@@ -32,6 +35,11 @@ class SeasonShareCard extends StatelessWidget {
   /// Localised, e.g. "August 2026". Rendered uppercased.
   final String monthLabel;
   final String seasonWord;
+
+  /// The stable pole key, so the card can resolve its own first-person line
+  /// rather than have the word and the sentence assembled in two places.
+  final String seasonPole;
+
   final List<Moment> moments;
   final int returnCount;
   final bool gapsShortening;
@@ -41,6 +49,11 @@ class SeasonShareCard extends StatelessWidget {
   /// Story canvas: 9:16, captured at 3x → 1080×1920.
   static const double width = 360;
   static const double height = 640;
+
+  /// Every string on this card is the user's own language, so the face has to
+  /// follow the locale — Sora has no Cyrillic, and the whole Russian card was
+  /// silently rendering in the iOS system font.
+  String get _font => AppTextStyles.displayFontFor(l10n.localeName);
 
   @override
   Widget build(BuildContext context) {
@@ -76,48 +89,70 @@ class SeasonShareCard extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(26, 54, 26, 40),
             child: Column(
               children: [
+                // "MY SEASON · AUGUST 2026". The card is read by people who
+                // have never opened the app, and a bare noun under a month
+                // is not a sentence — naming the thing is what makes «Вечер»
+                // legible as a label rather than a random word. It rides in
+                // the eyebrow because no other slot fits: the hero can't hold
+                // «сезон» without a construction that works for all eight
+                // words, and no Russian construction does.
                 Text(
-                  monthLabel.toUpperCase(),
+                  '${l10n.shareSeasonLabel} · ${monthLabel.toUpperCase()}',
                   style: TextStyle(
-                    fontFamily: 'Sora',
-                    fontSize: 13,
+                    fontFamily: _font,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    letterSpacing: 4,
+                    letterSpacing: 2.5,
                     color: colors.ctaPrimary,
                   ),
                 ),
-                const SizedBox(height: 12),
-                // Shrinks rather than clips: the word is a different length in
-                // every language, and a hero that runs off the card is worse
-                // than one a few points smaller.
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                  seasonWord,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontFamily: 'Sora',
-                    fontSize: 46,
-                    height: 1.05,
-                    fontWeight: FontWeight.w600,
-                    color: colors.textPrimary,
+                const SizedBox(height: 10),
+                // Fixed height so the grid lands on the same line every month.
+                // Cards posted in a row are the point; a hero that changes
+                // height shifts everything under it between posts.
+                SizedBox(
+                  height: 84,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Three deliberate steps rather than the arbitrary
+                      // fractions BoxFit.scaleDown produced — 44.8 and 41.2pt
+                      // read as drift, not decisions. FittedBox stays as the
+                      // never-clip net for languages not yet measured.
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          seasonWord,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontFamily: _font,
+                            fontSize: heroSizeFor(seasonWord, _font),
+                            height: 1.05,
+                            fontWeight: FontWeight.w600,
+                            color: colors.textPrimary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      // The sentence that makes the word mean something. It
+                      // used to be absent, and the slot held the gaps line —
+                      // a finding from a different axis entirely, which read
+                      // as an explanation and explained nothing.
+                      Text(
+                        SeasonL10n.shareLine(seasonPole, l10n),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: _font,
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                          color: colors.textSecondary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                ),
-                if (gapsShortening) ...[
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.shareSeasonGaps,
-                    style: TextStyle(
-                      fontFamily: 'Sora',
-                      fontSize: 15,
-                      fontStyle: FontStyle.italic,
-                      color: colors.textSecondary,
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 30),
+                const SizedBox(height: 24),
                 Center(
                   child: SizedBox(
                     width: 296,
@@ -141,12 +176,29 @@ class SeasonShareCard extends StatelessWidget {
                       : l10n.shareSeasonMoments(moments.length),
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: 'Sora',
+                    fontFamily: _font,
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                     color: colors.textPrimary,
                   ),
                 ),
+                // Shortening gaps are a fact *about the returns*, so they sit
+                // with the returns and read as the rest of that sentence —
+                // rather than under the season word, where they claimed to
+                // explain a reading they have nothing to do with.
+                if (gapsShortening && returnCount > 0) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    l10n.shareSeasonGaps,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: _font,
+                      fontSize: 13,
+                      fontStyle: FontStyle.italic,
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ],
                 const Spacer(),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(13),
@@ -161,6 +213,8 @@ class SeasonShareCard extends StatelessWidget {
                 Text(
                   'INTENDED',
                   style: TextStyle(
+                    // The wordmark, not copy: Latin in every locale, so it
+                    // stays in the brand face while the rest follows language.
                     fontFamily: 'Sora',
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -172,7 +226,7 @@ class SeasonShareCard extends StatelessWidget {
                 Text(
                   l10n.shareCardTagline,
                   style: TextStyle(
-                    fontFamily: 'Sora',
+                    fontFamily: _font,
                     fontSize: 13,
                     fontStyle: FontStyle.italic,
                     color: colors.textSecondary,
@@ -184,6 +238,42 @@ class SeasonShareCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Type steps for the hero, largest first.
+  static const List<double> heroSteps = [46, 42, 38];
+
+  /// The width the hero has: the canvas less its padding, less a little air
+  /// so a word never touches the edge it technically fits inside.
+  static const double heroMaxWidth = 296;
+
+  /// The largest step at which [word] fits [heroMaxWidth], measured.
+  ///
+  /// Counting characters picks the wrong step: «Постоянство» and
+  /// «Возвращение» are both eleven letters and differ by 28pt at the same
+  /// size, because «щ» is far wider than «о». One rule would either shrink a
+  /// word that fit or clip one that did not.
+  ///
+  /// A pure static rather than a method needing a BuildContext, so a test can
+  /// call it — this is the layout rule, and layout rules are what regress.
+  static double heroSizeFor(String word, String fontFamily) {
+    for (final size in heroSteps) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: word,
+          style: TextStyle(
+            fontFamily: fontFamily,
+            fontSize: size,
+            height: 1.05,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        maxLines: 1,
+        textDirection: TextDirection.ltr,
+      )..layout();
+      if (painter.width <= heroMaxWidth) return size;
+    }
+    return heroSteps.last;
   }
 
   /// "● Health 28 · ● Self-care 8 · ● Mood 4" — the grid's own legend, so the
@@ -219,7 +309,7 @@ class SeasonShareCard extends StatelessWidget {
               Text(
                 '${localizeCategoryName(e.key, l10n)} ${e.value}',
                 style: TextStyle(
-                  fontFamily: 'Sora',
+                  fontFamily: _font,
                   fontSize: 12.5,
                   color: colors.textSecondary,
                 ),

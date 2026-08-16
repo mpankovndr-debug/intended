@@ -1769,7 +1769,16 @@
       }
     }
   },
-  "shareSeasonGaps": "My gaps are getting shorter.",
+  "shareSeasonGaps": "and the gaps are getting shorter",
+  "shareSeasonLabel": "MY SEASON",
+  "shareSeasonMorningLine": "I come to this before the day starts.",
+  "shareSeasonEveningLine": "I come to this once the day has quieted.",
+  "shareSeasonSteadyLine": "A little, most days.",
+  "shareSeasonBurstsLine": "I arrive in waves, and they come back.",
+  "shareSeasonReturningLine": "I go quiet, and I find my way back.",
+  "shareSeasonContinuousLine": "I keep a thread running all month.",
+  "shareSeasonFocusedLine": "One thing has most of my attention.",
+  "shareSeasonWanderingLine": "I follow what I need.",
   "pathMoreIntentions": "MORE INTENTIONS",
   "pathSofterNightsTitle": "Softer Nights",
   "pathSofterNightsSubtitle": "For sleep that doesn't fight you",

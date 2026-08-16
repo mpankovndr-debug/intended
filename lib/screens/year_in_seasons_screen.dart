@@ -13,6 +13,7 @@ import '../services/season_service.dart';
 import '../state/user_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
+import '../utils/season_l10n.dart';
 import '../utils/text_styles.dart';
 import '../widgets/moment_grid.dart';
 import 'insights_screen.dart';
@@ -306,15 +307,6 @@ class _YearInSeasonsScreenState extends State<YearInSeasonsScreen> {
     );
   }
 
-  String _seasonWord(AppLocalizations l10n, String pole) => switch (pole) {
-        Season.morning => l10n.seasonMorning,
-        Season.evening => l10n.seasonEvening,
-        Season.steady => l10n.seasonSteady,
-        Season.bursts => l10n.seasonBursts,
-        Season.returning => l10n.seasonReturning,
-        Season.continuous => l10n.seasonContinuous,
-        Season.focused => l10n.seasonFocused,
-        Season.wandering => l10n.seasonWandering,
-        _ => l10n.seasonBeginning,
-      };
+  String _seasonWord(AppLocalizations l10n, String pole) =>
+      SeasonL10n.word(pole, l10n);
 }

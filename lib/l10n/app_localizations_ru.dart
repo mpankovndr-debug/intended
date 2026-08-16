@@ -402,7 +402,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Одно занимало большую часть твоего внимания.';
 
   @override
-  String get seasonWandering => 'Блуждание';
+  String get seasonWandering => 'Поиск';
 
   @override
   String get seasonWanderingLine =>
@@ -3685,7 +3685,34 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get shareSeasonGaps => 'Мои паузы становятся короче.';
+  String get shareSeasonGaps => 'и паузы между ними короче';
+
+  @override
+  String get shareSeasonLabel => 'МОЙ СЕЗОН';
+
+  @override
+  String get shareSeasonMorningLine => 'Я прихожу сюда, пока день тихий.';
+
+  @override
+  String get shareSeasonEveningLine => 'Я прихожу сюда, когда день затих.';
+
+  @override
+  String get shareSeasonSteadyLine => 'Понемногу, почти каждый день.';
+
+  @override
+  String get shareSeasonBurstsLine => 'Волнами. И волны возвращаются.';
+
+  @override
+  String get shareSeasonReturningLine => 'Я затихаю — и нахожу дорогу обратно.';
+
+  @override
+  String get shareSeasonContinuousLine => 'Я держу нить весь месяц.';
+
+  @override
+  String get shareSeasonFocusedLine => 'Одно занимает почти всё внимание.';
+
+  @override
+  String get shareSeasonWanderingLine => 'Я иду за тем, что нужно сейчас.';
 
   @override
   String get pathMoreIntentions => 'ЕЩЁ НАМЕРЕНИЯ';

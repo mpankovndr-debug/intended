@@ -3619,7 +3619,35 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get shareSeasonGaps => 'My gaps are getting shorter.';
+  String get shareSeasonGaps => 'and the gaps are getting shorter';
+
+  @override
+  String get shareSeasonLabel => 'MY SEASON';
+
+  @override
+  String get shareSeasonMorningLine => 'I come to this before the day starts.';
+
+  @override
+  String get shareSeasonEveningLine =>
+      'I come to this once the day has quieted.';
+
+  @override
+  String get shareSeasonSteadyLine => 'A little, most days.';
+
+  @override
+  String get shareSeasonBurstsLine => 'I arrive in waves, and they come back.';
+
+  @override
+  String get shareSeasonReturningLine => 'I go quiet, and I find my way back.';
+
+  @override
+  String get shareSeasonContinuousLine => 'I keep a thread running all month.';
+
+  @override
+  String get shareSeasonFocusedLine => 'One thing has most of my attention.';
+
+  @override
+  String get shareSeasonWanderingLine => 'I follow what I need.';
 
   @override
   String get pathMoreIntentions => 'MORE INTENTIONS';
