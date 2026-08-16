@@ -1601,6 +1601,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallYearlyPeriod => 'per year';
 
   @override
+  String paywallPricePerYear(String price) {
+    return '$price/year';
+  }
+
+  @override
+  String paywallPricePerMonth(String price) {
+    return '$price/month';
+  }
+
+  @override
   String get paywallYearlyPerMonth => '€3.75';
 
   @override
@@ -1626,9 +1636,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallLifetimePeriod => 'one-time';
 
   @override
-  String get paywallLifetimeBadge => 'Launch price';
-
-  @override
   String paywallCtaTrial(int days) {
     return 'Start $days-day free trial';
   }
@@ -1644,7 +1651,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$days days',
       one: '1 day',
     );
-    return '$_temp0 free, then $price/year. Cancel anytime.';
+    return '$_temp0 free, then $price/year. Renews automatically until you cancel.';
   }
 
   @override
@@ -1655,7 +1662,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$days days',
       one: '1 day',
     );
-    return '$_temp0 free, then $price/month. Cancel anytime.';
+    return '$_temp0 free, then $price/month. Renews automatically until you cancel.';
   }
 
   @override
@@ -1704,7 +1711,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$days days',
       one: '1 day',
     );
-    return '$_temp0 free, then $price/year — about $perMonth a month. Cancel anytime.';
+    return '$_temp0 free, then $price/year — about $perMonth a month. Renews automatically until you cancel.';
   }
 
   @override

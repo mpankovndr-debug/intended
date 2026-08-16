@@ -2648,6 +2648,18 @@ abstract class AppLocalizations {
   /// **'per year'**
   String get paywallYearlyPeriod;
 
+  /// Price with its billing period. Russian cannot take a slashed adverb, so each locale spells this itself — never build it by lowercasing the plan label.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/year'**
+  String paywallPricePerYear(String price);
+
+  /// See paywallPricePerYear.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/month'**
+  String paywallPricePerMonth(String price);
+
   /// No description provided for @paywallYearlyPerMonth.
   ///
   /// In en, this message translates to:
@@ -2690,12 +2702,6 @@ abstract class AppLocalizations {
   /// **'one-time'**
   String get paywallLifetimePeriod;
 
-  /// No description provided for @paywallLifetimeBadge.
-  ///
-  /// In en, this message translates to:
-  /// **'Launch price'**
-  String get paywallLifetimeBadge;
-
   /// No description provided for @paywallCtaTrial.
   ///
   /// In en, this message translates to:
@@ -2711,13 +2717,13 @@ abstract class AppLocalizations {
   /// Billing period is spelled per locale — never glue the price to the plan label.
   ///
   /// In en, this message translates to:
-  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/year. Cancel anytime.'**
+  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/year. Renews automatically until you cancel.'**
   String paywallTrialHintYearly(int days, String price);
 
   /// Billing period is spelled per locale — never glue the price to the plan label.
   ///
   /// In en, this message translates to:
-  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/month. Cancel anytime.'**
+  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/month. Renews automatically until you cancel.'**
   String paywallTrialHintMonthly(int days, String price);
 
   /// No description provided for @paywallLifetimeHint.
@@ -2795,7 +2801,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPaywallDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Cancel anytime.'**
+  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Renews automatically until you cancel.'**
   String onboardingPaywallDisclaimer(int days, String price, String perMonth);
 
   /// No description provided for @subscriptionTitle.

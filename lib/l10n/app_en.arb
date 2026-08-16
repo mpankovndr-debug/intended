@@ -848,6 +848,24 @@
   "paywallYearly": "Yearly",
   "paywallYearlyPrice": "€44.99",
   "paywallYearlyPeriod": "per year",
+  "paywallPricePerYear": "{price}/year",
+  "@paywallPricePerYear": {
+    "description": "Price with its billing period. Russian cannot take a slashed adverb, so each locale spells this itself — never build it by lowercasing the plan label.",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallPricePerMonth": "{price}/month",
+  "@paywallPricePerMonth": {
+    "description": "See paywallPricePerYear.",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "paywallYearlyPerMonth": "€3.75",
   "paywallYearlyAnchor": "{price}/month, billed yearly",
   "@paywallYearlyAnchor": {
@@ -869,7 +887,6 @@
   "paywallLifetime": "Lifetime",
   "paywallLifetimePrice": "€49.99",
   "paywallLifetimePeriod": "one-time",
-  "paywallLifetimeBadge": "Launch price",
   "paywallCtaTrial": "Start {days}-day free trial",
   "@paywallCtaTrial": {
     "placeholders": {
@@ -879,7 +896,7 @@
     }
   },
   "paywallCtaLifetime": "Get lifetime access",
-  "paywallTrialHintYearly": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year. Cancel anytime.",
+  "paywallTrialHintYearly": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year. Renews automatically until you cancel.",
   "@paywallTrialHintYearly": {
     "description": "Billing period is spelled per locale — never glue the price to the plan label.",
     "placeholders": {
@@ -891,7 +908,7 @@
       }
     }
   },
-  "paywallTrialHintMonthly": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/month. Cancel anytime.",
+  "paywallTrialHintMonthly": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/month. Renews automatically until you cancel.",
   "@paywallTrialHintMonthly": {
     "description": "Billing period is spelled per locale — never glue the price to the plan label.",
     "placeholders": {
@@ -915,7 +932,7 @@
   "onboardingPaywallBody": "The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.",
   "onboardingPaywallPrimaryCta": "Start free trial",
   "onboardingPaywallSecondaryCta": "Not now — keep the free version",
-  "onboardingPaywallDisclaimer": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Cancel anytime.",
+  "onboardingPaywallDisclaimer": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Renews automatically until you cancel.",
   "@onboardingPaywallDisclaimer": {
     "placeholders": {
       "days": {

@@ -660,11 +660,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           plan = l10n.paywallMonthly;
           final monthlyPrice =
               rc.monthlyPriceString ?? l10n.paywallMonthlyPrice;
-          price = '$monthlyPrice/${l10n.paywallMonthly.toLowerCase()}';
+          price = l10n.paywallPricePerMonth(monthlyPrice);
         } else if (productId.contains('yearly')) {
           plan = l10n.paywallYearly;
           final yearlyPrice = rc.yearlyPriceString ?? l10n.paywallYearlyPrice;
-          price = '$yearlyPrice/${l10n.paywallYearly.toLowerCase()}';
+          price = l10n.paywallPricePerYear(yearlyPrice);
         }
         final expDate = entitlement.expirationDate;
         if (expDate != null) {

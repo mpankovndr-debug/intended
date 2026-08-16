@@ -1644,6 +1644,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paywallYearlyPeriod => 'в год';
 
   @override
+  String paywallPricePerYear(String price) {
+    return '$price в год';
+  }
+
+  @override
+  String paywallPricePerMonth(String price) {
+    return '$price в месяц';
+  }
+
+  @override
   String get paywallYearlyPerMonth => '€3,75';
 
   @override
@@ -1669,9 +1679,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paywallLifetimePeriod => 'один раз';
 
   @override
-  String get paywallLifetimeBadge => 'Цена запуска';
-
-  @override
   String paywallCtaTrial(int days) {
     return 'Начать $days-дневный пробный период';
   }
@@ -1689,7 +1696,7 @@ class AppLocalizationsRu extends AppLocalizations {
       few: '$days дня',
       one: '$days день',
     );
-    return '$_temp0 бесплатно, затем $price в год. Отмена в любое время.';
+    return '$_temp0 бесплатно, затем $price в год. Продлевается автоматически, пока не отменишь.';
   }
 
   @override
@@ -1702,7 +1709,7 @@ class AppLocalizationsRu extends AppLocalizations {
       few: '$days дня',
       one: '$days день',
     );
-    return '$_temp0 бесплатно, затем $price в месяц. Отмена в любое время.';
+    return '$_temp0 бесплатно, затем $price в месяц. Продлевается автоматически, пока не отменишь.';
   }
 
   @override
@@ -1755,7 +1762,7 @@ class AppLocalizationsRu extends AppLocalizations {
       few: '$days дня',
       one: '$days день',
     );
-    return '$_temp0 бесплатно, дальше $price в год — около $perMonth в месяц. Отменить можно в любой момент.';
+    return '$_temp0 бесплатно, дальше $price в год — около $perMonth в месяц. Продлевается автоматически, пока не отменишь.';
   }
 
   @override

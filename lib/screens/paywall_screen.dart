@@ -216,7 +216,7 @@ class _PaywallScreenState extends State<PaywallScreen>
                               const SizedBox(height: 10),
                               _buildAnimatedBullet(1, CupertinoIcons.square_grid_2x2_fill, l10n.paywallFeature2),
                               const SizedBox(height: 10),
-                              _buildAnimatedBullet(2, CupertinoIcons.paintbrush_fill, l10n.paywallFeature3),
+                              _buildAnimatedBullet(2, CupertinoIcons.bubble_left_fill, l10n.paywallFeature3),
                               const SizedBox(height: 10),
                               _buildAnimatedBullet(3, CupertinoIcons.heart_fill, l10n.paywallFeature4),
                               const SizedBox(height: 10),
@@ -438,11 +438,11 @@ class _PaywallScreenState extends State<PaywallScreen>
           label: l10n.paywallLifetime,
           price: lifetimePrice,
           pricePerPeriod: l10n.paywallLifetimePeriod,
-          badge: _PricingBadge(
-            text: l10n.paywallLifetimeBadge,
-            primaryColor: colors.buttonDark,
-            secondaryColor: colors.buttonDark,
-          ),
+          // No badge. "Launch price" promised a rise that never came: lifetime
+          // went €69.99 → €49.99 while both subscriptions went up, so the badge
+          // had been contradicting the price history across two revisions.
+          // €49.99 one-time next to €44.99/year argues for itself.
+          badge: null,
           isSelected: _selectedPlan == 'lifetime',
           isDark: isDark,
           onTap: () => setState(() => _selectedPlan = 'lifetime'),
@@ -701,6 +701,10 @@ class _PaywallScreenState extends State<PaywallScreen>
                                 .read<RevenueCatService>()
                                 .trialDaysForPlan(_selectedPlan),
                           ),
+                    // «Начать 14-дневный пробный период» wraps where the
+                    // English never does, and a wrapped Text fills the button
+                    // and left-aligns every line unless told otherwise.
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: AppTextStyles.bodyFont(context),
                       fontSize: 17,

@@ -47,12 +47,12 @@ void main() {
       expect(l.paywallCtaTrial(14), 'Start 14-day free trial');
 
       expect(l.paywallTrialHintYearly(14, '€44.99'),
-          '14 days free, then €44.99/year. Cancel anytime.');
+          '14 days free, then €44.99/year. Renews automatically until you cancel.');
     });
 
     test('singular does not read "1 days"', () {
       expect(l.paywallTrialHintMonthly(1, '€5.99'),
-          '1 day free, then €5.99/month. Cancel anytime.');
+          '1 day free, then €5.99/month. Renews automatically until you cancel.');
       expect(
         l.themeSelectionPremiumHint(1),
         contains('Try it free for 1 day after setup'),
@@ -61,8 +61,10 @@ void main() {
 
     test('the onboarding disclaimer no longer hardcodes €3.75', () {
       final text = l.onboardingPaywallDisclaimer(14, '€44.99', '€3.75');
-      expect(text,
-          '14 days free, then €44.99/year — about €3.75 a month. Cancel anytime.');
+      expect(
+          text,
+          '14 days free, then €44.99/year — about €3.75 a month. '
+          'Renews automatically until you cancel.');
 
       // A different currency must survive end to end.
       expect(
@@ -143,6 +145,51 @@ void main() {
         AppLocalizationsRu().faqPricingAnswer(r'$5,99', r'$44,99', r'$49,99', 7),
       ]) {
         expect(text, isNot(contains('€')));
+      }
+    });
+  });
+
+  group('price + period is a phrase, on every surface that prints one', () {
+    // Profile → Manage subscription built this the same broken way the paywall
+    // did, so a Russian subscriber read «€44,99/ежегодно» there too.
+    test('English', () {
+      final l = AppLocalizationsEn();
+      expect(l.paywallPricePerYear('€44.99'), '€44.99/year');
+      expect(l.paywallPricePerMonth('€5.99'), '€5.99/month');
+    });
+
+    test('Russian takes a preposition, not a slashed adverb', () {
+      final l = AppLocalizationsRu();
+      expect(l.paywallPricePerYear('€44,99'), '€44,99 в год');
+      expect(l.paywallPricePerMonth('€5,99'), '€5,99 в месяц');
+    });
+  });
+
+  group('every purchase surface discloses auto-renewal', () {
+    // App Store guideline 3.1.2 wants the renewal terms in the binary, not
+    // only in the store listing. "Cancel anytime" implies it; it does not say
+    // it. Both paywalls — onboarding and main — have to carry the sentence.
+    test('English', () {
+      final l = AppLocalizationsEn();
+      for (final text in [
+        l.paywallTrialHintYearly(14, '€44.99'),
+        l.paywallTrialHintMonthly(14, '€5.99'),
+        l.onboardingPaywallDisclaimer(14, '€44.99', '€3.75'),
+      ]) {
+        expect(text, contains('Renews automatically'));
+      }
+    });
+
+    test('Russian, in «ты»', () {
+      final l = AppLocalizationsRu();
+      for (final text in [
+        l.paywallTrialHintYearly(14, '€44,99'),
+        l.paywallTrialHintMonthly(14, '€5,99'),
+        l.onboardingPaywallDisclaimer(14, '€44,99', '€3,75'),
+      ]) {
+        expect(text, contains('Продлевается автоматически'));
+        expect(text, contains('пока не отменишь'));
+        expect(text, isNot(contains('отмените')));
       }
     });
   });
