@@ -366,7 +366,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get seasonEvening => 'Вечер';
 
   @override
-  String get seasonEveningLine => 'Ты приходишь сюда, когда день затих.';
+  String get seasonEveningLine => 'Ты приходишь сюда, когда день затихает.';
 
   @override
   String get seasonSteady => 'Постоянство';
@@ -3543,7 +3543,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String insightsReturnGaps(String gaps) {
-    return 'с промежутками в $gaps дней.';
+    return 'Дни между ними: $gaps.';
   }
 
   @override
