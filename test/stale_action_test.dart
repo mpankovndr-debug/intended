@@ -88,6 +88,103 @@ void main() {
     });
   });
 
+  group('an action that has not had a fair chance yet', () {
+    // A long history, so the account-age test passes and only the action's
+    // own age is left deciding.
+    final oldAccount = [_moment('Drink water', 1), _moment('Drink water', 180)];
+
+    test('added three days ago to an old account is not stale', () {
+      expect(
+        StaleAction.isStale(
+          habit: 'Body scan',
+          moments: oldAccount,
+          now: _today,
+          adoptedAt: _today.subtract(const Duration(days: 3)),
+        ),
+        isFalse,
+      );
+    });
+
+    test('adopted exactly on the threshold is not yet stale', () {
+      expect(
+        StaleAction.isStale(
+          habit: 'Body scan',
+          moments: oldAccount,
+          now: _today,
+          adoptedAt: _today.subtract(const Duration(days: StaleAction.afterDays)),
+        ),
+        isFalse,
+      );
+    });
+
+    test('adopted a moment past the threshold can be', () {
+      expect(
+        StaleAction.isStale(
+          habit: 'Body scan',
+          moments: oldAccount,
+          now: _today,
+          adoptedAt: _today.subtract(
+            const Duration(days: StaleAction.afterDays, seconds: 1),
+          ),
+        ),
+        isTrue,
+      );
+    });
+
+    test('an unrecorded adoption reads as old enough, so nothing changes', () {
+      // Everything already on Today when adoption started being written down.
+      expect(
+        StaleAction.isStale(
+          habit: 'Body scan',
+          moments: oldAccount,
+          now: _today,
+          adoptedAt: null,
+        ),
+        isTrue,
+      );
+    });
+
+    test('a recent adoption cannot make a young account speak', () {
+      // Both fair-chance tests must pass, not either one.
+      expect(
+        StaleAction.isStale(
+          habit: 'Body scan',
+          moments: [_moment('Drink water', 3)],
+          now: _today,
+          adoptedAt: _today.subtract(const Duration(days: 100)),
+        ),
+        isFalse,
+      );
+    });
+
+    test('adoption is an instant, whatever zone it was stamped in', () {
+      expect(
+        StaleAction.isStale(
+          habit: 'Body scan',
+          moments: oldAccount,
+          now: _today,
+          adoptedAt: DateTime.utc(2026, 8, 19, 22),
+        ),
+        isFalse,
+      );
+    });
+
+    test('a too-new action is skipped, not allowed to block an older one', () {
+      // 'Body scan' has been quiet for months and deserves the card; the
+      // freshly added 'Stretch' sits in front of it in render order and must
+      // not swallow the only nudge on the screen.
+      expect(
+        StaleAction.primary(
+          visible: ['Drink water', 'Stretch', 'Body scan'],
+          moments: [_moment('Drink water', 1), _moment('Body scan', 40)],
+          now: _today,
+          adoptedAt: {'Stretch': _today.subtract(const Duration(days: 2))},
+        ),
+        'Body scan',
+      );
+    });
+  });
+
   group('primary', () {
     final history = [
       _moment('Drink water', 1),

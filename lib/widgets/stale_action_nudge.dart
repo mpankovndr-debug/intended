@@ -31,14 +31,24 @@ class StaleAction {
   /// silence.
   static const int afterDays = 10;
 
-  /// True when [habit] has had no moment inside the window, and the user has
-  /// enough history for that to mean anything. Silent while the whole history
-  /// is younger than the window: an action two days old has not failed to
-  /// land, it has not been tried.
+  /// True when [habit] has had no moment inside the window, and both tests
+  /// for "this has had a fair chance" pass.
+  ///
+  /// The account test: silent while the whole history is younger than the
+  /// window — an action two days old has not failed to land, it has not been
+  /// tried.
+  ///
+  /// The action test: the account test alone measures the *account's* age, so
+  /// an action added today to a six-month-old account cleared it instantly and
+  /// was told on day ten that it might not fit. [adoptedAt] is when this
+  /// action joined Today; null means we never recorded it — everything already
+  /// on Today when adoption started being written down — and unknown reads as
+  /// old enough, so nothing changes for those.
   static bool isStale({
     required String habit,
     required List<Moment> moments,
     required DateTime now,
+    DateTime? adoptedAt,
   }) {
     if (moments.isEmpty) return false;
     final cutoff = now.toUtc().subtract(const Duration(days: afterDays));
@@ -46,6 +56,7 @@ class StaleAction {
         .map((m) => m.completedAt)
         .reduce((a, b) => a.isBefore(b) ? a : b);
     if (!oldest.isBefore(cutoff)) return false;
+    if (adoptedAt != null && !adoptedAt.toUtc().isBefore(cutoff)) return false;
     return !moments.any(
       (m) => m.habitName == habit && m.completedAt.isAfter(cutoff),
     );
@@ -60,10 +71,15 @@ class StaleAction {
   /// Every other quiet action says nothing at all. Four "your intention may
   /// not fit" cards on one screen is a dashboard demanding optimisation, which
   /// is the pressure this app exists to remove.
+  /// [adoptedAt] maps action to when it joined Today; anything absent from it
+  /// is treated as old enough, matching [isStale]. A too-new action is skipped
+  /// rather than ending the search — it must not stand in front of an older
+  /// one that has genuinely gone quiet.
   static String? primary({
     required List<String> visible,
     required List<Moment> moments,
     required DateTime now,
+    Map<String, DateTime> adoptedAt = const {},
   }) {
     if (moments.isEmpty) return null;
     final cutoff = now.toUtc().subtract(const Duration(days: afterDays));
@@ -76,7 +92,10 @@ class StaleAction {
         .map((m) => m.habitName)
         .toSet();
     for (final habit in visible) {
-      if (!reachedForRecently.contains(habit)) return habit;
+      if (reachedForRecently.contains(habit)) continue;
+      final adopted = adoptedAt[habit];
+      if (adopted != null && !adopted.toUtc().isBefore(cutoff)) continue;
+      return habit;
     }
     return null;
   }

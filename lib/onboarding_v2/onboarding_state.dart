@@ -17,6 +17,12 @@ class OnboardingState extends ChangeNotifier {
   List<String> userHabits = [];
   List<String> _customHabits = [];
   Map<String, String> _customHabitFocusAreas = {}; // habitTitle -> focusArea
+
+  /// When each action joined Today, in UTC. Written by every add path; absent
+  /// for anything adopted before this started being recorded.
+  Map<String, DateTime> _habitAdoptedAt = {};
+  static const String _habitAdoptedAtKey = 'habit_adopted_at';
+
   static const int _maxCustomHabitsFree = 2;
   static const int _maxSwapsFree = 2;
   static const int _maxFocusAreasFree = 2;
@@ -99,6 +105,43 @@ class OnboardingState extends ChangeNotifier {
   List<String> get customHabits => List.unmodifiable(_customHabits);
   Map<String, String> get customHabitFocusAreas =>
       Map.unmodifiable(_customHabitFocusAreas);
+
+  /// When each active action joined Today, for the actions that have it
+  /// recorded. Read by the staleness rule, which needs the *action's* age
+  /// rather than the account's; anything missing here is treated as old
+  /// enough, so users who predate this record see no change.
+  Map<String, DateTime> get habitAdoptedAt =>
+      Map.unmodifiable(_habitAdoptedAt);
+
+  /// Marks [titles] as joining Today now.
+  ///
+  /// `putIfAbsent`, not assignment: a refresh that happens to redraw an action
+  /// the user already had must not restart its clock, and adding one action
+  /// must not restamp the others.
+  void _recordAdopted(Iterable<String> titles) {
+    final stamp = DateTime.now().toUtc();
+    for (final title in titles) {
+      _habitAdoptedAt.putIfAbsent(title, () => stamp);
+    }
+  }
+
+  /// Persists the adoption stamps, forgetting anything that has since left
+  /// Today.
+  ///
+  /// The pruning lives here rather than at each removal so no removal path can
+  /// forget it: an action set aside and taken up again months later is a new
+  /// adoption, and gets its fair chance over again.
+  Future<void> _saveHabitAdoptions(SharedPreferences prefs) async {
+    _habitAdoptedAt.removeWhere((title, _) => !userHabits.contains(title));
+    await prefs.setString(
+      _habitAdoptedAtKey,
+      jsonEncode(
+        _habitAdoptedAt.map(
+          (title, at) => MapEntry(title, at.toUtc().toIso8601String()),
+        ),
+      ),
+    );
+  }
 
   // All available habits by category (EXPANDED TO 12 EACH)
   static const Map<String, List<String>> habitsByCategory = {
@@ -334,8 +377,15 @@ class OnboardingState extends ChangeNotifier {
       }
     }
 
+    // Only what wasn't here a moment ago counts as newly adopted: this runs
+    // again on every refresh and focus-area change, and an action that
+    // survives a reshuffle has not just been taken up.
+    final previous = userHabits.toSet();
+
     // ✅ PRESERVE custom habits - add them back after generating
     userHabits = [...selectedHabits, ..._customHabits];
+
+    _recordAdopted(userHabits.where((h) => !previous.contains(h)));
 
     // Validate pinned habit still exists in new habit list
     final pinnedCleared = _pinnedHabit != null && !userHabits.contains(_pinnedHabit);
@@ -345,6 +395,7 @@ class OnboardingState extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('user_habits', userHabits);
+    await _saveHabitAdoptions(prefs);
     if (pinnedCleared) {
       await prefs.remove('pinned_habit');
     }
@@ -356,8 +407,10 @@ class OnboardingState extends ChangeNotifier {
     if (!canAddHabit) return;
     if (!userHabits.contains(habit)) {
       userHabits.add(habit);
+      _recordAdopted([habit]);
       final prefs = await SharedPreferences.getInstance();
       await prefs.setStringList('user_habits', userHabits);
+      await _saveHabitAdoptions(prefs);
       notifyListeners();
     }
   }
@@ -376,26 +429,29 @@ class OnboardingState extends ChangeNotifier {
     }
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('user_habits', userHabits);
+    await _saveHabitAdoptions(prefs);
     notifyListeners();
   }
 
   /// Adds multiple habits from a curated pack, skipping any already active.
   /// Returns the number of newly added habits.
   Future<int> addHabitsFromPack(List<String> habitIds) async {
-    int added = 0;
+    final adopted = <String>[];
     for (final habit in habitIds) {
       if (!canAddHabit) break;
       if (!userHabits.contains(habit)) {
         userHabits.add(habit);
-        added++;
+        adopted.add(habit);
       }
     }
-    if (added > 0) {
+    if (adopted.isNotEmpty) {
+      _recordAdopted(adopted);
       final prefs = await SharedPreferences.getInstance();
       await prefs.setStringList('user_habits', userHabits);
+      await _saveHabitAdoptions(prefs);
       notifyListeners();
     }
-    return added;
+    return adopted.length;
   }
 
   /// Adds a focus area from the monthly plan, and writes it down.
@@ -451,6 +507,24 @@ class OnboardingState extends ChangeNotifier {
         _customHabits = savedCustom;
       }
 
+      // Load adoption stamps. Anything missing here stays missing: it means
+      // the action predates this record, and the staleness rule reads unknown
+      // as old enough. Stamping them now would silence a nudge those users
+      // were already being shown.
+      final adoptedJson = prefs.getString(_habitAdoptedAtKey);
+      if (adoptedJson != null) {
+        try {
+          _habitAdoptedAt = (jsonDecode(adoptedJson) as Map).map(
+            (title, at) => MapEntry(
+              title as String,
+              DateTime.parse(at as String).toUtc(),
+            ),
+          );
+        } catch (_) {
+          _habitAdoptedAt = {};
+        }
+      }
+
       // Load custom habit focus area mapping
       final focusAreasJson = prefs.getString('custom_habit_focus_areas');
       if (focusAreasJson != null) {
@@ -478,8 +552,10 @@ class OnboardingState extends ChangeNotifier {
       // No saved habits = fresh start — clear any stale custom habits from prefs
       _customHabits.clear();
       _customHabitFocusAreas.clear();
+      _habitAdoptedAt.clear();
       await prefs.remove('custom_habits');
       await prefs.remove('custom_habit_focus_areas');
+      await prefs.remove(_habitAdoptedAtKey);
       await prefs.remove('pinned_habit');
     }
     
@@ -662,6 +738,10 @@ class OnboardingState extends ChangeNotifier {
 
     userHabits[index] = newHabit;
 
+    // The incoming action starts from nothing, however long the one it
+    // replaced had been here — saving below drops the outgoing one's stamp.
+    _recordAdopted([newHabit]);
+
     // If the swapped habit was pinned, transfer the pin
     if (_pinnedHabit == oldHabit) {
       _pinnedHabit = newHabit;
@@ -677,6 +757,7 @@ class OnboardingState extends ChangeNotifier {
     // Persist in background
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('user_habits', userHabits);
+    await _saveHabitAdoptions(prefs);
     if (_pinnedHabit == newHabit) {
       await prefs.setString('pinned_habit', newHabit);
     }
@@ -810,6 +891,7 @@ class OnboardingState extends ChangeNotifier {
 
     _customHabits.add(habitTitle);
     userHabits.add(habitTitle);
+    _recordAdopted([habitTitle]);
 
     // Assign focus area (default to first active focus area)
     final area = focusArea ?? (_focusAreas.isNotEmpty ? _focusAreas.first : null);
@@ -821,6 +903,7 @@ class OnboardingState extends ChangeNotifier {
     await prefs.setStringList('custom_habits', _customHabits);
     await prefs.setStringList('user_habits', userHabits);
     await _saveCustomHabitFocusAreas(prefs);
+    await _saveHabitAdoptions(prefs);
     // The recorder reads a static map loaded once at launch. Without this,
     // a custom made mid-session is recorded with no focus area at all —
     // a grey tile, absent from the legend, matched by no colour chip.
@@ -844,6 +927,7 @@ class OnboardingState extends ChangeNotifier {
     await prefs.setStringList('custom_habits', _customHabits);
     await prefs.setStringList('user_habits', userHabits);
     await _saveCustomHabitFocusAreas(prefs);
+    await _saveHabitAdoptions(prefs);
     if (_pinnedHabit == null) {
       await prefs.remove('pinned_habit');
     }
@@ -871,10 +955,19 @@ class OnboardingState extends ChangeNotifier {
       _customHabitFocusAreas[newTitle] = area;
     }
 
+    // Rewording an action is not adopting a new one, so it keeps its age.
+    // Otherwise renaming a two-day-old custom would hand it a fresh unknown
+    // stamp and make it eligible for the nudge straight away.
+    final adoptedAt = _habitAdoptedAt.remove(oldTitle);
+    if (adoptedAt != null) {
+      _habitAdoptedAt[newTitle] = adoptedAt;
+    }
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('custom_habits', _customHabits);
     await prefs.setStringList('user_habits', userHabits);
     await _saveCustomHabitFocusAreas(prefs);
+    await _saveHabitAdoptions(prefs);
     if (_pinnedHabit == newTitle) {
       await prefs.setString('pinned_habit', newTitle);
     }
@@ -931,6 +1024,7 @@ class OnboardingState extends ChangeNotifier {
     userHabits.clear();
     _customHabits.clear();
     _customHabitFocusAreas.clear();
+    _habitAdoptedAt.clear();
     _pinnedHabit = null;
     _swapsUsed.clear();
     _lastSwapReset = null;
@@ -944,6 +1038,7 @@ class OnboardingState extends ChangeNotifier {
     await prefs.remove('user_habits');
     await prefs.remove('custom_habits');
     await prefs.remove('custom_habit_focus_areas');
+    await prefs.remove(_habitAdoptedAtKey);
     await prefs.remove('pinned_habit');
     await prefs.remove('swaps_used');
     await prefs.remove('last_swap_reset');

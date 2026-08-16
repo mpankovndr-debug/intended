@@ -3103,7 +3103,9 @@ class _HabitCardState extends State<_HabitCard>
   Future<void> _checkStaleness() async {
     // Read before the first await: the order the user actually sees, pinned
     // first, is what decides which stale card gets the full nudge.
-    final visible = context.read<OnboardingState>().visibleHabits();
+    final onboarding = context.read<OnboardingState>();
+    final visible = onboarding.visibleHabits();
+    final adoptedAt = onboarding.habitAdoptedAt;
     final moments = await MomentsService.getAll();
     final now = DateTime.now();
 
@@ -3113,9 +3115,15 @@ class _HabitCardState extends State<_HabitCard>
       habit: widget.habitTitle,
       moments: moments,
       now: now,
+      adoptedAt: adoptedAt[widget.habitTitle],
     );
     final primary = stale &&
-        StaleAction.primary(visible: visible, moments: moments, now: now) ==
+        StaleAction.primary(
+              visible: visible,
+              moments: moments,
+              now: now,
+              adoptedAt: adoptedAt,
+            ) ==
             widget.habitTitle;
 
     final dismissed = primary &&
