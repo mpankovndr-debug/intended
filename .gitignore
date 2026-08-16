@@ -58,3 +58,6 @@ ios/firebase_app_id_file.json
 
 # Exported Cowork session transcripts (local reference, not source)
 cowork-transcripts/
+
+# Generated from the markdown docs by tools/build_growth_pdf.py
+Intended-Growth-Kit.pdf
