@@ -1,0 +1,132 @@
+diff --git a/lib/l10n/app_en.arb b/lib/l10n/app_en.arb
+index 9dbbe5b..700ceef 100644
+--- a/lib/l10n/app_en.arb
++++ b/lib/l10n/app_en.arb
+@@ -598,7 +598,6 @@
+       }
+     }
+   },
+-  "completionQuestion": "Did you do this today?",
+   "completionHowDidItLand": "How did that land?",
+   "completionMoodGlad": "Glad I did",
+   "completionMoodNeutral": "Neutral",
+@@ -615,8 +614,6 @@
+     }
+   },
+   "completionKeptOne": "Kept — your first moment this month.",
+-  "completionConfirm": "I did it",
+-  "completionDecline": "No, not today",
+   "celebrationNice": "Nice",
+   "celebrationWellDone": "Well done",
+   "celebrationYouDidIt": "You did it",
+diff --git a/lib/l10n/app_localizations.dart b/lib/l10n/app_localizations.dart
+index 80d4925..3ad9b58 100644
+--- a/lib/l10n/app_localizations.dart
++++ b/lib/l10n/app_localizations.dart
+@@ -1484,12 +1484,6 @@ abstract class AppLocalizations {
+   /// **'\"{title}\" will be removed and any progress lost.'**
+   String deleteHabitMessage(String title);
+ 
+-  /// No description provided for @completionQuestion.
+-  ///
+-  /// In en, this message translates to:
+-  /// **'Did you do this today?'**
+-  String get completionQuestion;
+-
+   /// No description provided for @completionHowDidItLand.
+   ///
+   /// In en, this message translates to:
+@@ -1544,18 +1538,6 @@ abstract class AppLocalizations {
+   /// **'Kept — your first moment this month.'**
+   String get completionKeptOne;
+ 
+-  /// No description provided for @completionConfirm.
+-  ///
+-  /// In en, this message translates to:
+-  /// **'I did it'**
+-  String get completionConfirm;
+-
+-  /// No description provided for @completionDecline.
+-  ///
+-  /// In en, this message translates to:
+-  /// **'No, not today'**
+-  String get completionDecline;
+-
+   /// No description provided for @celebrationNice.
+   ///
+   /// In en, this message translates to:
+diff --git a/lib/l10n/app_localizations_en.dart b/lib/l10n/app_localizations_en.dart
+index ad72b58..22ad2d4 100644
+--- a/lib/l10n/app_localizations_en.dart
++++ b/lib/l10n/app_localizations_en.dart
+@@ -901,9 +901,6 @@ class AppLocalizationsEn extends AppLocalizations {
+     return '\"$title\" will be removed and any progress lost.';
+   }
+ 
+-  @override
+-  String get completionQuestion => 'Did you do this today?';
+-
+   @override
+   String get completionHowDidItLand => 'How did that land?';
+ 
+@@ -933,12 +930,6 @@ class AppLocalizationsEn extends AppLocalizations {
+   @override
+   String get completionKeptOne => 'Kept — your first moment this month.';
+ 
+-  @override
+-  String get completionConfirm => 'I did it';
+-
+-  @override
+-  String get completionDecline => 'No, not today';
+-
+   @override
+   String get celebrationNice => 'Nice';
+ 
+diff --git a/lib/l10n/app_localizations_ru.dart b/lib/l10n/app_localizations_ru.dart
+index c499c71..533f046 100644
+--- a/lib/l10n/app_localizations_ru.dart
++++ b/lib/l10n/app_localizations_ru.dart
+@@ -938,9 +938,6 @@ class AppLocalizationsRu extends AppLocalizations {
+     return '«$title» будет удалена, а прогресс потерян.';
+   }
+ 
+-  @override
+-  String get completionQuestion => 'Ты выполнил это сегодня?';
+-
+   @override
+   String get completionHowDidItLand => 'Как это отозвалось?';
+ 
+@@ -971,12 +968,6 @@ class AppLocalizationsRu extends AppLocalizations {
+   String get completionKeptOne =>
+       'Сохранено — твой первый момент в этом месяце.';
+ 
+-  @override
+-  String get completionConfirm => 'Да, у меня получилось!';
+-
+-  @override
+-  String get completionDecline => 'Нет, не сегодня';
+-
+   @override
+   String get celebrationNice => 'Отлично';
+ 
+diff --git a/lib/l10n/app_ru.arb b/lib/l10n/app_ru.arb
+index 0a3674e..f59724d 100644
+--- a/lib/l10n/app_ru.arb
++++ b/lib/l10n/app_ru.arb
+@@ -373,7 +373,6 @@
+       }
+     }
+   },
+-  "completionQuestion": "Ты выполнил это сегодня?",
+   "completionHowDidItLand": "Как это отозвалось?",
+   "completionMoodGlad": "Стоило того",
+   "completionMoodNeutral": "Нейтрально",
+@@ -383,8 +382,6 @@
+   "completionSkip": "пропустить",
+   "completionKept": "Сохранено — {count} моментов в этом месяце.",
+   "completionKeptOne": "Сохранено — твой первый момент в этом месяце.",
+-  "completionConfirm": "Да, у меня получилось!",
+-  "completionDecline": "Нет, не сегодня",
+   "celebrationNice": "Отлично",
+   "celebrationWellDone": "Молодец",
+   "celebrationYouDidIt": "У тебя получилось",

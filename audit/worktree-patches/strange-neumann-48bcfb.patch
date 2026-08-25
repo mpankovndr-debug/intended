@@ -1,0 +1,140 @@
+diff --git a/assets/images/background_soft_clear_sky.png b/assets/images/background_soft_clear_sky.png
+deleted file mode 100644
+index 005dccb..0000000
+Binary files a/assets/images/background_soft_clear_sky.png and /dev/null differ
+diff --git a/assets/images/background_soft_deepfocus.png b/assets/images/background_soft_deepfocus.png
+deleted file mode 100644
+index 972fd28..0000000
+Binary files a/assets/images/background_soft_deepfocus.png and /dev/null differ
+diff --git a/assets/images/background_soft_forestfloor.png b/assets/images/background_soft_forestfloor.png
+deleted file mode 100644
+index bfce7e0..0000000
+Binary files a/assets/images/background_soft_forestfloor.png and /dev/null differ
+diff --git a/assets/images/background_soft_goldenhour.png b/assets/images/background_soft_goldenhour.png
+deleted file mode 100644
+index 4b389e1..0000000
+Binary files a/assets/images/background_soft_goldenhour.png and /dev/null differ
+diff --git a/assets/images/background_soft_iris.png b/assets/images/background_soft_iris.png
+deleted file mode 100644
+index 0c2d1c4..0000000
+Binary files a/assets/images/background_soft_iris.png and /dev/null differ
+diff --git a/assets/images/background_soft_morning_slate.png b/assets/images/background_soft_morning_slate.png
+deleted file mode 100644
+index 260ae61..0000000
+Binary files a/assets/images/background_soft_morning_slate.png and /dev/null differ
+diff --git a/assets/images/background_soft_nightbloom.png b/assets/images/background_soft_nightbloom.png
+deleted file mode 100644
+index bc3c6fa..0000000
+Binary files a/assets/images/background_soft_nightbloom.png and /dev/null differ
+diff --git a/assets/images/background_soft_sanddune.png b/assets/images/background_soft_sanddune.png
+deleted file mode 100644
+index 7fedd1e..0000000
+Binary files a/assets/images/background_soft_sanddune.png and /dev/null differ
+diff --git a/assets/images/background_soft_softdusk.png b/assets/images/background_soft_softdusk.png
+deleted file mode 100644
+index 2931776..0000000
+Binary files a/assets/images/background_soft_softdusk.png and /dev/null differ
+diff --git a/assets/images/background_soft_warm_clay.png b/assets/images/background_soft_warm_clay.png
+deleted file mode 100644
+index ff62dbc..0000000
+Binary files a/assets/images/background_soft_warm_clay.png and /dev/null differ
+diff --git a/lib/theme/app_colors.dart b/lib/theme/app_colors.dart
+index 873308b..bd1e611 100644
+--- a/lib/theme/app_colors.dart
++++ b/lib/theme/app_colors.dart
+@@ -79,7 +79,6 @@ class AppColorScheme {
+   final Color catCreativity;
+   final Color catFinances;
+   final Color catSelfCare;
+-  final String backgroundSoft;  // habits + progress screens
+   final String backgroundMs;    // moments screen
+   final Color ctaAlternative;
+   final Color completionHeart;
+@@ -157,7 +156,6 @@ class AppColorScheme {
+     required this.catCreativity,
+     required this.catFinances,
+     required this.catSelfCare,
+-    required this.backgroundSoft,
+     required this.backgroundMs,
+     required this.ctaAlternative,
+     required this.completionHeart,
+@@ -259,7 +257,6 @@ class AppColors {
+     catCreativity:    Color(0xFFB48BA3),
+     catFinances:      Color(0xFFC49B5A),
+     catSelfCare:      Color(0xFFB8A089),
+-    backgroundSoft:  'assets/images/background_soft_warm_clay.png',
+     backgroundMs:    'assets/images/background_ms_warm_clay.png',
+     ctaAlternative:  Color(0xFF6B8E6E),
+     completionHeart: Color(0xFFC4908A),
+@@ -338,7 +335,6 @@ class AppColors {
+     catCreativity:    Color(0xFFB48BA3),
+     catFinances:      Color(0xFFC49B5A),
+     catSelfCare:      Color(0xFFB8A089),
+-    backgroundSoft:  'assets/images/background_soft_iris.png',
+     backgroundMs:    'assets/images/background_ms_iris.png',
+     ctaAlternative:  Color(0xFF7C6FC4),
+     completionHeart: Color(0xFF9888C8),
+@@ -417,7 +413,6 @@ class AppColors {
+     catCreativity:    Color(0xFFB48BA3),
+     catFinances:      Color(0xFFC49B5A),
+     catSelfCare:      Color(0xFFB8A089),
+-    backgroundSoft:  'assets/images/background_soft_clear_sky.png',
+     backgroundMs:    'assets/images/background_ms_clear_sky.png',
+     ctaAlternative:  Color(0xFF4A7BAD),
+     completionHeart: Color(0xFF82B0D4),
+@@ -496,7 +491,6 @@ class AppColors {
+     catCreativity:    Color(0xFFB48BA3),
+     catFinances:      Color(0xFFC49B5A),
+     catSelfCare:      Color(0xFFB8A089),
+-    backgroundSoft:  'assets/images/background_soft_morning_slate.png',
+     backgroundMs:    'assets/images/background_ms_morning_slate.png',
+     ctaAlternative:  Color(0xFF4E7A75),
+     completionHeart: Color(0xFF8DB5B0),
+@@ -576,7 +570,6 @@ class AppColors {
+     catCreativity:    Color(0xFFB48BA3),
+     catFinances:      Color(0xFFC49B5A),
+     catSelfCare:      Color(0xFFB8A089),
+-    backgroundSoft:  'assets/images/background_soft_softdusk.png',
+     backgroundMs:    'assets/images/background_ms_softdusk.png',
+     ctaAlternative:  Color(0xFFC46878),
+     completionHeart: Color(0xFFD88890),
+@@ -656,7 +649,6 @@ class AppColors {
+     catCreativity:    Color(0xFFC8A0B8),
+     catFinances:      Color(0xFFD8B070),
+     catSelfCare:      Color(0xFFC8B098),
+-    backgroundSoft:  'assets/images/background_soft_deepfocus.png',
+     backgroundMs:    'assets/images/background_ms_deepfocus.png',
+     ctaAlternative:  Color(0xFFC9A96E),
+     completionHeart: Color(0xFFC9A96E),
+@@ -736,7 +728,6 @@ class AppColors {
+     catCreativity:    Color(0xFFB48BA3),
+     catFinances:      Color(0xFFC49B5A),
+     catSelfCare:      Color(0xFFB8A089),
+-    backgroundSoft:  'assets/images/background_soft_forestfloor.png',
+     backgroundMs:    'assets/images/background_ms_forestfloor.png',
+     ctaAlternative:  Color(0xFF5A8A5C),
+     completionHeart: Color(0xFF8AB88A),
+@@ -816,7 +807,6 @@ class AppColors {
+     catCreativity:    Color(0xFFB48BA3),
+     catFinances:      Color(0xFFC49B5A),
+     catSelfCare:      Color(0xFFB8A089),
+-    backgroundSoft:  'assets/images/background_soft_goldenhour.png',
+     backgroundMs:    'assets/images/background_ms_goldenhour.png',
+     ctaAlternative:  Color(0xFFC07A42),
+     completionHeart: Color(0xFFD09060),
+@@ -896,7 +886,6 @@ class AppColors {
+     catCreativity:    Color(0xFFC8A0B8),
+     catFinances:      Color(0xFFD8B070),
+     catSelfCare:      Color(0xFFC8B098),
+-    backgroundSoft:  'assets/images/background_soft_nightbloom.png',
+     backgroundMs:    'assets/images/background_ms_nightbloom.png',
+     ctaAlternative:  Color(0xFFB0A2D8),
+     completionHeart: Color(0xFFB0A2D8),
+@@ -976,7 +965,6 @@ class AppColors {
+     catCreativity:    Color(0xFFB48BA3),
+     catFinances:      Color(0xFFC49B5A),
+     catSelfCare:      Color(0xFFB8A089),
+-    backgroundSoft:  'assets/images/background_soft_sanddune.png',
+     backgroundMs:    'assets/images/background_ms_sanddune.png',
+     ctaAlternative:  Color(0xFF6A8B6F),
+     completionHeart: Color(0xFF8A7E72),

@@ -1,0 +1,23 @@
+diff --git a/lib/widgets/widget_mood_catchup.dart b/lib/widgets/widget_mood_catchup.dart
+index 303441b..3deee78 100644
+--- a/lib/widgets/widget_mood_catchup.dart
++++ b/lib/widgets/widget_mood_catchup.dart
+@@ -17,8 +17,17 @@ import '../utils/text_styles.dart';
+ /// so a heavy widget user's mosaic loses its texture and what-lifts-you
+ /// starves — the more convenient the path, the worse the data. On the next
+ /// open, each recent unrated widget moment gets one quiet card: the same
+-/// three pills, one tap, skippable. Never more than [maxPerOpen], never older
++/// three moods, one tap, skippable. Never more than [maxPerOpen], never older
+ /// than [lookback] — catch-up is a courtesy, not homework.
++///
++/// Deliberately NOT the completion sheet's select-then-Done model. That
++/// redesign fixed problems this card doesn't have: a note whose natural
++/// order (mood, then note) submit-on-tap made impossible, and a skip link a
++/// thumb-width from "add a note". Here there is no note, nothing sits next
++/// to skip, and up to [maxPerOpen] cards run back to back — a Done tap per
++/// card would double the cost of a courtesy. So the pill answers and
++/// dismisses in one tap, and the explicit skip link stays, because with no
++/// Done button it is the only visible way out.
+ class WidgetMoodCatchup {
+   WidgetMoodCatchup._();
+ 
