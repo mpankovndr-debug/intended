@@ -61,3 +61,6 @@ cowork-transcripts/
 
 # Generated from the markdown docs by tools/build_growth_pdf.py
 Intended-Growth-Kit.pdf
+
+# Claude Code local state (settings + isolated-session worktrees)
+.claude/

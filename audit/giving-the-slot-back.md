@@ -110,7 +110,15 @@ already persist state. Every month it doesn't exist is a month of history gone f
 **The counting store is `habit_done_*`, and it just became trustworthy.** This branch fixed the
 audit's #4: the retro-log path now writes both stores
 ([`main.dart:3093-3097`](lib/main.dart:3093) — *"Both stores, as a live completion writes both"*).
-Going forward the permanent store and the moments store agree; the remaining caveats (day keys in
+Going forward the permanent store and the moments store agree — but only forward: a completion
+retro-logged *before* that commit still has no key, so a user who used "log yesterday" in May has a
+May that reads low. This feature counts three *past* months, so it is the one consumer that
+inherits the residual. The direction is safe — a floor under-fires rather than over-fires, and the
+offer is meant to be rare — but the sentence "12 days in May" is the store's answer, not
+necessarily the user's month. Backfilling the missing keys from the moments that carry the same day
+would close it; nothing does that yet.
+
+Otherwise: the remaining caveats (day keys in
 the device's current zone, slug collisions — audit §1b) move a count by at most one at a month
 boundary, which the rule's band (§2) absorbs. The 1000-moment cap is irrelevant here:
 `habit_done_*` has no cap, so the ≤ 90-day constraint on *moments*-based windows doesn't bind this

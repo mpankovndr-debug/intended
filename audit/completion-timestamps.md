@@ -14,8 +14,11 @@ Three specific things are missing, and each has a named cause:
    every removal, including the implicit removals a refresh and a focus-area change perform.
 2. **Nothing records what was *offered* on a past day.** Only the current weekday mask and a single
    "last changed" timestamp exist. Offered-day history is unreconstructible.
-3. **The two completion stores disagree.** The retro-log ("yesterday") path writes a Moment and no
-   `habit_done_` key, so the two stores give different totals for the same habit.
+3. ~~**The two completion stores disagree.**~~ **Fixed on this branch, going forward only.** The
+   retro-log ("yesterday") path now writes both stores, dated yesterday
+   ([`main.dart:3093-3097`](lib/main.dart:3093)). **Retro-logs recorded before that commit still
+   have a Moment and no `habit_done_` key**, and nothing backfills them — so history predating the
+   fix is still short by exactly those days. See §2.
 
 ---
 
@@ -89,12 +92,19 @@ aside. Volume is trivial — 6 habits × 365 days = ~2,200 booleans a year.
   ([`main.dart:591-593`](lib/main.dart:591)). This is the one store that does *not* follow the
   recorded-offset rule. A user who flies east and completes at 01:00 books the completion on the
   wrong local day, and it is unrecoverable — there is no offset stored to correct it.
-- **The two stores disagree.** The "log yesterday" path records a Moment
-  ([`main.dart:3084-3089`](lib/main.dart:3084)) and **never calls `HabitTracker.markDone`**. Every
-  retro-logged completion is in `moments_collection` and absent from `habit_done_*`. The widget sync
-  writes both ([`widget_completion_service.dart:58-75`](lib/services/widget_completion_service.dart:58)),
-  and the two live paths write both ([`main.dart:2880-2888`](lib/main.dart:2880),
-  [`:6820-6824`](lib/main.dart:6820)). So `habit_done_*` **undercounts by exactly the retro-logs.**
+- ~~**The two stores disagree.**~~ **Fixed, forward-dated.** The "log yesterday" path used to
+  record a Moment and never call `HabitTracker.markDone`, so every retro-logged completion sat in
+  `moments_collection` and was absent from `habit_done_*`. It now writes both, keyed to *yesterday*
+  rather than today ([`main.dart:3093-3097`](lib/main.dart:3093)) — `markDone` grew an optional
+  date for it ([`:607`](lib/main.dart:607)). The widget sync already wrote both
+  ([`widget_completion_service.dart:58-75`](lib/services/widget_completion_service.dart:58)), as did
+  the two live paths.
+
+  **The residual, which matters to any rule counting from `habit_done_*`:** completions
+  retro-logged *before* that commit are still missing their key. They are reconstructible in
+  principle — the Moment carries the day — but nothing does it, so a user who used "log yesterday"
+  in the past has months that read low. Every such error is in the conservative direction: a rule
+  with a floor under-fires rather than over-fires.
 - **The id is a slug, and slugs can collide.** `habitId` lowercases and collapses non-alphanumerics
   ([`main.dart:583-589`](lib/main.dart:583)), so "Walk 10 min" and "Walk-10-min" share a key.
   `addCustomHabit` rejects case-insensitive duplicates
@@ -107,7 +117,7 @@ aside. Volume is trivial — 6 habits × 365 days = ~2,200 booleans a year.
 
 | # | question | verdict | from what |
 |---|---|---|---|
-| a | total completions since adoption | **Partial** | `habit_done_*` is complete but undercounts retro-logs; moments are capped at 1000; and "since adoption" has no reliable start date (§3) |
+| a | total completions since adoption | **Partial** | `habit_done_*` now agrees with the moments store going forward, but still misses retro-logs made before the fix; moments are capped at 1000; and "since adoption" has no reliable start date (§3) |
 | b | completions in last 30 / 60 / 90 days | **Yes, today** | either store; 90 days at 6/day = 540 moments, inside the cap for every user |
 | c | longest run of consecutive **offered** days completed | **No** | offered-day history does not exist |
 | d | rate rising / flat / falling | **Yes, today** — with a product caveat | two-window comparison over either store |
@@ -356,8 +366,8 @@ knowing nothing about the users who already qualify.
 
 **Which store is the source of truth**, because they disagree and each is incomplete in a different
 direction: `moments_collection` is rich and capped at ~5–9 months for an active user;
-`habit_done_*` is permanent and boolean, undercounts retro-logs, and books days by the device's
-current zone. A rule reading one and copy re-stating the other will eventually print a number the
+`habit_done_*` is permanent and boolean, misses retro-logs made before the fix above, and books
+days by the device's current zone. A rule reading one and copy re-stating the other will eventually print a number the
 user can disprove — which is precisely the failure `CLAUDE.md`'s "never state a finding you haven't
 computed" exists to prevent.
 
