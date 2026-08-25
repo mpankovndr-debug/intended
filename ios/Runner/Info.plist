@@ -4,6 +4,8 @@
 <dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Intended saves each completed pause to Health as a mindful minute, and your check-in as a State of Mind entry. Intended never reads anything from Health.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

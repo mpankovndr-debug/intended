@@ -215,6 +215,109 @@ class AnalyticsService {
     _analytics.logEvent(name: 'profile_name_edited');
   }
 
+  // ── Reach & channels ──────────────────────────────────────────
+
+  /// [kind] is 'daily' | 'weekly' | 'monthly_letter' | 'pause_action'.
+  /// Tap-through is the
+  /// only signal notifications earn their place with; the local counter in
+  /// AppUsageService can't segment by kind.
+  static void logNotificationOpened(String kind) {
+    _analytics.logEvent(
+      name: 'notification_opened',
+      parameters: {'kind': kind},
+    );
+  }
+
+  /// [status] is ShareResult.status.name — success / dismissed /
+  /// unavailable. Opening the share sheet and actually posting are
+  /// different funnels; only the OS result separates them.
+  static void logShareResult(String surface, String status) {
+    _analytics.logEvent(
+      name: 'share_result',
+      parameters: {'surface': surface, 'status': status},
+    );
+  }
+
+  /// Completions that arrived from the home-screen widget rather than the
+  /// app — the widget's whole value, invisible to habit_completed.
+  static void logWidgetCompletionsSynced(int count) {
+    _analytics.logEvent(
+      name: 'widget_completions_synced',
+      parameters: {'count': count},
+    );
+  }
+
+  // ── Pause ─────────────────────────────────────────────────────
+
+  /// [entry] is 'home' | 'widget' | 'lockscreen' | 'notification' — which
+  /// door people actually use decides where the entry points live long-term.
+  static void logPauseStarted(String entry) {
+    try {
+      _analytics.logEvent(
+        name: 'pause_started',
+        parameters: {'entry': entry},
+      );
+    } catch (_) {}
+  }
+
+  static void logPauseCompleted(String entry) {
+    try {
+      _analytics.logEvent(
+        name: 'pause_completed',
+        parameters: {'entry': entry},
+      );
+    } catch (_) {}
+  }
+
+  /// Leaving early is fine by design; this exists to notice if *everyone*
+  /// leaves at second 20, which would mean the minute is mis-shaped.
+  static void logPauseLeftEarly(int secondsIn) {
+    try {
+      _analytics.logEvent(
+        name: 'pause_left_early',
+        parameters: {'seconds_in': secondsIn},
+      );
+    } catch (_) {}
+  }
+
+  /// [state] is a PauseState.key or 'skipped'. App-native data, same class
+  /// as mood_response — never HealthKit-derived. Nothing read from Health
+  /// may ever reach analytics, directly or by implication.
+  static void logPauseCheckIn(String state) {
+    try {
+      _analytics.logEvent(
+        name: 'pause_checkin',
+        parameters: {'state': state},
+      );
+    } catch (_) {}
+  }
+
+  /// Outcome of the contextual Health soft-ask (our sheet, not the system
+  /// permission dialog — that one's answer stays inside HealthKit).
+  /// [outcome] is 'accepted' | 'declined' | 'dismissed'. A dismissal is kept
+  /// apart from a refusal so the accept rate is measured against real answers
+  /// only — the same reason iPads stay out of the Watch-pairing denominator.
+  static void logPauseHealthPrompt(String outcome) {
+    try {
+      _analytics.logEvent(
+        name: 'pause_health_prompt',
+        parameters: {'outcome': outcome},
+      );
+    } catch (_) {}
+  }
+
+  /// One-time, iPhone-only: whether an Apple Watch is paired. Device info,
+  /// not health data. This single number decides whether sleep-softening is
+  /// worth building.
+  static void logWatchPaired(bool paired) {
+    try {
+      _analytics.logEvent(
+        name: 'watch_paired',
+        parameters: {'paired': paired.toString()},
+      );
+    } catch (_) {}
+  }
+
   // ── User Properties ───────────────────────────────────────────
 
   static void setSubscriptionStatus(String status) {

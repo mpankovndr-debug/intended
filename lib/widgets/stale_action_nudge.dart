@@ -29,7 +29,57 @@ class StaleAction {
   /// month. Ten clears [Rescue.minQuietDays] (5) with room, so the gentle
   /// reduced screen and this card never argue with each other over the same
   /// silence.
+  /// Ten *offered* days, which for an unmasked action is ten calendar days.
   static const int afterDays = 10;
+
+  /// The instant [afterDays] offered days before [now] for an action carrying
+  /// [days] as its weekday mask.
+  ///
+  /// A null, empty or seven-day mask means every day is an offered day, and
+  /// this returns exactly `now - afterDays` — the original calendar-day
+  /// window, unchanged, which is what every seeded and unmasked action gets.
+  ///
+  /// A masked action is only on the screen on its own weekdays, so counting
+  /// calendar days measured the wrong thing: a Monday-only action peaks at a
+  /// seven-day gap when it is never missed, and one missed Monday reached
+  /// fourteen — tripping "this may not fit" on a schedule the user chose.
+  /// Counting offered days asks the question the card means to ask: has this
+  /// been on the screen ten times without being reached for?
+  ///
+  /// Walked on calendar dates rather than by subtracting 24-hour durations,
+  /// so a DST transition inside a ten-week window cannot shift the weekday it
+  /// lands on. The time of day is carried across, so the unmasked path and a
+  /// fully-offered mask produce the identical instant.
+  static DateTime cutoffFor(DateTime now, List<int>? days) {
+    if (days == null || days.isEmpty || days.length >= 7) {
+      return now.toUtc().subtract(const Duration(days: afterDays));
+    }
+    final mask = days.toSet();
+
+    var back = 0;
+    var offered = 0;
+    // Bounded: a mask holding at least one weekday needs at most afterDays
+    // weeks, and a mask matching nothing must not spin.
+    while (offered < afterDays && back < afterDays * 7) {
+      back++;
+      if (mask.contains(
+        DateTime(now.year, now.month, now.day - back).weekday,
+      )) {
+        offered++;
+      }
+    }
+
+    return DateTime(
+      now.year,
+      now.month,
+      now.day - back,
+      now.hour,
+      now.minute,
+      now.second,
+      now.millisecond,
+      now.microsecond,
+    ).toUtc();
+  }
 
   /// True when [habit] has had no moment inside the window, and both tests
   /// for "this has had a fair chance" pass.
@@ -44,14 +94,21 @@ class StaleAction {
   /// action joined Today; null means we never recorded it — everything already
   /// on Today when adoption started being written down — and unknown reads as
   /// old enough, so nothing changes for those.
+  ///
+  /// [days] is this action's weekday mask, if it has one. Passed in rather
+  /// than read from storage — same shape as `Drift.read`'s `maskChangedAt`,
+  /// and for the same reason: this stays pure, and stays tested. Both fair-
+  /// chance tests use the same widened window, because an action that has
+  /// only had four Mondays has not had its ten chances either.
   static bool isStale({
     required String habit,
     required List<Moment> moments,
     required DateTime now,
     DateTime? adoptedAt,
+    List<int>? days,
   }) {
     if (moments.isEmpty) return false;
-    final cutoff = now.toUtc().subtract(const Duration(days: afterDays));
+    final cutoff = cutoffFor(now, days);
     final oldest = moments
         .map((m) => m.completedAt)
         .reduce((a, b) => a.isBefore(b) ? a : b);
@@ -75,27 +132,29 @@ class StaleAction {
   /// is treated as old enough, matching [isStale]. A too-new action is skipped
   /// rather than ending the search — it must not stand in front of an older
   /// one that has genuinely gone quiet.
+  ///
+  /// [dayMasks] maps action to its weekday mask; anything absent is offered
+  /// every day. Since masks make the window per-action, this now asks
+  /// [isStale] rather than re-deriving the rule against one shared cutoff —
+  /// two copies of a rule that must agree is how they stop agreeing.
   static String? primary({
     required List<String> visible,
     required List<Moment> moments,
     required DateTime now,
     Map<String, DateTime> adoptedAt = const {},
+    Map<String, List<int>> dayMasks = const {},
   }) {
     if (moments.isEmpty) return null;
-    final cutoff = now.toUtc().subtract(const Duration(days: afterDays));
-    final oldest = moments
-        .map((m) => m.completedAt)
-        .reduce((a, b) => a.isBefore(b) ? a : b);
-    if (!oldest.isBefore(cutoff)) return null;
-    final reachedForRecently = moments
-        .where((m) => m.completedAt.isAfter(cutoff))
-        .map((m) => m.habitName)
-        .toSet();
     for (final habit in visible) {
-      if (reachedForRecently.contains(habit)) continue;
-      final adopted = adoptedAt[habit];
-      if (adopted != null && !adopted.toUtc().isBefore(cutoff)) continue;
-      return habit;
+      if (isStale(
+        habit: habit,
+        moments: moments,
+        now: now,
+        adoptedAt: adoptedAt[habit],
+        days: dayMasks[habit],
+      )) {
+        return habit;
+      }
     }
     return null;
   }

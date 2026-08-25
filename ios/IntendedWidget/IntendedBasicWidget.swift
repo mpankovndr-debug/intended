@@ -28,198 +28,20 @@ struct BasicEntry: TimelineEntry {
     let content: WidgetContent
 }
 
-// MARK: - Small widget view
+// MARK: - Views
+//
+// The layouts live in IntendedWidgetViews.swift and are shared with the
+// premium widget's medium size: the free tier is the intention, today's
+// actions with tap-to-record, and the month so far.
 
 struct BasicSmallView: View {
     let entry: BasicEntry
-
-    private var content: WidgetContent { entry.content }
-    private var theme: ThemeData { content.theme }
-    private var strings: WidgetStrings { WidgetStrings(locale: content.locale) }
-    private var isEmpty: Bool { content.totalCount == 0 }
-    private var allDone: Bool { content.totalCount > 0 && content.completedCount == content.totalCount }
-
-    var body: some View {
-        let textPrimary = Color(argbHex: theme.textPrimary)
-        let textSecondary = Color(argbHex: theme.textSecondary)
-        let accent = Color(argbHex: theme.accent)
-
-        Group {
-            if isEmpty {
-                // Empty state
-                VStack(spacing: 6) {
-                    Image(systemName: "leaf")
-                        .font(.system(size: 24))
-                        .foregroundColor(accent.opacity(0.6))
-                    Text(strings.noHabits)
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(textSecondary)
-                        .multilineTextAlignment(.center)
-                }
-            } else if allDone {
-                // All done celebration
-                VStack(spacing: 6) {
-                    ZStack {
-                        Circle()
-                            .stroke(accent, lineWidth: 4)
-                            .frame(width: 48, height: 48)
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(accent)
-                    }
-                    Text(strings.allDone)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(textPrimary)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                }
-            } else {
-                // Normal state: centered progress arc
-                VStack(spacing: 6) {
-                    ProgressArc(
-                        completed: content.completedCount,
-                        total: content.totalCount,
-                        accent: accent,
-                        textPrimary: textPrimary,
-                        textSecondary: textSecondary,
-                        size: 48
-                    )
-                    Text(strings.today)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(textSecondary)
-                }
-            }
-        }
-        .widgetBackground(theme: theme)
-    }
+    var body: some View { IntendedSmallView(content: entry.content) }
 }
-
-// MARK: - Medium widget view
 
 struct BasicMediumView: View {
     let entry: BasicEntry
-
-    private var content: WidgetContent { entry.content }
-    private var theme: ThemeData { content.theme }
-    private var strings: WidgetStrings { WidgetStrings(locale: content.locale) }
-    private var isEmpty: Bool { content.totalCount == 0 }
-    private var allDone: Bool { content.totalCount > 0 && content.completedCount == content.totalCount }
-
-    var body: some View {
-        let textPrimary = Color(argbHex: theme.textPrimary)
-        let textSecondary = Color(argbHex: theme.textSecondary)
-        let accent = Color(argbHex: theme.accent)
-
-        Group {
-            if isEmpty {
-                HStack(spacing: 0) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(content.greeting)
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundColor(textPrimary)
-                            .lineLimit(2)
-                        Spacer(minLength: 4)
-                        Text(strings.noHabits)
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(textSecondary)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    Image(systemName: "leaf")
-                        .font(.system(size: 28))
-                        .foregroundColor(accent.opacity(0.5))
-                        .padding(.leading, 12)
-                }
-            } else if allDone {
-                HStack(spacing: 0) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(content.greeting)
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundColor(textPrimary)
-                            .lineLimit(2)
-                        Spacer(minLength: 4)
-                        Text(strings.allDone)
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(accent)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    VStack(spacing: 4) {
-                        ZStack {
-                            Circle()
-                                .stroke(accent, lineWidth: 5)
-                                .frame(width: 72, height: 72)
-                            Image(systemName: "checkmark")
-                                .font(.system(size: 28, weight: .bold))
-                                .foregroundColor(accent)
-                        }
-                        Text(strings.today)
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(textSecondary)
-                    }
-                    .padding(.leading, 12)
-                }
-            } else {
-                HStack(spacing: 0) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(content.greeting)
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundColor(textPrimary)
-                            .lineLimit(1)
-
-                        Spacer(minLength: 4)
-
-                        // The list is the widget's job, free (§4.5: what you
-                        // chose is "what happened"). The locked teaser that
-                        // used to stand here was an ad on someone's wallpaper.
-                        VStack(alignment: .leading, spacing: 4) {
-                            ForEach(Array(content.habits.prefix(4).enumerated()), id: \.offset) { _, habit in
-                                HStack(spacing: 6) {
-                                    Circle()
-                                        .fill(habit.done ? accent : textSecondary.opacity(0.35))
-                                        .frame(width: 5, height: 5)
-                                    Text(habit.name)
-                                        .font(.system(size: 12, weight: .regular))
-                                        .foregroundColor(habit.done ? textSecondary : textPrimary)
-                                        .lineLimit(1)
-                                }
-                            }
-                        }
-
-                        Spacer(minLength: 4)
-
-                        Text(formattedDate())
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(textSecondary)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    VStack(spacing: 4) {
-                        ProgressArc(
-                            completed: content.completedCount,
-                            total: content.totalCount,
-                            accent: accent,
-                            textPrimary: textPrimary,
-                            textSecondary: textSecondary,
-                            size: 72
-                        )
-                        Text(strings.today)
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(textSecondary)
-                    }
-                    .padding(.leading, 12)
-                }
-            }
-        }
-        .widgetBackground(theme: theme)
-    }
-
-    private func formattedDate() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, d MMM"
-        formatter.locale = Locale(identifier: content.locale)
-        return formatter.string(from: Date())
-    }
+    var body: some View { IntendedMediumView(content: entry.content) }
 }
 
 // MARK: - Widget configuration
@@ -232,11 +54,7 @@ struct IntendedBasicWidget: Widget {
             if #available(iOS 17.0, *) {
                 BasicWidgetEntryView(entry: entry)
                     .containerBackground(for: .widget) {
-                        LinearGradient(
-                            colors: entry.content.theme.backgroundColors,
-                            startPoint: UnitPoint(x: 0.3, y: 0),
-                            endPoint: UnitPoint(x: 0.7, y: 1)
-                        )
+                        WidgetArtForFamily(content: entry.content)
                     }
             } else {
                 BasicWidgetEntryView(entry: entry)

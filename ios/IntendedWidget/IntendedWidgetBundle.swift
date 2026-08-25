@@ -7,5 +7,6 @@ struct IntendedWidgetBundle: WidgetBundle {
         IntendedBasicWidget()
         IntendedPremiumWidget()
         IntendedLockScreenWidget()
+        IntendedPauseWidget()
     }
 }

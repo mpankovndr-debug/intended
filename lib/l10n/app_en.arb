@@ -46,8 +46,8 @@
   "focusAreaHealthSub": "Your body will thank you.",
   "focusAreaMood": "Mood",
   "focusAreaMoodSub": "Notice how you feel. That's the first step.",
-  "focusAreaProductivity": "Productivity",
-  "focusAreaProductivitySub": "One thing at a time. That's plenty.",
+  "focusAreaProductivity": "Doing one thing",
+  "focusAreaProductivitySub": "Starting is the hard part.",
   "focusAreaHome": "Home & organization",
   "focusAreaHomeSub": "Small tidying, big calm.",
   "focusAreaRelationships": "Relationships",
@@ -539,9 +539,10 @@
   "customHabitFocusAreaLabel": "Which area is this for?",
   "customHabitSubmit": "Add to my habits",
   "editHabitTitle": "Edit habit",
+  "habitShowOnLabel": "Show this on",
   "editHabitSave": "Save",
-  "customHabitCreatedTitle": "Habit created",
-  "customHabitCreatedMessage": "\"{title}\" has been added to your habits.",
+  "customHabitCreatedTitle": "Intention created",
+  "customHabitCreatedMessage": "\"{title}\" has been added to your intentions.",
   "@customHabitCreatedMessage": {
     "placeholders": {
       "title": {
@@ -618,11 +619,11 @@
     }
   },
   "completionQuestion": "Did you do this today?",
-  "completionHowDidItLand": "How did that land?",
+  "completionHowDidItLand": "How was it?",
   "completionMoodGlad": "Glad I did",
   "completionMoodNeutral": "Neutral",
   "completionMoodTookEffort": "Took effort",
-  "completionAddNote": "+ add a note",
+  "completionAddNote": "add a note",
   "completionNoteHint": "Anything you want to remember?",
   "completionSkip": "skip",
   "completionKept": "Kept — {count} moments this month.",
@@ -1101,10 +1102,17 @@
   "habitCloseEyes": "Close your eyes for 30 seconds",
   "habitNeckRolls": "Do 5 gentle neck rolls",
   "habitWalkToWindow": "Walk to the window and back",
-  "habitBellyBreaths": "Take 5 deep belly breaths",
+  "habitBellyBreaths": "Take 5 slow, deep breaths",
   "habitBodyScan": "2-minute body scan",
   "habitGentleMovement": "5 minutes of gentle stretching",
   "habitMindfulMeal": "Eat one meal mindfully",
+  "habitEatAfterWaking": "Eat after waking up",
+  "habitProperMeal": "Eat one proper meal",
+  "habitDrinkWarm": "Drink something warm",
+  "habitTakeMedication": "Take your medication",
+  "habitGetOutside": "Get outside for a few minutes",
+  "habitMoveBody": "Move your body a little",
+  "habitBedEarly": "Get into bed early",
   "habitTenSecondPause": "One-minute pause",
   "habitNoticeFeeling": "Notice one thing you feel",
   "habitGroundingBreath": "Three grounding breaths",
@@ -1117,17 +1125,8 @@
   "habitSmileGently": "Smile kindly at yourself",
   "habitAskNeed": "Ask yourself \"what do I need right now?\"",
   "habitPermissionToRest": "Give yourself permission to rest",
-  "habitSetPriority": "Set one priority today",
   "habitPlanTomorrow": "Plan tomorrow in one sentence",
   "habitThirtySecondReset": "Do a 1-minute reset",
-  "habitWriteIdea": "Unsubscribe from an unnecessary email list",
-  "habitFinishTinyTask": "Finish one tiny task",
-  "habitDeclutterDesk": "Declutter your desk",
-  "habitReviewCalendar": "Review your calendar",
-  "habitTurnOffNotification": "Turn off one notification",
-  "habitCloseTab": "Close unnecessary browser tabs",
-  "habitArchiveEmails": "Archive 5 old emails",
-  "habitUpdateTodo": "Update one to-do item",
   "habitTidyOneThing": "Tidy one small thing",
   "habitPutBack": "Put one thing back where it belongs",
   "habitWipeSurface": "Wipe one surface",
@@ -1152,30 +1151,12 @@
   "habitTellMeaning": "Tell someone what they mean to you",
   "habitOfferHelp": "Offer help to someone",
   "habitCelebrateOthers": "Celebrate someone else's win",
-  "habitWriteSentence": "Write a short story",
+  "habitWriteSentence": "Write down what's in your head",
   "habitDoodle": "Doodle for 5 minutes",
-  "habitCaptureIdea": "Capture one idea",
   "habitNoticeBeauty": "Notice one beautiful thing",
   "habitTakePhoto": "Take one photo of something you like",
-  "habitDrawShape": "Draw something simple",
   "habitHumTune": "Hum a tune you enjoy",
-  "habitRearrange": "Rearrange something small",
   "habitTryNewWord": "Learn one new word",
-  "habitCreateTinyThing": "Play a short melody",
-  "habitPlayCreative": "Play with one creative medium",
-  "habitImagine": "Do a vocal warm-up",
-  "habitCheckBalance": "Try one financial tip",
-  "habitMoveToSavings": "Move €3/$3 to savings",
-  "habitReviewSubscription": "Review one subscription",
-  "habitNoteExpense": "Note 3 expenses",
-  "habitFinancialTip": "Read one financial tip",
-  "habitDeleteReceipt": "Delete one old receipt",
-  "habitUpdateBudget": "Treat yourself",
-  "habitReviewBill": "Review necessity of one subscription",
-  "habitPriceCheck": "Price-check one item before buying",
-  "habitWait24Hours": "Wait 24 hours before a big purchase",
-  "habitCelebrateMoneyWin": "Celebrate one money win",
-  "habitSavingsGoal": "Set one savings goal",
   "habitSitStill": "Sit still for 1 minute",
   "habitKindThing": "Do one kind thing for yourself",
   "habitDrinkSlowly": "Drink a cup of tasty coffee",
@@ -1188,6 +1169,15 @@
   "habitPutOnComfortable": "Put on something comfortable",
   "habitListenToSong": "Listen to one song you love",
   "habitDoNothing": "Do absolutely nothing for 5 minutes",
+  "habitGetOutOfBed": "Get out of bed",
+  "habitBrushTeeth": "Brush your teeth",
+  "habitWashFace": "Wash your face",
+  "habitTakeShower": "Take a shower",
+  "habitCleanClothes": "Put on clean clothes",
+  "habitBrushHair": "Brush your hair",
+  "habitOpenCurtains": "Open the curtains",
+  "habitTurnOnLamp": "Turn on a lamp",
+  "habitPhoneAcrossRoom": "Leave your phone across the room",
   "shareCardWeeklyCheckin": "Weekly check-in",
   "shareCardMilestone": "Milestone",
   "shareCardShowedUpPhrase": "I showed up for myself this week",
@@ -1477,6 +1467,14 @@
     "placeholders": {
       "count": {
         "type": "int"
+      }
+    }
+  },
+  "notifMonthlyLetter": "Your {month} letter is ready.",
+  "@notifMonthlyLetter": {
+    "placeholders": {
+      "month": {
+        "type": "String"
       }
     }
   },
@@ -1901,5 +1899,39 @@
     }
   },
   "profileExportSubject": "My Intended moments",
-  "profileExportEmpty": "Nothing to export yet."
+  "profileExportEmpty": "Nothing to export yet.",
+  "pauseEntryTitle": "a minute of breath",
+  "pauseLeave": "enough for now",
+  "pauseBreathIn": "in",
+  "pauseBreathOut": "out",
+  "pauseCheckInQuestion": "How are you feeling now?",
+  "pauseCheckInTense": "Still tense",
+  "pauseCheckInNeutral": "A little calmer",
+  "pauseCheckInCalm": "It lifted",
+  "pauseNotifAction": "A minute of breath",
+  "pauseHealthTitle": "Save to Apple Health?",
+  "pauseHealthBody": "Each completed pause can appear in Apple Health as a mindful minute — your answer here too. Intended never reads anything from Health.",
+  "pauseHealthSave": "Save to Health",
+  "widgetMomentsCount": "{count, plural, one{{count} moment} other{{count} moments}}",
+  "@widgetMomentsCount": {
+    "description": "Widget eyebrow: how many moments this month. Joined with ' · ' to the month name.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "widgetReturnsCount": "{count, plural, one{back once} other{back {count} times}}",
+  "@widgetReturnsCount": {
+    "description": "Widget eyebrow: returns after quiet stretches this month. Only rendered when count > 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "widgetMonthUnlock": "Intended+ — the whole month in colour",
+  "@widgetMonthUnlock": {
+    "description": "Large widget, not subscribed: caption under the faded month mosaic."
+  }
 }

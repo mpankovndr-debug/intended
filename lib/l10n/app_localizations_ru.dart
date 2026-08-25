@@ -111,10 +111,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get focusAreaMoodSub => 'Замечай, как себя чувствуешь. Это уже шаг.';
 
   @override
-  String get focusAreaProductivity => 'Продуктивность';
+  String get focusAreaProductivity => 'Одно дело';
 
   @override
-  String get focusAreaProductivitySub => 'По одному делу. Этого достаточно.';
+  String get focusAreaProductivitySub => 'Начать — самое трудное.';
 
   @override
   String get focusAreaHome => 'Дом и порядок';
@@ -864,14 +864,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get editHabitTitle => 'Редактировать привычку';
 
   @override
+  String get habitShowOnLabel => 'Когда показывать';
+
+  @override
   String get editHabitSave => 'Сохранить';
 
   @override
-  String get customHabitCreatedTitle => 'Привычка создана';
+  String get customHabitCreatedTitle => 'Намерение создано';
 
   @override
   String customHabitCreatedMessage(String title) {
-    return '«$title» добавлена в твои привычки.';
+    return '«$title» добавлено в твои намерения.';
   }
 
   @override
@@ -964,7 +967,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get completionQuestion => 'Ты выполнил это сегодня?';
 
   @override
-  String get completionHowDidItLand => 'Как это отозвалось?';
+  String get completionHowDidItLand => 'Как прошло?';
 
   @override
   String get completionMoodGlad => 'Стоило того';
@@ -976,7 +979,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get completionMoodTookEffort => 'Было непросто';
 
   @override
-  String get completionAddNote => '+ добавить заметку';
+  String get completionAddNote => 'добавить заметку';
 
   @override
   String get completionNoteHint => 'Хочешь что-то запомнить?';
@@ -986,7 +989,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String completionKept(int count) {
-    return 'Сохранено — $count моментов в этом месяце.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count момента',
+      many: '$count моментов',
+      few: '$count момента',
+      one: '$count момент',
+    );
+    return 'Сохранено — $_temp0 в этом месяце.';
   }
 
   @override
@@ -2125,7 +2136,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitWalkToWindow => 'Дойди до окна и обратно';
 
   @override
-  String get habitBellyBreaths => 'Сделай 5 глубоких вдохов животом';
+  String get habitBellyBreaths => 'Сделай 5 медленных глубоких вдохов';
 
   @override
   String get habitBodyScan => 'Последи за телом - 2 минуты';
@@ -2135,6 +2146,27 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get habitMindfulMeal => 'Один осознанный приём пищи';
+
+  @override
+  String get habitEatAfterWaking => 'Поешь после пробуждения';
+
+  @override
+  String get habitProperMeal => 'Поешь нормально хотя бы раз';
+
+  @override
+  String get habitDrinkWarm => 'Выпей что-нибудь тёплое';
+
+  @override
+  String get habitTakeMedication => 'Прими лекарство';
+
+  @override
+  String get habitGetOutside => 'Выйди на улицу на пару минут';
+
+  @override
+  String get habitMoveBody => 'Немного подвигайся';
+
+  @override
+  String get habitBedEarly => 'Ляг пораньше';
 
   @override
   String get habitTenSecondPause => 'Пауза на 1 минуту';
@@ -2165,7 +2197,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Назови 3 вещи, за которые чувствуешь благодарность';
 
   @override
-  String get habitSmileGently => 'Добро улыбнись себе';
+  String get habitSmileGently => 'Улыбнись себе по-доброму';
 
   @override
   String get habitAskNeed => 'Спроси себя: «Что мне сейчас нужно?»';
@@ -2174,37 +2206,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitPermissionToRest => 'Разреши себе отдохнуть';
 
   @override
-  String get habitSetPriority => 'Определи один приоритет на сегодня';
-
-  @override
   String get habitPlanTomorrow => 'Опиши завтрашний день одним предложением';
 
   @override
   String get habitThirtySecondReset => 'Перезагрузка на 1 минуту';
-
-  @override
-  String get habitWriteIdea => 'Отпишись от ненужной рассылки';
-
-  @override
-  String get habitFinishTinyTask => 'Заверши одно маленькое дело';
-
-  @override
-  String get habitDeclutterDesk => 'Убери лишнее со стола';
-
-  @override
-  String get habitReviewCalendar => 'Загляни в календарь';
-
-  @override
-  String get habitTurnOffNotification => 'Отключи одно уведомление';
-
-  @override
-  String get habitCloseTab => 'Закрой ненужные вкладки';
-
-  @override
-  String get habitArchiveEmails => 'Архивируй 5 старых имейлов';
-
-  @override
-  String get habitUpdateTodo => 'Обнови один пункт в списке дел';
 
   @override
   String get habitTidyOneThing => 'Убери одну мелочь';
@@ -2279,13 +2284,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitCelebrateOthers => 'Порадуйся за чью-то победу';
 
   @override
-  String get habitWriteSentence => 'Напиши короткий рассказ';
+  String get habitWriteSentence => 'Запиши, что в голове';
 
   @override
   String get habitDoodle => 'Рисуй каракули 5 минут';
-
-  @override
-  String get habitCaptureIdea => 'Запиши одну идею';
 
   @override
   String get habitNoticeBeauty => 'Заметь одну красивую вещь';
@@ -2294,61 +2296,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitTakePhoto => 'Сфотографируй что-то, что нравится';
 
   @override
-  String get habitDrawShape => 'Нарисуй что-то простое';
-
-  @override
   String get habitHumTune => 'Напой мелодию, которая нравится';
 
   @override
-  String get habitRearrange => 'Переставь что-нибудь небольшое';
-
-  @override
   String get habitTryNewWord => 'Выучи одно новое слово';
-
-  @override
-  String get habitCreateTinyThing => 'Сыграй одну короткую мелодию';
-
-  @override
-  String get habitPlayCreative => 'Поиграй с одним творческим материалом';
-
-  @override
-  String get habitImagine => 'Сделай одну распевку';
-
-  @override
-  String get habitCheckBalance => 'Попробуй один финансовый совет';
-
-  @override
-  String get habitMoveToSavings => 'Отложи ₽300 в копилку';
-
-  @override
-  String get habitReviewSubscription => 'Проверь одну подписку';
-
-  @override
-  String get habitNoteExpense => 'Запиши 3 траты';
-
-  @override
-  String get habitFinancialTip => 'Прочитай один финансовый совет';
-
-  @override
-  String get habitDeleteReceipt => 'Удали один старый чек';
-
-  @override
-  String get habitUpdateBudget => 'Побалуй себя';
-
-  @override
-  String get habitReviewBill => 'Проверь необходимость одной подписки';
-
-  @override
-  String get habitPriceCheck => 'Сравни цену перед покупкой';
-
-  @override
-  String get habitWait24Hours => 'Подожди 24 часа перед большой покупкой';
-
-  @override
-  String get habitCelebrateMoneyWin => 'Порадуйся одной финансовой победе';
-
-  @override
-  String get habitSavingsGoal => 'Поставь одну цель для накоплений';
 
   @override
   String get habitSitStill => 'Посиди тихо 1 минуту';
@@ -2386,6 +2337,33 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get habitDoNothing => 'Ничего не делай 5 минут';
+
+  @override
+  String get habitGetOutOfBed => 'Встань с кровати';
+
+  @override
+  String get habitBrushTeeth => 'Почисти зубы';
+
+  @override
+  String get habitWashFace => 'Умойся';
+
+  @override
+  String get habitTakeShower => 'Прими душ';
+
+  @override
+  String get habitCleanClothes => 'Надень чистое';
+
+  @override
+  String get habitBrushHair => 'Причешись';
+
+  @override
+  String get habitOpenCurtains => 'Открой шторы';
+
+  @override
+  String get habitTurnOnLamp => 'Включи лампу';
+
+  @override
+  String get habitPhoneAcrossRoom => 'Оставь телефон подальше';
 
   @override
   String get shareCardWeeklyCheckin => 'Недельный чек-ин';
@@ -2978,6 +2956,11 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String notifWeeklyDynamicN(int count) {
     return 'Твоя неделя на странице — в ней моментов: $count.';
+  }
+
+  @override
+  String notifMonthlyLetter(String month) {
+    return 'Твоё письмо за $month готово.';
   }
 
   @override
@@ -3801,10 +3784,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get intentionThroughAHardSeason => 'Бережнее к себе в это время';
 
   @override
-  String get habitScreensAwayBed => 'Убрать экраны за 20 минут до сна';
+  String get habitScreensAwayBed => 'Убери экраны за 20 минут до сна';
 
   @override
-  String get habitDimLights => 'Приглушить свет за час до сна';
+  String get habitDimLights => 'Приглуши свет за час до сна';
 
   @override
   String get habitMealWithoutPhone => 'Один приём пищи без телефона';
@@ -3926,4 +3909,70 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileExportEmpty => 'Пока нечего выгружать.';
+
+  @override
+  String get pauseEntryTitle => 'минута дыхания';
+
+  @override
+  String get pauseLeave => 'пока достаточно';
+
+  @override
+  String get pauseBreathIn => 'вдох';
+
+  @override
+  String get pauseBreathOut => 'выдох';
+
+  @override
+  String get pauseCheckInQuestion => 'Как чувствуешь себя сейчас?';
+
+  @override
+  String get pauseCheckInTense => 'Всё ещё в напряжении';
+
+  @override
+  String get pauseCheckInNeutral => 'Стало спокойнее';
+
+  @override
+  String get pauseCheckInCalm => 'Отпустило';
+
+  @override
+  String get pauseNotifAction => 'Минута дыхания';
+
+  @override
+  String get pauseHealthTitle => 'Сохранять в Apple Health?';
+
+  @override
+  String get pauseHealthBody =>
+      'Каждая завершённая пауза может появляться в Apple Health как минута осознанности — и твой ответ тоже. Intended ничего не читает из Health.';
+
+  @override
+  String get pauseHealthSave => 'Сохранять';
+
+  @override
+  String widgetMomentsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count момента',
+      many: '$count моментов',
+      few: '$count момента',
+      one: '$count момент',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String widgetReturnsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count возвращения',
+      many: '$count возвращений',
+      few: '$count возвращения',
+      one: '$count возвращение',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get widgetMonthUnlock => 'Intended+ — весь месяц в цвете';
 }

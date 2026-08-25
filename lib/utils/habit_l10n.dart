@@ -38,6 +38,9 @@ typedef _L10nGetter = String Function(AppLocalizations);
 const Map<String, _L10nGetter> _categoryNameGetters = {
   'Health': _catHealth,
   'Mood': _catMood,
+  'Doing one thing': _catProductivity,
+  // Renamed from 'Productivity'. Moments recorded before the rename carry
+  // the old string and are never rewritten, so both keys must resolve.
   'Productivity': _catProductivity,
   'Home & organization': _catHome,
   'Relationships': _catRelationships,
@@ -57,48 +60,47 @@ String _catSelfCare(AppLocalizations l10n) => l10n.focusAreaSelfCare;
 
 const Map<String, _L10nGetter> _habitNameGetters = {
   // Health
-  'Drink a glass of water': _hDrinkWater,
+  'Drink 3 glasses of water': _hDrinkWater,
   'Screens away 20 minutes before bed': _hScreensAwayBed,
   'Dim the lights an hour before sleep': _hDimLights,
   'One meal without your phone': _hMealWithoutPhone,
   'Take 3 slow breaths': _hThreeSlowBreaths,
-  'Stretch for 10 seconds': _hStretchTenSeconds,
+  'Stretch for 30 seconds': _hStretchTenSeconds,
   'Stand up and roll your shoulders': _hRollShoulders,
-  'Step outside for 30 seconds': _hStepOutside,
-  'Close your eyes for 20 seconds': _hCloseEyes,
+  'Step outside for 5 minutes': _hStepOutside,
+  'Close your eyes for 30 seconds': _hCloseEyes,
   'Do 5 gentle neck rolls': _hNeckRolls,
   'Walk to the window and back': _hWalkToWindow,
-  'Take 5 deep belly breaths': _hBellyBreaths,
+  'Take 5 slow, deep breaths': _hBellyBreaths,
   '2-minute body scan': _hBodyScan,
-  '10 minutes of gentle movement': _hGentleMovement,
+  '5 minutes of gentle stretching': _hGentleMovement,
   'Eat one meal mindfully': _hMindfulMeal,
+  "Eat after waking up": _hEatAfterWaking,
+  "Eat one proper meal": _hProperMeal,
+  "Drink something warm": _hDrinkWarm,
+  "Take your medication": _hTakeMedication,
+  "Get outside for a few minutes": _hGetOutside,
+  "Move your body a little": _hMoveBody,
+  "Get into bed early": _hBedEarly,
 
   // Mood
-  'Ten-second pause': _hTenSecondPause,
+  'One-minute pause': _hTenSecondPause,
   'Notice one thing you feel': _hNoticeFeeling,
-  'One grounding breath': _hGroundingBreath,
-  'Look away from your screen for 10 seconds': _hLookAway,
+  'Three grounding breaths': _hGroundingBreath,
+  'Look away from your screen for 30 seconds': _hLookAway,
   'Name three things you can see': _hNameThreeThings,
   'Notice one sound around you': _hNoticeSound,
   'Feel your feet on the ground': _hFeelFeet,
-  'Place hand on heart for a moment': _hHandOnHeart,
-  "Notice one thing you're grateful for": _hGratefulThing,
-  'Smile gently at yourself': _hSmileGently,
+  'Place hand on heart for 30 seconds': _hHandOnHeart,
+  "Name 3 things you're grateful for": _hGratefulThing,
+  'Smile kindly at yourself': _hSmileGently,
   'Ask yourself "what do I need right now?"': _hAskNeed,
   'Give yourself permission to rest': _hPermissionToRest,
 
-  // Productivity
-  'Set one priority': _hSetPriority,
+  // Moved here when Doing one thing was removed; stored titles unchanged,
+  // so completion history and habit_done_* keys survive.
   'Plan tomorrow in one sentence': _hPlanTomorrow,
-  'Do a 30-second reset': _hThirtySecondReset,
-  'Write down one idea': _hWriteIdea,
-  'Finish one tiny task': _hFinishTinyTask,
-  'Declutter your desk for 2 minutes': _hDeclutterDesk,
-  'Review your calendar': _hReviewCalendar,
-  'Turn off one notification': _hTurnOffNotification,
-  'Close one browser tab': _hCloseTab,
-  'Archive 5 old emails': _hArchiveEmails,
-  'Update one to-do item': _hUpdateTodo,
+  'Do a 1-minute reset': _hThirtySecondReset,
 
   // Home & organization
   'Tidy one small thing': _hTidyOneThing,
@@ -108,14 +110,14 @@ const Map<String, _L10nGetter> _habitNameGetters = {
   'Make your bed': _hMakeBed,
   'Clear one shelf': _hClearShelf,
   'Wash 3 dishes': _hWashDishes,
-  'Take out one small bag of trash': _hTakeOutTrash,
+  'Take out one bag of trash': _hTakeOutTrash,
   'Fold 3 items of clothing': _hFoldClothing,
   'Organize one drawer': _hOrganizeDrawer,
-  'Water one plant': _hWaterPlant,
-  'Light a candle': _hLightCandle,
+  'Water your plants': _hWaterPlant,
+  'Light a scented candle': _hLightCandle,
 
   // Relationships
-  'Send one message to someone': _hSendMessage,
+  'Send one message to someone you care about': _hSendMessage,
   'Think of one person you appreciate': _hAppreciatePerson,
   'Ask someone how they are': _hAskHowAreYou,
   'Give one genuine compliment': _hGiveCompliment,
@@ -129,45 +131,61 @@ const Map<String, _L10nGetter> _habitNameGetters = {
   "Celebrate someone else's win": _hCelebrateOthers,
 
   // Creativity
-  'Write one sentence': _hWriteSentence,
-  'Doodle for 10 seconds': _hDoodle,
-  'Capture one idea': _hCaptureIdea,
+  "Write down what's in your head": _hWriteSentence,
+  'Doodle for 5 minutes': _hDoodle,
   'Notice one beautiful thing': _hNoticeBeauty,
   'Take one photo of something you like': _hTakePhoto,
-  'Draw one simple shape': _hDrawShape,
   'Hum a tune you enjoy': _hHumTune,
-  'Rearrange something small': _hRearrange,
-  'Try one new word': _hTryNewWord,
-  'Create one tiny thing': _hCreateTinyThing,
-  'Play with one creative medium': _hPlayCreative,
-  'Imagine one possibility': _hImagine,
-
-  // Finances
-  'Check your balance': _hCheckBalance,
-  'Move €1 to savings': _hMoveToSavings,
-  'Review one subscription': _hReviewSubscription,
-  'Note one expense': _hNoteExpense,
-  'Read one financial tip': _hFinancialTip,
-  'Delete one old receipt': _hDeleteReceipt,
-  'Update one budget category': _hUpdateBudget,
-  'Review one bill': _hReviewBill,
-  'Price-check one item before buying': _hPriceCheck,
-  'Wait 24 hours before one purchase': _hWait24Hours,
-  'Celebrate one money win': _hCelebrateMoneyWin,
-  'Set one small savings goal': _hSavingsGoal,
+  'Learn one new word': _hTryNewWord,
 
   // Self-care
-  'Sit still for 10 seconds': _hSitStill,
+  'Sit still for 1 minute': _hSitStill,
   'Do one kind thing for yourself': _hKindThing,
-  'Drink water slowly': _hDrinkSlowly,
+  'Drink a cup of tasty coffee': _hDrinkSlowly,
   'Stretch your neck': _hStretchNeck,
   'Take one slow breath': _hOneSlowBreath,
   'Notice something you like about yourself': _hNoticeLikeAboutSelf,
   'Give yourself permission to say no': _hPermissionSayNo,
   'Do something that feels good': _hFeelGood,
-  'Rest for 2 minutes': _hRestTwoMinutes,
+  'Rest for 5 minutes': _hRestTwoMinutes,
   'Put on something comfortable': _hPutOnComfortable,
   'Listen to one song you love': _hListenToSong,
+  'Do absolutely nothing for 5 minutes': _hDoNothing,
+  "Get out of bed": _hGetOutOfBed,
+  "Brush your teeth": _hBrushTeeth,
+  "Wash your face": _hWashFace,
+  "Take a shower": _hTakeShower,
+  "Put on clean clothes": _hCleanClothes,
+  "Brush your hair": _hBrushHair,
+  "Open the curtains": _hOpenCurtains,
+  "Turn on a lamp": _hTurnOnLamp,
+  "Leave your phone across the room": _hPhoneAcrossRoom,
+  // Renamed titles. The stored string was aligned to what app_en.arb
+  // renders, but user_habits and recorded moments still carry the old one
+  // and are never rewritten — so both keys must resolve, or a Russian
+  // reader sees raw English on a held card and in their month.
+  'Drink a glass of water': _hDrinkWater,
+  'Stretch for 10 seconds': _hStretchTenSeconds,
+  'Step outside for 30 seconds': _hStepOutside,
+  'Close your eyes for 20 seconds': _hCloseEyes,
+  'Take 5 deep belly breaths': _hBellyBreaths,
+  '10 minutes of gentle movement': _hGentleMovement,
+  'Ten-second pause': _hTenSecondPause,
+  'One grounding breath': _hGroundingBreath,
+  'Look away from your screen for 10 seconds': _hLookAway,
+  'Place hand on heart for a moment': _hHandOnHeart,
+  "Notice one thing you're grateful for": _hGratefulThing,
+  'Smile gently at yourself': _hSmileGently,
+  'Do a 30-second reset': _hThirtySecondReset,
+  'Take out one small bag of trash': _hTakeOutTrash,
+  'Water one plant': _hWaterPlant,
+  'Light a candle': _hLightCandle,
+  'Send one message to someone': _hSendMessage,
+  'Doodle for 10 seconds': _hDoodle,
+  'Try one new word': _hTryNewWord,
+  'Sit still for 10 seconds': _hSitStill,
+  'Drink water slowly': _hDrinkSlowly,
+  'Rest for 2 minutes': _hRestTwoMinutes,
   'Do absolutely nothing for 30 seconds': _hDoNothing,
 };
 
@@ -187,6 +205,13 @@ String _hBellyBreaths(AppLocalizations l) => l.habitBellyBreaths;
 String _hBodyScan(AppLocalizations l) => l.habitBodyScan;
 String _hGentleMovement(AppLocalizations l) => l.habitGentleMovement;
 String _hMindfulMeal(AppLocalizations l) => l.habitMindfulMeal;
+String _hEatAfterWaking(AppLocalizations l) => l.habitEatAfterWaking;
+String _hProperMeal(AppLocalizations l) => l.habitProperMeal;
+String _hDrinkWarm(AppLocalizations l) => l.habitDrinkWarm;
+String _hTakeMedication(AppLocalizations l) => l.habitTakeMedication;
+String _hGetOutside(AppLocalizations l) => l.habitGetOutside;
+String _hMoveBody(AppLocalizations l) => l.habitMoveBody;
+String _hBedEarly(AppLocalizations l) => l.habitBedEarly;
 
 // Mood
 String _hTenSecondPause(AppLocalizations l) => l.habitTenSecondPause;
@@ -202,18 +227,9 @@ String _hSmileGently(AppLocalizations l) => l.habitSmileGently;
 String _hAskNeed(AppLocalizations l) => l.habitAskNeed;
 String _hPermissionToRest(AppLocalizations l) => l.habitPermissionToRest;
 
-// Productivity
-String _hSetPriority(AppLocalizations l) => l.habitSetPriority;
+// Moved from Doing one thing
 String _hPlanTomorrow(AppLocalizations l) => l.habitPlanTomorrow;
 String _hThirtySecondReset(AppLocalizations l) => l.habitThirtySecondReset;
-String _hWriteIdea(AppLocalizations l) => l.habitWriteIdea;
-String _hFinishTinyTask(AppLocalizations l) => l.habitFinishTinyTask;
-String _hDeclutterDesk(AppLocalizations l) => l.habitDeclutterDesk;
-String _hReviewCalendar(AppLocalizations l) => l.habitReviewCalendar;
-String _hTurnOffNotification(AppLocalizations l) => l.habitTurnOffNotification;
-String _hCloseTab(AppLocalizations l) => l.habitCloseTab;
-String _hArchiveEmails(AppLocalizations l) => l.habitArchiveEmails;
-String _hUpdateTodo(AppLocalizations l) => l.habitUpdateTodo;
 
 // Home & organization
 String _hTidyOneThing(AppLocalizations l) => l.habitTidyOneThing;
@@ -246,30 +262,10 @@ String _hCelebrateOthers(AppLocalizations l) => l.habitCelebrateOthers;
 // Creativity
 String _hWriteSentence(AppLocalizations l) => l.habitWriteSentence;
 String _hDoodle(AppLocalizations l) => l.habitDoodle;
-String _hCaptureIdea(AppLocalizations l) => l.habitCaptureIdea;
 String _hNoticeBeauty(AppLocalizations l) => l.habitNoticeBeauty;
 String _hTakePhoto(AppLocalizations l) => l.habitTakePhoto;
-String _hDrawShape(AppLocalizations l) => l.habitDrawShape;
 String _hHumTune(AppLocalizations l) => l.habitHumTune;
-String _hRearrange(AppLocalizations l) => l.habitRearrange;
 String _hTryNewWord(AppLocalizations l) => l.habitTryNewWord;
-String _hCreateTinyThing(AppLocalizations l) => l.habitCreateTinyThing;
-String _hPlayCreative(AppLocalizations l) => l.habitPlayCreative;
-String _hImagine(AppLocalizations l) => l.habitImagine;
-
-// Finances
-String _hCheckBalance(AppLocalizations l) => l.habitCheckBalance;
-String _hMoveToSavings(AppLocalizations l) => l.habitMoveToSavings;
-String _hReviewSubscription(AppLocalizations l) => l.habitReviewSubscription;
-String _hNoteExpense(AppLocalizations l) => l.habitNoteExpense;
-String _hFinancialTip(AppLocalizations l) => l.habitFinancialTip;
-String _hDeleteReceipt(AppLocalizations l) => l.habitDeleteReceipt;
-String _hUpdateBudget(AppLocalizations l) => l.habitUpdateBudget;
-String _hReviewBill(AppLocalizations l) => l.habitReviewBill;
-String _hPriceCheck(AppLocalizations l) => l.habitPriceCheck;
-String _hWait24Hours(AppLocalizations l) => l.habitWait24Hours;
-String _hCelebrateMoneyWin(AppLocalizations l) => l.habitCelebrateMoneyWin;
-String _hSavingsGoal(AppLocalizations l) => l.habitSavingsGoal;
 
 // Self-care
 String _hSitStill(AppLocalizations l) => l.habitSitStill;
@@ -284,3 +280,12 @@ String _hRestTwoMinutes(AppLocalizations l) => l.habitRestTwoMinutes;
 String _hPutOnComfortable(AppLocalizations l) => l.habitPutOnComfortable;
 String _hListenToSong(AppLocalizations l) => l.habitListenToSong;
 String _hDoNothing(AppLocalizations l) => l.habitDoNothing;
+String _hGetOutOfBed(AppLocalizations l) => l.habitGetOutOfBed;
+String _hBrushTeeth(AppLocalizations l) => l.habitBrushTeeth;
+String _hWashFace(AppLocalizations l) => l.habitWashFace;
+String _hTakeShower(AppLocalizations l) => l.habitTakeShower;
+String _hCleanClothes(AppLocalizations l) => l.habitCleanClothes;
+String _hBrushHair(AppLocalizations l) => l.habitBrushHair;
+String _hOpenCurtains(AppLocalizations l) => l.habitOpenCurtains;
+String _hTurnOnLamp(AppLocalizations l) => l.habitTurnOnLamp;
+String _hPhoneAcrossRoom(AppLocalizations l) => l.habitPhoneAcrossRoom;

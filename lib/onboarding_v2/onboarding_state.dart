@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/intention_path.dart';
 import '../services/analytics_service.dart';
+import '../services/moments_service.dart';
 import '../services/reflection_service.dart';
 
 class OnboardingState extends ChangeNotifier {
@@ -17,6 +18,23 @@ class OnboardingState extends ChangeNotifier {
   List<String> userHabits = [];
   List<String> _customHabits = [];
   Map<String, String> _customHabitFocusAreas = {}; // habitTitle -> focusArea
+
+  /// Which weekdays a custom action appears on: habitTitle -> [1..7], Mon=1,
+  /// matching [Moment.localWeekday].
+  ///
+  /// A title absent from this map means *every* day, so nothing here needs
+  /// migrating and an account that never sets a mask behaves exactly as before.
+  /// Seeded actions are never keyed — only customs can carry a mask.
+  Map<String, List<int>> _customHabitDays = {};
+  static const String _customHabitDaysKey = 'custom_habit_days';
+
+  /// When a mask was last created or changed, ISO-8601 UTC.
+  ///
+  /// Read by the drift card, which compares this week against a rolling
+  /// average built before the mask existed — see [Drift.maskSuppressionDays].
+  /// Public because the reader is a screen, not this class.
+  static const String customHabitDaysChangedAtKey =
+      'custom_habit_days_changed_at';
 
   /// When each action joined Today, in UTC. Written by every add path; absent
   /// for anything adopted before this started being recorded.
@@ -74,9 +92,87 @@ class OnboardingState extends ChangeNotifier {
     return ordered.take(rescue ? 1 : ordered.length).toList();
   }
 
+  /// [visibleHabits] with today's weekday mask applied — what to *draw* now.
+  ///
+  /// Deliberately a second method rather than a filter inside [visibleHabits].
+  /// That one feeds nine call sites, and they mean two different things by it:
+  /// "what to draw right now" (widget, home, all-done) and "which actions are
+  /// this user's" (Lift, MonthPlan, the staleness rule). Masking inside it
+  /// would silently change both — a ranking that reorders itself by weekday,
+  /// and a month plan that forgets an action on its off-days.
+  ///
+  /// The weekday is [DateTime.now] in the device's current zone: the same
+  /// clock `HabitTracker._key` uses for `habit_done_*`, so a card and its own
+  /// completion key can never disagree about which day it is. This is *not*
+  /// the recorded-offset rule [Moment.localDay] follows — that answers a
+  /// different question, about a moment already recorded.
+  List<String> habitsForToday({DateTime? now}) {
+    final visible = visibleHabits();
+    if (_customHabitDays.isEmpty) return visible;
+
+    final weekday = (now ?? DateTime.now()).weekday;
+    final todays = visible.where((h) {
+      final days = _customHabitDays[h];
+      // Absent, or empty through some earlier bad write, means every day.
+      if (days == null || days.isEmpty) return true;
+      return days.contains(weekday);
+    }).toList();
+
+    // A day must never have zero cards. An empty screen reads as "you have
+    // nothing to do", which is the one thing a mask must not be able to say.
+    return todays.isEmpty ? visible : todays;
+  }
+
+  /// Sets or clears [habitTitle]'s weekday mask, and stamps the change.
+  ///
+  /// Passing null, an empty list, or all seven days *clears* the entry rather
+  /// than storing it: absent already means every day, and a redundant mask
+  /// would suppress the drift card for four weeks while changing nothing.
+  /// A write that does not change the mask is not a change, and does not
+  /// re-stamp.
+  Future<void> setCustomHabitDays(String habitTitle, List<int>? days) async {
+    // Seeded actions are never masked.
+    if (!_customHabits.contains(habitTitle)) return;
+
+    final normalized = days == null
+        ? const <int>[]
+        : (days.where((d) => d >= 1 && d <= 7).toSet().toList()..sort());
+    final clears = normalized.isEmpty || normalized.length == 7;
+
+    final previous = _customHabitDays[habitTitle];
+    if (clears) {
+      if (previous == null) return;
+      _customHabitDays.remove(habitTitle);
+    } else {
+      // Both sides are sorted and deduped, so joining compares them.
+      if (previous != null && previous.join(',') == normalized.join(',')) {
+        return;
+      }
+      _customHabitDays[habitTitle] = normalized;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await _saveCustomHabitDays(prefs);
+    await prefs.setString(
+      customHabitDaysChangedAtKey,
+      DateTime.now().toUtc().toIso8601String(),
+    );
+
+    notifyListeners();
+  }
+
   // Intention path
   String _selectedIntentionPath = 'your_own_way';
   String? _lastPreselectedPathKey;
+
+  /// The path key whose [IntentionPath.starterActions] have already been
+  /// handed out. Null until a starters path generates for the first time.
+  ///
+  /// Comparing this against the current path key is also the reset: pick a
+  /// different path and it no longer matches, so that path seeds its own
+  /// starters once before falling back to its pool.
+  String? _startersAppliedForPath;
+  static const String _startersAppliedForPathKey = 'starters_applied_for_path';
 
   // NEW: Pin tracking
   String? _pinnedHabit;
@@ -105,6 +201,8 @@ class OnboardingState extends ChangeNotifier {
   List<String> get customHabits => List.unmodifiable(_customHabits);
   Map<String, String> get customHabitFocusAreas =>
       Map.unmodifiable(_customHabitFocusAreas);
+  Map<String, List<int>> get customHabitDays =>
+      Map.unmodifiable(_customHabitDays);
 
   /// When each active action joined Today, for the actions that have it
   /// recorded. Read by the staleness rule, which needs the *action's* age
@@ -147,49 +245,41 @@ class OnboardingState extends ChangeNotifier {
   static const Map<String, List<String>> habitsByCategory = {
     'Health': [
       // Starter (very easy)
-      'Drink a glass of water',
+      'Drink 3 glasses of water',
       'Take 3 slow breaths',
-      'Stretch for 10 seconds',
+      'Stretch for 30 seconds',
       // Core
       'Stand up and roll your shoulders',
-      'Step outside for 30 seconds',
-      'Close your eyes for 20 seconds',
+      'Step outside for 5 minutes',
+      'Close your eyes for 30 seconds',
       'Do 5 gentle neck rolls',
       'Walk to the window and back',
-      'Take 5 deep belly breaths',
+      'Take 5 slow, deep breaths',
       // Advanced
       '2-minute body scan',
-      '10 minutes of gentle movement',
+      '5 minutes of gentle stretching',
       'Eat one meal mindfully',
       'Screens away 20 minutes before bed',
+      'Drink something warm',
+      'Get outside for a few minutes',
+      'Move your body a little',
+      'Get into bed early',
     ],
     'Mood': [
-      'Ten-second pause',
+      'One-minute pause',
       'Notice one thing you feel',
-      'One grounding breath',
-      'Look away from your screen for 10 seconds',
+      'Three grounding breaths',
+      'Look away from your screen for 30 seconds',
       'Name three things you can see',
       'Notice one sound around you',
       'Feel your feet on the ground',
-      'Place hand on heart for a moment',
-      'Notice one thing you\'re grateful for',
-      'Smile gently at yourself',
+      'Place hand on heart for 30 seconds',
+      'Name 3 things you\'re grateful for',
+      'Smile kindly at yourself',
       'Ask yourself "what do I need right now?"',
       'Give yourself permission to rest',
       'One meal without your phone',
-    ],
-    'Productivity': [
-      'Set one priority',
       'Plan tomorrow in one sentence',
-      'Do a 30-second reset',
-      'Write down one idea',
-      'Finish one tiny task',
-      'Declutter your desk for 2 minutes',
-      'Review your calendar',
-      'Turn off one notification',
-      'Close one browser tab',
-      'Archive 5 old emails',
-      'Update one to-do item',
     ],
     'Home & organization': [
       'Tidy one small thing',
@@ -199,14 +289,14 @@ class OnboardingState extends ChangeNotifier {
       'Make your bed',
       'Clear one shelf',
       'Wash 3 dishes',
-      'Take out one small bag of trash',
+      'Take out one bag of trash',
       'Fold 3 items of clothing',
       'Organize one drawer',
-      'Water one plant',
-      'Light a candle',
+      'Water your plants',
+      'Light a scented candle',
     ],
     'Relationships': [
-      'Send one message to someone',
+      'Send one message to someone you care about',
       'Think of one person you appreciate',
       'Ask someone how they are',
       'Give one genuine compliment',
@@ -220,48 +310,124 @@ class OnboardingState extends ChangeNotifier {
       'Celebrate someone else\'s win',
     ],
     'Creativity': [
-      'Write one sentence',
-      'Doodle for 10 seconds',
-      'Capture one idea',
+      'Write down what\'s in your head',
+      'Doodle for 5 minutes',
       'Notice one beautiful thing',
       'Take one photo of something you like',
-      'Draw one simple shape',
       'Hum a tune you enjoy',
-      'Rearrange something small',
-      'Try one new word',
-      'Create one tiny thing',
-      'Play with one creative medium',
-      'Imagine one possibility',
-    ],
-    'Finances': [
-      'Check your balance',
-      'Move €1 to savings',
-      'Review one subscription',
-      'Note one expense',
-      'Read one financial tip',
-      'Delete one old receipt',
-      'Update one budget category',
-      'Review one bill',
-      'Price-check one item before buying',
-      'Wait 24 hours before one purchase',
-      'Celebrate one money win',
-      'Set one small savings goal',
+      'Learn one new word',
     ],
     'Self-care': [
-      'Sit still for 10 seconds',
+      'Sit still for 1 minute',
       'Do one kind thing for yourself',
-      'Drink water slowly',
+      'Drink a cup of tasty coffee',
       'Stretch your neck',
       'Take one slow breath',
       'Notice something you like about yourself',
       'Give yourself permission to say no',
       'Do something that feels good',
-      'Rest for 2 minutes',
+      'Rest for 5 minutes',
       'Put on something comfortable',
       'Listen to one song you love',
-      'Do absolutely nothing for 30 seconds',
+      'Do absolutely nothing for 5 minutes',
       'Dim the lights an hour before sleep',
+      'Get out of bed',
+      'Eat after waking up',
+      'Eat one proper meal',
+      'Take your medication',
+      'Brush your teeth',
+      'Wash your face',
+      'Take a shower',
+      'Put on clean clothes',
+      'Brush your hair',
+      'Open the curtains',
+      'Turn on a lamp',
+      'Leave your phone across the room',
+      'Do a 1-minute reset',
     ],
+  };
+
+  /// Actions from focus areas the app no longer offers, and the area that
+  /// inherits them.
+  ///
+  /// Finances was removed as a focus area, then Doing one thing. Their actions
+  /// stay resolvable because a user who *held* one keeps it until they swap or
+  /// refresh, and because `_categoryForHabit` returning null is how a completed
+  /// action becomes a grey uncategorised square with no legend chip. One map,
+  /// read by all three services, rather than the same strings copied three
+  /// times — the resolver-duplication scar.
+  ///
+  /// This governs *new* moments only. Moments already written carry their own
+  /// `category: 'Finances'` or `'Doing one thing'` and are never rewritten.
+  ///
+  /// Retirement chains. 'Write down one idea' and 'Close one browser tab' were
+  /// retired *into* Doing one thing; removing that area orphaned them, so they
+  /// move on to Self-care. A replacement that is itself retired resolves to a
+  /// category with no hue, no legend chip and no swap pool — pinned by the
+  /// 'every inheriting area is a real focus area' test.
+  static const Map<String, String> retiredHabitCategories = {
+    // Titles renamed to match what the ARB actually renders. A user still
+    // holding the old card resolves and swaps through these.
+    'Drink a glass of water': 'Health',
+    'Stretch for 10 seconds': 'Health',
+    'Step outside for 30 seconds': 'Health',
+    'Close your eyes for 20 seconds': 'Health',
+    'Take 5 deep belly breaths': 'Health',
+    '10 minutes of gentle movement': 'Health',
+    'Ten-second pause': 'Mood',
+    'One grounding breath': 'Mood',
+    'Look away from your screen for 10 seconds': 'Mood',
+    'Place hand on heart for a moment': 'Mood',
+    "Notice one thing you're grateful for": 'Mood',
+    'Smile gently at yourself': 'Mood',
+    'Do a 30-second reset': 'Self-care',
+    'Take out one small bag of trash': 'Home & organization',
+    'Water one plant': 'Home & organization',
+    'Light a candle': 'Home & organization',
+    'Send one message to someone': 'Relationships',
+    'Doodle for 10 seconds': 'Creativity',
+    'Try one new word': 'Creativity',
+    'Sit still for 10 seconds': 'Self-care',
+    'Drink water slowly': 'Self-care',
+    'Rest for 2 minutes': 'Self-care',
+    'Do absolutely nothing for 30 seconds': 'Self-care',
+    'Capture one idea': 'Creativity',
+    'Draw one simple shape': 'Creativity',
+    'Rearrange something small': 'Creativity',
+    'Play with one creative medium': 'Creativity',
+    'Imagine one possibility': 'Creativity',
+    'Create one tiny thing': 'Creativity',
+    'Set one priority': 'Self-care',
+    'Finish one tiny task': 'Self-care',
+    'Declutter your desk for 2 minutes': 'Self-care',
+    'Review your calendar': 'Self-care',
+    'Turn off one notification': 'Self-care',
+    'Archive 5 old emails': 'Self-care',
+    'Update one to-do item': 'Self-care',
+    'Write down one idea': 'Self-care',
+    'Close one browser tab': 'Self-care',
+    'Write one sentence': 'Creativity',
+    'Check your balance': 'Home & organization',
+    'Move €1 to savings': 'Home & organization',
+    'Review one subscription': 'Home & organization',
+    'Note one expense': 'Home & organization',
+    'Read one financial tip': 'Home & organization',
+    'Delete one old receipt': 'Home & organization',
+    'Update one budget category': 'Home & organization',
+    'Review one bill': 'Home & organization',
+    'Price-check one item before buying': 'Home & organization',
+    'Wait 24 hours before one purchase': 'Home & organization',
+    'Celebrate one money win': 'Home & organization',
+    'Set one small savings goal': 'Home & organization',
+  };
+
+  /// Focus areas that no longer exist, and what a saved selection becomes.
+  static const Map<String, String> retiredFocusAreas = {
+    'Finances': 'Home & organization',
+    // Both names for one area: 'Productivity' from before the rename,
+    // 'Doing one thing' from after it. Either can be sitting in prefs.
+    'Productivity': 'Self-care',
+    'Doing one thing': 'Self-care',
   };
 
   void setName(String value) {
@@ -272,13 +438,21 @@ class OnboardingState extends ChangeNotifier {
   /// Clears current focus-area selections and applies [defaults] as the
   /// pre-selection for [pathKey]. Tracks which path was last applied so
   /// FocusAreasScreen can detect when the path changed and re-apply.
-  void applyPathDefaults(List<String> defaults, String pathKey) {
+  ///
+  /// Persists, like [changeFocusAreas]. It used to mutate memory only, so a
+  /// path change from ChangePathScreen was lost on restart: `loadUserHabits`
+  /// read the old saved list back, leaving the user holding actions from areas
+  /// their focus list no longer contained.
+  Future<void> applyPathDefaults(List<String> defaults, String pathKey) async {
     _focusAreas.clear();
     for (final area in defaults) {
       _focusAreas.add(area);
     }
     _lastPreselectedPathKey = pathKey;
     notifyListeners();
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('focus_areas', _focusAreas);
   }
 
   Future<void> setSelectedIntentionPath(String pathKey) async {
@@ -358,11 +532,16 @@ class OnboardingState extends ChangeNotifier {
 
     // A path that knows its own actions seeds exactly those (§7): a random
     // draw from "Health" could hand a sleep-seeker a glass of water.
-    final path = IntentionPath.getById(
-      IntentionPathId.fromKey(_selectedIntentionPath),
-    );
+    //
+    // That holds for the *first* generation on a path. Applying them on every
+    // generation made refresh a no-op for the five starters paths and made
+    // their focus-area choice mean nothing — so after the first, they draw
+    // from their areas like the other four.
+    final pathKey = _selectedIntentionPath;
+    final path = IntentionPath.getById(IntentionPathId.fromKey(pathKey));
     final starters = path.starterActions;
-    if (starters != null) {
+    final useStarters = starters != null && _startersAppliedForPath != pathKey;
+    if (useStarters) {
       selectedHabits.addAll(starters);
     } else if (_focusAreas.isEmpty) {
       selectedHabits.addAll([
@@ -376,6 +555,9 @@ class OnboardingState extends ChangeNotifier {
         selectedHabits.addAll(shuffled.take(2));
       }
     }
+
+    // This path has now spent its starters; the next generation draws pool.
+    if (useStarters) _startersAppliedForPath = pathKey;
 
     // Only what wasn't here a moment ago counts as newly adopted: this runs
     // again on every refresh and focus-area change, and an action that
@@ -396,6 +578,9 @@ class OnboardingState extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('user_habits', userHabits);
     await _saveHabitAdoptions(prefs);
+    if (useStarters) {
+      await prefs.setString(_startersAppliedForPathKey, pathKey);
+    }
     if (pinnedCleared) {
       await prefs.remove('pinned_habit');
     }
@@ -479,6 +664,35 @@ class OnboardingState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Replaces retired focus areas in the saved selection with the area that
+  /// inherited them, in place, and persists the result.
+  ///
+  /// Runs inside [loadUserHabits] the moment `focus_areas` is read, before any
+  /// screen can see the stale value. Lazy migration is not enough: the change
+  /// -focus-areas picker seeds its own selection list from [focusAreas] and
+  /// renders cards from a fixed catalogue, so a retired area would sit there
+  /// invisible, occupying one of the two (or four) selection slots and getting
+  /// written straight back on save.
+  ///
+  /// A user whose replacement is already selected ends up with one area rather
+  /// than a duplicate. That is deliberate: one real area beats two names for
+  /// the same pool. Held actions are untouched — [userHabits] keeps whatever a
+  /// user was already using until they swap or refresh it themselves.
+  Future<void> _migrateRetiredFocusAreas(SharedPreferences prefs) async {
+    if (!_focusAreas.any(retiredFocusAreas.containsKey)) return;
+
+    final migrated = <String>[];
+    for (final area in _focusAreas) {
+      final replacement = retiredFocusAreas[area] ?? area;
+      if (!migrated.contains(replacement)) migrated.add(replacement);
+    }
+
+    _focusAreas
+      ..clear()
+      ..addAll(migrated);
+    await prefs.setStringList('focus_areas', _focusAreas);
+  }
+
   // Load habits from storage
   Future<void> loadUserHabits() async {
     final prefs = await SharedPreferences.getInstance();
@@ -494,7 +708,10 @@ class OnboardingState extends ChangeNotifier {
     if (savedFocusAreas != null) {
       _focusAreas.clear();
       _focusAreas.addAll(savedFocusAreas);
+      await _migrateRetiredFocusAreas(prefs);
     }
+
+    _startersAppliedForPath = prefs.getString(_startersAppliedForPathKey);
 
     final savedHabits = prefs.getStringList('user_habits');
 
@@ -536,6 +753,23 @@ class OnboardingState extends ChangeNotifier {
         }
       }
 
+      // Load custom habit weekday masks. An absent title means every day, so
+      // accounts made before masks existed load with an empty map and behave
+      // exactly as they did.
+      final daysJson = prefs.getString(_customHabitDaysKey);
+      if (daysJson != null) {
+        try {
+          _customHabitDays = (jsonDecode(daysJson) as Map).map(
+            (key, value) => MapEntry(
+              key as String,
+              (value as List).map((d) => d as int).toList(),
+            ),
+          );
+        } catch (_) {
+          _customHabitDays = {};
+        }
+      }
+
       // Migration: infer focus areas from existing habits for users who
       // completed onboarding before focus areas were persisted.
       if (_focusAreas.isEmpty && _onboardingComplete) {
@@ -552,9 +786,12 @@ class OnboardingState extends ChangeNotifier {
       // No saved habits = fresh start — clear any stale custom habits from prefs
       _customHabits.clear();
       _customHabitFocusAreas.clear();
+      _customHabitDays.clear();
       _habitAdoptedAt.clear();
       await prefs.remove('custom_habits');
       await prefs.remove('custom_habit_focus_areas');
+      await prefs.remove(_customHabitDaysKey);
+      await prefs.remove(customHabitDaysChangedAtKey);
       await prefs.remove(_habitAdoptedAtKey);
       await prefs.remove('pinned_habit');
     }
@@ -574,9 +811,11 @@ class OnboardingState extends ChangeNotifier {
         _customHabits.removeWhere((h) => stale.contains(h));
         for (final h in stale) {
           _customHabitFocusAreas.remove(h);
+          _customHabitDays.remove(h);
         }
         await prefs.setStringList('custom_habits', _customHabits);
         await _saveCustomHabitFocusAreas(prefs);
+        await _saveCustomHabitDays(prefs);
       }
 
       // Migration: assign first active focus area to custom habits without one
@@ -706,6 +945,12 @@ class OnboardingState extends ChangeNotifier {
         return entry.key;
       }
     }
+    // An action from a retired focus area, still held by whoever had it.
+    // This copy is the one `_handleSwap` consults: null here is not a grey
+    // square but a dead end — "can't swap", and the card cannot be replaced
+    // except by refreshing every action at once.
+    final retired = retiredHabitCategories[habit];
+    if (retired != null) return retired;
     // Check custom habit focus areas
     return _customHabitFocusAreas[habit];
   }
@@ -917,6 +1162,7 @@ class OnboardingState extends ChangeNotifier {
     _customHabits.remove(habitTitle);
     userHabits.remove(habitTitle);
     _customHabitFocusAreas.remove(habitTitle);
+    _customHabitDays.remove(habitTitle);
 
     // Clear pinned habit if the deleted habit was pinned
     if (_pinnedHabit == habitTitle) {
@@ -927,6 +1173,7 @@ class OnboardingState extends ChangeNotifier {
     await prefs.setStringList('custom_habits', _customHabits);
     await prefs.setStringList('user_habits', userHabits);
     await _saveCustomHabitFocusAreas(prefs);
+    await _saveCustomHabitDays(prefs);
     await _saveHabitAdoptions(prefs);
     if (_pinnedHabit == null) {
       await prefs.remove('pinned_habit');
@@ -955,6 +1202,14 @@ class OnboardingState extends ChangeNotifier {
       _customHabitFocusAreas[newTitle] = area;
     }
 
+    // Migrate the weekday mask. Rewording an action does not reschedule it,
+    // and this is not a mask *change* — so it must not re-stamp
+    // [customHabitDaysChangedAtKey] and suppress drift for another month.
+    final days = _customHabitDays.remove(oldTitle);
+    if (days != null) {
+      _customHabitDays[newTitle] = days;
+    }
+
     // Rewording an action is not adopting a new one, so it keeps its age.
     // Otherwise renaming a two-day-old custom would hand it a fresh unknown
     // stamp and make it eligible for the nudge straight away.
@@ -967,10 +1222,17 @@ class OnboardingState extends ChangeNotifier {
     await prefs.setStringList('custom_habits', _customHabits);
     await prefs.setStringList('user_habits', userHabits);
     await _saveCustomHabitFocusAreas(prefs);
+    await _saveCustomHabitDays(prefs);
     await _saveHabitAdoptions(prefs);
     if (_pinnedHabit == newTitle) {
       await prefs.setString('pinned_habit', newTitle);
     }
+
+    // Move the moments too. Outside the id guard below on purpose: a rename
+    // that only changes case or punctuation slugs to the same id, so the
+    // completion keys need no migration while `habitName` — the full title,
+    // and the key everything else joins on — still changed.
+    await MomentsService.renameHabit(oldTitle, newTitle);
 
     // Migrate completion history keys
     final oldId = _habitId(oldTitle);
@@ -1014,16 +1276,24 @@ class OnboardingState extends ChangeNotifier {
         'custom_habit_focus_areas', jsonEncode(_customHabitFocusAreas));
   }
 
+  /// Persists custom habit → weekday mask as JSON. Mirrors
+  /// [_saveCustomHabitFocusAreas]: same shape, same lifecycle, same call sites.
+  Future<void> _saveCustomHabitDays(SharedPreferences prefs) async {
+    await prefs.setString(_customHabitDaysKey, jsonEncode(_customHabitDays));
+  }
+
   Future<void> reset() async {
     _welcomeSeen = false;
     _name = null;
     _focusAreas.clear();
     _lastPreselectedPathKey = null;
+    _startersAppliedForPath = null;
     _dailyReminderEnabled = false;
     _onboardingComplete = false;
     userHabits.clear();
     _customHabits.clear();
     _customHabitFocusAreas.clear();
+    _customHabitDays.clear();
     _habitAdoptedAt.clear();
     _pinnedHabit = null;
     _swapsUsed.clear();
@@ -1038,7 +1308,10 @@ class OnboardingState extends ChangeNotifier {
     await prefs.remove('user_habits');
     await prefs.remove('custom_habits');
     await prefs.remove('custom_habit_focus_areas');
+    await prefs.remove(_customHabitDaysKey);
+    await prefs.remove(customHabitDaysChangedAtKey);
     await prefs.remove(_habitAdoptedAtKey);
+    await prefs.remove(_startersAppliedForPathKey);
     await prefs.remove('pinned_habit');
     await prefs.remove('swaps_used');
     await prefs.remove('last_swap_reset');

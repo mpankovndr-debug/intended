@@ -33,6 +33,22 @@ class NotificationPreferencesService {
     await prefs.setInt('notification_time_minute', minute);
   }
 
+  /// The language the currently-queued notifications were written in, or null
+  /// on an install that predates this record.
+  ///
+  /// iOS stores the sentence itself, not a reference to a translation, so a
+  /// queue built in Russian keeps speaking Russian after the app switches to
+  /// English. This is what lets [NotificationScheduler.refreshLocale] notice.
+  static Future<String?> getScheduledLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('notification_scheduled_locale');
+  }
+
+  static Future<void> setScheduledLocale(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('notification_scheduled_locale', value);
+  }
+
   static Future<bool> isWeeklyEnabled() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('weekly_notification_enabled') ?? false;

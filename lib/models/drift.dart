@@ -30,11 +30,36 @@ class Drift {
   /// "you usually" has no basis and the card would be inventing a norm.
   static const int minWeeksOfHistory = 4;
 
+  /// How long a weekday mask silences this card.
+  ///
+  /// A mask changes how many actions are even *offered* in a week, so the
+  /// average built before it describes a different app. Warning that someone
+  /// is running below their usual rate, when the drop is the schedule they
+  /// just chose, would read as the app disapproving of their own decision.
+  /// Four weeks — the same span [minWeeksOfHistory] needs — is how long it
+  /// takes for the baseline to describe the masked week again.
+  static const int maskSuppressionDays = minWeeksOfHistory * 7;
+
   /// Null when there is nothing honest to say — too little history, or a week
   /// that is doing fine. Silence is the default; this card earns its place.
-  static Drift? read(List<Moment> moments, {DateTime? now}) {
+  /// [maskChangedAt] is when a custom action's weekday mask was last created
+  /// or changed, or null if none ever was. Kept a parameter rather than a
+  /// storage read so this stays pure and testable.
+  static Drift? read(
+    List<Moment> moments, {
+    DateTime? now,
+    DateTime? maskChangedAt,
+  }) {
     if (moments.isEmpty) return null;
     final today = now ?? DateTime.now();
+
+    // Silent while the baseline predates the current schedule — see
+    // [maskSuppressionDays]. Checked before anything else: no amount of
+    // history makes a comparison against the wrong app honest.
+    if (maskChangedAt != null &&
+        today.difference(maskChangedAt).inDays < maskSuppressionDays) {
+      return null;
+    }
 
     // Everything is compared in one space: UTC-flagged wall clock, rebuilt
     // from each moment's own recorded offset. Mixing that with plain local

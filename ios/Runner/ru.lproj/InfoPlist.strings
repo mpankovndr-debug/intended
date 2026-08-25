@@ -1,2 +1,3 @@
 /* Russian localization for iOS per-app language support */
 "CFBundleDisplayName" = "Intended";
+"NSHealthUpdateUsageDescription" = "Intended сохраняет каждую завершённую паузу в «Здоровье» как минуту осознанности, а твой ответ — как запись о состоянии. Intended ничего не читает из «Здоровья».";

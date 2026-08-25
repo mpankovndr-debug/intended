@@ -28,6 +28,12 @@ class _PaywallScreenState extends State<PaywallScreen>
     with SingleTickerProviderStateMixin {
   String _selectedPlan = 'yearly'; // monthly, yearly, lifetime
   bool _isLoading = false;
+
+  /// True once shown-and-resolved: purchase completed, or the instant pop
+  /// for an already-premium user. Anything else that unmounts this screen
+  /// counts as a dismissal — dispose is the one choke point all the pop
+  /// paths (close button, barrier, back swipe) share.
+  bool _outcomeLogged = false;
   late final AnimationController _bulletController;
   late final List<Animation<double>> _bulletAnimations;
 
@@ -39,6 +45,7 @@ class _PaywallScreenState extends State<PaywallScreen>
       if (!mounted) return;
       final rc = context.read<RevenueCatService>();
       if (rc.isPremium) {
+        _outcomeLogged = true;
         Navigator.of(context).pop();
         return;
       }
@@ -66,6 +73,9 @@ class _PaywallScreenState extends State<PaywallScreen>
 
   @override
   void dispose() {
+    if (!_outcomeLogged) {
+      AnalyticsService.logPaywallDismissed(widget.source);
+    }
     _bulletController.dispose();
     super.dispose();
   }
@@ -678,6 +688,7 @@ class _PaywallScreenState extends State<PaywallScreen>
                           .purchasePlan(_selectedPlan);
                       if (mounted && success) {
                         AnalyticsService.logPurchaseCompleted(_selectedPlan);
+                        _outcomeLogged = true;
                         Navigator.pop(context);
                       } else {
                         AnalyticsService.logPurchaseCancelled();

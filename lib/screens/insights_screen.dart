@@ -12,6 +12,7 @@ import '../models/drift.dart';
 import '../models/first_week.dart';
 import '../models/intention_path.dart';
 import '../models/letter.dart';
+import '../models/letter_offer_policy.dart';
 import '../models/lift.dart';
 import '../models/month_plan.dart';
 import '../models/season.dart';
@@ -115,12 +116,22 @@ class _InsightsScreenState extends State<InsightsScreen> {
   @override
   void initState() {
     super.initState();
+    // Logged on visibility, not construction: this State is built once for
+    // the tab bar and lives across the whole session.
+    if (widget.isActive) AnalyticsService.logScreenView('insights');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && widget.isActive) _maybeOfferLetterPaywall();
+    });
     _load();
   }
 
   @override
   void didUpdateWidget(covariant InsightsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.isActive && !oldWidget.isActive) {
+      AnalyticsService.logScreenView('insights');
+      _maybeOfferLetterPaywall();
+    }
     // Re-read when the tab becomes visible; a moment may have landed since.
     if (widget.isActive && !oldWidget.isActive) {
       final jump = InsightsScreen.jumpTo.value;
@@ -156,13 +167,19 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final proof = await PlanService.proof();
     final prefs = await SharedPreferences.getInstance();
     final filterHintDone = prefs.getBool('grid_filter_hint_done') ?? false;
+    // Drift compares this week against an average built before any weekday
+    // mask existed, so a recent mask has to silence it (§Drift).
+    final maskChangedAtRaw =
+        prefs.getString(OnboardingState.customHabitDaysChangedAtKey);
+    final maskChangedAt =
+        maskChangedAtRaw == null ? null : DateTime.tryParse(maskChangedAtRaw);
     if (!mounted) return;
     setState(() {
       _moments = moments;
       _lastMonth = lastMonth;
       _season = season;
       _archive = archive;
-      _drift = Drift.read(moments);
+      _drift = Drift.read(moments, maskChangedAt: maskChangedAt);
       // Given the season and the reminder so it can avoid repeating the
       // card above it, and can ask a question with a real alternative in it.
       _letter = Letter.read(
@@ -1018,15 +1035,49 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// blurs behind the sheet, so the paywall arrives over the app rather than
   /// replacing it. This button did nothing at all until the design review
   /// caught it.
-  Future<void> _showPaywall() {
+  Future<void> _showPaywall({String source = 'insights_teaser'}) {
     return showCupertinoModalPopup(
       context: context,
       // Deeper than the paywall's 50%: the page behind is context,
       // not content, and at half-dim it still competed (SS1).
       barrierColor: const Color(0x99000000),
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      builder: (context) => const PaywallScreen(source: 'insights_teaser'),
+      builder: (context) => PaywallScreen(source: source),
     );
+  }
+
+  /// The one proactive paywall: fires on a visit to this tab, at most once
+  /// a month, only after day four, and only when this month's letter has
+  /// actually computed — the user lands on the page where the dissolving
+  /// letter is already visible behind the sheet. Policy in
+  /// [LetterOfferPolicy]; this method only gathers inputs and shows.
+  Future<void> _maybeOfferLetterPaywall() async {
+    final paid = context.read<UserState>().hasSubscription;
+    final moments = await MomentsService.momentsForMonth(DateTime.now());
+    final prefs = await SharedPreferences.getInstance();
+    final firstLaunchRaw = prefs.getString('first_launch_date');
+    final should = LetterOfferPolicy.shouldOffer(
+      hasSubscription: paid,
+      letterExists: Letter.read(moments) != null,
+      firstLaunch:
+          firstLaunchRaw == null ? null : DateTime.tryParse(firstLaunchRaw),
+      now: DateTime.now(),
+      lastOfferedMonth: prefs.getString(LetterOfferPolicy.lastOfferedPrefsKey),
+    );
+    if (!should) return;
+    if (!mounted) return;
+    // Not just mounted: never push a paywall over whatever sheet or route
+    // the user opened while we were reading prefs.
+    if (ModalRoute.of(context)?.isCurrent != true) return;
+    // Remember before showing, so a crash after this line costs us one
+    // offer rather than showing one on every launch.
+    await prefs.setString(
+      LetterOfferPolicy.lastOfferedPrefsKey,
+      LetterOfferPolicy.monthKey(DateTime.now()),
+    );
+    if (!mounted) return;
+    if (ModalRoute.of(context)?.isCurrent != true) return;
+    await _showPaywall(source: 'letter_teaser');
   }
 
   /// A real sentence that runs out of ink partway across.

@@ -121,6 +121,7 @@ class Moment {
   }
 
   Moment copyWith({
+    String? habitName,
     String? category,
     MomentMood? mood,
     String? note,
@@ -128,7 +129,7 @@ class Moment {
   }) {
     return Moment(
       id: id,
-      habitName: habitName,
+      habitName: habitName ?? this.habitName,
       habitEmoji: habitEmoji,
       completedAt: completedAt,
       category: category ?? this.category,

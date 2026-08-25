@@ -200,16 +200,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return l10n.focusAreaHealth;
       case 'Mood':
         return l10n.focusAreaMood;
-      case 'Productivity':
-        return l10n.focusAreaProductivity;
       case 'Home & organization':
         return l10n.focusAreaHome;
       case 'Relationships':
         return l10n.focusAreaRelationships;
       case 'Creativity':
         return l10n.focusAreaCreativity;
-      case 'Finances':
-        return l10n.focusAreaFinances;
       case 'Self-care':
         return l10n.focusAreaSelfCare;
       default:

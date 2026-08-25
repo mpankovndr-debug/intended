@@ -111,10 +111,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get focusAreaMoodSub => 'Notice how you feel. That\'s the first step.';
 
   @override
-  String get focusAreaProductivity => 'Productivity';
+  String get focusAreaProductivity => 'Doing one thing';
 
   @override
-  String get focusAreaProductivitySub => 'One thing at a time. That\'s plenty.';
+  String get focusAreaProductivitySub => 'Starting is the hard part.';
 
   @override
   String get focusAreaHome => 'Home & organization';
@@ -817,14 +817,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editHabitTitle => 'Edit habit';
 
   @override
+  String get habitShowOnLabel => 'Show this on';
+
+  @override
   String get editHabitSave => 'Save';
 
   @override
-  String get customHabitCreatedTitle => 'Habit created';
+  String get customHabitCreatedTitle => 'Intention created';
 
   @override
   String customHabitCreatedMessage(String title) {
-    return '\"$title\" has been added to your habits.';
+    return '\"$title\" has been added to your intentions.';
   }
 
   @override
@@ -917,7 +920,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completionQuestion => 'Did you do this today?';
 
   @override
-  String get completionHowDidItLand => 'How did that land?';
+  String get completionHowDidItLand => 'How was it?';
 
   @override
   String get completionMoodGlad => 'Glad I did';
@@ -929,7 +932,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completionMoodTookEffort => 'Took effort';
 
   @override
-  String get completionAddNote => '+ add a note';
+  String get completionAddNote => 'add a note';
 
   @override
   String get completionNoteHint => 'Anything you want to remember?';
@@ -2074,7 +2077,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitWalkToWindow => 'Walk to the window and back';
 
   @override
-  String get habitBellyBreaths => 'Take 5 deep belly breaths';
+  String get habitBellyBreaths => 'Take 5 slow, deep breaths';
 
   @override
   String get habitBodyScan => '2-minute body scan';
@@ -2084,6 +2087,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get habitMindfulMeal => 'Eat one meal mindfully';
+
+  @override
+  String get habitEatAfterWaking => 'Eat after waking up';
+
+  @override
+  String get habitProperMeal => 'Eat one proper meal';
+
+  @override
+  String get habitDrinkWarm => 'Drink something warm';
+
+  @override
+  String get habitTakeMedication => 'Take your medication';
+
+  @override
+  String get habitGetOutside => 'Get outside for a few minutes';
+
+  @override
+  String get habitMoveBody => 'Move your body a little';
+
+  @override
+  String get habitBedEarly => 'Get into bed early';
 
   @override
   String get habitTenSecondPause => 'One-minute pause';
@@ -2122,37 +2146,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitPermissionToRest => 'Give yourself permission to rest';
 
   @override
-  String get habitSetPriority => 'Set one priority today';
-
-  @override
   String get habitPlanTomorrow => 'Plan tomorrow in one sentence';
 
   @override
   String get habitThirtySecondReset => 'Do a 1-minute reset';
-
-  @override
-  String get habitWriteIdea => 'Unsubscribe from an unnecessary email list';
-
-  @override
-  String get habitFinishTinyTask => 'Finish one tiny task';
-
-  @override
-  String get habitDeclutterDesk => 'Declutter your desk';
-
-  @override
-  String get habitReviewCalendar => 'Review your calendar';
-
-  @override
-  String get habitTurnOffNotification => 'Turn off one notification';
-
-  @override
-  String get habitCloseTab => 'Close unnecessary browser tabs';
-
-  @override
-  String get habitArchiveEmails => 'Archive 5 old emails';
-
-  @override
-  String get habitUpdateTodo => 'Update one to-do item';
 
   @override
   String get habitTidyOneThing => 'Tidy one small thing';
@@ -2227,13 +2224,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitCelebrateOthers => 'Celebrate someone else\'s win';
 
   @override
-  String get habitWriteSentence => 'Write a short story';
+  String get habitWriteSentence => 'Write down what\'s in your head';
 
   @override
   String get habitDoodle => 'Doodle for 5 minutes';
-
-  @override
-  String get habitCaptureIdea => 'Capture one idea';
 
   @override
   String get habitNoticeBeauty => 'Notice one beautiful thing';
@@ -2242,61 +2236,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitTakePhoto => 'Take one photo of something you like';
 
   @override
-  String get habitDrawShape => 'Draw something simple';
-
-  @override
   String get habitHumTune => 'Hum a tune you enjoy';
 
   @override
-  String get habitRearrange => 'Rearrange something small';
-
-  @override
   String get habitTryNewWord => 'Learn one new word';
-
-  @override
-  String get habitCreateTinyThing => 'Play a short melody';
-
-  @override
-  String get habitPlayCreative => 'Play with one creative medium';
-
-  @override
-  String get habitImagine => 'Do a vocal warm-up';
-
-  @override
-  String get habitCheckBalance => 'Try one financial tip';
-
-  @override
-  String get habitMoveToSavings => 'Move €3/\$3 to savings';
-
-  @override
-  String get habitReviewSubscription => 'Review one subscription';
-
-  @override
-  String get habitNoteExpense => 'Note 3 expenses';
-
-  @override
-  String get habitFinancialTip => 'Read one financial tip';
-
-  @override
-  String get habitDeleteReceipt => 'Delete one old receipt';
-
-  @override
-  String get habitUpdateBudget => 'Treat yourself';
-
-  @override
-  String get habitReviewBill => 'Review necessity of one subscription';
-
-  @override
-  String get habitPriceCheck => 'Price-check one item before buying';
-
-  @override
-  String get habitWait24Hours => 'Wait 24 hours before a big purchase';
-
-  @override
-  String get habitCelebrateMoneyWin => 'Celebrate one money win';
-
-  @override
-  String get habitSavingsGoal => 'Set one savings goal';
 
   @override
   String get habitSitStill => 'Sit still for 1 minute';
@@ -2334,6 +2277,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get habitDoNothing => 'Do absolutely nothing for 5 minutes';
+
+  @override
+  String get habitGetOutOfBed => 'Get out of bed';
+
+  @override
+  String get habitBrushTeeth => 'Brush your teeth';
+
+  @override
+  String get habitWashFace => 'Wash your face';
+
+  @override
+  String get habitTakeShower => 'Take a shower';
+
+  @override
+  String get habitCleanClothes => 'Put on clean clothes';
+
+  @override
+  String get habitBrushHair => 'Brush your hair';
+
+  @override
+  String get habitOpenCurtains => 'Open the curtains';
+
+  @override
+  String get habitTurnOnLamp => 'Turn on a lamp';
+
+  @override
+  String get habitPhoneAcrossRoom => 'Leave your phone across the room';
 
   @override
   String get shareCardWeeklyCheckin => 'Weekly check-in';
@@ -2923,6 +2893,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String notifWeeklyDynamicN(int count) {
     return 'Your week is on the page — $count moments in it.';
+  }
+
+  @override
+  String notifMonthlyLetter(String month) {
+    return 'Your $month letter is ready.';
   }
 
   @override
@@ -3846,4 +3821,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileExportEmpty => 'Nothing to export yet.';
+
+  @override
+  String get pauseEntryTitle => 'a minute of breath';
+
+  @override
+  String get pauseLeave => 'enough for now';
+
+  @override
+  String get pauseBreathIn => 'in';
+
+  @override
+  String get pauseBreathOut => 'out';
+
+  @override
+  String get pauseCheckInQuestion => 'How are you feeling now?';
+
+  @override
+  String get pauseCheckInTense => 'Still tense';
+
+  @override
+  String get pauseCheckInNeutral => 'A little calmer';
+
+  @override
+  String get pauseCheckInCalm => 'It lifted';
+
+  @override
+  String get pauseNotifAction => 'A minute of breath';
+
+  @override
+  String get pauseHealthTitle => 'Save to Apple Health?';
+
+  @override
+  String get pauseHealthBody =>
+      'Each completed pause can appear in Apple Health as a mindful minute — your answer here too. Intended never reads anything from Health.';
+
+  @override
+  String get pauseHealthSave => 'Save to Health';
+
+  @override
+  String widgetMomentsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count moments',
+      one: '$count moment',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String widgetReturnsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'back $count times',
+      one: 'back once',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get widgetMonthUnlock => 'Intended+ — the whole month in colour';
 }

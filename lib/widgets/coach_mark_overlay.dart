@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/app_localizations.dart';
+
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
@@ -292,7 +294,7 @@ class _CardBody extends StatelessWidget {
                 child: GestureDetector(
                   onTap: onDismiss,
                   child: Text(
-                    'Got it',
+                    AppLocalizations.of(context).tipGotIt,
                     style: TextStyle(
                       fontFamily: AppTextStyles.bodyFont(context),
                       fontSize: 14,

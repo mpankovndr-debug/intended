@@ -90,7 +90,7 @@ class IntentionPath {
       iconAsset: 'assets/icons/path_gentle_mornings.svg',
       titleKey: 'pathGentleMorningsTitle',
       subtitleKey: 'pathGentleMorningsSubtitle',
-      defaultFocusAreas: const ['Health', 'Productivity'],
+      defaultFocusAreas: const ['Health', 'Mood'],
       accentColor: const Color(0xFFE09A4A), // warm amber — sunrise
     ),
     IntentionPath(
@@ -106,7 +106,7 @@ class IntentionPath {
       iconAsset: 'assets/icons/path_quiet_focus.svg',
       titleKey: 'pathQuietFocusTitle',
       subtitleKey: 'pathQuietFocusSubtitle',
-      defaultFocusAreas: const ['Productivity', 'Self-care'],
+      defaultFocusAreas: const ['Self-care', 'Mood'],
       accentColor: const Color(0xFF6E8FB5), // muted blue — focused stillness
     ),
     IntentionPath(
@@ -127,8 +127,8 @@ class IntentionPath {
       starterActions: const [
         'Screens away 20 minutes before bed',
         'Dim the lights an hour before sleep',
-        'Take 5 deep belly breaths',
-        'Do absolutely nothing for 30 seconds',
+        'Take 5 slow, deep breaths',
+        'Do absolutely nothing for 5 minutes',
       ],
     ),
     IntentionPath(
@@ -136,13 +136,13 @@ class IntentionPath {
       iconAsset: 'assets/icons/path_finding_calm.svg',
       titleKey: 'pathLookingUpTitle',
       subtitleKey: 'pathLookingUpSubtitle',
-      defaultFocusAreas: const ['Mood', 'Productivity'],
+      defaultFocusAreas: const ['Mood', 'Health'],
       accentColor: const Color(0xFF6FA08B), // fresh green — eyes off glass
       starterActions: const [
-        'Look away from your screen for 10 seconds',
+        'Look away from your screen for 30 seconds',
         'One meal without your phone',
-        'Turn off one notification',
-        'Step outside for 30 seconds',
+        'Name three things you can see',
+        'Step outside for 5 minutes',
       ],
     ),
     IntentionPath(
@@ -153,7 +153,7 @@ class IntentionPath {
       defaultFocusAreas: const ['Relationships', 'Mood'],
       accentColor: const Color(0xFFC08A93), // soft rose — warmth
       starterActions: const [
-        'Send one message to someone',
+        'Send one message to someone you care about',
         'Ask someone how they are',
         'Think of one person you appreciate',
         'Reach out to someone you miss',
@@ -167,10 +167,10 @@ class IntentionPath {
       defaultFocusAreas: const ['Health', 'Self-care'],
       accentColor: const Color(0xFFC98F6B), // warm clay — body in motion
       starterActions: const [
-        'Stretch for 10 seconds',
+        'Stretch for 30 seconds',
         'Stand up and roll your shoulders',
         'Walk to the window and back',
-        '10 minutes of gentle movement',
+        '5 minutes of gentle stretching',
       ],
     ),
     IntentionPath(
@@ -181,10 +181,10 @@ class IntentionPath {
       defaultFocusAreas: const ['Self-care', 'Mood'],
       accentColor: const Color(0xFF8A7295), // muted plum — shelter
       starterActions: const [
-        'Drink water slowly',
-        'Rest for 2 minutes',
-        'Place hand on heart for a moment',
-        'Give yourself permission to rest',
+        'Get out of bed',
+        'Eat after waking up',
+        'Brush your teeth',
+        'Open the curtains',
       ],
     ),
     // Kept for back-compat resolution (e.g. legacy stored prefs values).

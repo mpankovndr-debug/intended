@@ -28,7 +28,7 @@ class CategoryColors {
     'Health': 14, // coral
     'Self-care': 258, // violet
     'Mood': 96, // sage
-    'Productivity': 205, // blue
+    'Doing one thing': 205, // blue
     'Home & organization': 34, // amber
     'Relationships': 342, // rose
     'Creativity': 288, // magenta
@@ -51,7 +51,7 @@ class CategoryColors {
     'Health': 1.00, // coral
     'Home & organization': 0.92, // amber
     'Relationships': 0.86, // rose
-    'Productivity': 0.76, // blue
+    'Doing one thing': 0.76, // blue
     'Self-care': 0.68, // violet
     'Finances': 0.60, // teal
     'Creativity': 0.58, // magenta

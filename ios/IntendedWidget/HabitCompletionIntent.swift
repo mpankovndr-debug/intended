@@ -49,6 +49,26 @@ struct CompleteHabitIntent: AppIntent {
 
     // MARK: - Helpers
 
+    private func timeNow() -> String {
+        let formatter = DateFormatter()
+        formatter.setLocalizedDateFormatFromTemplate("HH:mm")
+        return formatter.string(from: Date())
+    }
+
+    private func appendMonthTile(_ hex: String?, defaults: UserDefaults) {
+        guard let hex = hex else { return }
+        var tiles: [String] = []
+        if let json = defaults.string(forKey: "widget_month_tiles"),
+           let data = json.data(using: .utf8) {
+            tiles = (try? JSONDecoder().decode([String].self, from: data)) ?? []
+        }
+        tiles.append(hex)
+        if let data = try? JSONEncoder().encode(tiles),
+           let json = String(data: data, encoding: .utf8) {
+            defaults.set(json, forKey: "widget_month_tiles")
+        }
+    }
+
     private func dateKey(for date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
@@ -80,10 +100,17 @@ struct CompleteHabitIntent: AppIntent {
             return
         }
 
-        // Mark matching habit as done (match on trackingName = raw English key)
+        // Mark matching habit as done (match on trackingName = raw English key),
+        // stamp the time so the large widget can show it, and grow the month
+        // by one tile in the habit's colour — the app replaces it with the
+        // mood-tinted tile on its next open.
         for i in habits.indices {
             if habits[i].trackingName == habitName {
-                habits[i].done = true
+                if !habits[i].done {
+                    habits[i].done = true
+                    habits[i].doneAt = timeNow()
+                    appendMonthTile(habits[i].colorHex, defaults: defaults)
+                }
                 break
             }
         }
@@ -112,6 +139,7 @@ private struct MutableHabitEntry: Codable {
     let rawName: String?
     var done: Bool
     let colorHex: String?
+    var doneAt: String?
 
     var trackingName: String { rawName ?? name }
 }

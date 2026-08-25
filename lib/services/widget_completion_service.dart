@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 import '../models/moment.dart';
+import 'analytics_service.dart';
 import 'moments_service.dart';
 import 'reflection_service.dart';
 import 'app_usage_service.dart';
@@ -90,6 +91,7 @@ class WidgetCompletionService {
       // Clear the pending queue
       await HomeWidget.saveWidgetData<String>(_pendingKey, '[]');
 
+      if (synced > 0) AnalyticsService.logWidgetCompletionsSynced(synced);
       return synced;
     } catch (e) {
       debugPrint('Widget completion sync failed: $e');

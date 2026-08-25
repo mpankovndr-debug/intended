@@ -60,6 +60,9 @@ import 'widgets/quiet_bloom_overlay.dart';
 import 'widgets/widget_mood_catchup.dart';
 import 'widgets/stale_action_nudge.dart';
 import 'widgets/upgrade_nudge_banner.dart';
+import 'services/pause_launcher.dart';
+import 'services/health_service.dart';
+import 'screens/pause_screen.dart';
 
 // ✅ ADD THIS HELPER HERE (before the main() function):
 Future<T?> showIntendedModal<T>({
@@ -591,9 +594,19 @@ class HabitTracker {
     return 'habit_done_${habitId(habitTitle)}_$d';
   }
 
-  static Future<void> markDone(String habitTitle) async {
+  /// Records [habitTitle] as done on [on], defaulting to today.
+  ///
+  /// [on] is a local wall-clock date — [_key] reads its date component
+  /// directly, the same way `DateTime.now()` was read before this took a
+  /// parameter. Passing a UTC instant would book the completion on the wrong
+  /// day for anyone east or west of UTC.
+  ///
+  /// The parameter exists for the retro-log ("I did do it yesterday"), which
+  /// recorded a Moment and no key at all, so the two completion stores
+  /// disagreed about the same habit.
+  static Future<void> markDone(String habitTitle, {DateTime? on}) async {
     final prefs = await SharedPreferences.getInstance();
-    final key = _key(habitTitle, DateTime.now());
+    final key = _key(habitTitle, on ?? DateTime.now());
     await prefs.setBool(key, true);
     // Store original title so weekly summary can display it after habit changes
     await prefs.setString('habit_title_${habitId(habitTitle)}', habitTitle);
@@ -672,7 +685,7 @@ Future<void> refreshHomeWidget(BuildContext context) async {
     ];
 
     await WidgetService.updateWidget(
-      userHabits: onboarding.visibleHabits(),
+      userHabits: onboarding.habitsForToday(),
       customHabitFocusAreas: onboarding.customHabitFocusAreas,
       isPremium: userState.hasSubscription,
       theme: themeProvider.theme,
@@ -680,6 +693,7 @@ Future<void> refreshHomeWidget(BuildContext context) async {
       locale: locale.languageCode,
       l10n: l10n,
       monthTileHexes: tiles,
+      monthMoments: monthMoments,
     );
   } catch (_) {
     // Widget update is non-critical — never crash the app for it.
@@ -792,20 +806,32 @@ void main() {
         // Re-schedule daily notifications if enabled and running low
         final dailyEnabled = await NotificationPreferencesService.isEnabled();
         if (dailyEnabled) {
+          final locale = WidgetsBinding.instance.platformDispatcher.locale;
+          final l10n = lookupAppLocalizations(
+            locale.languageCode == 'ru'
+                ? const Locale('ru')
+                : const Locale('en'),
+          );
+          // Before the top-up, not after: a language change rebuilds the whole
+          // queue, which refills the daily count as a side effect and leaves
+          // the check below with nothing to do.
+          await NotificationScheduler.refreshLocale(l10n);
+
           final pending = await NotificationScheduler.pendingDailyCount();
           if (pending < 3) {
-            final locale = WidgetsBinding.instance.platformDispatcher.locale;
-            final l10n = lookupAppLocalizations(
-              locale.languageCode == 'ru'
-                  ? const Locale('ru')
-                  : const Locale('en'),
-            );
             await NotificationScheduler.scheduleDaily(l10n);
           }
         }
 
         IOSVersion.init();
         WidgetService.initialize();
+
+        // Route cold starts from the Pause widget or the notification
+        // action button, then keep listening for warm taps.
+        await PauseLauncher.init();
+        // One-time Watch-pairing measurement — the number the sleep
+        // feature's build decision waits on.
+        HealthService.logWatchPairedOnce();
 
         // Sync any habit completions made from the iOS widget
         final widgetSynced = await WidgetCompletionService.syncPendingCompletions();
@@ -1040,6 +1066,7 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     // Listen for weekly notification tap → switch to Progress tab
     NotificationScheduler.pendingTabSwitch.addListener(_onPendingTabSwitch);
+    PauseLauncher.pending.addListener(_onPendingPause);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _userState = context.read<UserState>();
       _lastPremiumStatus = _userState!.hasSubscription;
@@ -1047,6 +1074,9 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
       // Cold-start path: bootstrap synced widget completions before any UI
       // existed, so the mood catch-up runs here, not in the resume hook.
       WidgetMoodCatchup.maybeShow(context);
+      // Cold-start path for the Pause: PauseLauncher.init() can set the
+      // value before this listener exists, so consume once explicitly.
+      _onPendingPause();
     });
   }
 
@@ -1056,6 +1086,13 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
       setState(() => _currentIndex = tab);
       NotificationScheduler.pendingTabSwitch.value = -1; // consumed
     }
+  }
+
+  void _onPendingPause() {
+    final entry = PauseLauncher.pending.value;
+    if (entry == null || !mounted) return;
+    PauseLauncher.pending.value = null; // consumed
+    Navigator.of(context).push(PauseScreen.route(entry: entry));
   }
 
   void _onSubscriptionChanged() {
@@ -1079,6 +1116,7 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
   @override
   void dispose() {
     NotificationScheduler.pendingTabSwitch.removeListener(_onPendingTabSwitch);
+    PauseLauncher.pending.removeListener(_onPendingPause);
     _userState?.removeListener(_onSubscriptionChanged);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -1097,6 +1135,9 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
         if (synced > 0) WidgetMoodCatchup.maybeShow(context);
       });
       NotificationScheduler.refreshTimezone(AppLocalizations.of(context));
+      // The phone's language can change while the app is backgrounded, and
+      // queued notifications carry their text with them.
+      NotificationScheduler.refreshLocale(AppLocalizations.of(context));
       context.read<RevenueCatService>().refreshPurchaseStatus();
     }
     if (state == AppLifecycleState.paused && mounted) {
@@ -1583,7 +1624,7 @@ class _HabitsScreenState extends State<HabitsScreen>
     // Picked here, off the same read, rather than in build: the one card a
     // returning user sees is the action they lived most, not item #1.
     final habit = Rescue.mostLived(
-      among: context.read<OnboardingState>().visibleHabits(),
+      among: context.read<OnboardingState>().habitsForToday(),
       moments: moments,
     );
     setState(() {
@@ -1722,10 +1763,16 @@ class _HabitsScreenState extends State<HabitsScreen>
     final pinnedHabit = onboardingState.pinnedHabit;
     // One owner for "what's active": the same list feeds all-done detection,
     // the widget, swap targets and the plan (review finding #3).
-    final allHabits = onboardingState.visibleHabits(
-      rescue: rescue != null,
-      preferred: _rescueHabit,
-    );
+    final allHabits = rescue != null
+        ? onboardingState.visibleHabits(
+            rescue: true,
+            preferred: _rescueHabit,
+          )
+        // The mask applies to the ordinary home screen only. The reduced
+        // rescue screen already narrows to a single lived action, and running
+        // it through a mask could hide the one thing worth offering someone
+        // who has been away.
+        : onboardingState.habitsForToday();
 
     // Detect pin/unpin transitions (for arrival animations)
     final isNewPin = pinnedHabit != null && pinnedHabit != _lastKnownPinned;
@@ -1775,11 +1822,14 @@ class _HabitsScreenState extends State<HabitsScreen>
                     opacity: _fadeHeader,
                     child: Padding(
                       key: _homeTopKey,
+                      // 20, not 32: the Pause door below absorbs the rest
+                      // of the header's breathing room instead of adding
+                      // its own, so a pinned habit sits where it always did.
                       padding: EdgeInsets.fromLTRB(
                           _pagePad(context),
                           MediaQuery.of(context).padding.top + 24,
                           _pagePad(context),
-                          32),
+                          20),
                       child: Column(
                         // Full width, otherwise the parent Column centres this
                         // block and the start-alignment below does nothing.
@@ -1815,6 +1865,14 @@ class _HabitsScreenState extends State<HabitsScreen>
                         ],
                       ),
                     ),
+                  ),
+
+                  // The Pause door: a line of warm light between the date
+                  // and the day's actions. Rides the header's fade so the
+                  // entrance cascade stays a single gesture.
+                  FadeTransition(
+                    opacity: _fadeHeader,
+                    child: const PauseDoor(),
                   ),
 
                   // Habits content
@@ -2401,14 +2459,21 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                         ),
                       ),
                     ),
-                    // Title
-                    Text(
-                      l10n.customHabitTitle,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        color: colors.textPrimary,
-                        fontFamily: AppTextStyles.bodyFont(context),
+                    // Title. Scales down instead of overflowing: «Напиши
+                    // своё намерение» plus «Отмена» is wider than a 402pt
+                    // screen, and a three-word title must never ellipsize.
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          l10n.customHabitTitle,
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            color: colors.textPrimary,
+                            fontFamily: AppTextStyles.bodyFont(context),
+                          ),
+                        ),
                       ),
                     ),
                     // Spacer to balance the row
@@ -2974,8 +3039,9 @@ class _HabitCardState extends State<_HabitCard>
   Future<bool> _areAllHabitsDone() async {
     final onboarding = context.read<OnboardingState>();
     // All *visible* done — a habit past the cap can't be completed anywhere,
-    // so counting it kept Quiet Bloom unreachable (review finding #3).
-    final habits = onboarding.visibleHabits();
+    // so counting it kept Quiet Bloom unreachable (review finding #3). Masked
+    // off today counts the same way: a card nobody can see can't be completed.
+    final habits = onboarding.habitsForToday();
     if (habits.isEmpty) return false;
     final completedIds = await HabitTracker.allCompletedIdsForDate(DateTime.now());
     return habits.every((h) => completedIds.contains(HabitTracker.habitId(h)));
@@ -2984,8 +3050,8 @@ class _HabitCardState extends State<_HabitCard>
   /// Checks if all habits are now complete; if so, triggers Quiet Bloom.
   Future<void> _checkAllDoneAndBloom() async {
     final onboarding = context.read<OnboardingState>();
-    // Visible, not raw — see _areAllHabitsDone (review finding #3).
-    final habits = onboarding.visibleHabits();
+    // Visible and unmasked, not raw — see _areAllHabitsDone (review #3).
+    final habits = onboarding.habitsForToday();
     debugPrint('[QuietBloom] _checkAllDoneAndBloom — ${habits.length} habits');
     if (habits.isEmpty) {
       debugPrint('[QuietBloom] ❌ No habits found, returning');
@@ -3032,6 +3098,12 @@ class _HabitCardState extends State<_HabitCard>
       return;
     }
 
+    // Both stores, as a live completion writes both — keyed to *yesterday*,
+    // not today. A Moment without its `habit_done_` key left anything
+    // counting from one store disagreeing with anything counting from the
+    // other, for the same habit.
+    await HabitTracker.markDone(widget.habitTitle, on: yesterday);
+
     final category = ReflectionService.categoryForHabit(widget.habitTitle);
     final moment = Moment.create(
       habitName: widget.habitTitle,
@@ -3076,11 +3148,13 @@ class _HabitCardState extends State<_HabitCard>
 
     // Both rules are pure statics in stale_action_nudge.dart, and tested
     // there — this method only reads state and paints the answer.
+    final dayMasks = onboarding.customHabitDays;
     final stale = StaleAction.isStale(
       habit: widget.habitTitle,
       moments: moments,
       now: now,
       adoptedAt: adoptedAt[widget.habitTitle],
+      days: dayMasks[widget.habitTitle],
     );
     final primary = stale &&
         StaleAction.primary(
@@ -3088,6 +3162,7 @@ class _HabitCardState extends State<_HabitCard>
               moments: moments,
               now: now,
               adoptedAt: adoptedAt,
+              dayMasks: dayMasks,
             ) ==
             widget.habitTitle;
 
@@ -3218,6 +3293,11 @@ class _HabitCardState extends State<_HabitCard>
                                 showDivider: true,
                               ),
 
+                            // Show this on — custom habits only, and between
+                            // rename and delete: changing when an action
+                            // appears is an edit, not a destructive act.
+                            if (isCustom) _buildWeekdayRow(),
+
                             // Delete — only for custom habits
                             if (isCustom)
                               _buildActionRow(
@@ -3334,6 +3414,129 @@ class _HabitCardState extends State<_HabitCard>
           ),
         ),
       ],
+    );
+  }
+
+  /// The weekday mask row for a custom action: seven chips, Monday first,
+  /// matching the 1–7 the mask is stored in (and [Moment.localWeekday]).
+  ///
+  /// At least one day always stays selected — tapping the last one off does
+  /// nothing. An empty mask *means* every day in storage, so clearing the last
+  /// chip would light all seven back up: a tap that appears to do the opposite
+  /// of what it did.
+  ///
+  /// Reads through [Consumer] rather than holding local state, so the chips
+  /// show what is stored rather than what was tapped, and the popup — a route
+  /// of its own — still rebuilds on notify.
+  Widget _buildWeekdayRow() {
+    final themeP = Provider.of<ThemeProvider>(context, listen: false);
+    final colors = themeP.colors;
+    final isDark = themeP.theme.isDark;
+    final l10n = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context).toString();
+    // 2024-01-01 was a Monday, so day-of-month doubles as the weekday number.
+    final labels = [
+      for (var d = 1; d <= 7; d++)
+        DateFormat.E(locale).format(DateTime(2024, 1, d)),
+    ];
+
+    return Consumer<OnboardingState>(
+      builder: (context, onboarding, _) {
+        final stored = onboarding.customHabitDays[widget.habitTitle];
+        final selected = (stored == null || stored.isEmpty)
+            ? {1, 2, 3, 4, 5, 6, 7}
+            : stored.toSet();
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                height: 0.5,
+                color: colors.borderMedium.withOpacity(0.6),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.habitShowOnLabel,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: colors.textSecondary,
+                      fontFamily: AppTextStyles.bodyFont(context),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: [
+                      for (var day = 1; day <= 7; day++)
+                        Builder(builder: (_) {
+                          final isOn = selected.contains(day);
+                          return GestureDetector(
+                            onTap: () {
+                              if (isOn && selected.length == 1) return;
+                              final next = selected.toSet();
+                              if (isOn) {
+                                next.remove(day);
+                              } else {
+                                next.add(day);
+                              }
+                              onboarding.setCustomHabitDays(
+                                  widget.habitTitle, next.toList());
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: isOn
+                                    ? colors.ctaPrimary.withOpacity(0.18)
+                                    : isDark
+                                        ? colors.cardBackground.withOpacity(
+                                            colors.cardBackgroundOpacity)
+                                        : const Color(0xFFFFFFFF)
+                                            .withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(24),
+                                border: Border.all(
+                                  color: isOn
+                                      ? colors.ctaPrimary.withOpacity(0.5)
+                                      : isDark
+                                          ? colors.borderCard.withOpacity(
+                                              colors.borderCardOpacity)
+                                          : colors.buttonDark.withOpacity(0.12),
+                                  width: isOn ? 1.5 : 1,
+                                ),
+                              ),
+                              child: Text(
+                                labels[day - 1],
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight:
+                                      isOn ? FontWeight.w600 : FontWeight.w500,
+                                  color: isOn
+                                      ? colors.textPrimary
+                                      : colors.textSecondary,
+                                  fontFamily: AppTextStyles.bodyFont(context),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

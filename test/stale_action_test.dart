@@ -261,4 +261,152 @@ void main() {
       );
     });
   });
+
+  // A weekday mask means the action is only on the screen on its own days, so
+  // the window counts offered days. _today is a Thursday; ten Mondays back
+  // from it is 66 days, landing on Monday 2026-06-15.
+  group('weekday masks', () {
+    test('an absent mask is identical to the calendar-day rule', () {
+      final moments = [_moment('Drink water', 1), _moment('Body scan', 40)];
+      final withoutParam =
+          StaleAction.isStale(habit: 'Body scan', moments: moments, now: _today);
+      expect(withoutParam, isTrue);
+      expect(
+        StaleAction.isStale(
+          habit: 'Body scan',
+          moments: moments,
+          now: _today,
+          days: null,
+        ),
+        withoutParam,
+      );
+      expect(
+        StaleAction.isStale(
+          habit: 'Body scan',
+          moments: moments,
+          now: _today,
+          days: const [1, 2, 3, 4, 5, 6, 7],
+        ),
+        withoutParam,
+        reason: 'offered every day is the unmasked window',
+      );
+    });
+
+    test('ten calendar days is still ten days for an unmasked action', () {
+      expect(StaleAction.cutoffFor(_today, null),
+          _today.toUtc().subtract(const Duration(days: 10)));
+      expect(StaleAction.cutoffFor(_today, const [1, 2, 3, 4, 5, 6, 7]),
+          _today.toUtc().subtract(const Duration(days: 10)));
+    });
+
+    test('ten offered days for a Monday-only action is 66 calendar days', () {
+      expect(StaleAction.cutoffFor(_today, const [1]),
+          _today.toUtc().subtract(const Duration(days: 66)));
+    });
+
+    test('a Monday-only action with one missed Monday is not stale', () {
+      // Done on Monday 2026-08-10, missed Monday 2026-08-17. Ten calendar
+      // days — the old rule called this stale, which is the bug.
+      final moments = [
+        _moment('Old habit', 200),
+        _moment('Walk the dog', 10),
+      ];
+      expect(
+        StaleAction.isStale(
+          habit: 'Walk the dog',
+          moments: moments,
+          now: _today,
+        ),
+        isTrue,
+        reason: 'the calendar-day rule trips on one missed Monday',
+      );
+      expect(
+        StaleAction.isStale(
+          habit: 'Walk the dog',
+          moments: moments,
+          now: _today,
+          days: const [1],
+        ),
+        isFalse,
+        reason: 'one missed Monday is one missed offered day',
+      );
+    });
+
+    test('nine missed Mondays is not yet ten', () {
+      expect(
+        StaleAction.isStale(
+          habit: 'Walk the dog',
+          moments: [_moment('Old habit', 200), _moment('Walk the dog', 59)],
+          now: _today,
+          days: const [1],
+        ),
+        isFalse,
+      );
+    });
+
+    test('ten missed Mondays is stale', () {
+      expect(
+        StaleAction.isStale(
+          habit: 'Walk the dog',
+          moments: [_moment('Old habit', 200), _moment('Walk the dog', 66)],
+          now: _today,
+          days: const [1],
+        ),
+        isTrue,
+      );
+    });
+
+    test('a long-abandoned masked action is still caught', () {
+      expect(
+        StaleAction.isStale(
+          habit: 'Walk the dog',
+          moments: [_moment('Drink water', 1), _moment('Walk the dog', 100)],
+          now: _today,
+          days: const [1],
+        ),
+        isTrue,
+      );
+    });
+
+    test('the fair-chance test widens with the mask too', () {
+      // Adopted 30 days ago has had four Mondays, not ten.
+      expect(
+        StaleAction.isStale(
+          habit: 'Walk the dog',
+          moments: [_moment('Old habit', 200), _moment('Walk the dog', 100)],
+          now: _today,
+          adoptedAt: _today.subtract(const Duration(days: 30)),
+          days: const [1],
+        ),
+        isFalse,
+      );
+    });
+
+    test('primary skips a masked action that is not stale yet', () {
+      final moments = [
+        _moment('Old habit', 200),
+        _moment('Walk the dog', 10),
+        _moment('Body scan', 40),
+      ];
+      // Render order puts the masked action first; it must not win.
+      expect(
+        StaleAction.primary(
+          visible: ['Walk the dog', 'Body scan'],
+          moments: moments,
+          now: _today,
+          dayMasks: const {'Walk the dog': [1]},
+        ),
+        'Body scan',
+      );
+      // Without the mask it would have.
+      expect(
+        StaleAction.primary(
+          visible: ['Walk the dog', 'Body scan'],
+          moments: moments,
+          now: _today,
+        ),
+        'Walk the dog',
+      );
+    });
+  });
 }
