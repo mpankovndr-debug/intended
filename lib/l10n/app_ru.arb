@@ -208,6 +208,44 @@
   "planAcceptMoveReminder": "Перенести",
   "planAcceptSetAside": "Отложить",
   "planAcceptKeepAnchor": "Закрепить",
+  "planNudgeGiveBack": "Похоже, «{habit}» — уже часть тебя: {m1} — {c1, plural, one{{c1} раз} few{{c1} раза} many{{c1} раз} other{{c1} раза}}, {m2} — {c2}, {m3} — {c3}. Оставить или освободить место для нового?",
+  "@planNudgeGiveBack": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      },
+      "c1": {
+        "type": "int"
+      },
+      "m1": {
+        "type": "String"
+      },
+      "c2": {
+        "type": "int"
+      },
+      "m2": {
+        "type": "String"
+      },
+      "c3": {
+        "type": "int"
+      },
+      "m3": {
+        "type": "String"
+      }
+    }
+  },
+  "planAcceptGiveBack": "Освободить место",
+  "planProofGaveBack": "{date} освобождено место: «{habit}».",
+  "@planProofGaveBack": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "planAcceptAddFocus": "Добавить",
   "planDecline": "Не в этом месяце",
   "planMore": "Ещё {count} — когда захочешь",

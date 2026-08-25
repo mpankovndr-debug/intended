@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intended/models/drift.dart';
+import 'package:intended/services/plan_service.dart';
+import 'package:intended/widgets/stale_action_nudge.dart';
 import 'package:intended/models/moment.dart';
 import 'package:intended/onboarding_v2/onboarding_state.dart';
 import 'package:intended/services/moments_service.dart';
@@ -173,6 +177,25 @@ void main() {
 
       final all = await MomentsService.getAll();
       expect(all.map((m) => m.habitName).toSet(), {'Walk Bruno', 'Read'});
+    });
+
+    test('rename carries a dismissal and a decline with it', () async {
+      // Wiring, not rule: the rules are covered in rename_keyed_stores_test.
+      // What this proves is that renameCustomHabit actually calls them.
+      final s = await _boot(
+        habits: ['Walk the dog'],
+        customs: ['Walk the dog'],
+        extra: {
+          'stale_nudge_dismissed': <String>['Walk the dog'],
+          'plan_declined_nudges':
+              jsonEncode({'2026-08': <String>['setAside:Walk the dog']}),
+        },
+      );
+
+      await s.renameCustomHabit('Walk the dog', 'Walk Bruno');
+
+      expect(await StaleNudgeDismissals.read(), {'Walk Bruno'});
+      expect(await PlanService.declinedFor('2026-08'), {'setAside:Walk Bruno'});
     });
 
     test('delete removes the mask entry', () async {

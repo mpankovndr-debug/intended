@@ -13,6 +13,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'services/analytics_service.dart';
+import 'services/habit_history_service.dart';
 import 'services/app_icon_service.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -580,14 +581,12 @@ const List<Habit> habits = [
 
 class HabitTracker {
   /// Normalise a habit title into a stable ID for storage keys.
-  static String habitId(String habitTitle) {
-    return habitTitle
-        .toLowerCase()
-        .trim()
-        .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
-        .replaceAll(RegExp(r'_+'), '_')
-        .replaceAll(RegExp(r'^_|_$'), '');
-  }
+  ///
+  /// Delegates: the rule lives in [HabitHistoryService.habitId], which is what
+  /// parses these keys back out again. Two hand-copies of one slug is how the
+  /// writer and the reader stop agreeing.
+  static String habitId(String habitTitle) =>
+      HabitHistoryService.habitId(habitTitle);
 
   static String _key(String habitTitle, DateTime date) {
     final d = date.toIso8601String().substring(0, 10);

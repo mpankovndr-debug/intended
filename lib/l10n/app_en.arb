@@ -280,6 +280,44 @@
   "planAcceptMoveReminder": "Move it",
   "planAcceptSetAside": "Set it aside",
   "planAcceptKeepAnchor": "Pin it",
+  "planNudgeGiveBack": "{habit} looks like it's yours now — {c1, plural, =1{once} other{{c1} times}} in {m1}, {c2} in {m2}, {c3} in {m3}. Keep it here, or make room for something new?",
+  "@planNudgeGiveBack": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      },
+      "c1": {
+        "type": "int"
+      },
+      "m1": {
+        "type": "String"
+      },
+      "c2": {
+        "type": "int"
+      },
+      "m2": {
+        "type": "String"
+      },
+      "c3": {
+        "type": "int"
+      },
+      "m3": {
+        "type": "String"
+      }
+    }
+  },
+  "planAcceptGiveBack": "Make room",
+  "planProofGaveBack": "On {date} you gave {habit} its slot back.",
+  "@planProofGaveBack": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "planAcceptAddFocus": "Add it",
   "planDecline": "Not this month",
   "planMore": "{count, plural, =1{One more when you're ready} other{{count} more when you're ready}}",

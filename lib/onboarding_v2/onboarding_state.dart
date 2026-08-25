@@ -5,8 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/intention_path.dart';
 import '../services/analytics_service.dart';
+import '../services/habit_history_service.dart';
 import '../services/moments_service.dart';
+import '../services/plan_service.dart';
 import '../services/reflection_service.dart';
+import '../widgets/stale_action_nudge.dart';
 
 class OnboardingState extends ChangeNotifier {
   bool _welcomeSeen = false;
@@ -1228,6 +1231,13 @@ class OnboardingState extends ChangeNotifier {
       await prefs.setString('pinned_habit', newTitle);
     }
 
+    // Everything else that is keyed by the title the user just changed.
+    // Without these a rename quietly undoes the user's own answers: a
+    // dismissed "this may not fit" card returns, and a plan suggestion they
+    // passed on comes back, because the stored name matches nothing.
+    await StaleNudgeDismissals.rename(oldTitle, newTitle);
+    await PlanService.renameSubject(oldTitle, newTitle);
+
     // Move the moments too. Outside the id guard below on purpose: a rename
     // that only changes case or punctuation slugs to the same id, so the
     // completion keys need no migration while `habitName` — the full title,
@@ -1257,14 +1267,11 @@ class OnboardingState extends ChangeNotifier {
     notifyListeners();
   }
 
-  static String _habitId(String habitTitle) {
-    return habitTitle
-        .toLowerCase()
-        .trim()
-        .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
-        .replaceAll(RegExp(r'_+'), '_')
-        .replaceAll(RegExp(r'^_|_$'), '');
-  }
+  /// Delegates to the one definition — see [HabitHistoryService.habitId].
+  /// This method rewrites `habit_done_*` keys on rename; the service reads
+  /// them back. They cannot be allowed to drift apart.
+  static String _habitId(String habitTitle) =>
+      HabitHistoryService.habitId(habitTitle);
 
   bool isCustomHabit(String habitTitle) {
     return _customHabits.contains(habitTitle);

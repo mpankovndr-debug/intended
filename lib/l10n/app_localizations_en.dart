@@ -528,6 +528,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planAcceptKeepAnchor => 'Pin it';
 
   @override
+  String planNudgeGiveBack(
+      String habit, int c1, String m1, int c2, String m2, int c3, String m3) {
+    String _temp0 = intl.Intl.pluralLogic(
+      c1,
+      locale: localeName,
+      other: '$c1 times',
+      one: 'once',
+    );
+    return '$habit looks like it\'s yours now — $_temp0 in $m1, $c2 in $m2, $c3 in $m3. Keep it here, or make room for something new?';
+  }
+
+  @override
+  String get planAcceptGiveBack => 'Make room';
+
+  @override
+  String planProofGaveBack(String date, String habit) {
+    return 'On $date you gave $habit its slot back.';
+  }
+
+  @override
   String get planAcceptAddFocus => 'Add it';
 
   @override

@@ -557,6 +557,28 @@ class AppLocalizationsRu extends AppLocalizations {
   String get planAcceptKeepAnchor => 'Закрепить';
 
   @override
+  String planNudgeGiveBack(
+      String habit, int c1, String m1, int c2, String m2, int c3, String m3) {
+    String _temp0 = intl.Intl.pluralLogic(
+      c1,
+      locale: localeName,
+      other: '$c1 раза',
+      many: '$c1 раз',
+      few: '$c1 раза',
+      one: '$c1 раз',
+    );
+    return 'Похоже, «$habit» — уже часть тебя: $m1 — $_temp0, $m2 — $c2, $m3 — $c3. Оставить или освободить место для нового?';
+  }
+
+  @override
+  String get planAcceptGiveBack => 'Освободить место';
+
+  @override
+  String planProofGaveBack(String date, String habit) {
+    return '$date освобождено место: «$habit».';
+  }
+
+  @override
   String get planAcceptAddFocus => 'Добавить';
 
   @override

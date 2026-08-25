@@ -890,6 +890,25 @@ abstract class AppLocalizations {
   /// **'Pin it'**
   String get planAcceptKeepAnchor;
 
+  /// No description provided for @planNudgeGiveBack.
+  ///
+  /// In en, this message translates to:
+  /// **'{habit} looks like it\'s yours now — {c1, plural, =1{once} other{{c1} times}} in {m1}, {c2} in {m2}, {c3} in {m3}. Keep it here, or make room for something new?'**
+  String planNudgeGiveBack(
+      String habit, int c1, String m1, int c2, String m2, int c3, String m3);
+
+  /// No description provided for @planAcceptGiveBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Make room'**
+  String get planAcceptGiveBack;
+
+  /// No description provided for @planProofGaveBack.
+  ///
+  /// In en, this message translates to:
+  /// **'On {date} you gave {habit} its slot back.'**
+  String planProofGaveBack(String date, String habit);
+
   /// No description provided for @planAcceptAddFocus.
   ///
   /// In en, this message translates to:

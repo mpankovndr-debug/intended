@@ -23,6 +23,8 @@ import '../services/moments_service.dart';
 import '../services/notification_preferences_service.dart';
 import '../services/notification_scheduler.dart';
 import '../services/analytics_service.dart';
+import '../models/settled_action.dart';
+import '../services/habit_history_service.dart';
 import '../services/plan_service.dart';
 import 'paywall_screen.dart';
 import 'season_share_screen.dart';
@@ -77,6 +79,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Set<String> _declinedNudges = const {};
   AcceptedNudge? _acceptedThisMonth;
   PlanProof? _proof;
+
+  /// The action steady enough to offer its slot back, or null.
+  ///
+  /// Computed in the load rather than in build, because unlike every other
+  /// plan input it reads three months of `habit_done_*` from disk — the plan
+  /// itself only ever sees last month's moments.
+  SettledAction? _settled;
   /// Legend filter: when set, the grid recedes to this focus area.
   String? _gridFilter;
 
@@ -145,6 +154,9 @@ class _InsightsScreenState extends State<InsightsScreen> {
   }
 
   Future<void> _load() async {
+    // Read before the first await: reaching for an inherited widget across an
+    // async gap is the classic way to touch a disposed element.
+    final onboarding = context.read<OnboardingState>();
     final now = DateTime.now();
     final monthKey = SeasonService.monthKeyFor(now);
     final moments = await MomentsService.momentsForMonth(_anchor);
@@ -173,6 +185,24 @@ class _InsightsScreenState extends State<InsightsScreen> {
         prefs.getString(OnboardingState.customHabitDaysChangedAtKey);
     final maskChangedAt =
         maskChangedAtRaw == null ? null : DateTime.tryParse(maskChangedAtRaw);
+
+    // The give-back rule: three closed months of the permanent completion
+    // record. `moments_collection` is capped at 1000 and cannot reach back
+    // this far, so this is the one reader that goes to `habit_done_*`.
+    final candidates = onboarding.visibleHabits();
+    final settled = SettledAction.read(
+      candidates: candidates,
+      monthCounts: await HabitHistoryService.monthCountsFor(
+        candidates,
+        HabitHistoryService.closedMonthsBefore(now),
+      ),
+      customHabits: onboarding.customHabits,
+      atCeiling:
+          onboarding.userHabits.length >= OnboardingState.maxActiveHabits,
+      pinnedHabit: onboarding.pinnedHabit,
+      declinedRecently: await PlanService.giveBackCooldown(now),
+    );
+
     if (!mounted) return;
     setState(() {
       _moments = moments;
@@ -199,6 +229,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       _declinedNudges = declined;
       _acceptedThisMonth = accepted;
       _proof = proof;
+      _settled = settled;
       _filterHintDone = filterHintDone;
       // Ranked from the full history, not the month: eight weeks of taps
       // straddle a month boundary by definition.
@@ -1472,6 +1503,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       remindersEnabled: _remindersEnabled,
       hasPinnedHabit: onboarding.pinnedHabit != null,
       declinedIds: _declinedNudges,
+      settled: _settled,
     );
   }
 
@@ -1658,6 +1690,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           localizeHabitName(nudge.habitName!, l10n),
           nudge.count,
         ),
+      NudgeKind.giveBack => _giveBackText(l10n, nudge),
       NudgeKind.keepAnchor => l10n.planNudgeKeepAnchor(
           localizeHabitName(nudge.habitName!, l10n),
           nudge.count,
@@ -1669,10 +1702,40 @@ class _InsightsScreenState extends State<InsightsScreen> {
     };
   }
 
+  /// The give-back card is the only one quoting three months, so it needs
+  /// their names beside their counts.
+  ///
+  /// The months are the three that closed before today — the same window
+  /// [SettledAction] counted, derived the same way, so the sentence can never
+  /// name a month the rule didn't read. Each locale arranges them its own way:
+  /// English says "in July", Russian names the month and drops the
+  /// preposition, because the formatter yields «июль» and «в июль» is not a
+  /// thing anyone writes.
+  String _giveBackText(AppLocalizations l10n, PlanNudge nudge) {
+    final locale = Localizations.localeOf(context).toString();
+    final counts = nudge.monthCounts!;
+    final now = DateTime.now();
+    // DateTime normalises an underflowing month, so January - 1 is December.
+    final names = [
+      for (var i = 1; i <= SettledAction.monthsRequired; i++)
+        DateFormat.LLLL(locale).format(DateTime(now.year, now.month - i)),
+    ];
+    return l10n.planNudgeGiveBack(
+      localizeHabitName(nudge.habitName!, l10n),
+      counts[0],
+      names[0],
+      counts[1],
+      names[1],
+      counts[2],
+      names[2],
+    );
+  }
+
   String _acceptLabel(AppLocalizations l10n, NudgeKind kind) {
     return switch (kind) {
       NudgeKind.moveReminder => l10n.planAcceptMoveReminder,
       NudgeKind.setAside => l10n.planAcceptSetAside,
+      NudgeKind.giveBack => l10n.planAcceptGiveBack,
       NudgeKind.keepAnchor => l10n.planAcceptKeepAnchor,
       NudgeKind.addFocusArea => l10n.planAcceptAddFocus,
     };
@@ -1695,6 +1758,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
         ),
       NudgeKind.setAside =>
         l10n.planProofSetAside(date, localizeHabitName(proof.subject, l10n)),
+      NudgeKind.giveBack =>
+        l10n.planProofGaveBack(date, localizeHabitName(proof.subject, l10n)),
       NudgeKind.keepAnchor =>
         l10n.planProofPinned(date, localizeHabitName(proof.subject, l10n)),
       NudgeKind.addFocusArea => l10n.planProofAddedFocus(
@@ -1748,6 +1813,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
         await NotificationPreferencesService.setMinute(0);
         await NotificationScheduler.rescheduleAll(l10n);
       case NudgeKind.setAside:
+        await onboarding.setAsideHabits([nudge.habitName!]);
+      case NudgeKind.giveBack:
+        // The same door, deliberately: the action returns to the browse pool
+        // exactly as a set-aside does. One removal path, not two.
         await onboarding.setAsideHabits([nudge.habitName!]);
       case NudgeKind.keepAnchor:
         await onboarding.pinHabit(nudge.habitName!);
