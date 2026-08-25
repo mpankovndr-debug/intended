@@ -186,6 +186,21 @@ class StaleNudgeDismissals {
     if (all == null || !all.contains(habit)) return;
     await prefs.setStringList(_key, all.where((h) => h != habit).toList());
   }
+
+  /// Carries a dismissal across a rename.
+  ///
+  /// Dismissals are keyed by title, so without this a rename silently undoes
+  /// the user's "leave it as is": the stored name matches nothing, the app
+  /// stops recognising the dismissal, and the card it already answered comes
+  /// back. Rewording an action is not un-dismissing it.
+  static Future<void> rename(String from, String to) async {
+    if (from == to) return;
+    final prefs = await SharedPreferences.getInstance();
+    final all = prefs.getStringList(_key);
+    if (all == null || !all.contains(from)) return;
+    final next = all.where((h) => h != from).toSet()..add(to);
+    await prefs.setStringList(_key, next.toList());
+  }
 }
 
 /// Frames one action card that has gone ten days without a moment, and offers
