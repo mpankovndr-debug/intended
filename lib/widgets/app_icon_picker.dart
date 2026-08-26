@@ -39,8 +39,8 @@ class _AppIconPickerState extends State<AppIconPicker> {
     (
       icon: AppIcon.defaultIcon,
       name: (l10n) => l10n.appIconDefault,
-      previewBg: const Color(0xFFF2D4B0),
-      previewAccent: const Color(0xFF7A6A58),
+      previewBg: const Color(0xFFD6CEE1),
+      previewAccent: const Color(0xFF6153A6),
       assetPath: 'assets/images/intended_icon.png',
       isPremium: false,
     ),

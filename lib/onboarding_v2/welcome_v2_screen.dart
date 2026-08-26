@@ -373,10 +373,15 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                                         ),
                                       ),
                                       child: Center(
-                                        child: Image.asset(
-                                          'assets/images/intended_icon_transparent.png',
-                                          width: 100,
-                                          height: 100,
+                                        child: ColorFiltered(
+                                          colorFilter: ColorFilter.mode(
+                                              colors.ctaPrimary,
+                                              BlendMode.srcIn),
+                                          child: Image.asset(
+                                            'assets/images/intended_icon_transparent.png',
+                                            width: 100,
+                                            height: 100,
+                                          ),
                                         ),
                                       ),
                                     ),
