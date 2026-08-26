@@ -1,3 +1,4 @@
 /* English localization for iOS per-app language support */
 "CFBundleDisplayName" = "Intended";
 "NSHealthUpdateUsageDescription" = "Intended saves each completed pause to Health as a mindful minute, and your check-in as a State of Mind entry. Intended never reads anything from Health.";
+"NSHealthShareUsageDescription" = "Intended never reads your Health data. This permission exists only because the app is able to write to Health — it adds your completed pauses and nothing else.";

@@ -6,6 +6,8 @@
 	<false/>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Intended saves each completed pause to Health as a mindful minute, and your check-in as a State of Mind entry. Intended never reads anything from Health.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Intended never reads your Health data. This permission exists only because the app is able to write to Health — it adds your completed pauses and nothing else.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
