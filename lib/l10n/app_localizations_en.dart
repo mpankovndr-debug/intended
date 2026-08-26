@@ -3093,7 +3093,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faqAddWidgetAnswer =>
-      'Long-press your home screen, tap +, search for Intended. You can also add lock screen widgets through iOS Settings.';
+      'Long-press your home screen, tap +, search for Intended. You can also add lock screen widgets through iOS Settings. There\'s a Pause widget too — one tap, and you\'re already breathing.';
 
   @override
   String get faqWidgetNotUpdating => 'Why isn\'t my widget updating?';
@@ -3110,7 +3110,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faqWhatIsPlusAnswer =>
-      'Intended+ is the reading of your month: the drift warning before a quiet stretch, a four-line letter, next month\'s plan built from this month\'s evidence, what actually lifts you, the season\'s explanation and archive — plus all ten themes, premium icons and widgets.';
+      'Intended+ is the reading of your month: the drift warning before a quiet stretch, a four-line letter, next month\'s plan built from this month\'s evidence, what actually lifts you, the season\'s explanation and archive — plus all ten themes, premium icons, and the widget that shows your whole month in colour.';
 
   @override
   String get faqPricing => 'How much does it cost?';
@@ -3219,6 +3219,27 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get faqWidgetCompletionAnswer =>
       'Yes! Tap any habit on your home screen widget to mark it done. It syncs when you next open Intended.';
+
+  @override
+  String get faqWhatIsPause => 'What\'s \"a minute of breath\"?';
+
+  @override
+  String get faqWhatIsPauseAnswer =>
+      'The Pause. Tap the line above your actions and the screen breathes with you — five slow rounds, in and out, then one quiet question about how you feel. It isn\'t an action and nothing counts it; leave whenever you\'ve had enough. It also opens from the widget and the lock screen, and it\'s free.';
+
+  @override
+  String get faqHabitDays => 'Can an action appear only on some days?';
+
+  @override
+  String get faqHabitDaysAnswer =>
+      'For actions you created, yes. Long-press the card and pick days under \"Show this on\". On its off-days the card simply steps aside — nothing is missed, nothing resets. Built-in actions appear every day.';
+
+  @override
+  String get faqHealthData => 'Does Intended read my Apple Health data?';
+
+  @override
+  String get faqHealthDataAnswer =>
+      'No — Intended never reads anything from Health. If you say yes after a pause, each completed pause is saved to Apple Health as a mindful minute, along with your answer. It\'s a one-way door, and you can close it anytime in iPhone Settings → Privacy & Security → Health.';
 
   @override
   String get bloomGentleMornings1 => 'A full morning. That\'s something.';
@@ -3878,6 +3899,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pauseHealthSave => 'Save to Health';
+
+  @override
+  String get returnOfferTitle => 'If you\'re ever away again';
+
+  @override
+  String get returnOfferBody =>
+      'Intended can send you one gentle note. Right now we can\'t reach you: notifications are off.';
+
+  @override
+  String get returnOfferAccept => 'Send me a note next time';
+
+  @override
+  String get returnOfferDismiss => 'I\'ll come back on my own';
 
   @override
   String widgetMomentsCount(int count) {

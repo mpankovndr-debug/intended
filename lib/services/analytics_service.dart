@@ -318,6 +318,18 @@ class AnalyticsService {
     } catch (_) {}
   }
 
+  /// The return-note offer card: 'shown', 'accepted', or 'declined'.
+  /// Acceptance rate is the number that decides whether the card earns
+  /// its place on the return day's screen.
+  static void logReturnNoteOffer(String outcome) {
+    try {
+      _analytics.logEvent(
+        name: 'return_note_offer',
+        parameters: {'outcome': outcome},
+      );
+    } catch (_) {}
+  }
+
   // ── User Properties ───────────────────────────────────────────
 
   static void setSubscriptionStatus(String status) {

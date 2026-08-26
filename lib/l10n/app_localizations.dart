@@ -5214,7 +5214,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqAddWidgetAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Long-press your home screen, tap +, search for Intended. You can also add lock screen widgets through iOS Settings.'**
+  /// **'Long-press your home screen, tap +, search for Intended. You can also add lock screen widgets through iOS Settings. There\'s a Pause widget too — one tap, and you\'re already breathing.'**
   String get faqAddWidgetAnswer;
 
   /// No description provided for @faqWidgetNotUpdating.
@@ -5244,7 +5244,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqWhatIsPlusAnswer.
   ///
   /// In en, this message translates to:
-  /// **'Intended+ is the reading of your month: the drift warning before a quiet stretch, a four-line letter, next month\'s plan built from this month\'s evidence, what actually lifts you, the season\'s explanation and archive — plus all ten themes, premium icons and widgets.'**
+  /// **'Intended+ is the reading of your month: the drift warning before a quiet stretch, a four-line letter, next month\'s plan built from this month\'s evidence, what actually lifts you, the season\'s explanation and archive — plus all ten themes, premium icons, and the widget that shows your whole month in colour.'**
   String get faqWhatIsPlusAnswer;
 
   /// No description provided for @faqPricing.
@@ -5338,7 +5338,7 @@ abstract class AppLocalizations {
   /// **'Data is local, so deleting removes everything. Subscriptions can be restored through the App Store.'**
   String get faqDeleteAppAnswer;
 
-  /// Count hint under each FAQ category card. Live counts run 3-7, so Russian needs few/many, not a single form.
+  /// Count hint under each FAQ category card. Live counts run 3-8, so Russian needs few/many, not a single form.
   ///
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 question} other{{count} questions}}'**
@@ -5421,6 +5421,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yes! Tap any habit on your home screen widget to mark it done. It syncs when you next open Intended.'**
   String get faqWidgetCompletionAnswer;
+
+  /// No description provided for @faqWhatIsPause.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s \"a minute of breath\"?'**
+  String get faqWhatIsPause;
+
+  /// No description provided for @faqWhatIsPauseAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The Pause. Tap the line above your actions and the screen breathes with you — five slow rounds, in and out, then one quiet question about how you feel. It isn\'t an action and nothing counts it; leave whenever you\'ve had enough. It also opens from the widget and the lock screen, and it\'s free.'**
+  String get faqWhatIsPauseAnswer;
+
+  /// No description provided for @faqHabitDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Can an action appear only on some days?'**
+  String get faqHabitDays;
+
+  /// No description provided for @faqHabitDaysAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'For actions you created, yes. Long-press the card and pick days under \"Show this on\". On its off-days the card simply steps aside — nothing is missed, nothing resets. Built-in actions appear every day.'**
+  String get faqHabitDaysAnswer;
+
+  /// No description provided for @faqHealthData.
+  ///
+  /// In en, this message translates to:
+  /// **'Does Intended read my Apple Health data?'**
+  String get faqHealthData;
+
+  /// No description provided for @faqHealthDataAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'No — Intended never reads anything from Health. If you say yes after a pause, each completed pause is saved to Apple Health as a mindful minute, along with your answer. It\'s a one-way door, and you can close it anytime in iPhone Settings → Privacy & Security → Health.'**
+  String get faqHealthDataAnswer;
 
   /// No description provided for @bloomGentleMornings1.
   ///
@@ -6501,6 +6537,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save to Health'**
   String get pauseHealthSave;
+
+  /// No description provided for @returnOfferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'If you\'re ever away again'**
+  String get returnOfferTitle;
+
+  /// No description provided for @returnOfferBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Intended can send you one gentle note. Right now we can\'t reach you: notifications are off.'**
+  String get returnOfferBody;
+
+  /// No description provided for @returnOfferAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Send me a note next time'**
+  String get returnOfferAccept;
+
+  /// No description provided for @returnOfferDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll come back on my own'**
+  String get returnOfferDismiss;
 
   /// Widget eyebrow: how many moments this month. Joined with ' · ' to the month name.
   ///

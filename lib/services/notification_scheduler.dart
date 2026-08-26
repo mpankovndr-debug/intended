@@ -3,6 +3,7 @@ import 'dart:ui' show Locale, PlatformDispatcher;
 import '../l10n/app_localizations.dart';
 import '../models/intention_path.dart';
 import '../models/letter.dart';
+import '../models/rescue.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -17,6 +18,7 @@ import 'moments_service.dart';
 import 'notification_messages.dart';
 import 'notification_preferences_service.dart';
 import 'pause_launcher.dart';
+import 'return_note_service.dart';
 import 'week_stats_service.dart';
 
 /// Adaptive notification frequency tiers.
@@ -412,6 +414,73 @@ class NotificationScheduler {
   static Future<int> pendingDailyCount() async {
     final pending = await _plugin.pendingNotificationRequests();
     return pending.where((n) => n.id >= 0 && n.id <= 6).length;
+  }
+
+  /// The current iOS permission, without prompting. False on any failure —
+  /// a reader that cannot know must not claim the app is reachable.
+  static Future<bool> permissionGranted() async {
+    try {
+      final ios = _plugin.resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>();
+      final options = await ios?.checkPermissions();
+      return options?.isEnabled ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  static const int _returnNoteId = 102;
+
+  /// The single come-back note promised by the return-offer card: one
+  /// notification, [Rescue.minQuietDays] days out, pushed back on every app
+  /// open so it only ever fires into a real quiet stretch — and fires once,
+  /// because nothing reschedules it while the user stays away. «Одно —
+  /// никогда семь» has to be literally true.
+  ///
+  /// Steps aside when the daily system is on: those reminders already carry
+  /// the re-engage message, and two channels saying "come back" is the
+  /// seven this note exists to not be.
+  static Future<void> scheduleReturnNote(AppLocalizations l10n) async {
+    await _plugin.cancel(_returnNoteId);
+    if (!await ReturnNoteService.isEnabled()) return;
+    if (await NotificationPreferencesService.isEnabled()) return;
+
+    final hour = await NotificationPreferencesService.getHour();
+    final minute = await NotificationPreferencesService.getMinute();
+    final now = tz.TZDateTime.now(tz.local);
+    final fireAt = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    ).add(const Duration(days: Rescue.minQuietDays));
+
+    await _plugin.zonedSchedule(
+      _returnNoteId,
+      '',
+      NotificationMessages.reengageMessage(l10n),
+      fireAt,
+      NotificationDetails(
+        iOS: const DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: false,
+          presentSound: true,
+        ),
+        android: AndroidNotificationDetails(
+          'daily_reminders',
+          l10n.notifDailyChannelName,
+          channelDescription: l10n.notifDailyChannelDesc,
+          importance: Importance.defaultImportance,
+          priority: Priority.defaultPriority,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: null,
+    );
   }
 
   static Future<void> refreshTimezone(AppLocalizations? l10n) async {

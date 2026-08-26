@@ -59,6 +59,8 @@ import 'services/review_request_service.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'widgets/quiet_bloom_overlay.dart';
 import 'widgets/widget_mood_catchup.dart';
+import 'services/return_note_service.dart';
+import 'widgets/return_note_offer_card.dart';
 import 'widgets/stale_action_nudge.dart';
 import 'widgets/upgrade_nudge_banner.dart';
 import 'services/pause_launcher.dart';
@@ -804,13 +806,17 @@ void main() {
 
         // Re-schedule daily notifications if enabled and running low
         final dailyEnabled = await NotificationPreferencesService.isEnabled();
+        final startupLocale = WidgetsBinding.instance.platformDispatcher.locale;
+        final startupL10n = lookupAppLocalizations(
+          startupLocale.languageCode == 'ru'
+              ? const Locale('ru')
+              : const Locale('en'),
+        );
+        // Every open pushes the come-back note another quiet stretch out, so
+        // it only ever fires into real silence. No-op unless accepted.
+        await NotificationScheduler.scheduleReturnNote(startupL10n);
         if (dailyEnabled) {
-          final locale = WidgetsBinding.instance.platformDispatcher.locale;
-          final l10n = lookupAppLocalizations(
-            locale.languageCode == 'ru'
-                ? const Locale('ru')
-                : const Locale('en'),
-          );
+          final l10n = startupL10n;
           // Before the top-up, not after: a language change rebuilds the whole
           // queue, which refills the daily count as a side effect and leaves
           // the check below with nothing to do.
@@ -1137,6 +1143,10 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
       // The phone's language can change while the app is backgrounded, and
       // queued notifications carry their text with them.
       NotificationScheduler.refreshLocale(AppLocalizations.of(context));
+      // Warm resumes count as opens too: iOS keeps the app in memory for
+      // days, and a come-back note that fires while the user is actively
+      // resuming the app is the false positive that makes it nagging.
+      NotificationScheduler.scheduleReturnNote(AppLocalizations.of(context));
       context.read<RevenueCatService>().refreshPurchaseStatus();
     }
     if (state == AppLifecycleState.paused && mounted) {
@@ -1325,10 +1335,14 @@ class _WelcomeBackOverlayState extends State<WelcomeBackOverlay>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(
-                    'assets/images/intended_icon_transparent.png',
-                    width: 80,
-                    height: 80,
+                  ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                        colors.ctaPrimary, BlendMode.srcIn),
+                    child: Image.asset(
+                      'assets/images/intended_icon_transparent.png',
+                      width: 80,
+                      height: 80,
+                    ),
                   ),
                   const SizedBox(height: 24),
                   FadeTransition(
@@ -1519,6 +1533,7 @@ class _HabitsScreenState extends State<HabitsScreen>
   /// Set when the user has been away long enough that the full list is the
   /// wrong thing to greet them with (§4.6, §5.1). Free forever.
   Rescue? _rescue;
+  bool _showReturnOffer = false;
 
   /// The action the reduced screen should offer, chosen from what the user
   /// actually lived before the gap. Null when nothing has ever been completed,
@@ -1626,9 +1641,16 @@ class _HabitsScreenState extends State<HabitsScreen>
       among: context.read<OnboardingState>().habitsForToday(),
       moments: moments,
     );
+    // Same read: the return-offer card and the rescue are two halves of one
+    // question ("is today ordinary?"), and by construction only one of them
+    // can be true at once — a return day has a moment today, a rescue day
+    // has none.
+    final offerReturnNote = await ReturnNoteService.shouldOffer(moments);
+    if (!mounted) return;
     setState(() {
       _rescue = Rescue.read(moments);
       _rescueHabit = habit;
+      _showReturnOffer = offerReturnNote;
     });
   }
 
@@ -1708,6 +1730,11 @@ class _HabitsScreenState extends State<HabitsScreen>
       _currentDateStr = today;
       setState(() {}); // Cascade rebuild to all habit cards
       refreshHomeWidget(context);
+      // The screen should know what week it is on a warm resume too:
+      // without this, someone whose app survived days in memory resumes to
+      // a home screen that never re-asks how long it has been — no rescue,
+      // and no return-note offer on the day they come back.
+      _checkForGap();
     }
   }
 
@@ -1982,7 +2009,11 @@ class _HabitsScreenState extends State<HabitsScreen>
                                       colors: colors,
                                     ),
                                     const SizedBox(height: 14),
-                                  ],
+                                  ] else if (_showReturnOffer)
+                                    ReturnNoteOfferCard(
+                                      onDone: () => setState(
+                                          () => _showReturnOffer = false),
+                                    ),
                                   ...unpinned.asMap().entries.map((entry) {
                                     final habit = entry.value;
                                     final habitCard = _HabitCard(

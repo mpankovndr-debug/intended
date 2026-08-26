@@ -41,6 +41,7 @@ import '../services/review_request_service.dart';
 import '../services/revenue_cat_service.dart';
 import '../services/moments_service.dart';
 import '../services/notification_scheduler.dart';
+import '../services/return_note_service.dart';
 import '../services/notification_preferences_service.dart';
 import 'year_in_seasons_screen.dart';
 import '../widgets/app_icon_picker.dart';
@@ -1586,6 +1587,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   } else {
                                     await NotificationPreferencesService
                                         .setEnabled(false);
+                                    // Off means off: the come-back note dies
+                                    // with the toggle, or the next app open
+                                    // re-arms it and a notification the user
+                                    // thought they silenced arrives six days
+                                    // later.
+                                    await ReturnNoteService.setEnabled(false);
                                     await NotificationScheduler.cancelAll();
                                     AnalyticsService.logDailyReminderToggled(
                                         false);

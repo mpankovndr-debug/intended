@@ -78,6 +78,9 @@ List<_FaqCategory> _buildCategories(_FaqPricing pricing) => [
               question: (l) => l.faqHowIsDifferent,
               answer: (l) => l.faqHowIsDifferentAnswer),
           _FaqItem(
+              question: (l) => l.faqWhatIsPause,
+              answer: (l) => l.faqWhatIsPauseAnswer),
+          _FaqItem(
               question: (l) => l.faqNeedAccount,
               answer: (l) => l.faqNeedAccountAnswer),
         ],
@@ -98,6 +101,9 @@ List<_FaqCategory> _buildCategories(_FaqPricing pricing) => [
           _FaqItem(
               question: (l) => l.faqCustomHabits,
               answer: (l) => l.faqCustomHabitsAnswer),
+          _FaqItem(
+              question: (l) => l.faqHabitDays,
+              answer: (l) => l.faqHabitDaysAnswer),
           _FaqItem(
               question: (l) => l.faqSwapHabit,
               answer: (l) => l.faqSwapHabitAnswer),
@@ -202,6 +208,9 @@ List<_FaqCategory> _buildCategories(_FaqPricing pricing) => [
           _FaqItem(
               question: (l) => l.faqDataSelling,
               answer: (l) => l.faqDataSellingAnswer),
+          _FaqItem(
+              question: (l) => l.faqHealthData,
+              answer: (l) => l.faqHealthDataAnswer),
           _FaqItem(
               question: (l) => l.faqDeleteApp,
               answer: (l) => l.faqDeleteAppAnswer),

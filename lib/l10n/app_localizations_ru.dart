@@ -3158,7 +3158,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get faqAddWidgetAnswer =>
-      'Долгое нажатие на главный экран, затем + — найди Intended. Виджеты на экран блокировки — через Настройки iOS.';
+      'Долгое нажатие на главный экран, затем + — найди Intended. Виджеты на экран блокировки — через Настройки iOS. Есть и виджет Паузы — одно касание, и ты уже дышишь.';
 
   @override
   String get faqWidgetNotUpdating => 'Почему виджет не обновляется?';
@@ -3175,7 +3175,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get faqWhatIsPlusAnswer =>
-      'Intended+ — это чтение твоего месяца: предупреждение о дрейфе перед тихой полосой, письмо в четыре строки, план на следующий месяц из фактов этого, «что тебя поддерживает», объяснение сезона и архив — плюс все десять тем, премиум-иконки и виджеты.';
+      'Intended+ — это чтение твоего месяца: предупреждение о дрейфе перед тихой полосой, письмо в четыре строки, план на следующий месяц из фактов этого, «что тебя поддерживает», объяснение сезона и архив — плюс все десять тем, премиум-иконки и виджет, где весь твой месяц — в цвете.';
 
   @override
   String get faqPricing => 'Сколько стоит?';
@@ -3286,6 +3286,28 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get faqWidgetCompletionAnswer =>
       'Да! Нажми на привычку прямо в виджете. Данные синхронизируются при следующем открытии Intended.';
+
+  @override
+  String get faqWhatIsPause => 'Что такое «минута дыхания»?';
+
+  @override
+  String get faqWhatIsPauseAnswer =>
+      'Пауза. Нажми на строку над действиями — и экран будет дышать вместе с тобой: пять медленных вдохов и выдохов, а после — один тихий вопрос о том, как ты. Это не действие, и ничто её не считает; уйти можно, когда достаточно. Пауза открывается и с виджета, и с экрана блокировки — и она бесплатна.';
+
+  @override
+  String get faqHabitDays =>
+      'Можно показывать действие только в некоторые дни?';
+
+  @override
+  String get faqHabitDaysAnswer =>
+      'Свои действия — да. Подержи палец на карточке и выбери дни в «Когда показывать». В остальные дни карточка просто отходит в сторону — ничего не пропущено и не сброшено. Встроенные действия появляются каждый день.';
+
+  @override
+  String get faqHealthData => 'Читает ли Intended мои данные Apple Health?';
+
+  @override
+  String get faqHealthDataAnswer =>
+      'Нет — Intended никогда ничего не читает из Health. Если после паузы ты согласишься, каждая завершённая пауза будет записана в Apple Health как минута осознанности — вместе с твоим ответом. Это дверь в одну сторону, и закрыть её можно в любой момент: Настройки iPhone → Конфиденциальность и безопасность → Здоровье.';
 
   @override
   String get bloomGentleMornings1 => 'Полное утро. Это кое-что значит.';
@@ -3968,6 +3990,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pauseHealthSave => 'Сохранять';
+
+  @override
+  String get returnOfferTitle => 'Если однажды ты снова возьмёшь паузу';
+
+  @override
+  String get returnOfferBody =>
+      'Intended может отправить тебе всего одно напоминание. Сейчас оно не дойдёт: уведомления выключены.';
+
+  @override
+  String get returnOfferAccept => 'Отправить мне напоминание';
+
+  @override
+  String get returnOfferDismiss => 'Я вернусь без напоминаний';
 
   @override
   String widgetMomentsCount(int count) {
