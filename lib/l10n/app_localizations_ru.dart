@@ -660,6 +660,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'В этом месяце есть закономерность, которую пока не видно: фокус, который выбран, и фокус, которым ты живёшь, не совпадают.';
 
   @override
+  String get insightsTeaserReturns =>
+      'Между твоими возвращениями есть свой ритм. Intended+ покажет его тебе.';
+
+  @override
   String get insightsTeaserCta => 'Узнать, что заметил Intended+';
 
   @override
@@ -3990,6 +3994,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pauseHealthSave => 'Сохранять';
+
+  @override
+  String get breathCircleCaption => 'один круг — одна минута дыхания';
 
   @override
   String get returnOfferTitle => 'Если однажды ты снова возьмёшь паузу';

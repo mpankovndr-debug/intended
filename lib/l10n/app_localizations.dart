@@ -987,6 +987,12 @@ abstract class AppLocalizations {
   /// **'There\'s a pattern in this month you can\'t see yet — the gap between the focus you chose and the one you actually lived.'**
   String get insightsTeaserBody;
 
+  /// No description provided for @insightsTeaserReturns.
+  ///
+  /// In en, this message translates to:
+  /// **'This month\'s quiet stretches have a shape — how far apart your returns really were. Intended+ reads it back to you.'**
+  String get insightsTeaserReturns;
+
   /// No description provided for @insightsTeaserCta.
   ///
   /// In en, this message translates to:
@@ -6537,6 +6543,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save to Health'**
   String get pauseHealthSave;
+
+  /// No description provided for @breathCircleCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'one circle = one minute of breath'**
+  String get breathCircleCaption;
 
   /// No description provided for @returnOfferTitle.
   ///

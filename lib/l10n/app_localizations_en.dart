@@ -629,6 +629,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'There\'s a pattern in this month you can\'t see yet — the gap between the focus you chose and the one you actually lived.';
 
   @override
+  String get insightsTeaserReturns =>
+      'This month\'s quiet stretches have a shape — how far apart your returns really were. Intended+ reads it back to you.';
+
+  @override
   String get insightsTeaserCta => 'See what Intended+ noticed';
 
   @override
@@ -3899,6 +3903,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pauseHealthSave => 'Save to Health';
+
+  @override
+  String get breathCircleCaption => 'one circle = one minute of breath';
 
   @override
   String get returnOfferTitle => 'If you\'re ever away again';

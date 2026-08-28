@@ -13,6 +13,8 @@ import '../models/first_week.dart';
 import '../models/intention_path.dart';
 import '../models/letter.dart';
 import '../models/letter_offer_policy.dart';
+import '../models/pause_check_in.dart';
+import '../models/pause_month.dart';
 import '../models/lift.dart';
 import '../models/month_plan.dart';
 import '../models/season.dart';
@@ -21,6 +23,7 @@ import '../services/season_service.dart';
 import '../onboarding_v2/onboarding_state.dart';
 import '../services/moments_service.dart';
 import '../services/notification_preferences_service.dart';
+import '../services/pause_service.dart';
 import '../services/notification_scheduler.dart';
 import '../services/analytics_service.dart';
 import '../models/settled_action.dart';
@@ -36,6 +39,8 @@ import '../utils/season_l10n.dart';
 import '../utils/text_styles.dart';
 import '../main.dart' show AppBackground;
 import '../theme/category_colors.dart';
+import '../theme/pause_ink.dart';
+import '../widgets/breath_circles.dart';
 import '../widgets/dashed_border_box.dart';
 import '../widgets/moment_grid.dart';
 
@@ -60,6 +65,7 @@ class InsightsScreen extends StatefulWidget {
 
 class _InsightsScreenState extends State<InsightsScreen> {
   List<Moment> _moments = const [];
+  List<PauseCheckIn> _pauses = const [];
 
   /// Last month's moments — the evidence the plan is read from (§6.2). The
   /// plan itself is derived in build, so accepting a nudge that changes the
@@ -160,6 +166,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final now = DateTime.now();
     final monthKey = SeasonService.monthKeyFor(now);
     final moments = await MomentsService.momentsForMonth(_anchor);
+    final pauses = PauseMonth.forMonth(await PauseService.getAll(), _anchor);
     // DateTime normalises month 0 to December of the previous year, so this
     // holds across a January boundary.
     final lastMonth =
@@ -206,6 +213,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     if (!mounted) return;
     setState(() {
       _moments = moments;
+      _pauses = pauses;
       _lastMonth = lastMonth;
       _season = season;
       _archive = archive;
@@ -305,6 +313,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
             ...[
             _shell(colors, sections: [
               _monthCard(l10n, colors, themeProvider, paid: paid),
+              if (_pauses.isNotEmpty)
+                _breathCard(l10n, colors, themeProvider),
               // A browsed month is a record: the grid, its season, its letter.
               // Everything that speaks in present tense — drift, the plan, so
               // far, week one — exists only on the month being lived.
@@ -479,6 +489,86 @@ class _InsightsScreenState extends State<InsightsScreen> {
       ),
     );
   }
+
+  /// A non-tappable pill in the legend's own dress: a symbol and a fact.
+  /// Deliberately without the filter pills' border-fill "control" cues —
+  /// these state, they don't do.
+  Widget _infoChip(AppColorScheme colors,
+          {required Widget dot, required String label}) =>
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+        decoration: BoxDecoration(
+          color: colors.profileCard
+              .withValues(alpha: colors.profileCardOpacity * 0.6),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: colors.borderCard.withValues(alpha: 0.45),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            dot,
+            const SizedBox(width: 7),
+            Text(label, style: _cardMeta(colors)),
+          ],
+        ),
+      );
+
+  /// The month's pauses, spoken in the grid's own grammar one register
+  /// quieter: circles instead of squares (a breath, not an action), one ink
+  /// instead of eight hues, and the fill carrying the answer. Absent
+  /// entirely when the month holds no pauses — the card never advertises
+  /// the feature (silence beats filler).
+  Widget _breathCard(
+    AppLocalizations l10n,
+    AppColorScheme colors,
+    ThemeProvider themeProvider,
+  ) {
+    final ink = PauseInk.of(themeProvider.theme);
+    final counts = PauseMonth.answerCounts(_pauses);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _eyebrow(l10n.pauseEntryTitle.toUpperCase(), colors),
+        const SizedBox(height: 14),
+        BreathCircles(checkIns: _pauses, ink: ink),
+        const SizedBox(height: 12),
+        Text(l10n.breathCircleCaption, style: _cardMeta(colors)),
+        if (counts.isNotEmpty) ...[
+          const SizedBox(height: 14),
+          Wrap(
+            spacing: 16,
+            runSpacing: 8,
+            children: [
+              // Fixed scale order, never sorted by count: a reordering row
+              // would rank feelings, which is a leaderboard in a cardigan.
+              for (final state in const [
+                PauseState.calm,
+                PauseState.neutral,
+                PauseState.tense,
+              ])
+                if (counts[state] != null)
+                  _infoChip(
+                    colors,
+                    dot: BreathDot(state: state, ink: ink),
+                    label:
+                        '${_pauseStateLabel(l10n, state)} ${counts[state]}',
+                  ),
+            ],
+          ),
+        ],
+      ],
+    );
+  }
+
+  String _pauseStateLabel(AppLocalizations l10n, PauseState state) =>
+      switch (state) {
+        PauseState.calm => l10n.pauseCheckInCalm,
+        PauseState.neutral => l10n.pauseCheckInNeutral,
+        PauseState.tense => l10n.pauseCheckInTense,
+      };
 
   /// The profile card's row divider.
   Widget _divider(AppColorScheme colors) => Container(
@@ -1023,9 +1113,14 @@ class _InsightsScreenState extends State<InsightsScreen> {
           ],
           if (shown.isEmpty)
             Text(
+              // Strongest computed claim first. The returns variant is gated
+              // exactly like the paid line it advertises (two or more gaps),
+              // so the promise is only made when the reading it sells exists.
               _hasFocusGap(onboarding)
                   ? l10n.insightsTeaserBody
-                  : l10n.insightsTeaserNoGap,
+                  : _gapLengths().length >= 2
+                      ? l10n.insightsTeaserReturns
+                      : l10n.insightsTeaserNoGap,
               style: _cardBody(colors),
             )
           else ...[
