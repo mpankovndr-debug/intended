@@ -63,6 +63,7 @@ import 'services/return_note_service.dart';
 import 'widgets/return_note_offer_card.dart';
 import 'widgets/stale_action_nudge.dart';
 import 'widgets/upgrade_nudge_banner.dart';
+import 'widgets/practices_card.dart';
 import 'services/pause_launcher.dart';
 import 'services/health_service.dart';
 import 'screens/pause_screen.dart';
@@ -1898,7 +1899,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                   // entrance cascade stays a single gesture.
                   FadeTransition(
                     opacity: _fadeHeader,
-                    child: const PauseDoor(),
+                    child: const PracticesCard(),
                   ),
 
                   // Habits content

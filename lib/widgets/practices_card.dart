@@ -1,0 +1,128 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../l10n/app_localizations.dart';
+import '../screens/gratitude_cadence_screen.dart';
+import '../screens/gratitude_page_screen.dart';
+import '../screens/pause_screen.dart';
+import '../services/gratitude_preferences_service.dart';
+import '../theme/app_colors.dart';
+import '../theme/theme_provider.dart';
+import '../utils/text_styles.dart';
+
+/// The two practices, in one container: a minute of breath, and a page of
+/// thanks.
+///
+/// One card rather than two floating lines. Everything else on this screen is
+/// a rounded container, and the doors were the only exception — with one door
+/// that exception reads as *special*, and with two it reads as an oversight.
+/// Grouping them also says the true thing about them: these are practices,
+/// siblings to each other, and not siblings of the actions in the list below
+/// (which carry a checkmark and become moments) or of the quiet doors under it
+/// (which are settings you touch once a month).
+///
+/// Both rows are drawn here rather than reusing the old standalone pause door,
+/// which painted a band of warm light behind its text. Alone on the landscape
+/// that glow was the point; inside a card, beside a plain sibling, it made the
+/// two rows look like different kinds of thing — so the card sets one ink, one
+/// height, one weight, and neither row is dressed differently from the other.
+class PracticesCard extends StatelessWidget {
+  const PracticesCard({super.key});
+
+  /// First open goes to setup; every open after goes straight to the page.
+  static Future<void> openGratitude(BuildContext context) async {
+    final chosen = await GratitudePreferencesService.hasChosenCadence();
+    if (!context.mounted) return;
+    await Navigator.of(context).push(
+      chosen ? GratitudePageScreen.route() : GratitudeCadenceScreen.route(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+    final colors = themeProvider.colors;
+    final isDark = themeProvider.theme.isDark;
+    final l10n = AppLocalizations.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+      child: Container(
+        decoration: BoxDecoration(
+          // The Profile page's card surface, not the habit card's. At
+          // `cardBackground` (0.28) this washed into the landscape and the two
+          // doors read as floating text again — which is the exact thing
+          // putting them in a container was meant to fix.
+          color: colors.profileCard.withOpacity(colors.profileCardOpacity),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: isDark
+                ? colors.borderCard.withOpacity(colors.borderCardOpacity)
+                : const Color(0xFFFFFFFF).withOpacity(0.6),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: colors.textPrimary.withOpacity(0.04),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _DoorRow(
+              label: l10n.pauseEntryTitle,
+              onTap: () => Navigator.of(context)
+                  .push(PauseScreen.route(entry: 'home')),
+            ),
+            Container(
+              height: 1,
+              margin: const EdgeInsets.symmetric(horizontal: 22),
+              color: colors.divider.withOpacity(colors.dividerOpacity),
+            ),
+            _DoorRow(
+              label: l10n.gratitudeDoor,
+              onTap: () => openGratitude(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One practice, as a line of letterspaced type. Both rows use this, so a
+/// change to weight, ink or height can only ever land on both.
+class _DoorRow extends StatelessWidget {
+  const _DoorRow({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: SizedBox(
+        height: 56,
+        width: double.infinity,
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 3.0,
+              color: colors.textSubtitle,
+              fontFamily: AppTextStyles.bodyFont(context),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
