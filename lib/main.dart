@@ -7028,35 +7028,58 @@ class _RescueCard extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
+      // A card, not bare text. Everything else on this screen sits in a
+      // rounded container; the rescue was the one thing floating on the
+      // landscape, which read as a stray caption rather than the frame for
+      // the single card beneath it.
+      //
+      // Tinted with the theme's own ink so it reads as a different *kind* of
+      // thing from the white action card below, without a second colour to
+      // maintain across ten themes. No illustration: this app has no
+      // characters anywhere, and the screen someone lands on after nine quiet
+      // days is the wrong place to debut one — the copy is warm enough on its
+      // own, and a face here would be the app emoting at them.
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(22, 22, 22, 24),
+        decoration: BoxDecoration(
+          color: colors.ctaPrimary.withOpacity(0.10),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: colors.borderCard.withOpacity(colors.borderCardOpacity),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
             // Past three weeks the count stops helping. "Twenty-nine days"
             // is a number someone can feel judged by; "it's been a while"
             // is the same fact without the arithmetic.
-            rescue.isLongAbsence
-                ? l10n.rescueLongTitle
-                : l10n.rescueTitle(rescue.quietDays),
-            style: TextStyle(
-              fontSize: 20,
-              height: 1.3,
-              fontWeight: FontWeight.w600,
-              color: colors.textPrimary,
-              fontFamily: 'Sora',
+              rescue.isLongAbsence
+                  ? l10n.rescueLongTitle
+                  : l10n.rescueTitle(rescue.quietDays),
+              style: TextStyle(
+                fontSize: 20,
+                height: 1.3,
+                fontWeight: FontWeight.w600,
+                color: colors.textPrimary,
+                fontFamily: 'Sora',
+              ),
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            rescue.isLongAbsence ? l10n.rescueLongBody : l10n.rescueBody,
-            style: TextStyle(
-              fontSize: 15,
-              height: 1.45,
-              color: colors.textSecondary,
-              fontFamily: AppTextStyles.bodyFont(context),
+            const SizedBox(height: 6),
+            Text(
+              rescue.isLongAbsence ? l10n.rescueLongBody : l10n.rescueBody,
+              style: TextStyle(
+                fontSize: 15,
+                height: 1.45,
+                color: colors.textSecondary,
+                fontFamily: AppTextStyles.bodyFont(context),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
