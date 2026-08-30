@@ -66,7 +66,6 @@ class CuratedPacks {
     focusAreas: ['Self-care', 'Mood'],
     habitIds: [
       'Do absolutely nothing for 5 minutes',
-      "Name 3 things you're grateful for",
       'Put on something comfortable',
       'Listen to one song you love',
     ],

@@ -1,6 +1,7 @@
 import 'dart:ui' show Locale, PlatformDispatcher;
 
 import '../l10n/app_localizations.dart';
+import '../models/gratitude_cadence.dart';
 import '../models/intention_path.dart';
 import '../models/letter.dart';
 import '../models/rescue.dart';
@@ -14,6 +15,8 @@ import 'package:timezone/timezone.dart' as tz;
 
 import 'analytics_service.dart';
 import 'app_usage_service.dart';
+import 'gratitude_preferences_service.dart';
+import 'gratitude_service.dart';
 import 'moments_service.dart';
 import 'notification_messages.dart';
 import 'notification_preferences_service.dart';
@@ -229,6 +232,18 @@ class NotificationScheduler {
         dayStep = 3; // Every 3 days (gentle)
     }
 
+    // The page wins the evening. Whatever days the gratitude reminder is due,
+    // the habit nudge stands down: both say "come back to the app", and two of
+    // those in one day is the pile-up this rule exists to prevent. Opening the
+    // page puts the day's actions on screen anyway.
+    //
+    // The same instinct already existed one method down — [scheduleReturnNote]
+    // refuses to queue at all while the daily is on. This generalises it.
+    final GratitudeCadence? pageCadence =
+        (await GratitudePreferencesService.isEnabled())
+            ? await GratitudePreferencesService.getCadence()
+            : null;
+
     int notifId = 0;
     int msgOffset = 0;
     for (int dayOffset = 0; dayOffset < 7; dayOffset += dayStep) {
@@ -242,6 +257,11 @@ class NotificationScheduler {
         hour,
         minute,
       ).add(Duration(days: dayOffset));
+
+      if (pageCadence != null &&
+          GratitudeSchedule.firesOn(pageCadence, scheduled)) {
+        continue;
+      }
 
       // Skip if the time has already passed today
       if (scheduled.isBefore(now)) {
@@ -292,16 +312,21 @@ class NotificationScheduler {
     }
   }
 
+  /// The weekly reflection, Sunday at 09:00.
+  ///
+  /// Morning, not evening. It is a looking-back message and reads better
+  /// before the day than at the end of one — and Sunday night is the only
+  /// slot the gratitude page and the reflection would both want, so moving
+  /// this is what keeps the one-a-day rule from silently eating it.
   static Future<void> scheduleWeekly(AppLocalizations l10n) async {
     final now = tz.TZDateTime.now(tz.local);
 
-    // Find the next Sunday at 21:00
     var scheduled = tz.TZDateTime(
       tz.local,
       now.year,
       now.month,
       now.day,
-      21,
+      9,
       0,
     );
 
@@ -314,7 +339,7 @@ class NotificationScheduler {
         scheduled.year,
         scheduled.month,
         scheduled.day,
-        21,
+        9,
         0,
       );
     }
@@ -358,6 +383,83 @@ class NotificationScheduler {
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
     );
+  }
+
+  /// Ids for the page reminder. Its own block, so cancelling these can never
+  /// touch the daily queue (0-6), the weekly (100), the letter (101) or the
+  /// return note (102).
+  static const int _gratitudeIdBase = 110;
+
+  /// Fourteen queued slots, not seven. iOS only keeps what is scheduled, so
+  /// the queue is the whole reminder for anyone who stops opening the app —
+  /// and someone who has stopped opening the app is exactly who a fortnight
+  /// of runway is for. Well inside the 64-notification ceiling: the daily
+  /// takes at most 7, the weekly, letter and return note one each.
+  static const int _gratitudeSlots = 14;
+
+  /// The gratitude page reminder.
+  ///
+  /// Deliberately NOT adaptive. [_getAdaptiveTier] drops the habit nudge to
+  /// every second or third day when someone goes quiet — right for a nudge,
+  /// wrong here. This is a practice the user opted into and chose a cadence
+  /// for, sometimes on clinical advice, and an app that quietly stops asking
+  /// after four missed evenings fails them exactly when asking matters most.
+  ///
+  /// Tonight's slot is dropped once the page is written. The queue rebuilds on
+  /// every app open, the same way the return note is re-evaluated there.
+  static Future<void> scheduleGratitude(AppLocalizations l10n) async {
+    for (int i = 0; i < _gratitudeSlots; i++) {
+      await _plugin.cancel(_gratitudeIdBase + i);
+    }
+    if (!await GratitudePreferencesService.isEnabled()) return;
+    final cadence = await GratitudePreferencesService.getCadence();
+    if (cadence == null) return;
+
+    final hour = await GratitudePreferencesService.getHour();
+    final minute = await GratitudePreferencesService.getMinute();
+    final now = tz.TZDateTime.now(tz.local);
+    final writtenToday = await GratitudeService.writtenToday();
+
+    final times = GratitudeSchedule.nextFireTimes(
+      cadence,
+      from: DateTime(now.year, now.month, now.day, now.hour, now.minute),
+      hour: hour,
+      minute: minute,
+      count: _gratitudeSlots,
+    );
+
+    int id = _gratitudeIdBase;
+    for (final t in times) {
+      final isToday =
+          t.year == now.year && t.month == now.month && t.day == now.day;
+      if (isToday && writtenToday) continue;
+
+      await _plugin.zonedSchedule(
+        id,
+        '',
+        l10n.notifGratitudeBody,
+        tz.TZDateTime(tz.local, t.year, t.month, t.day, t.hour, t.minute),
+        NotificationDetails(
+          iOS: const DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: false,
+            presentSound: true,
+          ),
+          android: AndroidNotificationDetails(
+            'gratitude_reminders',
+            l10n.notifGratitudeChannelName,
+            channelDescription: l10n.notifGratitudeChannelDesc,
+            importance: Importance.defaultImportance,
+            priority: Priority.defaultPriority,
+          ),
+        ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: null,
+      );
+      id++;
+    }
   }
 
   static const int _monthlyLetterId = 101;
@@ -566,6 +668,7 @@ class NotificationScheduler {
     await NotificationPreferencesService.setScheduledLocale(l10n.localeName);
 
     await scheduleDaily(l10n);
+    await scheduleGratitude(l10n);
 
     final weeklyEnabled =
         await NotificationPreferencesService.isWeeklyEnabled();

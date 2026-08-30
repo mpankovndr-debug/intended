@@ -1983,5 +1983,38 @@
   "widgetMonthUnlock": "Intended+ — the whole month in colour",
   "@widgetMonthUnlock": {
     "description": "Large widget, not subscribed: caption under the faded month mosaic."
-  }
+  },
+  "gratitudeDoor": "a page of thanks",
+  "gratitudeTitle": "What are you thankful for?",
+  "gratitudeHint": "Five each is plenty. Fewer is fine.",
+  "gratitudeToYourself": "TO YOURSELF",
+  "gratitudeToOthers": "TO OTHERS",
+  "gratitudeSelfPlaceholder": "something you're glad you did",
+  "gratitudeOthersPlaceholder": "someone you're glad about, and why",
+  "gratitudeAddAnother": "add another",
+  "gratitudeDone": "Done",
+  "gratitudeSideFull": "Ten is as many as a page holds.",
+  "gratitudePagesCount": "{count, plural, one{{count} page} other{{count} pages}}",
+  "@gratitudePagesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gratitudePastPages": "Past pages",
+  "gratitudeCadenceTitle": "How often?",
+  "gratitudeCadenceBody": "Weekly keeps it fresh for some people. Daily builds the rhythm for others.",
+  "gratitudeCadenceDaily": "Every day",
+  "gratitudeCadenceDailySub": "A page each night.",
+  "gratitudeCadenceFew": "A few days a week",
+  "gratitudeCadenceFewSub": "Three evenings a week.",
+  "gratitudeCadenceWeekly": "Once a week",
+  "gratitudeCadenceWeeklySub": "One longer sit.",
+  "gratitudeRemindAt": "Remind me at",
+  "gratitudeChangeWhenever": "Change it whenever.",
+  "gratitudeStart": "Start",
+  "notifGratitudeBody": "A page of thanks, if you have a minute.",
+  "notifGratitudeChannelName": "Gratitude page",
+  "notifGratitudeChannelDesc": "The evening reminder for your gratitude page"
 }

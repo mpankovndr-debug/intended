@@ -1494,5 +1494,38 @@
   "returnOfferDismiss": "Я вернусь без напоминаний",
   "widgetMomentsCount": "{count, plural, one{{count} момент} few{{count} момента} many{{count} моментов} other{{count} момента}}",
   "widgetReturnsCount": "{count, plural, one{{count} возвращение} few{{count} возвращения} many{{count} возвращений} other{{count} возвращения}}",
-  "widgetMonthUnlock": "Intended+ — весь месяц в цвете"
+  "widgetMonthUnlock": "Intended+ — весь месяц в цвете",
+  "gratitudeDoor": "страница благодарности",
+  "gratitudeTitle": "За что сказать спасибо?",
+  "gratitudeHint": "По пять — уже много. Меньше тоже хорошо.",
+  "gratitudeToYourself": "СЕБЕ",
+  "gratitudeToOthers": "ДРУГИМ",
+  "gratitudeSelfPlaceholder": "то, за что стоит сказать спасибо себе",
+  "gratitudeOthersPlaceholder": "кто-то, кому хочется сказать спасибо",
+  "gratitudeAddAnother": "добавить ещё",
+  "gratitudeDone": "Готово",
+  "gratitudeSideFull": "Десять — это всё, что помещается на странице.",
+  "gratitudePagesCount": "{count, plural, one{{count} страница} few{{count} страницы} many{{count} страниц} other{{count} страницы}}",
+  "@gratitudePagesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gratitudePastPages": "Прошлые страницы",
+  "gratitudeCadenceTitle": "Как часто?",
+  "gratitudeCadenceBody": "Кому-то раз в неделю помогает сохранить свежесть. Кому-то каждый день — выстроить ритм.",
+  "gratitudeCadenceDaily": "Каждый день",
+  "gratitudeCadenceDailySub": "Страница каждый вечер.",
+  "gratitudeCadenceFew": "Несколько дней в неделю",
+  "gratitudeCadenceFewSub": "Три вечера в неделю.",
+  "gratitudeCadenceWeekly": "Раз в неделю",
+  "gratitudeCadenceWeeklySub": "Один вечер, подольше.",
+  "gratitudeRemindAt": "Напоминать в",
+  "gratitudeChangeWhenever": "Это можно изменить в любой момент.",
+  "gratitudeStart": "Начать",
+  "notifGratitudeBody": "Страница благодарности — если есть минута.",
+  "notifGratitudeChannelName": "Страница благодарности",
+  "notifGratitudeChannelDesc": "Вечернее напоминание о странице благодарности"
 }

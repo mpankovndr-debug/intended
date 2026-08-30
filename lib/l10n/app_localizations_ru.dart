@@ -4039,4 +4039,97 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get widgetMonthUnlock => 'Intended+ — весь месяц в цвете';
+
+  @override
+  String get gratitudeDoor => 'страница благодарности';
+
+  @override
+  String get gratitudeTitle => 'За что сказать спасибо?';
+
+  @override
+  String get gratitudeHint => 'По пять — уже много. Меньше тоже хорошо.';
+
+  @override
+  String get gratitudeToYourself => 'СЕБЕ';
+
+  @override
+  String get gratitudeToOthers => 'ДРУГИМ';
+
+  @override
+  String get gratitudeSelfPlaceholder =>
+      'то, за что стоит сказать спасибо себе';
+
+  @override
+  String get gratitudeOthersPlaceholder =>
+      'кто-то, кому хочется сказать спасибо';
+
+  @override
+  String get gratitudeAddAnother => 'добавить ещё';
+
+  @override
+  String get gratitudeDone => 'Готово';
+
+  @override
+  String get gratitudeSideFull =>
+      'Десять — это всё, что помещается на странице.';
+
+  @override
+  String gratitudePagesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count страницы',
+      many: '$count страниц',
+      few: '$count страницы',
+      one: '$count страница',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get gratitudePastPages => 'Прошлые страницы';
+
+  @override
+  String get gratitudeCadenceTitle => 'Как часто?';
+
+  @override
+  String get gratitudeCadenceBody =>
+      'Кому-то раз в неделю помогает сохранить свежесть. Кому-то каждый день — выстроить ритм.';
+
+  @override
+  String get gratitudeCadenceDaily => 'Каждый день';
+
+  @override
+  String get gratitudeCadenceDailySub => 'Страница каждый вечер.';
+
+  @override
+  String get gratitudeCadenceFew => 'Несколько дней в неделю';
+
+  @override
+  String get gratitudeCadenceFewSub => 'Три вечера в неделю.';
+
+  @override
+  String get gratitudeCadenceWeekly => 'Раз в неделю';
+
+  @override
+  String get gratitudeCadenceWeeklySub => 'Один вечер, подольше.';
+
+  @override
+  String get gratitudeRemindAt => 'Напоминать в';
+
+  @override
+  String get gratitudeChangeWhenever => 'Это можно изменить в любой момент.';
+
+  @override
+  String get gratitudeStart => 'Начать';
+
+  @override
+  String get notifGratitudeBody => 'Страница благодарности — если есть минута.';
+
+  @override
+  String get notifGratitudeChannelName => 'Страница благодарности';
+
+  @override
+  String get notifGratitudeChannelDesc =>
+      'Вечернее напоминание о странице благодарности';
 }

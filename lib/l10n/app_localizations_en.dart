@@ -3944,4 +3944,93 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get widgetMonthUnlock => 'Intended+ — the whole month in colour';
+
+  @override
+  String get gratitudeDoor => 'a page of thanks';
+
+  @override
+  String get gratitudeTitle => 'What are you thankful for?';
+
+  @override
+  String get gratitudeHint => 'Five each is plenty. Fewer is fine.';
+
+  @override
+  String get gratitudeToYourself => 'TO YOURSELF';
+
+  @override
+  String get gratitudeToOthers => 'TO OTHERS';
+
+  @override
+  String get gratitudeSelfPlaceholder => 'something you\'re glad you did';
+
+  @override
+  String get gratitudeOthersPlaceholder =>
+      'someone you\'re glad about, and why';
+
+  @override
+  String get gratitudeAddAnother => 'add another';
+
+  @override
+  String get gratitudeDone => 'Done';
+
+  @override
+  String get gratitudeSideFull => 'Ten is as many as a page holds.';
+
+  @override
+  String gratitudePagesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages',
+      one: '$count page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get gratitudePastPages => 'Past pages';
+
+  @override
+  String get gratitudeCadenceTitle => 'How often?';
+
+  @override
+  String get gratitudeCadenceBody =>
+      'Weekly keeps it fresh for some people. Daily builds the rhythm for others.';
+
+  @override
+  String get gratitudeCadenceDaily => 'Every day';
+
+  @override
+  String get gratitudeCadenceDailySub => 'A page each night.';
+
+  @override
+  String get gratitudeCadenceFew => 'A few days a week';
+
+  @override
+  String get gratitudeCadenceFewSub => 'Three evenings a week.';
+
+  @override
+  String get gratitudeCadenceWeekly => 'Once a week';
+
+  @override
+  String get gratitudeCadenceWeeklySub => 'One longer sit.';
+
+  @override
+  String get gratitudeRemindAt => 'Remind me at';
+
+  @override
+  String get gratitudeChangeWhenever => 'Change it whenever.';
+
+  @override
+  String get gratitudeStart => 'Start';
+
+  @override
+  String get notifGratitudeBody => 'A page of thanks, if you have a minute.';
+
+  @override
+  String get notifGratitudeChannelName => 'Gratitude page';
+
+  @override
+  String get notifGratitudeChannelDesc =>
+      'The evening reminder for your gratitude page';
 }

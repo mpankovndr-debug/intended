@@ -6591,6 +6591,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Intended+ — the whole month in colour'**
   String get widgetMonthUnlock;
+
+  /// No description provided for @gratitudeDoor.
+  ///
+  /// In en, this message translates to:
+  /// **'a page of thanks'**
+  String get gratitudeDoor;
+
+  /// No description provided for @gratitudeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What are you thankful for?'**
+  String get gratitudeTitle;
+
+  /// No description provided for @gratitudeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Five each is plenty. Fewer is fine.'**
+  String get gratitudeHint;
+
+  /// No description provided for @gratitudeToYourself.
+  ///
+  /// In en, this message translates to:
+  /// **'TO YOURSELF'**
+  String get gratitudeToYourself;
+
+  /// No description provided for @gratitudeToOthers.
+  ///
+  /// In en, this message translates to:
+  /// **'TO OTHERS'**
+  String get gratitudeToOthers;
+
+  /// No description provided for @gratitudeSelfPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'something you\'re glad you did'**
+  String get gratitudeSelfPlaceholder;
+
+  /// No description provided for @gratitudeOthersPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'someone you\'re glad about, and why'**
+  String get gratitudeOthersPlaceholder;
+
+  /// No description provided for @gratitudeAddAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'add another'**
+  String get gratitudeAddAnother;
+
+  /// No description provided for @gratitudeDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get gratitudeDone;
+
+  /// No description provided for @gratitudeSideFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Ten is as many as a page holds.'**
+  String get gratitudeSideFull;
+
+  /// No description provided for @gratitudePagesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} page} other{{count} pages}}'**
+  String gratitudePagesCount(int count);
+
+  /// No description provided for @gratitudePastPages.
+  ///
+  /// In en, this message translates to:
+  /// **'Past pages'**
+  String get gratitudePastPages;
+
+  /// No description provided for @gratitudeCadenceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How often?'**
+  String get gratitudeCadenceTitle;
+
+  /// No description provided for @gratitudeCadenceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly keeps it fresh for some people. Daily builds the rhythm for others.'**
+  String get gratitudeCadenceBody;
+
+  /// No description provided for @gratitudeCadenceDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get gratitudeCadenceDaily;
+
+  /// No description provided for @gratitudeCadenceDailySub.
+  ///
+  /// In en, this message translates to:
+  /// **'A page each night.'**
+  String get gratitudeCadenceDailySub;
+
+  /// No description provided for @gratitudeCadenceFew.
+  ///
+  /// In en, this message translates to:
+  /// **'A few days a week'**
+  String get gratitudeCadenceFew;
+
+  /// No description provided for @gratitudeCadenceFewSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Three evenings a week.'**
+  String get gratitudeCadenceFewSub;
+
+  /// No description provided for @gratitudeCadenceWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Once a week'**
+  String get gratitudeCadenceWeekly;
+
+  /// No description provided for @gratitudeCadenceWeeklySub.
+  ///
+  /// In en, this message translates to:
+  /// **'One longer sit.'**
+  String get gratitudeCadenceWeeklySub;
+
+  /// No description provided for @gratitudeRemindAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me at'**
+  String get gratitudeRemindAt;
+
+  /// No description provided for @gratitudeChangeWhenever.
+  ///
+  /// In en, this message translates to:
+  /// **'Change it whenever.'**
+  String get gratitudeChangeWhenever;
+
+  /// No description provided for @gratitudeStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get gratitudeStart;
+
+  /// No description provided for @notifGratitudeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A page of thanks, if you have a minute.'**
+  String get notifGratitudeBody;
+
+  /// No description provided for @notifGratitudeChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Gratitude page'**
+  String get notifGratitudeChannelName;
+
+  /// No description provided for @notifGratitudeChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The evening reminder for your gratitude page'**
+  String get notifGratitudeChannelDesc;
 }
 
 class _AppLocalizationsDelegate

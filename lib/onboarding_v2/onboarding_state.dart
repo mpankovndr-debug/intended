@@ -277,7 +277,6 @@ class OnboardingState extends ChangeNotifier {
       'Notice one sound around you',
       'Feel your feet on the ground',
       'Place hand on heart for 30 seconds',
-      'Name 3 things you\'re grateful for',
       'Smile kindly at yourself',
       'Ask yourself "what do I need right now?"',
       'Give yourself permission to rest',
