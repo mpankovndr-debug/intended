@@ -3989,6 +3989,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get healthTitle => 'Apple Health';
 
   @override
+  String get healthAnswered =>
+      'iOS задаёт этот вопрос только один раз — и уже задал. Изменить можно по шагам ниже.';
+
+  @override
   String get healthConnect => 'Сохранять паузы в Apple Health';
 
   @override

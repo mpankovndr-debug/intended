@@ -1955,6 +1955,7 @@
   "pauseCheckInCalm": "It lifted",
   "pauseNotifAction": "A minute of breath",
   "healthTitle": "Apple Health",
+  "healthAnswered": "iOS asks this only once, and it already has. Use the steps below to change it.",
   "healthConnect": "Save pauses to Apple Health",
   "healthUnavailable": "Apple Health isn't available on this device.",
   "healthManageNote": "You can turn this off anytime in iPhone Settings → Privacy & Security → Health → Intended.",

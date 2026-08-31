@@ -95,21 +95,27 @@ class _GratitudePageScreenState extends State<GratitudePageScreen> {
 
   /// Writes the page and rebuilds the notification queue, which is what drops
   /// tonight's reminder once there is something on the page.
-  void _persist() {
+  Future<void> _persist() {
     final self = _linesOf(_self);
     final others = _linesOf(_others);
     final existing = _existing;
     final entry = existing == null
         ? GratitudeEntry.create(forSelf: self, forOthers: others)
         : existing.copyWith(forSelf: self, forOthers: others);
-    // Fire-and-forget: dispose cannot await, and a lost page is worse than a
-    // late queue rebuild.
-    GratitudeService.save(entry);
+    // Returns the future rather than swallowing it. `dispose` cannot await
+    // and drops it on purpose — a lost page is worse than a late queue
+    // rebuild — but `_done` must, because the very next thing it does reads
+    // this write back.
+    return GratitudeService.save(entry);
   }
 
   Future<void> _done() async {
-    _persist();
+    // Awaited, not fired: `scheduleGratitude` asks `writtenToday()` whether
+    // to drop tonight's slot, and reads this very write to answer. Racing it
+    // nudges someone to write the page they just finished.
+    await _persist();
     _saved = true;
+    if (!mounted) return;
     final l10n = AppLocalizations.of(context);
     await NotificationScheduler.scheduleGratitude(l10n);
     if (!mounted) return;

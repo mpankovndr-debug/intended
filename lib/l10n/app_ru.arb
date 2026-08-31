@@ -1485,6 +1485,7 @@
   "pauseCheckInCalm": "Отпустило",
   "pauseNotifAction": "Минута дыхания",
   "healthTitle": "Apple Health",
+  "healthAnswered": "iOS задаёт этот вопрос только один раз — и уже задал. Изменить можно по шагам ниже.",
   "healthConnect": "Сохранять паузы в Apple Health",
   "healthUnavailable": "Apple Health недоступен на этом устройстве.",
   "healthManageNote": "Это можно отключить в любой момент: Настройки iPhone → Конфиденциальность и безопасность → Здоровье → Intended.",

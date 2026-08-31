@@ -37,6 +37,15 @@ class HealthService {
     await prefs.setInt(_offersKey, (prefs.getInt(_offersKey) ?? 0) + 1);
   }
 
+  /// True once the question has been settled, wherever it was settled.
+  /// Profile reads this to know the authorisation sheet will not appear
+  /// again: iOS presents it once per app, so a button offering it a second
+  /// time would do nothing at all.
+  static Future<bool> hasAnswered() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_answeredKey) ?? false;
+  }
+
   /// The user chose — "Save to Health" or an explicit "Not now". Either way
   /// the question is settled and never comes back.
   ///

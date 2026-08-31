@@ -29,6 +29,7 @@ class AppleHealthScreen extends StatefulWidget {
 
 class _AppleHealthScreenState extends State<AppleHealthScreen> {
   bool? _available;
+  bool _answered = false;
 
   @override
   void initState() {
@@ -36,15 +37,22 @@ class _AppleHealthScreenState extends State<AppleHealthScreen> {
     PauseNative.healthIsAvailable().then((v) {
       if (mounted) setState(() => _available = v);
     });
+    HealthService.hasAnswered().then((v) {
+      if (mounted) setState(() => _answered = v);
+    });
   }
 
   Future<void> _connect() async {
-    // Asking here settles the question the same way the post-pause sheet
-    // does, so someone who answers in one place is never asked in the other.
-    await HealthService.markAnswered();
     AnalyticsService.logPauseHealthPrompt('accepted_settings');
+    // Request first, record second.
+    //
+    // *Scar:* HealthService already carries this one — marking the question
+    // answered before the sheet resolves retires the feature on a tap that
+    // decided nothing. Writing it here in the other order would have
+    // reproduced it on a second screen.
     await PauseNative.healthRequestWriteAuth();
-    if (mounted) setState(() {});
+    await HealthService.markAnswered();
+    if (mounted) setState(() => _answered = true);
   }
 
   @override
@@ -107,10 +115,24 @@ class _AppleHealthScreenState extends State<AppleHealthScreen> {
                           ),
                         )
                       else if (_available == true)
-                        styledPrimaryButton(
-                          label: l10n.healthConnect,
-                          onPressed: _connect,
-                        ),
+                        // iOS presents its permission sheet exactly once per
+                        // app; every later call returns silently. A button
+                        // that still looks tappable after that is a button
+                        // that does nothing, so it stands down and says why.
+                        _answered
+                            ? Text(
+                                l10n.healthAnswered,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  height: 1.5,
+                                  color: colors.textSecondary,
+                                  fontFamily: AppTextStyles.bodyFont(context),
+                                ),
+                              )
+                            : styledPrimaryButton(
+                                label: l10n.healthConnect,
+                                onPressed: _connect,
+                              ),
                       const SizedBox(height: 20),
                       Text(
                         l10n.healthManageNote,

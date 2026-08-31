@@ -6532,6 +6532,12 @@ abstract class AppLocalizations {
   /// **'Apple Health'**
   String get healthTitle;
 
+  /// No description provided for @healthAnswered.
+  ///
+  /// In en, this message translates to:
+  /// **'iOS asks this only once, and it already has. Use the steps below to change it.'**
+  String get healthAnswered;
+
   /// No description provided for @healthConnect.
   ///
   /// In en, this message translates to:
