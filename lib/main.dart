@@ -63,6 +63,7 @@ import 'services/return_note_service.dart';
 import 'widgets/return_note_offer_card.dart';
 import 'widgets/stale_action_nudge.dart';
 import 'widgets/upgrade_nudge_banner.dart';
+import 'screens/gratitude_page_screen.dart';
 import 'widgets/practices_card.dart';
 import 'services/pause_launcher.dart';
 import 'services/health_service.dart';
@@ -714,7 +715,7 @@ double _pagePad(BuildContext context) {
 /// The two quiet doors under the list (§7) sank into the landscape at pure
 /// accent colour (SS2). A third of the way toward ink keeps them quiet but
 /// findable, on every theme, without inventing a new colour.
-Color _doorColor(AppColorScheme colors) =>
+Color doorColor(AppColorScheme colors) =>
     Color.lerp(colors.ctaPrimary, colors.textPrimary, 0.35)!;
 
 void main() {
@@ -1073,6 +1074,8 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
     // Listen for weekly notification tap → switch to Progress tab
     NotificationScheduler.pendingTabSwitch.addListener(_onPendingTabSwitch);
     PauseLauncher.pending.addListener(_onPendingPause);
+    NotificationScheduler.pendingGratitudePage
+        .addListener(_onPendingGratitudePage);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _userState = context.read<UserState>();
       _lastPremiumStatus = _userState!.hasSubscription;
@@ -1083,6 +1086,12 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
       // Cold-start path for the Pause: PauseLauncher.init() can set the
       // value before this listener exists, so consume once explicitly.
       _onPendingPause();
+      // Cold-start path for the page reminder: the tap that launched the app
+      // never reaches the response callback.
+      NotificationScheduler.launchedFromGratitudePage().then((launched) {
+        if (launched) NotificationScheduler.pendingGratitudePage.value = true;
+      });
+      _onPendingGratitudePage();
     });
   }
 
@@ -1099,6 +1108,14 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
     if (entry == null || !mounted) return;
     PauseLauncher.pending.value = null; // consumed
     Navigator.of(context).push(PauseScreen.route(entry: entry));
+  }
+
+  void _onPendingGratitudePage() {
+    if (!NotificationScheduler.pendingGratitudePage.value || !mounted) return;
+    NotificationScheduler.pendingGratitudePage.value = false; // consumed
+    // Straight to the page: whoever tapped the reminder has already chosen a
+    // cadence, so the setup screen would be a door in front of a door.
+    Navigator.of(context).push(GratitudePageScreen.route());
   }
 
   void _onSubscriptionChanged() {
@@ -1123,6 +1140,8 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
   void dispose() {
     NotificationScheduler.pendingTabSwitch.removeListener(_onPendingTabSwitch);
     PauseLauncher.pending.removeListener(_onPendingPause);
+    NotificationScheduler.pendingGratitudePage
+        .removeListener(_onPendingGratitudePage);
     _userState?.removeListener(_onSubscriptionChanged);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -2067,7 +2086,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                           style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w500,
-                                            color: _doorColor(colors),
+                                            color: doorColor(colors),
                                             fontFamily: AppTextStyles.bodyFont(
                                                 context),
                                           ),
@@ -2112,7 +2131,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                             Icon(
                                               CupertinoIcons.add,
                                               size: 18,
-                                              color: _doorColor(colors),
+                                              color: doorColor(colors),
                                             ),
                                             const SizedBox(width: 8),
                                             Text(
@@ -2120,7 +2139,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w500,
-                                                color: _doorColor(colors),
+                                                color: doorColor(colors),
                                                 fontFamily:
                                                     AppTextStyles.bodyFont(
                                                         context),
@@ -2313,7 +2332,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                           // Same colour as the add row: two
                                           // doors of equal standing (§7), not
                                           // a door and an afterthought.
-                                          color: _doorColor(colors),
+                                          color: doorColor(colors),
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
@@ -2321,7 +2340,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500,
-                                            color: _doorColor(colors),
+                                            color: doorColor(colors),
                                             fontFamily:
                                                 AppTextStyles.bodyFont(context),
                                           ),

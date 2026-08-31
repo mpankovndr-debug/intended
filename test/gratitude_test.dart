@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intended/services/notification_scheduler.dart';
 import 'package:intended/models/gratitude_cadence.dart';
 import 'package:intended/models/gratitude_entry.dart';
 import 'package:intended/models/gratitude_month.dart';
 
 void main() {
+  _notificationRoutingTests();
   GratitudeEntry entry(
     DateTime utc, {
     List<String> self = const ['a'],
@@ -208,6 +210,24 @@ void main() {
       for (int i = 1; i < times.length; i++) {
         expect(times[i].difference(times[i - 1]).inDays, 7);
       }
+    });
+  });
+}
+
+void _notificationRoutingTests() {
+  group('page reminder ids', () {
+    test('the reminder\'s own slots route to the page, nothing else does', () {
+      // The 14 slots the page reminder owns.
+      for (int i = 0; i < 14; i++) {
+        expect(NotificationScheduler.isGratitudeId(110 + i), isTrue,
+            reason: 'slot $i belongs to the page');
+      }
+      // The neighbours: daily habit nudges below, weekly (100) and the
+      // monthly letter (101) above, and the first id past the block.
+      expect(NotificationScheduler.isGratitudeId(100), isFalse);
+      expect(NotificationScheduler.isGratitudeId(101), isFalse);
+      expect(NotificationScheduler.isGratitudeId(109), isFalse);
+      expect(NotificationScheduler.isGratitudeId(124), isFalse);
     });
   });
 }

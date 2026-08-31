@@ -44,6 +44,30 @@ class NotificationScheduler {
   /// Listeners should switch to the Progress tab (index 1).
   static final ValueNotifier<int> pendingTabSwitch = ValueNotifier<int>(-1);
 
+  /// Set when a gratitude page reminder is tapped. The home screen consumes
+  /// it and pushes the page — a reminder to write tonight's page that landed
+  /// you on the home screen would make you find the door yourself.
+  static final ValueNotifier<bool> pendingGratitudePage =
+      ValueNotifier<bool>(false);
+
+  /// The page reminder owns ids [_gratitudeIdBase, +_gratitudeSlots).
+  static bool isGratitudeId(int id) =>
+      id >= _gratitudeIdBase && id < _gratitudeIdBase + _gratitudeSlots;
+
+  /// Cold start: the tap that launched the app never reaches the response
+  /// callback, so it has to be read back from the launch details.
+  static Future<bool> launchedFromGratitudePage() async {
+    try {
+      final details = await _plugin.getNotificationAppLaunchDetails();
+      final int? id = details?.notificationResponse?.id;
+      return details?.didNotificationLaunchApp == true &&
+          id != null &&
+          isGratitudeId(id);
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// The daily notification's "minute of breath" action (iOS category and
   /// action ids — registered once at initialize, referenced by scheduleDaily).
   static const String _pauseCategoryId = 'daily_pause';
@@ -110,16 +134,25 @@ class NotificationScheduler {
           PauseLauncher.pending.value = 'notification';
           return;
         }
+        final int? id = response.id;
+        final bool isPage = id != null && isGratitudeId(id);
         AppUsageService.incrementNotificationsTapped();
-        AnalyticsService.logNotificationOpened(switch (response.id) {
-          100 => 'weekly',
-          _monthlyLetterId => 'monthly_letter',
-          _ => 'daily',
-        });
+        AnalyticsService.logNotificationOpened(
+          isPage
+              ? 'gratitude_page'
+              : switch (id) {
+                  100 => 'weekly',
+                  _monthlyLetterId => 'monthly_letter',
+                  _ => 'daily',
+                },
+        );
         // Weekly (100) and the monthly letter (101) both land on the
-        // Progress tab — that's where the letter lives.
-        if (response.id == 100 || response.id == _monthlyLetterId) {
+        // Progress tab — that's where the letter lives. The page reminder
+        // opens the page itself.
+        if (id == 100 || id == _monthlyLetterId) {
           pendingTabSwitch.value = 1; // Progress tab index
+        } else if (isPage) {
+          pendingGratitudePage.value = true;
         }
       },
     );

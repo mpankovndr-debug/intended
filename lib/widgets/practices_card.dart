@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/gratitude_cadence_screen.dart';
 import '../screens/gratitude_page_screen.dart';
+import '../main.dart' show doorColor;
 import '../screens/pause_screen.dart';
 import '../services/gratitude_preferences_service.dart';
 import '../theme/app_colors.dart';
@@ -113,11 +114,13 @@ class _DoorRow extends StatelessWidget {
         child: Center(
           child: Text(
             label,
+            // The same type as "add something of your own" at the foot of the
+            // list — these are all invitations to open something, and they
+            // were reading as three different kinds of control.
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 15,
               fontWeight: FontWeight.w500,
-              letterSpacing: 3.0,
-              color: colors.textSubtitle,
+              color: doorColor(colors),
               fontFamily: AppTextStyles.bodyFont(context),
             ),
           ),

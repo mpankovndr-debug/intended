@@ -80,8 +80,24 @@ class _GratitudeArchiveScreenState extends State<GratitudeArchiveScreen> {
         child: SafeArea(
           child: Column(
             children: [
+              // The way out. The month row's own left chevron sits where a
+              // back control normally would, so without this the only exit
+              // was the system swipe — and nothing on screen said so.
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Icon(Icons.arrow_back_rounded,
+                          size: 24, color: colors.checkmarkFill),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
                 child: Row(
                   children: [
                     _chevron(colors, Icons.chevron_left_rounded, canGoOlder,
