@@ -5,6 +5,7 @@ import '../models/gratitude_cadence.dart';
 import '../models/intention_path.dart';
 import '../models/letter.dart';
 import '../models/rescue.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -351,31 +352,35 @@ class NotificationScheduler {
   /// before the day than at the end of one — and Sunday night is the only
   /// slot the gratitude page and the reflection would both want, so moving
   /// this is what keeps the one-a-day rule from silently eating it.
+  /// The hour the weekly reflection lands on. Named once so the copy that
+  /// promises it and the code that schedules it cannot drift apart again.
+  static const int weeklyHour = 9;
+
+  /// The next Sunday at [weeklyHour], strictly in the future.
+  ///
+  /// Pure and public so the date arithmetic can be tested without a plugin:
+  /// "did the user get their Sunday message" is not answerable from a widget
+  /// test, but "is the next slot the correct Sunday" is.
+  static DateTime nextWeeklySlot(DateTime now) {
+    var scheduled = DateTime(now.year, now.month, now.day, weeklyHour, 0);
+    while (scheduled.weekday != DateTime.sunday || !scheduled.isAfter(now)) {
+      final next = scheduled.add(const Duration(days: 1));
+      scheduled = DateTime(next.year, next.month, next.day, weeklyHour, 0);
+    }
+    return scheduled;
+  }
+
   static Future<void> scheduleWeekly(AppLocalizations l10n) async {
     final now = tz.TZDateTime.now(tz.local);
-
-    var scheduled = tz.TZDateTime(
+    final slot = nextWeeklySlot(now);
+    final scheduled = tz.TZDateTime(
       tz.local,
-      now.year,
-      now.month,
-      now.day,
-      9,
-      0,
+      slot.year,
+      slot.month,
+      slot.day,
+      slot.hour,
+      slot.minute,
     );
-
-    // Advance to next Sunday (weekday 7)
-    while (scheduled.weekday != DateTime.sunday ||
-        !scheduled.isAfter(now)) {
-      scheduled = scheduled.add(const Duration(days: 1));
-      scheduled = tz.TZDateTime(
-        tz.local,
-        scheduled.year,
-        scheduled.month,
-        scheduled.day,
-        9,
-        0,
-      );
-    }
 
     // Dynamic weekly message based on this week's check-in count
     final prefs = await SharedPreferences.getInstance();
@@ -687,6 +692,17 @@ class NotificationScheduler {
     return remindersEnabled;
   }
 
+  /// Runs one scheduling leg, swallowing its failure. A queue missing one
+  /// message is bad; a queue missing every message after the one that broke
+  /// is what makes it unreportable.
+  static Future<void> _tryStep(Future<void> Function() step) async {
+    try {
+      await step();
+    } catch (e, st) {
+      FirebaseCrashlytics.instance.recordError(e, st, fatal: false);
+    }
+  }
+
   static Future<void> cancelAll() async {
     await _plugin.cancelAll();
   }
@@ -700,16 +716,21 @@ class NotificationScheduler {
     // written there would claim otherwise.
     await NotificationPreferencesService.setScheduledLocale(l10n.localeName);
 
-    await scheduleDaily(l10n);
-    await scheduleGratitude(l10n);
+    // Each leg is isolated. This method begins with `cancelAll`, so anything
+    // that throws part-way through used to leave the queue *emptier than it
+    // found it* — one failing scheduler silently taking the rest down with
+    // it, with no error anywhere a user could see. The page reminder made
+    // that worse by adding a leg ahead of the weekly.
+    await _tryStep(() => scheduleDaily(l10n));
+    await _tryStep(() => scheduleGratitude(l10n));
 
     final weeklyEnabled =
         await NotificationPreferencesService.isWeeklyEnabled();
     if (weeklyEnabled) {
-      await scheduleWeekly(l10n);
+      await _tryStep(() => scheduleWeekly(l10n));
       // The monthly letter rides the same preference: both are the
       // reflection cadence, and a separate toggle would need its own UI.
-      await scheduleMonthlyLetter(l10n);
+      await _tryStep(() => scheduleMonthlyLetter(l10n));
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:intended/models/gratitude_entry.dart';
 import 'package:intended/models/gratitude_month.dart';
 
 void main() {
+  _weeklySlotTests();
   _notificationRoutingTests();
   GratitudeEntry entry(
     DateTime utc, {
@@ -228,6 +229,36 @@ void _notificationRoutingTests() {
       expect(NotificationScheduler.isGratitudeId(101), isFalse);
       expect(NotificationScheduler.isGratitudeId(109), isFalse);
       expect(NotificationScheduler.isGratitudeId(124), isFalse);
+    });
+  });
+}
+
+void _weeklySlotTests() {
+  group('weekly reflection slot', () {
+    test('lands on the next Sunday at the hour the copy promises', () {
+      // Monday 31 Aug 2026 → Sunday 6 Sep.
+      final fromMonday =
+          NotificationScheduler.nextWeeklySlot(DateTime(2026, 8, 31, 19, 0));
+      expect(fromMonday, DateTime(2026, 9, 6, 9, 0));
+
+      // Sunday before the hour → today, not next week. Someone who opens the
+      // app on Sunday morning should not wait eight days.
+      final earlySunday =
+          NotificationScheduler.nextWeeklySlot(DateTime(2026, 9, 6, 7, 30));
+      expect(earlySunday, DateTime(2026, 9, 6, 9, 0));
+
+      // Sunday after the hour → next Sunday, never a slot in the past.
+      final lateSunday =
+          NotificationScheduler.nextWeeklySlot(DateTime(2026, 9, 6, 9, 1));
+      expect(lateSunday, DateTime(2026, 9, 13, 9, 0));
+    });
+
+    test('the hour is the one the subtitle names', () {
+      // Guards the drift that shipped: the schedule moved to 09:00 and both
+      // "Every Sunday evening" strings stayed behind.
+      expect(NotificationScheduler.weeklyHour, 9);
+      expect(NotificationScheduler.weeklyHour < 12, isTrue,
+          reason: 'the copy says morning');
     });
   });
 }
