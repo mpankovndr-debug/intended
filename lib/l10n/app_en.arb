@@ -1954,6 +1954,10 @@
   "pauseCheckInNeutral": "A little calmer",
   "pauseCheckInCalm": "It lifted",
   "pauseNotifAction": "A minute of breath",
+  "healthTitle": "Apple Health",
+  "healthConnect": "Save pauses to Apple Health",
+  "healthUnavailable": "Apple Health isn't available on this device.",
+  "healthManageNote": "You can turn this off anytime in iPhone Settings → Privacy & Security → Health → Intended.",
   "pauseHealthTitle": "Save to Apple Health?",
   "pauseHealthBody": "Each completed pause can appear in Apple Health as a mindful minute — your answer here too. Intended never reads anything from Health.",
   "pauseHealthSave": "Save to Health",
@@ -1984,7 +1988,7 @@
   "@widgetMonthUnlock": {
     "description": "Large widget, not subscribed: caption under the faded month mosaic."
   },
-  "gratitudeDoor": "a page of thanks",
+  "gratitudeDoor": "a page of gratitude",
   "gratitudeTitle": "What are you thankful for?",
   "gratitudeHint": "Five each is plenty. Fewer is fine.",
   "gratitudeToYourself": "TO YOURSELF",

@@ -6526,6 +6526,30 @@ abstract class AppLocalizations {
   /// **'A minute of breath'**
   String get pauseNotifAction;
 
+  /// No description provided for @healthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Health'**
+  String get healthTitle;
+
+  /// No description provided for @healthConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Save pauses to Apple Health'**
+  String get healthConnect;
+
+  /// No description provided for @healthUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Health isn\'t available on this device.'**
+  String get healthUnavailable;
+
+  /// No description provided for @healthManageNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You can turn this off anytime in iPhone Settings → Privacy & Security → Health → Intended.'**
+  String get healthManageNote;
+
   /// No description provided for @pauseHealthTitle.
   ///
   /// In en, this message translates to:
@@ -6595,7 +6619,7 @@ abstract class AppLocalizations {
   /// No description provided for @gratitudeDoor.
   ///
   /// In en, this message translates to:
-  /// **'a page of thanks'**
+  /// **'a page of gratitude'**
   String get gratitudeDoor;
 
   /// No description provided for @gratitudeTitle.

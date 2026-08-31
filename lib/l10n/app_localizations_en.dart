@@ -3895,6 +3895,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pauseNotifAction => 'A minute of breath';
 
   @override
+  String get healthTitle => 'Apple Health';
+
+  @override
+  String get healthConnect => 'Save pauses to Apple Health';
+
+  @override
+  String get healthUnavailable =>
+      'Apple Health isn\'t available on this device.';
+
+  @override
+  String get healthManageNote =>
+      'You can turn this off anytime in iPhone Settings → Privacy & Security → Health → Intended.';
+
+  @override
   String get pauseHealthTitle => 'Save to Apple Health?';
 
   @override
@@ -3946,7 +3960,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get widgetMonthUnlock => 'Intended+ — the whole month in colour';
 
   @override
-  String get gratitudeDoor => 'a page of thanks';
+  String get gratitudeDoor => 'a page of gratitude';
 
   @override
   String get gratitudeTitle => 'What are you thankful for?';

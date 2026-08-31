@@ -3986,6 +3986,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pauseNotifAction => 'Минута дыхания';
 
   @override
+  String get healthTitle => 'Apple Health';
+
+  @override
+  String get healthConnect => 'Сохранять паузы в Apple Health';
+
+  @override
+  String get healthUnavailable => 'Apple Health недоступен на этом устройстве.';
+
+  @override
+  String get healthManageNote =>
+      'Это можно отключить в любой момент: Настройки iPhone → Конфиденциальность и безопасность → Здоровье → Intended.';
+
+  @override
   String get pauseHealthTitle => 'Сохранять в Apple Health?';
 
   @override
@@ -4044,10 +4057,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get gratitudeDoor => 'страница благодарности';
 
   @override
-  String get gratitudeTitle => 'За что сказать спасибо?';
+  String get gratitudeTitle => 'Что сегодня вызывает у тебя благодарность?';
 
   @override
-  String get gratitudeHint => 'По пять — уже много. Меньше тоже хорошо.';
+  String get gratitudeHint => 'По пять — уже достаточно. Меньше тоже хорошо.';
 
   @override
   String get gratitudeToYourself => 'СЕБЕ';
@@ -4094,7 +4107,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get gratitudeCadenceBody =>
-      'Кому-то раз в неделю помогает сохранить свежесть. Кому-то каждый день — выстроить ритм.';
+      'Кому-то еженедельный ритм помогает сохранять интерес. Кому-то помогает ежедневный.';
 
   @override
   String get gratitudeCadenceDaily => 'Каждый день';
