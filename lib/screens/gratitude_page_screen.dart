@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../main.dart' show pagePad;
 import '../l10n/app_localizations.dart';
 import '../models/gratitude_entry.dart';
 import '../services/gratitude_service.dart';
@@ -161,7 +162,7 @@ class _GratitudePageScreenState extends State<GratitudePageScreen> {
                     _header(colors, dateStr, l10n),
                     Expanded(
                       child: SingleChildScrollView(
-                        padding: const EdgeInsets.fromLTRB(24, 26, 24, 24),
+                        padding: EdgeInsets.fromLTRB(pagePad(context), 26, pagePad(context), 24),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -195,7 +196,7 @@ class _GratitudePageScreenState extends State<GratitudePageScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+                      padding: EdgeInsets.fromLTRB(pagePad(context), 8, pagePad(context), 24),
                       child: GestureDetector(
                         onTap: _done,
                         child: Container(
@@ -224,7 +225,7 @@ class _GratitudePageScreenState extends State<GratitudePageScreen> {
 
   Widget _header(dynamic colors, String dateStr, AppLocalizations l10n) =>
       Padding(
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+        padding: EdgeInsets.fromLTRB(pagePad(context), 8, pagePad(context), 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

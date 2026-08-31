@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../screens/gratitude_cadence_screen.dart';
 import '../screens/gratitude_page_screen.dart';
-import '../main.dart' show doorColor;
+import '../main.dart' show doorColor, pagePad;
 import '../screens/pause_screen.dart';
 import '../services/gratitude_preferences_service.dart';
 import '../theme/app_colors.dart';
@@ -46,8 +46,13 @@ class PracticesCard extends StatelessWidget {
     final isDark = themeProvider.theme.isDark;
     final l10n = AppLocalizations.of(context);
 
+    // The list's own gutter rule, not a copied constant. A hardcoded 24
+    // matched _pagePad exactly on phones — which is why every phone check
+    // passed — and overshot the 680pt content cap by 92pt on an iPad, where
+    // this card ran wider than every intention card below it.
+    final pad = pagePad(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+      padding: EdgeInsets.fromLTRB(pad, 0, pad, 0),
       child: Container(
         decoration: BoxDecoration(
           // The Profile page's card surface, not the habit card's. At

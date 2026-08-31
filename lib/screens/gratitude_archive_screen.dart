@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
-import '../main.dart' show AppBackground;
+import '../main.dart' show AppBackground, pagePad;
 import '../models/gratitude_entry.dart';
 import '../models/gratitude_month.dart';
 import '../services/gratitude_service.dart';
@@ -84,7 +84,7 @@ class _GratitudeArchiveScreenState extends State<GratitudeArchiveScreen> {
               // back control normally would, so without this the only exit
               // was the system swipe — and nothing on screen said so.
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+                padding: EdgeInsets.fromLTRB(pagePad(context), 8, pagePad(context), 0),
                 child: Row(
                   children: [
                     GestureDetector(
@@ -97,7 +97,7 @@ class _GratitudeArchiveScreenState extends State<GratitudeArchiveScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+                padding: EdgeInsets.fromLTRB(pagePad(context), 12, pagePad(context), 0),
                 child: Row(
                   children: [
                     _chevron(colors, Icons.chevron_left_rounded, canGoOlder,
@@ -136,7 +136,7 @@ class _GratitudeArchiveScreenState extends State<GratitudeArchiveScreen> {
               ),
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(24, 26, 24, 40),
+                  padding: EdgeInsets.fromLTRB(pagePad(context), 26, pagePad(context), 40),
                   itemCount: pages.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 14),
                   itemBuilder: (_, i) => _pageCard(

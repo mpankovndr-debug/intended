@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
-import '../main.dart' show AppBackground, styledPrimaryButton;
+import '../main.dart' show AppBackground, pagePad, styledPrimaryButton;
 import '../services/analytics_service.dart';
 import '../services/health_service.dart';
 import '../services/pause_native.dart';
@@ -68,7 +68,7 @@ class _AppleHealthScreenState extends State<AppleHealthScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+                padding: EdgeInsets.fromLTRB(pagePad(context), 8, pagePad(context), 0),
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () => Navigator.of(context).pop(),
@@ -78,7 +78,7 @@ class _AppleHealthScreenState extends State<AppleHealthScreen> {
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+                  padding: EdgeInsets.fromLTRB(pagePad(context), 24, pagePad(context), 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

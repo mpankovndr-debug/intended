@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../main.dart' show pagePad;
 import '../l10n/app_localizations.dart';
 import '../models/gratitude_cadence.dart';
 import '../services/gratitude_preferences_service.dart';
@@ -84,7 +85,7 @@ class _GratitudeCadenceScreenState extends State<GratitudeCadenceScreen> {
             GestureDetector(
               onTap: () => Navigator.of(ctx).pop(),
               child: Container(
-                margin: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+                margin: EdgeInsets.fromLTRB(pagePad(context), 8, pagePad(context), 24),
                 height: 48,
                 decoration: BoxDecoration(
                   color: colors.buttonDark,
@@ -135,7 +136,7 @@ class _GratitudeCadenceScreenState extends State<GratitudeCadenceScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+                padding: EdgeInsets.fromLTRB(pagePad(context), 8, pagePad(context), 0),
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () => Navigator.of(context).pop(),
@@ -145,7 +146,7 @@ class _GratitudeCadenceScreenState extends State<GratitudeCadenceScreen> {
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(24, 30, 24, 20),
+                  padding: EdgeInsets.fromLTRB(pagePad(context), 30, pagePad(context), 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -225,7 +226,7 @@ class _GratitudeCadenceScreenState extends State<GratitudeCadenceScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+                padding: EdgeInsets.fromLTRB(pagePad(context), 0, pagePad(context), 12),
                 child: SizedBox(
                   width: double.infinity,
                   child: Text(l10n.gratitudeChangeWhenever,
@@ -239,7 +240,7 @@ class _GratitudeCadenceScreenState extends State<GratitudeCadenceScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                padding: EdgeInsets.fromLTRB(pagePad(context), 0, pagePad(context), 24),
                 child: GestureDetector(
                   onTap: _start,
                   child: Container(

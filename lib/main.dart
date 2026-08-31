@@ -707,7 +707,7 @@ Future<void> refreshHomeWidget(BuildContext context) async {
 /// screens (iPad). 24 on phones; the surplus becomes symmetric gutters.
 /// The same rule Insights and the archive already apply — Today was the
 /// one surface still stretching edge to edge on a 13" iPad.
-double _pagePad(BuildContext context) {
+double pagePad(BuildContext context) {
   final gutter = (MediaQuery.of(context).size.width - 680) / 2;
   return gutter > 24 ? gutter : 24.0;
 }
@@ -1872,9 +1872,9 @@ class _HabitsScreenState extends State<HabitsScreen>
                       // of the header's breathing room instead of adding
                       // its own, so a pinned habit sits where it always did.
                       padding: EdgeInsets.fromLTRB(
-                          _pagePad(context),
+                          pagePad(context),
                           MediaQuery.of(context).padding.top + 24,
-                          _pagePad(context),
+                          pagePad(context),
                           20),
                       child: Column(
                         // Full width, otherwise the parent Column centres this
@@ -1941,7 +1941,7 @@ class _HabitsScreenState extends State<HabitsScreen>
                         opacity: _fadeMiddle,
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(
-                              _pagePad(context), 16, _pagePad(context), 0),
+                              pagePad(context), 16, pagePad(context), 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -2010,9 +2010,9 @@ class _HabitsScreenState extends State<HabitsScreen>
                           position: _slideContent,
                           child: ListView(
                               padding: EdgeInsets.fromLTRB(
-                                _pagePad(context),
+                                pagePad(context),
                                 pinned.isNotEmpty ? 12 : 16,
-                                _pagePad(context),
+                                pagePad(context),
                                 140,
                               ),
                               children: [
