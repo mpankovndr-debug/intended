@@ -3459,6 +3459,174 @@ abstract class AppLocalizations {
   /// **'Close your eyes for 30 seconds'**
   String get habitCloseEyes;
 
+  /// No description provided for @habitCheckBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your balance'**
+  String get habitCheckBalance;
+
+  /// No description provided for @habitReviewBill.
+  ///
+  /// In en, this message translates to:
+  /// **'Review one bill'**
+  String get habitReviewBill;
+
+  /// No description provided for @habitReviewSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Review one subscription'**
+  String get habitReviewSubscription;
+
+  /// No description provided for @habitNoteExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Note one expense'**
+  String get habitNoteExpense;
+
+  /// No description provided for @habitMoveToSavings.
+  ///
+  /// In en, this message translates to:
+  /// **'Move €1 to savings'**
+  String get habitMoveToSavings;
+
+  /// No description provided for @habitSavingsGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Set one small savings goal'**
+  String get habitSavingsGoal;
+
+  /// No description provided for @habitUpdateBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Update one budget category'**
+  String get habitUpdateBudget;
+
+  /// No description provided for @habitDeleteReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete one old receipt'**
+  String get habitDeleteReceipt;
+
+  /// No description provided for @habitFinancialTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Read one financial tip'**
+  String get habitFinancialTip;
+
+  /// No description provided for @habitMoneyWin.
+  ///
+  /// In en, this message translates to:
+  /// **'Celebrate one money win'**
+  String get habitMoneyWin;
+
+  /// No description provided for @habitPriceCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Price-check one item before buying'**
+  String get habitPriceCheck;
+
+  /// No description provided for @habitWait24Hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait 24 hours before one purchase'**
+  String get habitWait24Hours;
+
+  /// No description provided for @habitSetPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Set one priority'**
+  String get habitSetPriority;
+
+  /// No description provided for @habitFinishTinyTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish one tiny task'**
+  String get habitFinishTinyTask;
+
+  /// No description provided for @habitCloseTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Close one browser tab'**
+  String get habitCloseTab;
+
+  /// No description provided for @habitTurnOffNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off one notification'**
+  String get habitTurnOffNotification;
+
+  /// No description provided for @habitArchiveEmails.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive 5 old emails'**
+  String get habitArchiveEmails;
+
+  /// No description provided for @habitReviewCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your calendar'**
+  String get habitReviewCalendar;
+
+  /// No description provided for @habitUpdateTodo.
+  ///
+  /// In en, this message translates to:
+  /// **'Update one to-do item'**
+  String get habitUpdateTodo;
+
+  /// No description provided for @habitDeclutterDesk.
+  ///
+  /// In en, this message translates to:
+  /// **'Declutter your desk for 2 minutes'**
+  String get habitDeclutterDesk;
+
+  /// No description provided for @habitRearrangeSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'Rearrange something small'**
+  String get habitRearrangeSmall;
+
+  /// No description provided for @habitWriteOneSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'Write one sentence'**
+  String get habitWriteOneSentence;
+
+  /// No description provided for @habitWriteIdea.
+  ///
+  /// In en, this message translates to:
+  /// **'Write down one idea'**
+  String get habitWriteIdea;
+
+  /// No description provided for @habitCaptureIdea.
+  ///
+  /// In en, this message translates to:
+  /// **'Capture one idea'**
+  String get habitCaptureIdea;
+
+  /// No description provided for @habitDrawShape.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw one simple shape'**
+  String get habitDrawShape;
+
+  /// No description provided for @habitCreateTinyThing.
+  ///
+  /// In en, this message translates to:
+  /// **'Create one tiny thing'**
+  String get habitCreateTinyThing;
+
+  /// No description provided for @habitCreativeMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Play with one creative medium'**
+  String get habitCreativeMedium;
+
+  /// No description provided for @habitImaginePossibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Imagine one possibility'**
+  String get habitImaginePossibility;
+
   /// No description provided for @habitNeckRolls.
   ///
   /// In en, this message translates to:

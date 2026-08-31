@@ -2156,6 +2156,90 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitCloseEyes => 'Закрой глаза на 30 секунд';
 
   @override
+  String get habitCheckBalance => 'Проверь баланс';
+
+  @override
+  String get habitReviewBill => 'Проверь один счёт';
+
+  @override
+  String get habitReviewSubscription => 'Проверь одну подписку';
+
+  @override
+  String get habitNoteExpense => 'Запиши один расход';
+
+  @override
+  String get habitMoveToSavings => 'Отложи 1 € в накопления';
+
+  @override
+  String get habitSavingsGoal => 'Поставь небольшую цель по накоплениям';
+
+  @override
+  String get habitUpdateBudget => 'Обнови одну статью бюджета';
+
+  @override
+  String get habitDeleteReceipt => 'Удали один старый чек';
+
+  @override
+  String get habitFinancialTip => 'Прочитай один совет о деньгах';
+
+  @override
+  String get habitMoneyWin => 'Отметь одну финансовую победу';
+
+  @override
+  String get habitPriceCheck => 'Сравни цену перед покупкой';
+
+  @override
+  String get habitWait24Hours => 'Подожди сутки перед покупкой';
+
+  @override
+  String get habitSetPriority => 'Выбери один приоритет';
+
+  @override
+  String get habitFinishTinyTask => 'Закончи одну маленькую задачу';
+
+  @override
+  String get habitCloseTab => 'Закрой одну вкладку';
+
+  @override
+  String get habitTurnOffNotification => 'Отключи одно уведомление';
+
+  @override
+  String get habitArchiveEmails => 'Убери в архив 5 старых писем';
+
+  @override
+  String get habitReviewCalendar => 'Посмотри свой календарь';
+
+  @override
+  String get habitUpdateTodo => 'Обнови один пункт в списке дел';
+
+  @override
+  String get habitDeclutterDesk => 'Разбери стол за 2 минуты';
+
+  @override
+  String get habitRearrangeSmall => 'Переставь что-нибудь небольшое';
+
+  @override
+  String get habitWriteOneSentence => 'Напиши одно предложение';
+
+  @override
+  String get habitWriteIdea => 'Запиши одну мысль';
+
+  @override
+  String get habitCaptureIdea => 'Запиши идею, пока не ушла';
+
+  @override
+  String get habitDrawShape => 'Нарисуй одну простую фигуру';
+
+  @override
+  String get habitCreateTinyThing => 'Сделай одну маленькую вещь';
+
+  @override
+  String get habitCreativeMedium => 'Попробуй один способ творчества';
+
+  @override
+  String get habitImaginePossibility => 'Представь одну возможность';
+
+  @override
   String get habitNeckRolls => 'Сделай 5 мягких вращений шеей';
 
   @override

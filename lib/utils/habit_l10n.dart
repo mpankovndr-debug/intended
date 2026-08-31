@@ -1,5 +1,11 @@
 import '../l10n/app_localizations.dart';
 
+/// Every habit name the localiser can translate. Public so a test can assert
+/// the catalog is covered: [localizeHabitName] falls back to the raw English
+/// name, which is right for a habit someone typed themselves and silent for
+/// one we simply forgot, and nothing else can tell those apart.
+Set<String> get localisedHabitNames => _habitNameGetters.keys.toSet();
+
 /// Translates a stored English habit name to the user's current locale.
 /// Custom habits (not in the map) are returned as-is.
 String localizeHabitName(String englishName, AppLocalizations l10n) {
@@ -187,6 +193,39 @@ const Map<String, _L10nGetter> _habitNameGetters = {
   'Drink water slowly': _hDrinkSlowly,
   'Rest for 2 minutes': _hRestTwoMinutes,
   'Do absolutely nothing for 30 seconds': _hDoNothing,
+
+  // Added 2026-08-31: the retired finance, productivity and creativity
+  // habits. Retiring a habit takes it out of the pool, not off the phone
+  // of someone who already chose it — these rendered raw English to
+  // Russian readers from February until a promo screenshot caught it.
+  'Check your balance': _habitCheckBalance,
+  'Review one bill': _habitReviewBill,
+  'Review one subscription': _habitReviewSubscription,
+  'Note one expense': _habitNoteExpense,
+  'Move €1 to savings': _habitMoveToSavings,
+  'Set one small savings goal': _habitSavingsGoal,
+  'Update one budget category': _habitUpdateBudget,
+  'Delete one old receipt': _habitDeleteReceipt,
+  'Read one financial tip': _habitFinancialTip,
+  'Celebrate one money win': _habitMoneyWin,
+  'Price-check one item before buying': _habitPriceCheck,
+  'Wait 24 hours before one purchase': _habitWait24Hours,
+  'Set one priority': _habitSetPriority,
+  'Finish one tiny task': _habitFinishTinyTask,
+  'Close one browser tab': _habitCloseTab,
+  'Turn off one notification': _habitTurnOffNotification,
+  'Archive 5 old emails': _habitArchiveEmails,
+  'Review your calendar': _habitReviewCalendar,
+  'Update one to-do item': _habitUpdateTodo,
+  'Declutter your desk for 2 minutes': _habitDeclutterDesk,
+  'Rearrange something small': _habitRearrangeSmall,
+  'Write one sentence': _habitWriteOneSentence,
+  'Write down one idea': _habitWriteIdea,
+  'Capture one idea': _habitCaptureIdea,
+  'Draw one simple shape': _habitDrawShape,
+  'Create one tiny thing': _habitCreateTinyThing,
+  'Play with one creative medium': _habitCreativeMedium,
+  'Imagine one possibility': _habitImaginePossibility,
 };
 
 // Health
@@ -289,3 +328,32 @@ String _hBrushHair(AppLocalizations l) => l.habitBrushHair;
 String _hOpenCurtains(AppLocalizations l) => l.habitOpenCurtains;
 String _hTurnOnLamp(AppLocalizations l) => l.habitTurnOnLamp;
 String _hPhoneAcrossRoom(AppLocalizations l) => l.habitPhoneAcrossRoom;
+
+String _habitCheckBalance(AppLocalizations l) => l.habitCheckBalance;
+String _habitReviewBill(AppLocalizations l) => l.habitReviewBill;
+String _habitReviewSubscription(AppLocalizations l) => l.habitReviewSubscription;
+String _habitNoteExpense(AppLocalizations l) => l.habitNoteExpense;
+String _habitMoveToSavings(AppLocalizations l) => l.habitMoveToSavings;
+String _habitSavingsGoal(AppLocalizations l) => l.habitSavingsGoal;
+String _habitUpdateBudget(AppLocalizations l) => l.habitUpdateBudget;
+String _habitDeleteReceipt(AppLocalizations l) => l.habitDeleteReceipt;
+String _habitFinancialTip(AppLocalizations l) => l.habitFinancialTip;
+String _habitMoneyWin(AppLocalizations l) => l.habitMoneyWin;
+String _habitPriceCheck(AppLocalizations l) => l.habitPriceCheck;
+String _habitWait24Hours(AppLocalizations l) => l.habitWait24Hours;
+String _habitSetPriority(AppLocalizations l) => l.habitSetPriority;
+String _habitFinishTinyTask(AppLocalizations l) => l.habitFinishTinyTask;
+String _habitCloseTab(AppLocalizations l) => l.habitCloseTab;
+String _habitTurnOffNotification(AppLocalizations l) => l.habitTurnOffNotification;
+String _habitArchiveEmails(AppLocalizations l) => l.habitArchiveEmails;
+String _habitReviewCalendar(AppLocalizations l) => l.habitReviewCalendar;
+String _habitUpdateTodo(AppLocalizations l) => l.habitUpdateTodo;
+String _habitDeclutterDesk(AppLocalizations l) => l.habitDeclutterDesk;
+String _habitRearrangeSmall(AppLocalizations l) => l.habitRearrangeSmall;
+String _habitWriteOneSentence(AppLocalizations l) => l.habitWriteOneSentence;
+String _habitWriteIdea(AppLocalizations l) => l.habitWriteIdea;
+String _habitCaptureIdea(AppLocalizations l) => l.habitCaptureIdea;
+String _habitDrawShape(AppLocalizations l) => l.habitDrawShape;
+String _habitCreateTinyThing(AppLocalizations l) => l.habitCreateTinyThing;
+String _habitCreativeMedium(AppLocalizations l) => l.habitCreativeMedium;
+String _habitImaginePossibility(AppLocalizations l) => l.habitImaginePossibility;

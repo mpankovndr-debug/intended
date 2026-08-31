@@ -167,13 +167,19 @@ void main() {
       }
     });
 
-    test('a retired action name no longer localizes, and falls through', () {
-      // The twelve habit strings are gone from both ARBs. Nothing renders them
-      // any more except a card someone is still holding, which shows the
-      // stored English — acceptable, and the reason they stay resolvable as a
-      // *category* above.
+    test('a retired action name localizes again', () {
+      // Reversed 2026-08-31. The 2026-08-25 decision dropped these strings and
+      // accepted that a card someone still held would render stored English.
+      // What that looks like in practice is a Russian home screen with two
+      // habits in Russian and two in English, side by side — which is how it
+      // was found. "Acceptable" was a judgement about a shrinking set of
+      // users; it did not survive seeing it.
       expect(
         localizeHabitName('Set one small savings goal', AppLocalizationsRu()),
+        'Поставь небольшую цель по накоплениям',
+      );
+      expect(
+        localizeHabitName('Set one small savings goal', AppLocalizationsEn()),
         'Set one small savings goal',
       );
     });

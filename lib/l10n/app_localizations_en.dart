@@ -2095,6 +2095,90 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitCloseEyes => 'Close your eyes for 30 seconds';
 
   @override
+  String get habitCheckBalance => 'Check your balance';
+
+  @override
+  String get habitReviewBill => 'Review one bill';
+
+  @override
+  String get habitReviewSubscription => 'Review one subscription';
+
+  @override
+  String get habitNoteExpense => 'Note one expense';
+
+  @override
+  String get habitMoveToSavings => 'Move €1 to savings';
+
+  @override
+  String get habitSavingsGoal => 'Set one small savings goal';
+
+  @override
+  String get habitUpdateBudget => 'Update one budget category';
+
+  @override
+  String get habitDeleteReceipt => 'Delete one old receipt';
+
+  @override
+  String get habitFinancialTip => 'Read one financial tip';
+
+  @override
+  String get habitMoneyWin => 'Celebrate one money win';
+
+  @override
+  String get habitPriceCheck => 'Price-check one item before buying';
+
+  @override
+  String get habitWait24Hours => 'Wait 24 hours before one purchase';
+
+  @override
+  String get habitSetPriority => 'Set one priority';
+
+  @override
+  String get habitFinishTinyTask => 'Finish one tiny task';
+
+  @override
+  String get habitCloseTab => 'Close one browser tab';
+
+  @override
+  String get habitTurnOffNotification => 'Turn off one notification';
+
+  @override
+  String get habitArchiveEmails => 'Archive 5 old emails';
+
+  @override
+  String get habitReviewCalendar => 'Review your calendar';
+
+  @override
+  String get habitUpdateTodo => 'Update one to-do item';
+
+  @override
+  String get habitDeclutterDesk => 'Declutter your desk for 2 minutes';
+
+  @override
+  String get habitRearrangeSmall => 'Rearrange something small';
+
+  @override
+  String get habitWriteOneSentence => 'Write one sentence';
+
+  @override
+  String get habitWriteIdea => 'Write down one idea';
+
+  @override
+  String get habitCaptureIdea => 'Capture one idea';
+
+  @override
+  String get habitDrawShape => 'Draw one simple shape';
+
+  @override
+  String get habitCreateTinyThing => 'Create one tiny thing';
+
+  @override
+  String get habitCreativeMedium => 'Play with one creative medium';
+
+  @override
+  String get habitImaginePossibility => 'Imagine one possibility';
+
+  @override
   String get habitNeckRolls => 'Do 5 gentle neck rolls';
 
   @override
