@@ -1993,6 +1993,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                           ),
+
+                          // Row 4: Apple Health.
+                          //
+                          // A setting, not support — it changes what the app
+                          // writes about you, which is what everything else
+                          // in this card does and nothing in the one below
+                          // does. It also has to be *found*: App Review met
+                          // 2.1(23) on an iPad, never completed a pause, and
+                          // so never saw the only Health surface the app had
+                          // (Guideline 2.5.1). A row behind a condition does
+                          // not identify anything.
+                          if (Platform.isIOS) ...[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Container(
+                                height: 1,
+                                color: colors.ctaPrimary.withOpacity(0.1),
+                              ),
+                            ),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () => Navigator.of(context)
+                                  .push(AppleHealthScreen.route()),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          colors.ctaPrimary.withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Icon(
+                                      CupertinoIcons.heart,
+                                      size: 18,
+                                      color: colors.textMutedBrown,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      l10n.healthTitle,
+                                      style: TextStyle(
+                                        fontFamily:
+                                            AppTextStyles.bodyFont(context),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: colors.textPrimary,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(
+                                    CupertinoIcons.chevron_right,
+                                    size: 16,
+                                    color: colors.textSecondary,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -2037,39 +2098,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: Column(
                         children: [
-                          // Health sits first and always — App Review met
-                          // 2.1(23) on an iPad, never completed a pause, and
-                          // so never saw the only Health surface the app had
-                          // (Guideline 2.5.1). A row behind a condition does
-                          // not identify anything.
-                          if (Platform.isIOS) ...[
-                            Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: _ProfileButton(
-                                iconContainer: Container(
-                                  width: 48,
-                                  height: 48,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        colors.accentRegular.withOpacity(0.12),
-                                    borderRadius: BorderRadius.circular(24),
-                                  ),
-                                  child: Icon(
-                                    CupertinoIcons.heart,
-                                    size: 20,
-                                    color: colors.textMutedBrown,
-                                  ),
-                                ),
-                                title: l10n.healthTitle,
-                                onTap: () => Navigator.of(context)
-                                    .push(AppleHealthScreen.route()),
-                              ),
-                            ),
-                            Container(
-                              height: 1,
-                              color: colors.ctaPrimary.withOpacity(0.1),
-                            ),
-                          ],
                           Padding(
                             padding: const EdgeInsets.all(20),
                             child: _ProfileButton(
