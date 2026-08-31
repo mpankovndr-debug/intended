@@ -99,7 +99,7 @@
   "reminderSwitchHint": "Включи, чтобы выбрать время ежедневного напоминания.",
   "reminderNoWorries": "Ничего страшного — включить можно в любой момент в профиле.",
   "reminderWeeklySummary": "Итоги недели",
-  "reminderWeeklySubtitle": "Каждое воскресенье вечером",
+  "reminderWeeklySubtitle": "Каждое воскресенье утром",
   "reminderLetsGo": "Поехали, {name}",
   "@reminderLetsGo": {
     "placeholders": {
@@ -703,7 +703,7 @@
   "profileDailyReminders": "Ежедневные напоминания",
   "profileRemindAt": "Напомнить в",
   "profileWeeklySummary": "Итоги недели",
-  "profileWeeklySubtitle": "Каждое воскресенье вечером",
+  "profileWeeklySubtitle": "Каждое воскресенье утром",
   "profileNotifDenied": "Ничего страшного — включить уведомления можно в настройках устройства.",
   "profileNotifDeniedTitle": "Уведомления отключены",
   "profileNotifDeniedMessage": "Чтобы включить напоминания, разреши уведомления для Intended в настройках устройства.",

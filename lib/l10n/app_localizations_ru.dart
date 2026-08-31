@@ -208,7 +208,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get reminderWeeklySummary => 'Итоги недели';
 
   @override
-  String get reminderWeeklySubtitle => 'Каждое воскресенье вечером';
+  String get reminderWeeklySubtitle => 'Каждое воскресенье утром';
 
   @override
   String reminderLetsGo(String name) {
@@ -1888,7 +1888,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileWeeklySummary => 'Итоги недели';
 
   @override
-  String get profileWeeklySubtitle => 'Каждое воскресенье вечером';
+  String get profileWeeklySubtitle => 'Каждое воскресенье утром';
 
   @override
   String get profileNotifDenied =>

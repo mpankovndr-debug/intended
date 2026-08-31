@@ -207,7 +207,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reminderWeeklySummary => 'Weekly summary';
 
   @override
-  String get reminderWeeklySubtitle => 'Every Sunday evening';
+  String get reminderWeeklySubtitle => 'Every Sunday morning';
 
   @override
   String reminderLetsGo(String name) {
@@ -1826,7 +1826,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileWeeklySummary => 'Weekly summary';
 
   @override
-  String get profileWeeklySubtitle => 'Every Sunday evening';
+  String get profileWeeklySubtitle => 'Every Sunday morning';
 
   @override
   String get profileNotifDenied =>

@@ -62,11 +62,20 @@ class PracticesCard extends StatelessWidget {
                 : const Color(0xFFFFFFFF).withOpacity(0.6),
             width: 1,
           ),
+          // The intention cards' exact edge, both layers of it: the outer
+          // shadow for depth and the top-edge bevel that gives the glass its
+          // lit rim. Without the bevel this card sat flatter than the cards
+          // under it and read as a different material.
           boxShadow: [
             BoxShadow(
               color: colors.textPrimary.withOpacity(0.04),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              blurRadius: 16,
+              offset: const Offset(0, 2),
+            ),
+            BoxShadow(
+              color: const Color(0xFFFFFFFF).withOpacity(isDark ? 0.18 : 0.25),
+              blurRadius: isDark ? 0.5 : 1,
+              offset: const Offset(0, 1),
             ),
           ],
         ),

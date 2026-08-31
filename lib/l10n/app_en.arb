@@ -99,7 +99,7 @@
   "reminderSwitchHint": "Switch this on to pick the time for your daily reminder.",
   "reminderNoWorries": "No worries — you can turn these on anytime from your profile.",
   "reminderWeeklySummary": "Weekly summary",
-  "reminderWeeklySubtitle": "Every Sunday evening",
+  "reminderWeeklySubtitle": "Every Sunday morning",
   "reminderLetsGo": "Let's go, {name}",
   "@reminderLetsGo": {
     "placeholders": {
@@ -1018,7 +1018,7 @@
   "profileDailyReminders": "Daily reminders",
   "profileRemindAt": "Remind me at",
   "profileWeeklySummary": "Weekly summary",
-  "profileWeeklySubtitle": "Every Sunday evening",
+  "profileWeeklySubtitle": "Every Sunday morning",
   "profileNotifDenied": "No worries — you can enable notifications in your device Settings.",
   "profileNotifDeniedTitle": "Notifications Disabled",
   "profileNotifDeniedMessage": "To enable reminders, please turn on notifications for Intended in your device Settings.",

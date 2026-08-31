@@ -467,7 +467,7 @@ abstract class AppLocalizations {
   /// No description provided for @reminderWeeklySubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Every Sunday evening'**
+  /// **'Every Sunday morning'**
   String get reminderWeeklySubtitle;
 
   /// No description provided for @reminderLetsGo.
@@ -2988,7 +2988,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileWeeklySubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Every Sunday evening'**
+  /// **'Every Sunday morning'**
   String get profileWeeklySubtitle;
 
   /// No description provided for @profileNotifDenied.
