@@ -50,6 +50,7 @@ import '../widgets/focus_area_card.dart';
 import '../onboarding_v2/focus_areas_screen.dart';
 import '../services/backup_service.dart';
 import '../services/coach_mark_service.dart';
+import 'apple_health_screen.dart';
 import '../features/profile/faq_screen.dart';
 import '../features/profile/change_path_screen.dart';
 
@@ -2036,6 +2037,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: Column(
                         children: [
+                          // Health sits first and always — App Review met
+                          // 2.1(23) on an iPad, never completed a pause, and
+                          // so never saw the only Health surface the app had
+                          // (Guideline 2.5.1). A row behind a condition does
+                          // not identify anything.
+                          if (Platform.isIOS) ...[
+                            Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: _ProfileButton(
+                                iconContainer: Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        colors.accentRegular.withOpacity(0.12),
+                                    borderRadius: BorderRadius.circular(24),
+                                  ),
+                                  child: Icon(
+                                    CupertinoIcons.heart,
+                                    size: 20,
+                                    color: colors.textMutedBrown,
+                                  ),
+                                ),
+                                title: l10n.healthTitle,
+                                onTap: () => Navigator.of(context)
+                                    .push(AppleHealthScreen.route()),
+                              ),
+                            ),
+                            Container(
+                              height: 1,
+                              color: colors.ctaPrimary.withOpacity(0.1),
+                            ),
+                          ],
                           Padding(
                             padding: const EdgeInsets.all(20),
                             child: _ProfileButton(
