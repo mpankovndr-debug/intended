@@ -5,6 +5,8 @@ import '../models/gratitude_cadence.dart';
 import '../models/intention_path.dart';
 import '../models/letter.dart';
 import '../models/rescue.dart';
+import '../screens/insights_screen.dart';
+import '../state/user_state.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -68,6 +70,37 @@ class NotificationScheduler {
       return false;
     }
   }
+
+  /// Cold start for the weekly (100) and the letter (101), for the same
+  /// reason as [launchedFromGratitudePage]: a tap that launches the app
+  /// never reaches the response callback. Routes exactly as the warm tap
+  /// does. Safe to call unconditionally at startup — it is a no-op unless a
+  /// reflection notification is what launched the app.
+  static Future<void> routeReflectionLaunch() async {
+    try {
+      final details = await _plugin.getNotificationAppLaunchDetails();
+      final int? id = details?.notificationResponse?.id;
+      if (details?.didNotificationLaunchApp != true || id == null) return;
+      if (id == 100 || id == _monthlyLetterId) _routeReflectionTap(id);
+    } catch (_) {}
+  }
+
+  /// One route for both reflection notifications, warm or cold. The letter
+  /// fires on the 1st *about the month just closed*, while Insights opens on
+  /// the current month by default — so for the letter alone, point Insights
+  /// at the previous month first, or the tap opens on an empty grid with the
+  /// promised card one swipe away. The weekly has no month and is left as is.
+  static void _routeReflectionTap(int id) {
+    if (id == _monthlyLetterId) {
+      InsightsScreen.jumpTo.value = previousMonthStart(DateTime.now());
+    }
+    pendingTabSwitch.value = 1; // Progress tab index
+  }
+
+  /// The first of the month before [now]. Month 0 normalises to December of
+  /// the previous year, so this holds across a January boundary.
+  static DateTime previousMonthStart(DateTime now) =>
+      DateTime(now.year, now.month - 1, 1);
 
   /// The daily notification's "minute of breath" action (iOS category and
   /// action ids — registered once at initialize, referenced by scheduleDaily).
@@ -151,7 +184,7 @@ class NotificationScheduler {
         // Progress tab — that's where the letter lives. The page reminder
         // opens the page itself.
         if (id == 100 || id == _monthlyLetterId) {
-          pendingTabSwitch.value = 1; // Progress tab index
+          _routeReflectionTap(id!);
         } else if (isPage) {
           pendingGratitudePage.value = true;
         }
@@ -515,6 +548,11 @@ class NotificationScheduler {
   static Future<void> scheduleMonthlyLetter(AppLocalizations l10n) async {
     final moments = await MomentsService.momentsForMonth(DateTime.now());
     if (Letter.read(moments) == null) return;
+    // The card this promises is paid-only — Insights renders the letter
+    // behind hasSubscription on both of its placements. A free user told
+    // their letter was ready would land on a screen where nothing is. Read
+    // from the persisted flag: this runs without a context, on every open.
+    if (!await UserState.hasSubscriptionPersisted()) return;
 
     final now = tz.TZDateTime.now(tz.local);
     final firstOfNext = now.month == 12

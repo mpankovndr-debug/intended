@@ -1092,6 +1092,10 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
         if (launched) NotificationScheduler.pendingGratitudePage.value = true;
       });
       _onPendingGratitudePage();
+      // Cold-start path for the weekly and the letter, for the same reason.
+      // The pendingTabSwitch listener above is already attached, so the
+      // switch it requests is consumed like a warm tap.
+      NotificationScheduler.routeReflectionLaunch();
     });
   }
 
