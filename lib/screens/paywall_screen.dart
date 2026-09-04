@@ -49,8 +49,10 @@ class _PaywallScreenState extends State<PaywallScreen>
         Navigator.of(context).pop();
         return;
       }
-      // Lazy-load offerings when the paywall is actually shown
-      rc.ensureOfferings();
+      // Lazy-load offerings when the paywall is actually shown. Until they
+      // arrive the plan rows and the button paint a loading state — never a
+      // typed-in price or a trial length the store hasn't confirmed.
+      rc.ensureOfferings(plan: _selectedPlan);
     });
     AnalyticsService.logScreenView('paywall');
     AnalyticsService.logPaywallShown(widget.source);
@@ -87,6 +89,14 @@ class _PaywallScreenState extends State<PaywallScreen>
     final colors = themeProvider.colors;
     final isDark = themeProvider.theme.isDark;
     final l10n = AppLocalizations.of(context);
+    // Watched, not read: the prices arrive after the first frame, and a
+    // read() here left the fallback strings on screen until the next tap.
+    final rc = context.watch<RevenueCatService>();
+    final status = rc.offeringsStatus;
+    final pricesLoading = status == OfferingsStatus.pending ||
+        status == OfferingsStatus.loading;
+    final blocked =
+        pricesLoading ? null : rc.unavailableReasonFor(_selectedPlan);
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -234,11 +244,13 @@ class _PaywallScreenState extends State<PaywallScreen>
                           ),
                         ),
                         const SizedBox(height: 16),
-                        _buildPricingOptions(colors, l10n, isDark: isDark),
+                        _buildPricingOptions(colors, l10n, rc, isDark: isDark),
                         const SizedBox(height: 12),
-                        _buildCTAButton(colors, l10n),
+                        _buildCTAButton(colors, l10n, rc,
+                            pricesLoading: pricesLoading, blocked: blocked),
                         const SizedBox(height: 8),
-                        _buildDisclaimer(colors, l10n),
+                        _buildDisclaimer(colors, l10n, rc,
+                            pricesLoading: pricesLoading, blocked: blocked),
                         const SizedBox(height: 12),
                         Text(
                           l10n.paywallFooter,
@@ -390,15 +402,18 @@ class _PaywallScreenState extends State<PaywallScreen>
     );
   }
 
-  Widget _buildPricingOptions(AppColorScheme colors, AppLocalizations l10n, {required bool isDark}) {
-    final rc = context.read<RevenueCatService>();
-    final monthlyPrice = rc.monthlyPriceString ?? l10n.paywallMonthlyPrice;
-    final yearlyPrice = rc.yearlyPriceString ?? l10n.paywallYearlyPrice;
-    final lifetimePrice = rc.lifetimePriceString ?? l10n.paywallLifetimePrice;
+  Widget _buildPricingOptions(
+      AppColorScheme colors, AppLocalizations l10n, RevenueCatService rc,
+      {required bool isDark}) {
+    // Null until the store answers, and a null price paints a placeholder.
+    // The ARB fallbacks (€5.99 / €44.99 / €49.99) are not used here any
+    // more: they were shown as fact to every user whose offerings never
+    // loaded, in a currency that may not have been theirs.
+    final monthlyPrice = rc.monthlyPriceString;
+    final yearlyPrice = rc.yearlyPriceString;
+    final lifetimePrice = rc.lifetimePriceString;
     final savingsPercent = rc.yearlySavingsPercent;
-    final saveBadgeText = savingsPercent != null
-        ? l10n.paywallSavePercent(savingsPercent)
-        : l10n.paywallYearlySave;
+    final yearlyPerMonth = rc.yearlyPerMonthString;
 
     return Column(
       children: [
@@ -426,14 +441,18 @@ class _PaywallScreenState extends State<PaywallScreen>
           pricePerPeriod: l10n.paywallYearlyPeriod,
           // Anchor the yearly plan against the monthly one — the per-month
           // figure is what makes €44.99 read as cheap next to €5.99.
-          subtitle: l10n.paywallYearlyAnchor(
-            rc.yearlyPerMonthString ?? l10n.paywallYearlyPerMonth,
-          ),
-          badge: _PricingBadge(
-            text: saveBadgeText,
-            primaryColor: colors.ctaPrimary,
-            secondaryColor: colors.success,
-          ),
+          subtitle: yearlyPerMonth == null
+              ? null
+              : l10n.paywallYearlyAnchor(yearlyPerMonth),
+          // "Save 37%" was a typed-in number; the badge now exists only when
+          // the two live prices make it true.
+          badge: savingsPercent == null
+              ? null
+              : _PricingBadge(
+                  text: l10n.paywallSavePercent(savingsPercent),
+                  primaryColor: colors.ctaPrimary,
+                  secondaryColor: colors.success,
+                ),
           isSelected: _selectedPlan == 'yearly',
           isDark: isDark,
           onTap: () => setState(() => _selectedPlan = 'yearly'),
@@ -465,7 +484,7 @@ class _PaywallScreenState extends State<PaywallScreen>
     required AppColorScheme colors,
     required String plan,
     required String label,
-    required String price,
+    required String? price,
     required String pricePerPeriod,
     String? subtitle,
     required _PricingBadge? badge,
@@ -551,34 +570,40 @@ class _PaywallScreenState extends State<PaywallScreen>
                         ),
                       ),
                       const SizedBox(height: 2),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              price,
-                              style: TextStyle(
-                                fontFamily: 'Sora',
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
-                                color: priceColor,
+                      if (price == null)
+                        // The store hasn't answered, or couldn't. A bar
+                        // where the number will be — never a number we
+                        // typed in ourselves.
+                        _PricePlaceholder(color: priceColor)
+                      else
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                price,
+                                style: TextStyle(
+                                  fontFamily: 'Sora',
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                  color: priceColor,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            pricePerPeriod,
-                            style: TextStyle(
-                              fontFamily: AppTextStyles.bodyFont(context),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: suffixColor,
+                            const SizedBox(width: 6),
+                            Text(
+                              pricePerPeriod,
+                              style: TextStyle(
+                                fontFamily: AppTextStyles.bodyFont(context),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: suffixColor,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                       if (subtitle != null) ...[
                         const SizedBox(height: 2),
                         Text(
@@ -638,7 +663,30 @@ class _PaywallScreenState extends State<PaywallScreen>
     );
   }
 
-  Widget _buildCTAButton(AppColorScheme colors, AppLocalizations l10n) {
+  Widget _buildCTAButton(
+    AppColorScheme colors,
+    AppLocalizations l10n,
+    RevenueCatService rc, {
+    required bool pricesLoading,
+    required PurchaseUnavailableReason? blocked,
+  }) {
+    // Three honest states. Loading: a spinner, because a label here is a
+    // claim. Blocked: the button becomes the retry — a "Start free trial"
+    // that can't start anything is the silent failure this replaces. Ready:
+    // the trial is named only when the store's intro offer is free and its
+    // length is a number we can print.
+    final String label;
+    if (blocked != null) {
+      label = l10n.paywallRetry;
+    } else if (_selectedPlan == 'lifetime') {
+      label = l10n.paywallCtaLifetime;
+    } else {
+      final days = rc.freeTrialDaysForPlan(_selectedPlan);
+      label =
+          days == null ? l10n.paywallCtaSubscribe : l10n.paywallCtaTrial(days);
+    }
+    final busy = _isLoading || pricesLoading;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
       child: BackdropFilter(
@@ -677,41 +725,15 @@ class _PaywallScreenState extends State<PaywallScreen>
           child: CupertinoButton(
             padding: const EdgeInsets.symmetric(vertical: 16),
             borderRadius: BorderRadius.circular(24),
-            onPressed: _isLoading
+            onPressed: busy
                 ? null
-                : () async {
-                    setState(() => _isLoading = true);
-                    AnalyticsService.logPurchaseStarted(_selectedPlan);
-                    try {
-                      final success = await context
-                          .read<RevenueCatService>()
-                          .purchasePlan(_selectedPlan);
-                      if (mounted && success) {
-                        AnalyticsService.logPurchaseCompleted(_selectedPlan);
-                        _outcomeLogged = true;
-                        Navigator.pop(context);
-                      } else {
-                        AnalyticsService.logPurchaseCancelled();
-                      }
-                    } catch (_) {
-                      AnalyticsService.logPurchaseFailed();
-                      if (mounted) {
-                        AppToast.show(context, l10n.boostPurchaseError);
-                      }
-                    } finally {
-                      if (mounted) setState(() => _isLoading = false);
-                    }
-                  },
-            child: _isLoading
+                : blocked != null
+                    ? _retryPrices
+                    : () => _purchase(l10n),
+            child: busy
                 ? const CupertinoActivityIndicator(color: Color(0xFFFFFFFF))
                 : Text(
-                    _selectedPlan == 'lifetime'
-                        ? l10n.paywallCtaLifetime
-                        : l10n.paywallCtaTrial(
-                            context
-                                .read<RevenueCatService>()
-                                .trialDaysForPlan(_selectedPlan),
-                          ),
+                    label,
                     // «Начать 14-дневный пробный период» wraps where the
                     // English never does, and a wrapped Text fills the button
                     // and left-aligns every line unless told otherwise.
@@ -729,35 +751,114 @@ class _PaywallScreenState extends State<PaywallScreen>
     );
   }
 
-  Widget _buildDisclaimer(AppColorScheme colors, AppLocalizations l10n) {
+  Future<void> _purchase(AppLocalizations l10n) async {
     final rc = context.read<RevenueCatService>();
-    final String text;
+    // A tap with nothing to sell is not a cancel — it is the broken button
+    // this screen used to record as purchase_cancelled. The button is only
+    // enabled once the plan is purchasable, so this is the race guard: the
+    // plan changed, or a retry emptied the offering, under the tap.
+    final blocked = rc.unavailableReasonFor(_selectedPlan);
+    if (blocked != null) {
+      AnalyticsService.logPurchaseUnavailable(
+        blocked.analyticsValue,
+        stage: 'tap',
+        error: rc.lastUnavailableError,
+      );
+      setState(() {}); // repaint into the retry state
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    AnalyticsService.logPurchaseStarted(_selectedPlan);
+    try {
+      final outcome = await rc.purchasePlan(_selectedPlan);
+      if (!mounted) return;
+      switch (outcome) {
+        case PurchaseOutcome.purchased:
+          AnalyticsService.logPurchaseCompleted(_selectedPlan);
+          _outcomeLogged = true;
+          Navigator.pop(context);
+        case PurchaseOutcome.cancelled:
+          AnalyticsService.logPurchaseCancelled();
+        case PurchaseOutcome.unavailable:
+          AnalyticsService.logPurchaseUnavailable(
+            (rc.unavailableReasonFor(_selectedPlan) ??
+                    PurchaseUnavailableReason.noPackage)
+                .analyticsValue,
+            stage: 'tap',
+            error: rc.lastUnavailableError,
+          );
+        case PurchaseOutcome.entitlementMissing:
+          // The store took the purchase and the entitlement stayed off: the
+          // product isn't attached to Intended+ in the RevenueCat dashboard.
+          // An error, never a cancel.
+          AnalyticsService.logPurchaseEntitlementMissing();
+          AppToast.show(context, l10n.boostPurchaseError);
+      }
+    } catch (e) {
+      AnalyticsService.logPurchaseFailed(e);
+      if (mounted) {
+        AppToast.show(context, l10n.boostPurchaseError);
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _retryPrices() {
+    context.read<RevenueCatService>().retryOfferings(plan: _selectedPlan);
+  }
+
+  Widget _buildDisclaimer(
+    AppColorScheme colors,
+    AppLocalizations l10n,
+    RevenueCatService rc, {
+    required bool pricesLoading,
+    required PurchaseUnavailableReason? blocked,
+  }) {
+    final style = TextStyle(
+      fontFamily: AppTextStyles.bodyFont(context),
+      fontSize: 13,
+      fontWeight: FontWeight.w400,
+      color: colors.textTertiary,
+    );
+    // One line of this style, held so the footer doesn't jump when the
+    // store answers.
+    const held = SizedBox(height: 18);
+    if (pricesLoading) return held;
+    if (blocked != null) {
+      return Text(
+        l10n.paywallPricesUnavailable,
+        style: style.copyWith(color: colors.textSecondary),
+        textAlign: TextAlign.center,
+      );
+    }
+    final String? text;
     if (_selectedPlan == 'lifetime') {
       text = l10n.paywallLifetimeHint;
     } else {
       // The billing period belongs to the sentence, not to the price: Russian
       // can't take «/ежегодно» after a slash, so each locale spells its own.
-      final days = rc.trialDaysForPlan(_selectedPlan);
-      text = _selectedPlan == 'yearly'
-          ? l10n.paywallTrialHintYearly(
-              days,
-              rc.yearlyPriceString ?? l10n.paywallYearlyPrice,
-            )
-          : l10n.paywallTrialHintMonthly(
-              days,
-              rc.monthlyPriceString ?? l10n.paywallMonthlyPrice,
-            );
+      // The trial is in the sentence only when the store's intro offer is
+      // free; otherwise the plan is sold as what it is.
+      final days = rc.freeTrialDaysForPlan(_selectedPlan);
+      final price = _selectedPlan == 'yearly'
+          ? rc.yearlyPriceString
+          : rc.monthlyPriceString;
+      if (price == null) {
+        text = null;
+      } else if (_selectedPlan == 'yearly') {
+        text = days == null
+            ? l10n.paywallHintYearlyNoTrial(price)
+            : l10n.paywallTrialHintYearly(days, price);
+      } else {
+        text = days == null
+            ? l10n.paywallHintMonthlyNoTrial(price)
+            : l10n.paywallTrialHintMonthly(days, price);
+      }
     }
-    return Text(
-      text,
-      style: TextStyle(
-        fontFamily: AppTextStyles.bodyFont(context),
-        fontSize: 13,
-        fontWeight: FontWeight.w400,
-        color: colors.textTertiary,
-      ),
-      textAlign: TextAlign.center,
-    );
+    if (text == null) return held;
+    return Text(text, style: style, textAlign: TextAlign.center);
   }
 
   Widget _buildContinueFreeSection(AppColorScheme colors, AppLocalizations l10n) {
@@ -946,6 +1047,28 @@ class _PricingBadge extends StatelessWidget {
           color: const Color(0xFFFFFFFF),
           letterSpacing: 0.3,
         ),
+      ),
+    );
+  }
+}
+
+/// Where a price goes before the store has answered — or when it couldn't.
+/// A quiet bar in the price colour, so the row keeps its shape and nothing
+/// on it claims a number.
+class _PricePlaceholder extends StatelessWidget {
+  final Color? color;
+
+  const _PricePlaceholder({required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 64,
+      height: 18,
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      decoration: BoxDecoration(
+        color: (color ?? const Color(0xFF000000)).withOpacity(0.14),
+        borderRadius: BorderRadius.circular(6),
       ),
     );
   }

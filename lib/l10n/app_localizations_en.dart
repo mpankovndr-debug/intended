@@ -1696,6 +1696,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallLifetimeHint => 'One-time purchase. No subscription.';
 
   @override
+  String get paywallPricesUnavailable => 'Prices didn\'t load. Try again.';
+
+  @override
+  String get paywallRetry => 'Retry';
+
+  @override
+  String get paywallCtaSubscribe => 'Continue with Intended+';
+
+  @override
+  String paywallHintYearlyNoTrial(String price) {
+    return '$price/year. Renews automatically until you cancel.';
+  }
+
+  @override
+  String paywallHintMonthlyNoTrial(String price) {
+    return '$price/month. Renews automatically until you cancel.';
+  }
+
+  @override
   String get paywallContinueFree => 'Continue with Core';
 
   @override
@@ -1739,6 +1758,11 @@ class AppLocalizationsEn extends AppLocalizations {
       one: '1 day',
     );
     return '$_temp0 free, then $price/year — about $perMonth a month. Renews automatically until you cancel.';
+  }
+
+  @override
+  String onboardingPaywallDisclaimerNoTrial(String price, String perMonth) {
+    return '$price/year — about $perMonth a month. Renews automatically until you cancel.';
   }
 
   @override
@@ -1890,6 +1914,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileVersion => 'Intended v2.0.0';
+
+  @override
+  String get profileTesterModeOn => 'Tester mode on';
+
+  @override
+  String get profileTesterModeOff => 'Tester mode off';
 
   @override
   String get profileCannotOpenEmail => 'Cannot open email';

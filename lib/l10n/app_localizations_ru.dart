@@ -1753,6 +1753,26 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paywallLifetimeHint => 'Разовая покупка. Без подписки.';
 
   @override
+  String get paywallPricesUnavailable =>
+      'Цены не загрузились. Попробуй ещё раз.';
+
+  @override
+  String get paywallRetry => 'Повторить';
+
+  @override
+  String get paywallCtaSubscribe => 'Продолжить с Intended+';
+
+  @override
+  String paywallHintYearlyNoTrial(String price) {
+    return '$price в год. Продлевается автоматически, пока не отменишь.';
+  }
+
+  @override
+  String paywallHintMonthlyNoTrial(String price) {
+    return '$price в месяц. Продлевается автоматически, пока не отменишь.';
+  }
+
+  @override
   String get paywallContinueFree => 'Продолжить с Core';
 
   @override
@@ -1800,6 +1820,11 @@ class AppLocalizationsRu extends AppLocalizations {
       one: '$days день',
     );
     return '$_temp0 бесплатно, дальше $price в год — около $perMonth в месяц. Продлевается автоматически, пока не отменишь.';
+  }
+
+  @override
+  String onboardingPaywallDisclaimerNoTrial(String price, String perMonth) {
+    return '$price в год — около $perMonth в месяц. Продлевается автоматически, пока не отменишь.';
   }
 
   @override
@@ -1952,6 +1977,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileVersion => 'Intended v2.0.0';
+
+  @override
+  String get profileTesterModeOn => 'Режим тестировщика включён';
+
+  @override
+  String get profileTesterModeOff => 'Режим тестировщика выключен';
 
   @override
   String get profileCannotOpenEmail => 'Не удалось открыть почту';

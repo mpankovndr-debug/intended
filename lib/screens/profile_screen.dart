@@ -78,6 +78,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _weeklyEnabled = false;
   bool _notifPermissionDenied = false;
 
+  // Hidden tester toggle: seven taps on the version label.
+  int _versionTaps = 0;
+  Timer? _versionTapTimer;
+
   @override
   void initState() {
     super.initState();
@@ -192,8 +196,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void dispose() {
     _authSub.cancel();
+    _versionTapTimer?.cancel();
     controller.dispose();
     super.dispose();
+  }
+
+  /// Seven taps on the version label, each within two seconds of the last,
+  /// flip the `is_tester` analytics property. Hidden on purpose: it exists
+  /// so TestFlight installs can be kept out of the dashboard.
+  Future<void> _onVersionTap() async {
+    _versionTapTimer?.cancel();
+    _versionTaps += 1;
+    if (_versionTaps < 7) {
+      _versionTapTimer = Timer(const Duration(seconds: 2), () {
+        _versionTaps = 0;
+      });
+      return;
+    }
+    _versionTaps = 0;
+    HapticFeedback.mediumImpact();
+    final on = await AnalyticsService.toggleTester();
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
+    AppToast.show(
+      context,
+      on ? l10n.profileTesterModeOn : l10n.profileTesterModeOff,
+    );
   }
 
   String _localizedAreaName(AppLocalizations l10n, String area) {
@@ -2661,14 +2689,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                         const SizedBox(height: 8),
 
-                        // Version Label
-                        Text(
-                          l10n.profileVersion,
-                          style: TextStyle(
-                            fontFamily: AppTextStyles.bodyFont(context),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: colors.textMutedBrown,
+                        // Version Label — seven taps toggle the tester flag
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: _onVersionTap,
+                          child: Text(
+                            l10n.profileVersion,
+                            style: TextStyle(
+                              fontFamily: AppTextStyles.bodyFont(context),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: colors.textMutedBrown,
+                            ),
                           ),
                         ),
                       ],

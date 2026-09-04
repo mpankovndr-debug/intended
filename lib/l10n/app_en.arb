@@ -961,6 +961,33 @@
     }
   },
   "paywallLifetimeHint": "One-time purchase. No subscription.",
+  "paywallPricesUnavailable": "Prices didn't load. Try again.",
+  "@paywallPricesUnavailable": {
+    "description": "Inline line under the purchase button when offerings could not be loaded. The button itself becomes the retry."
+  },
+  "paywallRetry": "Retry",
+  "paywallCtaSubscribe": "Continue with Intended+",
+  "@paywallCtaSubscribe": {
+    "description": "Purchase button for a subscription plan whose store product has no free intro offer — no trial is claimed."
+  },
+  "paywallHintYearlyNoTrial": "{price}/year. Renews automatically until you cancel.",
+  "@paywallHintYearlyNoTrial": {
+    "description": "Disclaimer for the yearly plan when the store reports no free trial. Billing period is spelled per locale.",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallHintMonthlyNoTrial": "{price}/month. Renews automatically until you cancel.",
+  "@paywallHintMonthlyNoTrial": {
+    "description": "Disclaimer for the monthly plan when the store reports no free trial. Billing period is spelled per locale.",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "paywallContinueFree": "Continue with Core",
   "paywallRestorePurchases": "Restore Purchases",
   "restoreError": "Could not restore purchases. Please try again.",
@@ -978,6 +1005,18 @@
       "days": {
         "type": "int"
       },
+      "price": {
+        "type": "String"
+      },
+      "perMonth": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingPaywallDisclaimerNoTrial": "{price}/year — about {perMonth} a month. Renews automatically until you cancel.",
+  "@onboardingPaywallDisclaimerNoTrial": {
+    "description": "The onboarding disclaimer when the store reports no free trial on the yearly plan.",
+    "placeholders": {
       "price": {
         "type": "String"
       },
@@ -1039,6 +1078,8 @@
   "profileSignOut": "Sign out",
   "profileDeleteData": "Delete account & data",
   "profileVersion": "Intended v2.0.0",
+  "profileTesterModeOn": "Tester mode on",
+  "profileTesterModeOff": "Tester mode off",
   "profileCannotOpenEmail": "Cannot open email",
   "profileEmailFallback": "Please email us at\nsupport@intendedapp.com",
   "profileChangeFocusTitle": "Change focus areas?",

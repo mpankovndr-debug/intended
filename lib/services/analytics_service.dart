@@ -1,5 +1,10 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart' show kDebugMode, visibleForTesting;
+import 'package:flutter/services.dart' show PlatformException;
+import 'package:purchases_flutter/purchases_flutter.dart'
+    show PurchasesErrorCode, PurchasesErrorHelper;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AnalyticsService {
   AnalyticsService._();
@@ -168,9 +173,122 @@ class AnalyticsService {
     _analytics.logEvent(name: 'purchase_cancelled');
   }
 
-  static void logPurchaseFailed() {
-    _analytics.logEvent(name: 'purchase_failed');
+  /// A purchase the store refused. [error] is whatever the SDK threw — a
+  /// PlatformException for every RevenueCat failure — and becomes the
+  /// `error_code` / `error_message` pair, so the dashboard can tell a
+  /// declined card from a StoreKit outage from an Apple ID that can't buy.
+  static void logPurchaseFailed(Object error) {
+    try {
+      _analytics.logEvent(
+        name: 'purchase_failed',
+        parameters: purchaseErrorParams(error),
+      );
+    } catch (_) {}
   }
+
+  /// The store returned without an error and the entitlement stayed off.
+  /// Same event as [logPurchaseFailed], since the user was charged, with
+  /// `error_code` set to `entitlementMissing` — a RevenueCat dashboard
+  /// problem, not a store one.
+  static void logPurchaseEntitlementMissing() {
+    try {
+      _analytics.logEvent(
+        name: 'purchase_failed',
+        parameters: {
+          errorCodeParam: 'entitlementMissing',
+          errorMessageParam:
+              'purchase returned without an error; entitlement inactive',
+        },
+      );
+    } catch (_) {}
+  }
+
+  /// A purchase that could not even start — no current offering, no package
+  /// for the plan, or an SDK that never configured — as opposed to one the
+  /// user closed. [stage] is `load` when a paywall opened without a usable
+  /// offering and `tap` when the purchase button was pressed anyway. Its own
+  /// event on purpose: these used to be logged as purchase_cancelled, which
+  /// made a broken button look like disinterest.
+  ///
+  /// [error] is the exception behind the reason when there is one — the
+  /// failed `configure` or `getOfferings` call — and is null for a store
+  /// that answered with nothing to sell.
+  static void logPurchaseUnavailable(
+    String reason, {
+    required String stage,
+    Object? error,
+  }) {
+    try {
+      _analytics.logEvent(
+        name: 'purchase_unavailable',
+        parameters: {
+          'reason': reason,
+          'stage': stage,
+          ...purchaseErrorParams(error),
+        },
+      );
+    } catch (_) {}
+  }
+
+  // ── Purchase error detail ─────────────────────────────────────
+
+  static const errorCodeParam = 'error_code';
+  static const errorMessageParam = 'error_message';
+
+  /// GA4 truncates event parameter values past this many characters.
+  static const errorMessageMaxLength = 100;
+
+  /// The `error_code` / `error_message` pair for a purchase event.
+  ///
+  /// A PlatformException is what the RevenueCat plugin throws for every
+  /// store failure: its `code` is the PurchasesErrorCode index and its
+  /// `details` carry the StoreKit text under `underlyingErrorMessage`. The
+  /// code becomes the enum's name (`purchaseNotAllowedError`,
+  /// `storeProblemError`, `paymentPendingError`…); the message prefers the
+  /// StoreKit text, falls back to RevenueCat's, and is cut to GA4's limit.
+  /// Null — no error, just nothing to sell — reads `none` for both.
+  @visibleForTesting
+  static Map<String, Object> purchaseErrorParams(Object? error) {
+    if (error == null) {
+      return {errorCodeParam: 'none', errorMessageParam: 'none'};
+    }
+    if (error is PlatformException) {
+      return {
+        errorCodeParam: _purchasesErrorCode(error).name,
+        errorMessageParam: _truncate(_purchasesErrorMessage(error)),
+      };
+    }
+    return {
+      errorCodeParam: PurchasesErrorCode.unknownError.name,
+      errorMessageParam: _truncate(error.toString()),
+    };
+  }
+
+  static PurchasesErrorCode _purchasesErrorCode(PlatformException e) {
+    try {
+      return PurchasesErrorHelper.getErrorCode(e);
+    } catch (_) {
+      // A non-numeric or out-of-range code is nothing the helper can map.
+      return PurchasesErrorCode.unknownError;
+    }
+  }
+
+  static String _purchasesErrorMessage(PlatformException e) {
+    final details = e.details;
+    if (details is Map) {
+      final underlying = details['underlyingErrorMessage'];
+      if (underlying is String && underlying.trim().isNotEmpty) {
+        return underlying.trim();
+      }
+    }
+    final message = e.message?.trim();
+    if (message != null && message.isNotEmpty) return message;
+    return e.code;
+  }
+
+  static String _truncate(String s) => s.length <= errorMessageMaxLength
+      ? s
+      : s.substring(0, errorMessageMaxLength);
 
   static void logRestoreStarted() {
     _analytics.logEvent(name: 'restore_started');
@@ -328,6 +446,49 @@ class AnalyticsService {
         parameters: {'outcome': outcome},
       );
     } catch (_) {}
+  }
+
+  // ── Tester flag ───────────────────────────────────────────────
+
+  /// Shared-preferences key behind the hidden toggle in Profile.
+  static const testerPrefKey = 'is_tester';
+
+  /// Debug builds are always testers; release builds honour the toggle.
+  @visibleForTesting
+  static bool resolveTester({required bool debug, required bool? stored}) =>
+      debug || (stored ?? false);
+
+  /// Sets the `is_tester` user property from the build mode and the stored
+  /// toggle. Called at launch, before the first event, and after each
+  /// toggle. Returns the value applied.
+  static Future<bool> applyTesterFlag() async {
+    var tester = kDebugMode;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      tester = resolveTester(
+        debug: kDebugMode,
+        stored: prefs.getBool(testerPrefKey),
+      );
+      await _analytics.setUserProperty(
+        name: 'is_tester',
+        value: tester.toString(),
+      );
+      FirebaseCrashlytics.instance.setCustomKey('is_tester', tester);
+    } catch (_) {}
+    return tester;
+  }
+
+  /// Flips the stored toggle and re-applies it. Returns the effective value
+  /// afterwards — in a debug build that is always true, whatever is stored.
+  static Future<bool> toggleTester() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(
+        testerPrefKey,
+        !(prefs.getBool(testerPrefKey) ?? false),
+      );
+    } catch (_) {}
+    return applyTesterFlag();
   }
 
   // ── User Properties ───────────────────────────────────────────

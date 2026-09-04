@@ -747,6 +747,9 @@ void main() {
         await FirebaseAuth.instance.signOut();
       }
 
+      // Tag debug builds and opted-in testers before the first event.
+      unawaited(AnalyticsService.applyTesterFlag());
+
       // Load saved name
       final savedName = prefs.getString('user_name');
 

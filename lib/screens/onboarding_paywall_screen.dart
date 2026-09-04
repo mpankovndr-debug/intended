@@ -20,6 +20,11 @@ import '../widgets/app_toast.dart';
 /// an explicit choice. This is by design (matches Finch / Atoms pattern)
 /// and keeps "Continue with Core" as the gentle, clearly-labelled exit.
 ///
+/// The primary button waits (a spinner) until the store has answered, and
+/// becomes a retry when it couldn't. It never says "free trial" unless the
+/// live product carries a free intro offer, and never shows a typed-in
+/// price: a claim the store hasn't confirmed is not made.
+///
 /// Pop value:
 ///  - `true`  — purchase succeeded.
 ///  - `false` — user chose Core, or a purchase attempt failed/was cancelled.
@@ -72,12 +77,15 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
       curve: const Interval(0.3, 1.0, curve: Curves.easeOutCubic),
     ));
 
-    // Lazy-load offerings so the trial price renders correctly in the
-    // disclaimer line. Triggers an App Store sign-in dialog on first call,
-    // which is acceptable here — the user has just finished onboarding.
+    // Lazy-load offerings so the price and the trial length come from the
+    // store. Until they do, the button and the disclaimer paint a loading
+    // state; if they can't, the service reports why and the button becomes
+    // a retry.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      context.read<RevenueCatService>().ensureOfferings();
+      context
+          .read<RevenueCatService>()
+          .ensureOfferings(plan: OnboardingPaywallScreen._plan);
       _entrance.forward();
     });
   }
@@ -90,27 +98,60 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
 
   Future<void> _handleStartTrial() async {
     if (_isLoading) return;
+    final rc = context.read<RevenueCatService>();
+    const plan = OnboardingPaywallScreen._plan;
+
+    // A tap with nothing to sell is not a cancel — it is the broken button
+    // this screen used to record as purchase_cancelled. The button is only
+    // enabled once the plan is purchasable, so this is the race guard: a
+    // retry emptied the offering under the tap. The build already shows the
+    // message and the retry for this state.
+    final blocked = rc.unavailableReasonFor(plan);
+    if (blocked != null) {
+      AnalyticsService.logPurchaseUnavailable(
+        blocked.analyticsValue,
+        stage: 'tap',
+        error: rc.lastUnavailableError,
+      );
+      return;
+    }
+
     HapticFeedback.mediumImpact();
     setState(() => _isLoading = true);
 
-    AnalyticsService.logPurchaseStarted(OnboardingPaywallScreen._plan);
+    AnalyticsService.logPurchaseStarted(plan);
 
     try {
-      final success = await context
-          .read<RevenueCatService>()
-          .purchasePlan(OnboardingPaywallScreen._plan);
+      final outcome = await rc.purchasePlan(plan);
       if (!mounted) return;
-      if (success) {
-        AnalyticsService.logPurchaseCompleted(OnboardingPaywallScreen._plan);
-        Navigator.of(context).pop(true);
-      } else {
-        // User cancelled the iOS purchase sheet — stay on the paywall and
-        // let them choose again. RevenueCatService swallows
-        // purchaseCancelledError and returns false, so this is the normal path.
-        AnalyticsService.logPurchaseCancelled();
+      switch (outcome) {
+        case PurchaseOutcome.purchased:
+          AnalyticsService.logPurchaseCompleted(plan);
+          Navigator.of(context).pop(true);
+        case PurchaseOutcome.cancelled:
+          // The user closed the App Store sheet — stay on the paywall and
+          // let them choose again.
+          AnalyticsService.logPurchaseCancelled();
+        case PurchaseOutcome.unavailable:
+          AnalyticsService.logPurchaseUnavailable(
+            (rc.unavailableReasonFor(plan) ??
+                    PurchaseUnavailableReason.noPackage)
+                .analyticsValue,
+            stage: 'tap',
+            error: rc.lastUnavailableError,
+          );
+        case PurchaseOutcome.entitlementMissing:
+          // The store took the purchase and the entitlement stayed off: the
+          // product isn't attached to Intended+ in the RevenueCat dashboard.
+          // An error, never a cancel.
+          AnalyticsService.logPurchaseEntitlementMissing();
+          AppToast.show(
+            context,
+            AppLocalizations.of(context).boostPurchaseError,
+          );
       }
-    } catch (_) {
-      AnalyticsService.logPurchaseFailed();
+    } catch (e) {
+      AnalyticsService.logPurchaseFailed(e);
       if (mounted) {
         AppToast.show(
           context,
@@ -122,11 +163,62 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
     }
   }
 
+  void _handleRetry() {
+    HapticFeedback.selectionClick();
+    context
+        .read<RevenueCatService>()
+        .retryOfferings(plan: OnboardingPaywallScreen._plan);
+  }
+
   void _handleContinueFree() {
     if (_isLoading) return;
     HapticFeedback.selectionClick();
     AnalyticsService.logPaywallDismissed(OnboardingPaywallScreen.source);
     Navigator.of(context).pop(false);
+  }
+
+  /// The line under the buttons: a held space while the store answers, the
+  /// retry message when it didn't, otherwise the price — with the trial in
+  /// front of it only when the store's intro offer is free.
+  Widget _disclaimer(
+    AppLocalizations l10n,
+    AppColorScheme colors,
+    RevenueCatService rc, {
+    required bool pricesLoading,
+    required PurchaseUnavailableReason? blocked,
+    required int? trialDays,
+  }) {
+    final style = TextStyle(
+      fontFamily: AppTextStyles.bodyFont(context),
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
+      color: colors.textTertiary.withValues(alpha: 0.7),
+      height: 1.4,
+    );
+    // Two lines of this style; holding them keeps the buttons still.
+    const held = SizedBox(height: 34);
+    if (pricesLoading) return held;
+    if (blocked != null) {
+      return Text(
+        l10n.paywallPricesUnavailable,
+        textAlign: TextAlign.center,
+        style: style.copyWith(color: colors.textSecondary),
+      );
+    }
+    final price = rc.yearlyPriceString;
+    if (price == null) return held;
+    final perMonth = rc.yearlyPerMonthString;
+    final String text;
+    if (trialDays != null) {
+      text = perMonth == null
+          ? l10n.paywallTrialHintYearly(trialDays, price)
+          : l10n.onboardingPaywallDisclaimer(trialDays, price, perMonth);
+    } else {
+      text = perMonth == null
+          ? l10n.paywallHintYearlyNoTrial(price)
+          : l10n.onboardingPaywallDisclaimerNoTrial(price, perMonth);
+    }
+    return Text(text, textAlign: TextAlign.center, style: style);
   }
 
   /// The thread between steps: a short line and a soft chevron, centered
@@ -164,10 +256,21 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
     final colors = context.watch<ThemeProvider>().colors;
     final l10n = AppLocalizations.of(context);
     final rc = context.watch<RevenueCatService>();
-    final yearlyPrice = rc.yearlyPriceString ?? l10n.paywallYearlyPrice;
-    final yearlyPerMonth =
-        rc.yearlyPerMonthString ?? l10n.paywallYearlyPerMonth;
-    final trialDays = rc.trialDaysForPlan('yearly');
+    final status = rc.offeringsStatus;
+    final pricesLoading = status == OfferingsStatus.pending ||
+        status == OfferingsStatus.loading;
+    final blocked = pricesLoading
+        ? null
+        : rc.unavailableReasonFor(OnboardingPaywallScreen._plan);
+    // Nothing here falls back to a typed-in number. Before the store answers
+    // the screen shows a loading state; after it answers, a plan with no free
+    // intro offer is sold without a trial claim.
+    final trialDays = rc.freeTrialDaysForPlan(OnboardingPaywallScreen._plan);
+    final ctaLabel = blocked != null
+        ? l10n.paywallRetry
+        : trialDays == null
+            ? l10n.paywallCtaSubscribe
+            : l10n.onboardingPaywallPrimaryCta;
 
     // Block the system back gesture / hardware back. The user must choose
     // one of the two CTAs — there is no implicit dismiss.
@@ -354,9 +457,11 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
                         position: _slideUp,
                         child: _PrimaryCta(
                           colors: colors,
-                          label: l10n.onboardingPaywallPrimaryCta,
-                          isLoading: _isLoading,
-                          onPressed: _handleStartTrial,
+                          label: ctaLabel,
+                          isLoading: _isLoading || pricesLoading,
+                          onPressed: blocked != null
+                              ? _handleRetry
+                              : _handleStartTrial,
                         ),
                       ),
                     ),
@@ -384,17 +489,13 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
 
                     FadeTransition(
                       opacity: _fadeIn,
-                      child: Text(
-                        l10n.onboardingPaywallDisclaimer(
-                            trialDays, yearlyPrice, yearlyPerMonth),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: AppTextStyles.bodyFont(context),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: colors.textTertiary.withValues(alpha: 0.7),
-                          height: 1.4,
-                        ),
+                      child: _disclaimer(
+                        l10n,
+                        colors,
+                        rc,
+                        pricesLoading: pricesLoading,
+                        blocked: blocked,
+                        trialDays: trialDays,
                       ),
                     ),
 

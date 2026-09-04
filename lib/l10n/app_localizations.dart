@@ -2763,6 +2763,36 @@ abstract class AppLocalizations {
   /// **'One-time purchase. No subscription.'**
   String get paywallLifetimeHint;
 
+  /// Inline line under the purchase button when offerings could not be loaded. The button itself becomes the retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Prices didn\'t load. Try again.'**
+  String get paywallPricesUnavailable;
+
+  /// No description provided for @paywallRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get paywallRetry;
+
+  /// Purchase button for a subscription plan whose store product has no free intro offer — no trial is claimed.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Intended+'**
+  String get paywallCtaSubscribe;
+
+  /// Disclaimer for the yearly plan when the store reports no free trial. Billing period is spelled per locale.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/year. Renews automatically until you cancel.'**
+  String paywallHintYearlyNoTrial(String price);
+
+  /// Disclaimer for the monthly plan when the store reports no free trial. Billing period is spelled per locale.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/month. Renews automatically until you cancel.'**
+  String paywallHintMonthlyNoTrial(String price);
+
   /// No description provided for @paywallContinueFree.
   ///
   /// In en, this message translates to:
@@ -2834,6 +2864,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Renews automatically until you cancel.'**
   String onboardingPaywallDisclaimer(int days, String price, String perMonth);
+
+  /// The onboarding disclaimer when the store reports no free trial on the yearly plan.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/year — about {perMonth} a month. Renews automatically until you cancel.'**
+  String onboardingPaywallDisclaimerNoTrial(String price, String perMonth);
 
   /// No description provided for @subscriptionTitle.
   ///
@@ -3110,6 +3146,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Intended v2.0.0'**
   String get profileVersion;
+
+  /// No description provided for @profileTesterModeOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Tester mode on'**
+  String get profileTesterModeOn;
+
+  /// No description provided for @profileTesterModeOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Tester mode off'**
+  String get profileTesterModeOff;
 
   /// No description provided for @profileCannotOpenEmail.
   ///
