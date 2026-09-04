@@ -822,9 +822,9 @@ class _PaywallScreenState extends State<PaywallScreen>
       fontWeight: FontWeight.w400,
       color: colors.textTertiary,
     );
-    // One line of this style, held so the footer doesn't jump when the
-    // store answers.
-    const held = SizedBox(height: 18);
+    // Three lines of this style (the trial timeline), held so the footer
+    // doesn't jump when the store answers.
+    const held = SizedBox(height: 54);
     if (pricesLoading) return held;
     if (blocked != null) {
       return Text(
@@ -847,14 +847,23 @@ class _PaywallScreenState extends State<PaywallScreen>
           : rc.monthlyPriceString;
       if (price == null) {
         text = null;
-      } else if (_selectedPlan == 'yearly') {
-        text = days == null
+      } else if (days == null) {
+        text = _selectedPlan == 'yearly'
             ? l10n.paywallHintYearlyNoTrial(price)
-            : l10n.paywallTrialHintYearly(days, price);
+            : l10n.paywallHintMonthlyNoTrial(price);
       } else {
-        text = days == null
-            ? l10n.paywallHintMonthlyNoTrial(price)
-            : l10n.paywallTrialHintMonthly(days, price);
+        // The trial timeline. Its two numbers are the store's intro offer;
+        // if it can't say what the trial costs, nothing renders.
+        final trialPrice = rc.freeTrialPriceStringForPlan(_selectedPlan);
+        text = trialPrice == null
+            ? null
+            : [
+                l10n.paywallTimelineToday(trialPrice),
+                _selectedPlan == 'yearly'
+                    ? l10n.paywallTimelineRenewsYearly(days, price)
+                    : l10n.paywallTimelineRenewsMonthly(days, price),
+                l10n.paywallTimelineCancel,
+              ].join('\n');
       }
     }
     if (text == null) return held;

@@ -68,6 +68,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String welcomeBackReturnWithName(String name) {
+    return 'Hi, $name! You came back — that\'s what\'s important.';
+  }
+
+  @override
+  String get welcomeBackReturn =>
+      'Hi! You came back — that\'s what\'s important.';
+
+  @override
+  String get welcomeBackLongAway => 'Hey, you. We kept the light on.';
+
+  @override
+  String get welcomeBackShortAway => 'You\'re back. No catching up needed.';
+
+  @override
   String get welcomeSubtitle => 'Build small daily habits\nwithout the guilt.';
 
   @override
@@ -84,7 +99,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingLetsGetStarted => 'Let\'s get started';
 
   @override
-  String get onboardingSkipForNow => 'Skip for now';
+  String get onboardingContinueWithoutName => 'Continue without a name';
 
   @override
   String onboardingNameTooLong(int max) {
@@ -233,6 +248,14 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return 'Deep Focus and more themes are available with Intended+. Try it free for $_temp0 after setup.';
   }
+
+  @override
+  String get themeSelectionPremiumHintUnspecified =>
+      'Deep Focus and more themes are available with Intended+. Try it free after setup.';
+
+  @override
+  String get themeSelectionPremiumHintNoTrial =>
+      'Deep Focus and more themes are available with Intended+.';
 
   @override
   String get habitRevealTitle => 'Here\'s what we picked for you';
@@ -1671,26 +1694,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallCtaLifetime => 'Get lifetime access';
 
   @override
-  String paywallTrialHintYearly(int days, String price) {
-    String _temp0 = intl.Intl.pluralLogic(
-      days,
-      locale: localeName,
-      other: '$days days',
-      one: '1 day',
-    );
-    return '$_temp0 free, then $price/year. Renews automatically until you cancel.';
+  String paywallTimelineToday(String price) {
+    return 'Today — $price. Full access, nothing charged.';
   }
 
   @override
-  String paywallTrialHintMonthly(int days, String price) {
-    String _temp0 = intl.Intl.pluralLogic(
-      days,
-      locale: localeName,
-      other: '$days days',
-      one: '1 day',
-    );
-    return '$_temp0 free, then $price/month. Renews automatically until you cancel.';
+  String paywallTimelineRenewsYearly(int days, String price) {
+    return 'Day $days — $price/year, renews automatically unless you cancel.';
   }
+
+  @override
+  String paywallTimelineRenewsMonthly(int days, String price) {
+    return 'Day $days — $price/month, renews automatically unless you cancel.';
+  }
+
+  @override
+  String get paywallTimelineCancel => 'Cancel anytime in Settings.';
 
   @override
   String get paywallLifetimeHint => 'One-time purchase. No subscription.';
@@ -1748,17 +1767,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingPaywallSecondaryCta => 'Not now — keep the free version';
-
-  @override
-  String onboardingPaywallDisclaimer(int days, String price, String perMonth) {
-    String _temp0 = intl.Intl.pluralLogic(
-      days,
-      locale: localeName,
-      other: '$days days',
-      one: '1 day',
-    );
-    return '$_temp0 free, then $price/year — about $perMonth a month. Renews automatically until you cancel.';
-  }
 
   @override
   String onboardingPaywallDisclaimerNoTrial(String price, String perMonth) {
@@ -1913,7 +1921,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileDeleteData => 'Delete account & data';
 
   @override
-  String get profileVersion => 'Intended v2.0.0';
+  String profileVersion(String version) {
+    return 'Intended v$version';
+  }
 
   @override
   String get profileTesterModeOn => 'Tester mode on';
@@ -3237,6 +3247,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String faqPricingAnswer(
       String monthly, String yearly, String lifetime, int days) {
     return 'Monthly: $monthly. Yearly: $yearly. Lifetime: $lifetime, one-time. Both subscriptions start with a $days-day free trial.';
+  }
+
+  @override
+  String faqPricingAnswerUnspecified(
+      String monthly, String yearly, String lifetime) {
+    return 'Monthly: $monthly. Yearly: $yearly. Lifetime: $lifetime, one-time. Both subscriptions start with a free trial.';
+  }
+
+  @override
+  String faqPricingAnswerNoTrial(
+      String monthly, String yearly, String lifetime) {
+    return 'Monthly: $monthly. Yearly: $yearly. Lifetime: $lifetime, one-time.';
   }
 
   @override

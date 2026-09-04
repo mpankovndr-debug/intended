@@ -57,6 +57,17 @@ class _ThemeSelectionScreenState extends State<ThemeSelectionScreen> {
     );
   }
 
+  /// Names the trial only as far as the store has confirmed it: a length
+  /// when the yearly plan's intro offer is known, "free" while it isn't, and
+  /// nothing at all once the store has said there is no trial.
+  static String _premiumHint(AppLocalizations l10n, RevenueCatService rc) =>
+      switch (rc.yearlyTrialClaim) {
+        TrialClaim.days =>
+          l10n.themeSelectionPremiumHint(rc.freeTrialDaysForPlan('yearly')!),
+        TrialClaim.unspecified => l10n.themeSelectionPremiumHintUnspecified,
+        TrialClaim.none => l10n.themeSelectionPremiumHintNoTrial,
+      };
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -140,8 +151,9 @@ class _ThemeSelectionScreenState extends State<ThemeSelectionScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              l10n.themeSelectionPremiumHint(
-                                context.watch<RevenueCatService>().trialDays,
+                              _premiumHint(
+                                l10n,
+                                context.watch<RevenueCatService>(),
                               ),
                               textAlign: TextAlign.center,
                               style: TextStyle(

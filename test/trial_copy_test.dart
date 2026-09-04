@@ -26,7 +26,7 @@ void main() {
         () {
       // A calendar month is 28–31 days. Printing "30 days free" for a 1-month
       // intro offer would be a sentence the app cannot stand behind, so the
-      // copy falls back to defaultTrialDays instead.
+      // copy makes no numeric claim instead.
       expect(RevenueCatService.introPeriodInDays(PeriodUnit.month, 1), isNull);
       expect(RevenueCatService.introPeriodInDays(PeriodUnit.year, 1), isNull);
       expect(
@@ -46,30 +46,33 @@ void main() {
       expect(l.paywallCtaTrial(7), 'Start 7-day free trial');
       expect(l.paywallCtaTrial(14), 'Start 14-day free trial');
 
-      expect(l.paywallTrialHintYearly(14, '€44.99'),
-          '14 days free, then €44.99/year. Renews automatically until you cancel.');
+      expect(l.paywallTimelineRenewsYearly(14, '€44.99'),
+          'Day 14 — €44.99/year, renews automatically unless you cancel.');
+      expect(l.paywallTimelineRenewsMonthly(7, '€5.99'),
+          'Day 7 — €5.99/month, renews automatically unless you cancel.');
     });
 
     test('singular does not read "1 days"', () {
-      expect(l.paywallTrialHintMonthly(1, '€5.99'),
-          '1 day free, then €5.99/month. Renews automatically until you cancel.');
       expect(
         l.themeSelectionPremiumHint(1),
         contains('Try it free for 1 day after setup'),
       );
     });
 
-    test('the onboarding disclaimer no longer hardcodes €3.75', () {
-      final text = l.onboardingPaywallDisclaimer(14, '€44.99', '€3.75');
-      expect(
-          text,
-          '14 days free, then €44.99/year — about €3.75 a month. '
-          'Renews automatically until you cancel.');
+    test('the trial timeline prints the store\'s own zero price', () {
+      // The "Today" line takes the intro offer's formatted price verbatim —
+      // whatever currency and format the store used for the plan itself.
+      expect(l.paywallTimelineToday(r'$0.00'),
+          r'Today — $0.00. Full access, nothing charged.');
+      expect(l.paywallTimelineToday('0,00 €'), startsWith('Today — 0,00 €.'));
+      expect(l.paywallTimelineCancel, 'Cancel anytime in Settings.');
+    });
 
-      // A different currency must survive end to end.
+    test('the no-trial onboarding disclaimer still carries the per-month figure',
+        () {
       expect(
-        l.onboardingPaywallDisclaimer(7, r'$49.99', r'$4.17'),
-        contains(r'about $4.17 a month'),
+        l.onboardingPaywallDisclaimerNoTrial('€44.99', '€3.75'),
+        '€44.99/year — about €3.75 a month. Renews automatically until you cancel.',
       );
     });
   });
@@ -77,25 +80,26 @@ void main() {
   group('Russian trial copy declines correctly', () {
     final l = AppLocalizationsRu();
 
-    test('one / few / many forms', () {
-      expect(l.paywallTrialHintYearly(1, 'X'), startsWith('1 день'));
-      expect(l.paywallTrialHintYearly(3, 'X'), startsWith('3 дня'));
-      expect(l.paywallTrialHintYearly(7, 'X'), startsWith('7 дней'));
-      expect(l.paywallTrialHintYearly(14, 'X'), startsWith('14 дней'));
-      expect(l.paywallTrialHintYearly(21, 'X'), startsWith('21 день'));
-      expect(l.paywallTrialHintMonthly(3, 'X'), startsWith('3 дня'));
+    test('the timeline names the day, so no plural is needed', () {
+      expect(l.paywallTimelineRenewsYearly(14, '€44,99'),
+          'День 14 — €44,99 в год, продлевается автоматически, если не отменишь.');
+      expect(l.paywallTimelineRenewsYearly(1, 'X'), startsWith('День 1 —'));
+      expect(l.paywallTimelineToday('0,00 €'),
+          'Сегодня — 0,00 €. Полный доступ, ничего не списывается.');
     });
 
     test('the billing period is a Russian phrase, never a slashed adverb', () {
       // The bug this replaces: the screen composed the price by gluing it to
       // the lowercased plan label, so Russian read «€44,99/ежегодно» — an
       // adverb where a period belongs, which no native reader can parse.
-      expect(l.paywallTrialHintYearly(14, '€44,99'), contains('€44,99 в год'));
-      expect(l.paywallTrialHintMonthly(14, '€5,99'), contains('€5,99 в месяц'));
+      expect(
+          l.paywallTimelineRenewsYearly(14, '€44,99'), contains('€44,99 в год'));
+      expect(l.paywallTimelineRenewsMonthly(14, '€5,99'),
+          contains('€5,99 в месяц'));
 
       for (final text in [
-        l.paywallTrialHintYearly(14, '€44,99'),
-        l.paywallTrialHintMonthly(14, '€5,99'),
+        l.paywallTimelineRenewsYearly(14, '€44,99'),
+        l.paywallTimelineRenewsMonthly(14, '€5,99'),
       ]) {
         expect(text, isNot(contains('ежегодно')));
         expect(text, isNot(contains('ежемесячно')));
@@ -108,10 +112,10 @@ void main() {
       expect(l.paywallCtaTrial(14), 'Начать 14-дневный пробный период');
     });
 
-    test('disclaimer takes a localised per-month figure', () {
+    test('the no-trial disclaimer takes a localised per-month figure', () {
       expect(
-        l.onboardingPaywallDisclaimer(14, '€44,99', '€3,75'),
-        allOf(startsWith('14 дней бесплатно'), contains('около €3,75')),
+        l.onboardingPaywallDisclaimerNoTrial('€44,99', '€3,75'),
+        allOf(startsWith('€44,99 в год'), contains('около €3,75')),
       );
     });
   });
@@ -135,6 +139,47 @@ void main() {
           contains('7-дневного бесплатного периода'),
         ),
       );
+    });
+
+    test('names a trial without measuring it until the store confirms', () {
+      expect(
+        AppLocalizationsEn().faqPricingAnswerUnspecified('€5.99', '€44.99', '€49.99'),
+        endsWith('Both subscriptions start with a free trial.'),
+      );
+      expect(
+        AppLocalizationsRu().faqPricingAnswerUnspecified('€5,99', '€44,99', '€49,99'),
+        endsWith('с бесплатного пробного периода.'),
+      );
+      for (final text in [
+        AppLocalizationsEn().faqPricingAnswerUnspecified('a', 'b', 'c'),
+        AppLocalizationsRu().faqPricingAnswerUnspecified('a', 'b', 'c'),
+        AppLocalizationsEn().faqPricingAnswerNoTrial('a', 'b', 'c'),
+        AppLocalizationsRu().faqPricingAnswerNoTrial('a', 'b', 'c'),
+        AppLocalizationsEn().themeSelectionPremiumHintUnspecified,
+        AppLocalizationsRu().themeSelectionPremiumHintUnspecified,
+        AppLocalizationsEn().themeSelectionPremiumHintNoTrial,
+        AppLocalizationsRu().themeSelectionPremiumHintNoTrial,
+      ]) {
+        expect(text, isNot(matches(RegExp(r'\d'))), reason: text);
+      }
+    });
+
+    test('says nothing about a trial once the store has said there is none',
+        () {
+      for (final text in [
+        AppLocalizationsEn().faqPricingAnswerNoTrial('a', 'b', 'c'),
+        AppLocalizationsEn().themeSelectionPremiumHintNoTrial,
+      ]) {
+        expect(text.toLowerCase(), isNot(contains('trial')));
+        expect(text.toLowerCase(), isNot(contains('free')));
+      }
+      for (final text in [
+        AppLocalizationsRu().faqPricingAnswerNoTrial('a', 'b', 'c'),
+        AppLocalizationsRu().themeSelectionPremiumHintNoTrial,
+      ]) {
+        expect(text, isNot(contains('пробн')));
+        expect(text, isNot(contains('бесплатн')));
+      }
     });
 
     test('no euro sign is baked into either answer', () {
@@ -168,35 +213,115 @@ void main() {
   group('every purchase surface discloses auto-renewal', () {
     // App Store guideline 3.1.2 wants the renewal terms in the binary, not
     // only in the store listing. "Cancel anytime" implies it; it does not say
-    // it. Both paywalls — onboarding and main — have to carry the sentence.
+    // it. Both paywalls — onboarding and main — have to carry the sentence,
+    // with and without a trial.
     test('English', () {
       final l = AppLocalizationsEn();
       for (final text in [
-        l.paywallTrialHintYearly(14, '€44.99'),
-        l.paywallTrialHintMonthly(14, '€5.99'),
-        l.onboardingPaywallDisclaimer(14, '€44.99', '€3.75'),
+        l.paywallHintYearlyNoTrial('€44.99'),
+        l.paywallHintMonthlyNoTrial('€5.99'),
+        l.onboardingPaywallDisclaimerNoTrial('€44.99', '€3.75'),
+        l.paywallTimelineRenewsYearly(14, '€44.99'),
+        l.paywallTimelineRenewsMonthly(14, '€5.99'),
       ]) {
-        expect(text, contains('Renews automatically'));
+        expect(text.toLowerCase(), contains('renews automatically'));
       }
     });
 
     test('Russian, in «ты»', () {
       final l = AppLocalizationsRu();
       for (final text in [
-        l.paywallTrialHintYearly(14, '€44,99'),
-        l.paywallTrialHintMonthly(14, '€5,99'),
-        l.onboardingPaywallDisclaimer(14, '€44,99', '€3,75'),
+        l.paywallHintYearlyNoTrial('€44,99'),
+        l.paywallHintMonthlyNoTrial('€5,99'),
+        l.onboardingPaywallDisclaimerNoTrial('€44,99', '€3,75'),
+        l.paywallTimelineRenewsYearly(14, '€44,99'),
+        l.paywallTimelineRenewsMonthly(14, '€5,99'),
+        l.paywallTimelineCancel,
       ]) {
-        expect(text, contains('Продлевается автоматически'));
-        expect(text, contains('пока не отменишь'));
+        expect(text.toLowerCase(), contains('отмен'));
         expect(text, isNot(contains('отмените')));
+      }
+      for (final text in [
+        l.paywallHintYearlyNoTrial('€44,99'),
+        l.paywallHintMonthlyNoTrial('€5,99'),
+        l.onboardingPaywallDisclaimerNoTrial('€44,99', '€3,75'),
+        l.paywallTimelineRenewsYearly(14, '€44,99'),
+        l.paywallTimelineRenewsMonthly(14, '€5,99'),
+      ]) {
+        expect(text.toLowerCase(), contains('продлевается автоматически'));
       }
     });
   });
 
-  test('defaultTrialDays matches what App Store Connect currently sells', () {
-    // If you change the intro offer in ASC, change this constant to match.
-    // It is only ever shown in the window before products resolve.
-    expect(RevenueCatService.defaultTrialDays, 14);
+  group('freeTrialPriceString', () {
+    IntroductoryPrice intro(double price, String priceString) => IntroductoryPrice(
+        price, priceString, 'P2W', 1, PeriodUnit.week, 2);
+
+    test('is the store\'s own string for a free intro offer', () {
+      expect(RevenueCatService.freeTrialPriceString(intro(0, r'$0.00')),
+          r'$0.00');
+      expect(RevenueCatService.freeTrialPriceString(intro(0, '0,00 €')),
+          '0,00 €');
+    });
+
+    test('is null wherever freeTrialDays is null, so the two only print together',
+        () {
+      expect(RevenueCatService.freeTrialPriceString(null), isNull);
+      // A discounted first period is not a trial.
+      expect(RevenueCatService.freeTrialPriceString(intro(1.99, r'$1.99')),
+          isNull);
+      // A month-long offer has no printable day count.
+      expect(
+        RevenueCatService.freeTrialPriceString(
+            const IntroductoryPrice(0, r'$0.00', 'P1M', 1, PeriodUnit.month, 1)),
+        isNull,
+      );
+    });
+
+    test('an empty price string renders nothing rather than "Today — ."', () {
+      expect(RevenueCatService.freeTrialPriceString(intro(0, '')), isNull);
+    });
+  });
+
+  group('trial claims outside the paywalls', () {
+    // There is no typed-in trial length anywhere any more. Before the store
+    // answers a surface may say "free trial"; after it answers, it says the
+    // store's number or nothing.
+    test('a confirmed length is printed whatever the status', () {
+      for (final status in OfferingsStatus.values) {
+        expect(
+          RevenueCatService.resolveTrialClaim(status: status, days: 14),
+          TrialClaim.days,
+          reason: status.name,
+        );
+      }
+    });
+
+    test('an unknown length is unspecified until the store has loaded', () {
+      for (final status in [
+        OfferingsStatus.pending,
+        OfferingsStatus.loading,
+        OfferingsStatus.failed,
+      ]) {
+        expect(
+          RevenueCatService.resolveTrialClaim(status: status, days: null),
+          TrialClaim.unspecified,
+          reason: status.name,
+        );
+      }
+      expect(
+        RevenueCatService.resolveTrialClaim(
+            status: OfferingsStatus.loaded, days: null),
+        TrialClaim.none,
+      );
+    });
+
+    test('"both subscriptions" only gets a number both plans share', () {
+      expect(RevenueCatService.sharedTrialDays(14, 14), 14);
+      expect(RevenueCatService.sharedTrialDays(14, 7), isNull);
+      expect(RevenueCatService.sharedTrialDays(14, null), isNull);
+      expect(RevenueCatService.sharedTrialDays(null, 14), isNull);
+      expect(RevenueCatService.sharedTrialDays(null, null), isNull);
+    });
   });
 }

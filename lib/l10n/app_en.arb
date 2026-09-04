@@ -26,12 +26,30 @@
       }
     }
   },
+  "welcomeBackReturnWithName": "Hi, {name}! You came back — that's what's important.",
+  "@welcomeBackReturnWithName": {
+    "description": "The brief overlay after 7–13 days away, when a name is stored.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeBackReturn": "Hi! You came back — that's what's important.",
+  "welcomeBackLongAway": "Hey, you. We kept the light on.",
+  "@welcomeBackLongAway": {
+    "description": "The brief overlay after 14+ days away."
+  },
+  "welcomeBackShortAway": "You're back. No catching up needed.",
+  "@welcomeBackShortAway": {
+    "description": "The brief overlay after 3–6 days away."
+  },
   "welcomeSubtitle": "Build small daily habits\nwithout the guilt.",
   "onboardingTagline": "Intention, not perfection.",
   "onboardingDescriptor": "No streaks. No scores. Just small steps that bring you closer to yourself.",
   "onboardingNamePrompt": "What should we call you?",
   "onboardingLetsGetStarted": "Let's get started",
-  "onboardingSkipForNow": "Skip for now",
+  "onboardingContinueWithoutName": "Continue without a name",
   "onboardingNameTooLong": "Name should be under {max} characters",
   "@onboardingNameTooLong": {
     "placeholders": {
@@ -118,6 +136,14 @@
         "type": "int"
       }
     }
+  },
+  "themeSelectionPremiumHintUnspecified": "Deep Focus and more themes are available with Intended+. Try it free after setup.",
+  "@themeSelectionPremiumHintUnspecified": {
+    "description": "The theme hint before the store has confirmed the trial length — names a trial, never measures it."
+  },
+  "themeSelectionPremiumHintNoTrial": "Deep Focus and more themes are available with Intended+.",
+  "@themeSelectionPremiumHintNoTrial": {
+    "description": "The theme hint when the store reports no free trial on the yearly plan."
   },
   "habitRevealTitle": "Here's what we picked for you",
   "habitRevealSubtitleDefault": "Based on your preferences",
@@ -936,9 +962,18 @@
     }
   },
   "paywallCtaLifetime": "Get lifetime access",
-  "paywallTrialHintYearly": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year. Renews automatically until you cancel.",
-  "@paywallTrialHintYearly": {
-    "description": "Billing period is spelled per locale — never glue the price to the plan label.",
+  "paywallTimelineToday": "Today — {price}. Full access, nothing charged.",
+  "@paywallTimelineToday": {
+    "description": "First line of the trial timeline. {price} is the store's own formatted price for the free intro offer, e.g. $0.00.",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallTimelineRenewsYearly": "Day {days} — {price}/year, renews automatically unless you cancel.",
+  "@paywallTimelineRenewsYearly": {
+    "description": "Second line of the trial timeline for the yearly plan. Billing period is spelled per locale — never glue the price to the plan label.",
     "placeholders": {
       "days": {
         "type": "int"
@@ -948,9 +983,9 @@
       }
     }
   },
-  "paywallTrialHintMonthly": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/month. Renews automatically until you cancel.",
-  "@paywallTrialHintMonthly": {
-    "description": "Billing period is spelled per locale — never glue the price to the plan label.",
+  "paywallTimelineRenewsMonthly": "Day {days} — {price}/month, renews automatically unless you cancel.",
+  "@paywallTimelineRenewsMonthly": {
+    "description": "Second line of the trial timeline for the monthly plan.",
     "placeholders": {
       "days": {
         "type": "int"
@@ -960,6 +995,7 @@
       }
     }
   },
+  "paywallTimelineCancel": "Cancel anytime in Settings.",
   "paywallLifetimeHint": "One-time purchase. No subscription.",
   "paywallPricesUnavailable": "Prices didn't load. Try again.",
   "@paywallPricesUnavailable": {
@@ -999,20 +1035,6 @@
   "onboardingPaywallBody": "The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.",
   "onboardingPaywallPrimaryCta": "Start free trial",
   "onboardingPaywallSecondaryCta": "Not now — keep the free version",
-  "onboardingPaywallDisclaimer": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Renews automatically until you cancel.",
-  "@onboardingPaywallDisclaimer": {
-    "placeholders": {
-      "days": {
-        "type": "int"
-      },
-      "price": {
-        "type": "String"
-      },
-      "perMonth": {
-        "type": "String"
-      }
-    }
-  },
   "onboardingPaywallDisclaimerNoTrial": "{price}/year — about {perMonth} a month. Renews automatically until you cancel.",
   "@onboardingPaywallDisclaimerNoTrial": {
     "description": "The onboarding disclaimer when the store reports no free trial on the yearly plan.",
@@ -1077,7 +1099,15 @@
   "signOutWarningMessage": "Your data stays on this device only. You won't be able to access it on other devices or after reinstalling.",
   "profileSignOut": "Sign out",
   "profileDeleteData": "Delete account & data",
-  "profileVersion": "Intended v2.0.0",
+  "profileVersion": "Intended v{version}",
+  "@profileVersion": {
+    "description": "Version label at the foot of the profile; {version} is the live bundle version from package_info_plus.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "profileTesterModeOn": "Tester mode on",
   "profileTesterModeOff": "Tester mode off",
   "profileCannotOpenEmail": "Cannot open email",
@@ -1657,6 +1687,36 @@
       },
       "days": {
         "type": "int"
+      }
+    }
+  },
+  "faqPricingAnswerUnspecified": "Monthly: {monthly}. Yearly: {yearly}. Lifetime: {lifetime}, one-time. Both subscriptions start with a free trial.",
+  "@faqPricingAnswerUnspecified": {
+    "description": "The pricing answer before the store has confirmed a trial length shared by both subscriptions.",
+    "placeholders": {
+      "monthly": {
+        "type": "String"
+      },
+      "yearly": {
+        "type": "String"
+      },
+      "lifetime": {
+        "type": "String"
+      }
+    }
+  },
+  "faqPricingAnswerNoTrial": "Monthly: {monthly}. Yearly: {yearly}. Lifetime: {lifetime}, one-time.",
+  "@faqPricingAnswerNoTrial": {
+    "description": "The pricing answer when the store reports no free trial (or lengths that differ between the two subscriptions).",
+    "placeholders": {
+      "monthly": {
+        "type": "String"
+      },
+      "yearly": {
+        "type": "String"
+      },
+      "lifetime": {
+        "type": "String"
       }
     }
   },

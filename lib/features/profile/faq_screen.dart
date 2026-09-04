@@ -20,24 +20,40 @@ class _FaqPricing {
   final String monthly;
   final String yearly;
   final String lifetime;
-  final int trialDays;
+  final TrialClaim trialClaim;
+
+  /// Set only when [trialClaim] is [TrialClaim.days].
+  final int? trialDays;
 
   const _FaqPricing({
     required this.monthly,
     required this.yearly,
     required this.lifetime,
+    required this.trialClaim,
     required this.trialDays,
   });
 
-  /// Falls back to the same ARB constants the paywall uses when products
-  /// haven't loaded yet — one set of numbers, one place to change them.
+  /// Prices fall back to the same ARB constants the paywall uses when
+  /// products haven't loaded yet — one set of numbers, one place to change
+  /// them. The trial has no such fallback: until the store confirms a length
+  /// the answer names a trial without measuring it, and once the store says
+  /// there is none, the answer doesn't mention one.
   factory _FaqPricing.from(RevenueCatService rc, AppLocalizations l) =>
       _FaqPricing(
         monthly: rc.monthlyPriceString ?? l.paywallMonthlyPrice,
         yearly: rc.yearlyPriceString ?? l.paywallYearlyPrice,
         lifetime: rc.lifetimePriceString ?? l.paywallLifetimePrice,
-        trialDays: rc.trialDays,
+        trialClaim: rc.subscriptionsTrialClaim,
+        trialDays: rc.sharedSubscriptionTrialDays,
       );
+
+  String answer(AppLocalizations l) => switch (trialClaim) {
+        TrialClaim.days =>
+          l.faqPricingAnswer(monthly, yearly, lifetime, trialDays!),
+        TrialClaim.unspecified =>
+          l.faqPricingAnswerUnspecified(monthly, yearly, lifetime),
+        TrialClaim.none => l.faqPricingAnswerNoTrial(monthly, yearly, lifetime),
+      };
 }
 
 class _FaqItem {
@@ -179,12 +195,7 @@ List<_FaqCategory> _buildCategories(_FaqPricing pricing) => [
               answer: (l) => l.faqWhatIsPlusAnswer),
           _FaqItem(
             question: (l) => l.faqPricing,
-            answer: (l) => l.faqPricingAnswer(
-              pricing.monthly,
-              pricing.yearly,
-              pricing.lifetime,
-              pricing.trialDays,
-            ),
+            answer: pricing.answer,
           ),
           _FaqItem(
               question: (l) => l.faqFreeVersion,

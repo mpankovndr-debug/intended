@@ -212,6 +212,30 @@ abstract class AppLocalizations {
   /// **'Welcome to Intended,\n{name}'**
   String welcomeTitleWithName(String name);
 
+  /// The brief overlay after 7–13 days away, when a name is stored.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi, {name}! You came back — that\'s what\'s important.'**
+  String welcomeBackReturnWithName(String name);
+
+  /// No description provided for @welcomeBackReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi! You came back — that\'s what\'s important.'**
+  String get welcomeBackReturn;
+
+  /// The brief overlay after 14+ days away.
+  ///
+  /// In en, this message translates to:
+  /// **'Hey, you. We kept the light on.'**
+  String get welcomeBackLongAway;
+
+  /// The brief overlay after 3–6 days away.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re back. No catching up needed.'**
+  String get welcomeBackShortAway;
+
   /// No description provided for @welcomeSubtitle.
   ///
   /// In en, this message translates to:
@@ -242,11 +266,11 @@ abstract class AppLocalizations {
   /// **'Let\'s get started'**
   String get onboardingLetsGetStarted;
 
-  /// No description provided for @onboardingSkipForNow.
+  /// No description provided for @onboardingContinueWithoutName.
   ///
   /// In en, this message translates to:
-  /// **'Skip for now'**
-  String get onboardingSkipForNow;
+  /// **'Continue without a name'**
+  String get onboardingContinueWithoutName;
 
   /// No description provided for @onboardingNameTooLong.
   ///
@@ -499,6 +523,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Deep Focus and more themes are available with Intended+. Try it free for {days, plural, =1{1 day} other{{days} days}} after setup.'**
   String themeSelectionPremiumHint(int days);
+
+  /// The theme hint before the store has confirmed the trial length — names a trial, never measures it.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep Focus and more themes are available with Intended+. Try it free after setup.'**
+  String get themeSelectionPremiumHintUnspecified;
+
+  /// The theme hint when the store reports no free trial on the yearly plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep Focus and more themes are available with Intended+.'**
+  String get themeSelectionPremiumHintNoTrial;
 
   /// No description provided for @habitRevealTitle.
   ///
@@ -2745,17 +2781,29 @@ abstract class AppLocalizations {
   /// **'Get lifetime access'**
   String get paywallCtaLifetime;
 
-  /// Billing period is spelled per locale — never glue the price to the plan label.
+  /// First line of the trial timeline. {price} is the store's own formatted price for the free intro offer, e.g. $0.00.
   ///
   /// In en, this message translates to:
-  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/year. Renews automatically until you cancel.'**
-  String paywallTrialHintYearly(int days, String price);
+  /// **'Today — {price}. Full access, nothing charged.'**
+  String paywallTimelineToday(String price);
 
-  /// Billing period is spelled per locale — never glue the price to the plan label.
+  /// Second line of the trial timeline for the yearly plan. Billing period is spelled per locale — never glue the price to the plan label.
   ///
   /// In en, this message translates to:
-  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/month. Renews automatically until you cancel.'**
-  String paywallTrialHintMonthly(int days, String price);
+  /// **'Day {days} — {price}/year, renews automatically unless you cancel.'**
+  String paywallTimelineRenewsYearly(int days, String price);
+
+  /// Second line of the trial timeline for the monthly plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {days} — {price}/month, renews automatically unless you cancel.'**
+  String paywallTimelineRenewsMonthly(int days, String price);
+
+  /// No description provided for @paywallTimelineCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel anytime in Settings.'**
+  String get paywallTimelineCancel;
 
   /// No description provided for @paywallLifetimeHint.
   ///
@@ -2858,12 +2906,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not now — keep the free version'**
   String get onboardingPaywallSecondaryCta;
-
-  /// No description provided for @onboardingPaywallDisclaimer.
-  ///
-  /// In en, this message translates to:
-  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Renews automatically until you cancel.'**
-  String onboardingPaywallDisclaimer(int days, String price, String perMonth);
 
   /// The onboarding disclaimer when the store reports no free trial on the yearly plan.
   ///
@@ -3141,11 +3183,11 @@ abstract class AppLocalizations {
   /// **'Delete account & data'**
   String get profileDeleteData;
 
-  /// No description provided for @profileVersion.
+  /// Version label at the foot of the profile; {version} is the live bundle version from package_info_plus.
   ///
   /// In en, this message translates to:
-  /// **'Intended v2.0.0'**
-  String get profileVersion;
+  /// **'Intended v{version}'**
+  String profileVersion(String version);
 
   /// No description provided for @profileTesterModeOn.
   ///
@@ -5481,6 +5523,20 @@ abstract class AppLocalizations {
   /// **'Monthly: {monthly}. Yearly: {yearly}. Lifetime: {lifetime}, one-time. Both subscriptions start with a {days}-day free trial.'**
   String faqPricingAnswer(
       String monthly, String yearly, String lifetime, int days);
+
+  /// The pricing answer before the store has confirmed a trial length shared by both subscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly: {monthly}. Yearly: {yearly}. Lifetime: {lifetime}, one-time. Both subscriptions start with a free trial.'**
+  String faqPricingAnswerUnspecified(
+      String monthly, String yearly, String lifetime);
+
+  /// The pricing answer when the store reports no free trial (or lengths that differ between the two subscriptions).
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly: {monthly}. Yearly: {yearly}. Lifetime: {lifetime}, one-time.'**
+  String faqPricingAnswerNoTrial(
+      String monthly, String yearly, String lifetime);
 
   /// No description provided for @faqFreeVersion.
   ///

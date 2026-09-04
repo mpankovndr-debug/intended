@@ -7,6 +7,7 @@ import 'package:flutter/material.dart' show CircleAvatar, Colors, NetworkImage;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -62,6 +63,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  /// From package_info_plus, so the label can only say what the bundle says.
+  String? _version;
+
   final controller = TextEditingController();
   bool _isEditing = false;
 
@@ -85,6 +89,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    PackageInfo.fromPlatform().then((info) {
+      if (mounted) setState(() => _version = info.version);
+    });
     AnalyticsService.logScreenView('profile');
     controller.addListener(() {
       setState(() {});
@@ -2694,7 +2701,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           behavior: HitTestBehavior.opaque,
                           onTap: _onVersionTap,
                           child: Text(
-                            l10n.profileVersion,
+                            _version == null
+                                ? ''
+                                : l10n.profileVersion(_version!),
                             style: TextStyle(
                               fontFamily: AppTextStyles.bodyFont(context),
                               fontSize: 13,

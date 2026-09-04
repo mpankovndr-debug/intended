@@ -68,6 +68,20 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String welcomeBackReturnWithName(String name) {
+    return 'Привет, $name! Ты снова здесь — и это главное.';
+  }
+
+  @override
+  String get welcomeBackReturn => 'Привет! Ты снова здесь — и это главное.';
+
+  @override
+  String get welcomeBackLongAway => 'Привет! Тут всё по-прежнему.';
+
+  @override
+  String get welcomeBackShortAway => 'С возвращением! Навёрстывать нечего.';
+
+  @override
   String get welcomeSubtitle =>
       'Маленькие ежедневные привычки —\nбез чувства вины.';
 
@@ -85,7 +99,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingLetsGetStarted => 'Начнём';
 
   @override
-  String get onboardingSkipForNow => 'Пропустить';
+  String get onboardingContinueWithoutName => 'Продолжить без имени';
 
   @override
   String onboardingNameTooLong(int max) {
@@ -236,6 +250,14 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '«Глубокий фокус» и другие темы доступны с Intended+. Попробуй бесплатно $_temp0 после настройки.';
   }
+
+  @override
+  String get themeSelectionPremiumHintUnspecified =>
+      '«Глубокий фокус» и другие темы доступны с Intended+. Попробуй бесплатно после настройки.';
+
+  @override
+  String get themeSelectionPremiumHintNoTrial =>
+      '«Глубокий фокус» и другие темы доступны с Intended+.';
 
   @override
   String get habitRevealTitle => 'Вот, что мы подобрали для тебя';
@@ -1724,30 +1746,23 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paywallCtaLifetime => 'Получить навсегда';
 
   @override
-  String paywallTrialHintYearly(int days, String price) {
-    String _temp0 = intl.Intl.pluralLogic(
-      days,
-      locale: localeName,
-      other: '$days дня',
-      many: '$days дней',
-      few: '$days дня',
-      one: '$days день',
-    );
-    return '$_temp0 бесплатно, затем $price в год. Продлевается автоматически, пока не отменишь.';
+  String paywallTimelineToday(String price) {
+    return 'Сегодня — $price. Полный доступ, ничего не списывается.';
   }
 
   @override
-  String paywallTrialHintMonthly(int days, String price) {
-    String _temp0 = intl.Intl.pluralLogic(
-      days,
-      locale: localeName,
-      other: '$days дня',
-      many: '$days дней',
-      few: '$days дня',
-      one: '$days день',
-    );
-    return '$_temp0 бесплатно, затем $price в месяц. Продлевается автоматически, пока не отменишь.';
+  String paywallTimelineRenewsYearly(int days, String price) {
+    return 'День $days — $price в год, продлевается автоматически, если не отменишь.';
   }
+
+  @override
+  String paywallTimelineRenewsMonthly(int days, String price) {
+    return 'День $days — $price в месяц, продлевается автоматически, если не отменишь.';
+  }
+
+  @override
+  String get paywallTimelineCancel =>
+      'Отменить можно в любой момент в Настройках.';
 
   @override
   String get paywallLifetimeHint => 'Разовая покупка. Без подписки.';
@@ -1808,19 +1823,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get onboardingPaywallSecondaryCta =>
       'Не сейчас — остаться на бесплатной';
-
-  @override
-  String onboardingPaywallDisclaimer(int days, String price, String perMonth) {
-    String _temp0 = intl.Intl.pluralLogic(
-      days,
-      locale: localeName,
-      other: '$days дня',
-      many: '$days дней',
-      few: '$days дня',
-      one: '$days день',
-    );
-    return '$_temp0 бесплатно, дальше $price в год — около $perMonth в месяц. Продлевается автоматически, пока не отменишь.';
-  }
 
   @override
   String onboardingPaywallDisclaimerNoTrial(String price, String perMonth) {
@@ -1976,7 +1978,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileDeleteData => 'Удалить аккаунт и данные';
 
   @override
-  String get profileVersion => 'Intended v2.0.0';
+  String profileVersion(String version) {
+    return 'Intended v$version';
+  }
 
   @override
   String get profileTesterModeOn => 'Режим тестировщика включён';
@@ -3303,6 +3307,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String faqPricingAnswer(
       String monthly, String yearly, String lifetime, int days) {
     return 'Ежемесячно: $monthly. Годовой: $yearly. Навсегда: $lifetime, разовая покупка. Обе подписки начинаются с $days-дневного бесплатного периода.';
+  }
+
+  @override
+  String faqPricingAnswerUnspecified(
+      String monthly, String yearly, String lifetime) {
+    return 'Ежемесячно: $monthly. Годовой: $yearly. Навсегда: $lifetime, разовая покупка. Обе подписки начинаются с бесплатного пробного периода.';
+  }
+
+  @override
+  String faqPricingAnswerNoTrial(
+      String monthly, String yearly, String lifetime) {
+    return 'Ежемесячно: $monthly. Годовой: $yearly. Навсегда: $lifetime, разовая покупка.';
   }
 
   @override

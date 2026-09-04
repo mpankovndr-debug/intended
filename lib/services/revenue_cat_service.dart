@@ -36,6 +36,21 @@ enum PurchaseUnavailableReason {
 /// [RevenueCatService.unavailableReasonFor] about that.
 enum OfferingsStatus { pending, loading, loaded, failed }
 
+/// What a surface outside the paywalls (the FAQ, the theme hint) may say
+/// about the free trial. The paywalls don't use this: they show a loading
+/// state instead of talking before the store answers.
+enum TrialClaim {
+  /// The store confirmed a free intro offer of a printable length.
+  days,
+
+  /// The store hasn't answered yet, or failed: a trial may be named, never
+  /// measured.
+  unspecified,
+
+  /// The store answered and there is no free trial to claim.
+  none,
+}
+
 /// How a purchase attempt ended.
 enum PurchaseOutcome {
   /// The entitlement is active.
@@ -149,12 +164,6 @@ class RevenueCatService extends ChangeNotifier {
   // Free-trial length (from the live App Store intro offer)
   // ---------------------------------------------------------------------------
 
-  /// Shown by the FAQ and the theme hint until the store answers. Mirrors the
-  /// intro offer configured in App Store Connect — if you change the trial
-  /// there, change this one line too. The paywalls never use it: a trial
-  /// length the store hasn't confirmed is a claim, and they make none.
-  static const int defaultTrialDays = 14;
-
   /// The introductory period expressed in whole days.
   ///
   /// Returns null for month/year units on purpose: a calendar month is 28–31
@@ -185,27 +194,65 @@ class RevenueCatService extends ChangeNotifier {
   }
 
   /// Free-trial length for [plan] from the live store product, or null —
-  /// and null means the paywall makes no trial claim at all. Never falls
-  /// back to [defaultTrialDays]: before the store answers there is nothing
-  /// to claim, and after it answers a missing offer *is* the answer.
+  /// and null means the paywall makes no trial claim at all. There is no
+  /// typed-in fallback: before the store answers there is nothing to claim,
+  /// and after it answers a missing offer *is* the answer.
   int? freeTrialDaysForPlan(String plan) =>
       freeTrialDays(_findProduct(_productIdFor(plan))?.introductoryPrice);
 
-  int? _trialDaysFor(String id) {
-    final intro = _findProduct(id)?.introductoryPrice;
-    if (intro == null) return null;
-    return introPeriodInDays(intro.periodUnit, intro.periodNumberOfUnits);
+  /// The store's own formatted price for a free intro offer ("$0.00",
+  /// "0,00 €"), or null. Gated on [freeTrialDays] so the trial's price and
+  /// its length can only ever be printed together: no free trial, no "Today".
+  @visibleForTesting
+  static String? freeTrialPriceString(IntroductoryPrice? intro) {
+    if (intro == null || freeTrialDays(intro) == null) return null;
+    return intro.priceString.isEmpty ? null : intro.priceString;
   }
 
-  int? get yearlyTrialDays => _trialDaysFor('com.intendedapp.plus.yearly');
-  int? get monthlyTrialDays => _trialDaysFor('com.intendedapp.plus.monthly');
+  /// [freeTrialPriceString] for [plan]'s live store product. Null means the
+  /// trial timeline does not render — never a typed-in zero.
+  String? freeTrialPriceStringForPlan(String plan) =>
+      freeTrialPriceString(_findProduct(_productIdFor(plan))?.introductoryPrice);
 
-  /// Trial length to print in copy that has to say *something* before the
-  /// store answers (the FAQ, the theme hint). Prefers the yearly plan (the
-  /// hero), falls back to monthly, then to [defaultTrialDays]. Not for
-  /// paywalls — see [freeTrialDaysForPlan].
-  int get trialDays =>
-      yearlyTrialDays ?? monthlyTrialDays ?? defaultTrialDays;
+  /// The trial claim a non-paywall surface may make. Pure so it can be
+  /// tested: [days] is the confirmed free-trial length (null when unknown
+  /// *or* absent) and [status] is what tells those two nulls apart.
+  @visibleForTesting
+  static TrialClaim resolveTrialClaim({
+    required OfferingsStatus status,
+    required int? days,
+  }) {
+    if (days != null) return TrialClaim.days;
+    return status == OfferingsStatus.loaded
+        ? TrialClaim.none
+        : TrialClaim.unspecified;
+  }
+
+  /// The length both subscriptions share, or null. "Both subscriptions start
+  /// with a 14-day trial" has to be true of both; if they differ or either
+  /// has no free trial, the FAQ says nothing numeric.
+  @visibleForTesting
+  static int? sharedTrialDays(int? yearly, int? monthly) =>
+      yearly != null && yearly == monthly ? yearly : null;
+
+  /// Trial length the FAQ may print for "both subscriptions", or null.
+  int? get sharedSubscriptionTrialDays => sharedTrialDays(
+        freeTrialDaysForPlan('yearly'),
+        freeTrialDaysForPlan('monthly'),
+      );
+
+  /// What the FAQ may say about the subscriptions' trial.
+  TrialClaim get subscriptionsTrialClaim => resolveTrialClaim(
+        status: offeringsStatus,
+        days: sharedSubscriptionTrialDays,
+      );
+
+  /// What the theme hint may say about the yearly plan's trial — the plan
+  /// onboarding goes on to sell.
+  TrialClaim get yearlyTrialClaim => resolveTrialClaim(
+        status: offeringsStatus,
+        days: freeTrialDaysForPlan('yearly'),
+      );
 
   StoreProduct? _findProduct(String id) {
     for (final p in getPackages()) {

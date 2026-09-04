@@ -1313,15 +1313,16 @@ class _WelcomeBackOverlayState extends State<WelcomeBackOverlay>
   }
 
   String _getMessage() {
-    if (_daysAbsent >= 14) return 'Hey, you. We kept the light on.';
+    final l10n = AppLocalizations.of(context);
+    if (_daysAbsent >= 14) return l10n.welcomeBackLongAway;
     if (_daysAbsent >= 7) {
       final name = context.read<UserState>().name;
       if (name != null && name.isNotEmpty) {
-        return 'Hi, $name! You came back — that\'s what\'s important.';
+        return l10n.welcomeBackReturnWithName(name);
       }
-      return 'Hi! You came back — that\'s what\'s important.';
+      return l10n.welcomeBackReturn;
     }
-    return 'You\'re back. No catching up needed.';
+    return l10n.welcomeBackShortAway;
   }
 
   @override

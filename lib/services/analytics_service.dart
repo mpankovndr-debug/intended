@@ -84,12 +84,27 @@ class AnalyticsService {
     _analytics.logEvent(name: 'onboarding_started');
   }
 
-  static void logOnboardingStepCompleted(String stepName) {
+  /// [nameProvided] is only sent by the Welcome screen's `name_entry` step,
+  /// so the funnel can split "typed a name" from "continued without one".
+  /// Other steps leave it null and the parameter is simply absent.
+  static void logOnboardingStepCompleted(String stepName, {bool? nameProvided}) {
     _analytics.logEvent(
       name: 'onboarding_step_completed',
-      parameters: {'step_name': stepName},
+      parameters: onboardingStepParams(stepName, nameProvided: nameProvided),
     );
   }
+
+  /// Pure so it can be pinned by a test: `name_provided` is encoded as the
+  /// string 'true'/'false' like every other boolean this service sends.
+  @visibleForTesting
+  static Map<String, Object> onboardingStepParams(
+    String stepName, {
+    bool? nameProvided,
+  }) =>
+      {
+        'step_name': stepName,
+        if (nameProvided != null) 'name_provided': nameProvided.toString(),
+      };
 
   static void logOnboardingCompleted() {
     _analytics.logEvent(name: 'onboarding_completed');

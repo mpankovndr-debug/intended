@@ -195,8 +195,9 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
       color: colors.textTertiary.withValues(alpha: 0.7),
       height: 1.4,
     );
-    // Two lines of this style; holding them keeps the buttons still.
-    const held = SizedBox(height: 34);
+    // Three lines of this style (the trial timeline); holding them keeps
+    // the buttons still while the store answers.
+    const held = SizedBox(height: 50);
     if (pricesLoading) return held;
     if (blocked != null) {
       return Text(
@@ -207,13 +208,20 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
     }
     final price = rc.yearlyPriceString;
     if (price == null) return held;
-    final perMonth = rc.yearlyPerMonthString;
     final String text;
     if (trialDays != null) {
-      text = perMonth == null
-          ? l10n.paywallTrialHintYearly(trialDays, price)
-          : l10n.onboardingPaywallDisclaimer(trialDays, price, perMonth);
+      // The trial timeline. Both numbers are the store's intro offer; if it
+      // can't say what the trial costs, the timeline doesn't render.
+      final trialPrice =
+          rc.freeTrialPriceStringForPlan(OnboardingPaywallScreen._plan);
+      if (trialPrice == null) return held;
+      text = [
+        l10n.paywallTimelineToday(trialPrice),
+        l10n.paywallTimelineRenewsYearly(trialDays, price),
+        l10n.paywallTimelineCancel,
+      ].join('\n');
     } else {
+      final perMonth = rc.yearlyPerMonthString;
       text = perMonth == null
           ? l10n.paywallHintYearlyNoTrial(price)
           : l10n.onboardingPaywallDisclaimerNoTrial(price, perMonth);

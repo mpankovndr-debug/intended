@@ -244,7 +244,10 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
 
     state.markWelcomeSeen();
 
-    AnalyticsService.logOnboardingStepCompleted('name_entry');
+    AnalyticsService.logOnboardingStepCompleted(
+      'name_entry',
+      nameProvided: name != null && name.isNotEmpty,
+    );
 
     Navigator.pushReplacement(
       context,
@@ -636,7 +639,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
 
         const SizedBox(height: 16),
 
-        // Skip & Sign in row
+        // "Continue without a name" & Sign in row
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -646,7 +649,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
               onPressed: () => _navigateToFocusAreas(),
               minimumSize: const Size(0, 0),
               child: Text(
-                l10n.onboardingSkipForNow,
+                l10n.onboardingContinueWithoutName,
                 style: TextStyle(
                   fontFamily: AppTextStyles.bodyFont(context),
                   fontSize: 15,
