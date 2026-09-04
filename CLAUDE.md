@@ -185,6 +185,15 @@ means" after three seconds is the test.
 month was X" requires X to actually be most of it. If you loosen a threshold,
 change the copy too.
 
+**Prices, trials and dates: show the live value, or say nothing specific.**
+Never a hardcoded number, never a claim the store hasn't confirmed. Omitting
+is never false — a sentence that names a trial without measuring it, or
+drops the trial sentence when the store reports none, is always true.
+*Scar:* the FAQ shipped €6.99 / €49.99 / €89.99 against a real €5.99 /
+€44.99 / €49.99, every trial string said "7 days" and later read a
+`defaultTrialDays = 14` constant, whatever App Store Connect was selling —
+and the profile still said "v2.0.0" in the 2.1.0 builds.
+
 ---
 
 ## Before you commit
