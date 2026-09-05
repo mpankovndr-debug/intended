@@ -122,6 +122,14 @@ class PauseScreen extends StatefulWidget {
     return 1;
   }
 
+  static int _openCount = 0;
+
+  /// Whether a Pause is on screen right now. The widget and notification
+  /// launchers check this before pushing: a second tap while one is already
+  /// breathing would stack a second screen — two haptic clocks, two
+  /// check-ins — on top of the first.
+  static bool get isOpen => _openCount > 0;
+
   /// A soft fade in and out — arriving at this screen should feel like the
   /// app exhaling, not navigating.
   static Route<void> route({required String entry}) {
@@ -156,6 +164,7 @@ class _PauseScreenState extends State<PauseScreen>
   @override
   void initState() {
     super.initState();
+    PauseScreen._openCount++;
     _startedAt = DateTime.now();
     WidgetsBinding.instance.addObserver(this);
     AnalyticsService.logPauseStarted(widget.entry);
@@ -284,6 +293,7 @@ class _PauseScreenState extends State<PauseScreen>
 
   @override
   void dispose() {
+    PauseScreen._openCount--;
     WidgetsBinding.instance.removeObserver(this);
     _settleTimer?.cancel();
     _cycle.dispose();

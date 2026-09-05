@@ -4,7 +4,8 @@ import 'package:home_widget/home_widget.dart';
 import 'notification_scheduler.dart';
 
 /// Funnels every "open the Pause" request that starts outside the app —
-/// widget taps (homeWidget://pause), the notification action button, and
+/// widget taps (homeWidget://pause?...&homeWidget — the bare key is what
+/// makes the home_widget plugin forward the URL), the notification action button, and
 /// cold starts from either — into one notifier the home screen listens to,
 /// mirroring [NotificationScheduler.pendingTabSwitch].
 class PauseLauncher {

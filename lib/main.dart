@@ -1114,6 +1114,9 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
     final entry = PauseLauncher.pending.value;
     if (entry == null || !mounted) return;
     PauseLauncher.pending.value = null; // consumed
+    // A widget tap while a Pause is already breathing asks for what's
+    // already on screen; pushing again would stack a second one over it.
+    if (PauseScreen.isOpen) return;
     Navigator.of(context).push(PauseScreen.route(entry: entry));
   }
 

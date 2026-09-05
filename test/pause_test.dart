@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -133,6 +135,32 @@ void main() {
       expect(PauseLauncher.pending.value, isNull);
       PauseLauncher.handleWidgetUri(Uri.parse('homeWidget://something'));
       expect(PauseLauncher.pending.value, isNull);
+    });
+
+    // The Swift side is the other half of the contract. home_widget's
+    // SwiftHomeWidgetPlugin.isWidgetUrl forwards a launch URL to Dart only
+    // when its query carries an item named `homeWidget`; a URL that lacks it
+    // opens the app on Home and this launcher never hears about it (the
+    // 2.1.1 build shipped exactly that). Read the extension source and pin
+    // both halves on every URL it declares.
+    test('every widget URL the extension declares reaches the launcher', () {
+      final swift = File('ios/IntendedWidget/IntendedPauseWidget.swift')
+          .readAsStringSync();
+      final urls = RegExp(r'URL\(string: "([^"]+)"\)')
+          .allMatches(swift)
+          .map((m) => m.group(1)!)
+          .toList();
+      expect(urls, hasLength(2), reason: 'one home-screen and one lock-screen URL');
+      for (final raw in urls) {
+        final uri = Uri.parse(raw);
+        expect(uri.queryParameters.containsKey('homeWidget'), isTrue,
+            reason: '$raw lacks the homeWidget query key the plugin requires');
+        PauseLauncher.pending.value = null;
+        PauseLauncher.handleWidgetUri(uri);
+        expect(PauseLauncher.pending.value,
+            uri.queryParameters['src'] == 'lockscreen' ? 'lockscreen' : 'widget',
+            reason: raw);
+      }
     });
   });
 }
