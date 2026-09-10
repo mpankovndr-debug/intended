@@ -807,48 +807,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitCheckin => 'Честная проверка себя';
 
   @override
-  String get dayMonday => 'Понедельник';
-
-  @override
-  String get dayTuesday => 'Вторник';
-
-  @override
-  String get dayWednesday => 'Среда';
-
-  @override
-  String get dayThursday => 'Четверг';
-
-  @override
-  String get dayFriday => 'Пятница';
-
-  @override
-  String get daySaturday => 'Суббота';
-
-  @override
-  String get daySunday => 'Воскресенье';
-
-  @override
-  String get dayShortMon => 'П';
-
-  @override
-  String get dayShortTue => 'В';
-
-  @override
-  String get dayShortWed => 'С';
-
-  @override
-  String get dayShortThu => 'Ч';
-
-  @override
-  String get dayShortFri => 'П';
-
-  @override
-  String get dayShortSat => 'С';
-
-  @override
-  String get dayShortSun => 'В';
-
-  @override
   String get monthJanuary => 'Январь';
 
   @override
