@@ -42,9 +42,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonSkip => 'Skip';
 
   @override
-  String get commonRefresh => 'Refresh';
-
-  @override
   String get appNameIntended => 'Intended';
 
   @override
@@ -833,9 +830,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get customHabitLimitTitle => 'Your list is full';
-
-  @override
   String get customHabitLimitMessage =>
       'Six intentions at a time — four from your path and two of your own. Set one aside to make room.';
 
@@ -891,13 +885,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get swapErrorTitle => 'Something went wrong';
-
-  @override
-  String get swapLimitTitle => 'Swap this habit?';
-
-  @override
-  String get swapLimitMessage =>
-      'You\'ve used all your free swaps this month.\n\nIntended+: Unlimited swaps';
 
   @override
   String get swapNoAltTitle => 'No alternatives';
@@ -1483,35 +1470,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileChangeAreas => 'Change areas';
 
   @override
-  String get profileFocusLimitMessage =>
-      'You\'ve used your free change this month.';
-
-  @override
-  String get profileFocusLimitOptions => '• Intended+: Unlimited';
-
-  @override
   String get profileChangeSpace => 'Change your space';
-
-  @override
-  String get profileRefreshTitle => 'Refresh habits?';
-
-  @override
-  String get profileRefreshMessage =>
-      'You\'ll get a new set of habits based on your focus areas.';
-
-  @override
-  String get profileRefreshSuccessTitle => 'Habits refreshed';
-
-  @override
-  String get profileRefreshSuccessMessage =>
-      'You have a new set of habits waiting for you.';
-
-  @override
-  String get profileDailyLimitTitle => 'Daily limit reached';
-
-  @override
-  String get profileDailyLimitMessage =>
-      'You\'ve refreshed your habits 3 times today. Try again tomorrow, or upgrade to Intended+ for unlimited refreshes.';
 
   @override
   String get profileCannotOpenLink => 'Cannot open link';
@@ -1547,9 +1506,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileChangeFocusAreasScreenTitle => 'Change Focus Areas';
-
-  @override
-  String get profileChooseUpTo2 => 'Choose up to 2 areas';
 
   @override
   String get profileSaveChanges => 'Save Changes';
@@ -2022,9 +1978,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String profileBackedUp(Object time) {
     return 'Backed up $time';
   }
-
-  @override
-  String get profileNotBackedUp => 'Not backed up';
 
   @override
   String get profileBackupNow => 'Back up now';
@@ -3220,12 +3173,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String letterQuestionStillFits(String path) {
     return 'Is “$path” still what you\'re after?';
   }
-
-  @override
-  String get profileExportSubject => 'My Intended moments';
-
-  @override
-  String get profileExportEmpty => 'Nothing to export yet.';
 
   @override
   String get pauseEntryTitle => 'a minute of breath';

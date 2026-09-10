@@ -164,12 +164,6 @@ abstract class AppLocalizations {
   /// **'Skip'**
   String get commonSkip;
 
-  /// No description provided for @commonRefresh.
-  ///
-  /// In en, this message translates to:
-  /// **'Refresh'**
-  String get commonRefresh;
-
   /// No description provided for @appNameIntended.
   ///
   /// In en, this message translates to:
@@ -1329,12 +1323,6 @@ abstract class AppLocalizations {
   /// **'\"{title}\" has been added to your intentions.'**
   String customHabitCreatedMessage(String title);
 
-  /// No description provided for @customHabitLimitTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Your list is full'**
-  String get customHabitLimitTitle;
-
   /// No description provided for @customHabitLimitMessage.
   ///
   /// In en, this message translates to:
@@ -1424,18 +1412,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong'**
   String get swapErrorTitle;
-
-  /// No description provided for @swapLimitTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Swap this habit?'**
-  String get swapLimitTitle;
-
-  /// No description provided for @swapLimitMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve used all your free swaps this month.\n\nIntended+: Unlimited swaps'**
-  String get swapLimitMessage;
 
   /// No description provided for @swapNoAltTitle.
   ///
@@ -2475,59 +2451,11 @@ abstract class AppLocalizations {
   /// **'Change areas'**
   String get profileChangeAreas;
 
-  /// No description provided for @profileFocusLimitMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve used your free change this month.'**
-  String get profileFocusLimitMessage;
-
-  /// No description provided for @profileFocusLimitOptions.
-  ///
-  /// In en, this message translates to:
-  /// **'• Intended+: Unlimited'**
-  String get profileFocusLimitOptions;
-
   /// No description provided for @profileChangeSpace.
   ///
   /// In en, this message translates to:
   /// **'Change your space'**
   String get profileChangeSpace;
-
-  /// No description provided for @profileRefreshTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Refresh habits?'**
-  String get profileRefreshTitle;
-
-  /// No description provided for @profileRefreshMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ll get a new set of habits based on your focus areas.'**
-  String get profileRefreshMessage;
-
-  /// No description provided for @profileRefreshSuccessTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Habits refreshed'**
-  String get profileRefreshSuccessTitle;
-
-  /// No description provided for @profileRefreshSuccessMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'You have a new set of habits waiting for you.'**
-  String get profileRefreshSuccessMessage;
-
-  /// No description provided for @profileDailyLimitTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Daily limit reached'**
-  String get profileDailyLimitTitle;
-
-  /// No description provided for @profileDailyLimitMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve refreshed your habits 3 times today. Try again tomorrow, or upgrade to Intended+ for unlimited refreshes.'**
-  String get profileDailyLimitMessage;
 
   /// No description provided for @profileCannotOpenLink.
   ///
@@ -2588,12 +2516,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change Focus Areas'**
   String get profileChangeFocusAreasScreenTitle;
-
-  /// No description provided for @profileChooseUpTo2.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose up to 2 areas'**
-  String get profileChooseUpTo2;
 
   /// No description provided for @profileSaveChanges.
   ///
@@ -3512,12 +3434,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Backed up {time}'**
   String profileBackedUp(Object time);
-
-  /// No description provided for @profileNotBackedUp.
-  ///
-  /// In en, this message translates to:
-  /// **'Not backed up'**
-  String get profileNotBackedUp;
 
   /// No description provided for @profileBackupNow.
   ///
@@ -5501,18 +5417,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Is “{path}” still what you\'re after?'**
   String letterQuestionStillFits(String path);
-
-  /// No description provided for @profileExportSubject.
-  ///
-  /// In en, this message translates to:
-  /// **'My Intended moments'**
-  String get profileExportSubject;
-
-  /// No description provided for @profileExportEmpty.
-  ///
-  /// In en, this message translates to:
-  /// **'Nothing to export yet.'**
-  String get profileExportEmpty;
 
   /// No description provided for @pauseEntryTitle.
   ///

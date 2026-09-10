@@ -42,9 +42,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get commonSkip => 'Пропустить';
 
   @override
-  String get commonRefresh => 'Обновить';
-
-  @override
   String get appNameIntended => 'Intended';
 
   @override
@@ -881,9 +878,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get customHabitLimitTitle => 'Список полон';
-
-  @override
   String get customHabitLimitMessage =>
       'Шесть намерений сразу — четыре из твоего пути и два своих. Отложи одно, чтобы освободить место.';
 
@@ -939,13 +933,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get swapErrorTitle => 'Что-то пошло не так';
-
-  @override
-  String get swapLimitTitle => 'Заменить привычку?';
-
-  @override
-  String get swapLimitMessage =>
-      'Все бесплатные замены в этом месяце использованы.\n\nIntended+: без ограничений';
 
   @override
   String get swapNoAltTitle => 'Нет альтернатив';
@@ -1546,35 +1533,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileChangeAreas => 'Изменить направления';
 
   @override
-  String get profileFocusLimitMessage =>
-      'Бесплатная замена в этом месяце уже использована.';
-
-  @override
-  String get profileFocusLimitOptions => '• Intended+: без ограничений';
-
-  @override
   String get profileChangeSpace => 'Сменить пространство';
-
-  @override
-  String get profileRefreshTitle => 'Обновить привычки?';
-
-  @override
-  String get profileRefreshMessage =>
-      'Ты получишь новый набор привычек на основе своих направлений.';
-
-  @override
-  String get profileRefreshSuccessTitle => 'Привычки обновлены';
-
-  @override
-  String get profileRefreshSuccessMessage =>
-      'Новый набор привычек уже ждёт тебя.';
-
-  @override
-  String get profileDailyLimitTitle => 'Дневной лимит достигнут';
-
-  @override
-  String get profileDailyLimitMessage =>
-      'Привычки обновлены 3 раза сегодня. Попробуй завтра или открой Intended+ для безлимитных обновлений.';
 
   @override
   String get profileCannotOpenLink => 'Не удалось открыть ссылку';
@@ -1609,9 +1568,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileChangeFocusAreasScreenTitle => 'Смена направлений';
-
-  @override
-  String get profileChooseUpTo2 => 'Выбери до 2 направлений';
 
   @override
   String get profileSaveChanges => 'Сохранить';
@@ -2086,9 +2042,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String profileBackedUp(Object time) {
     return 'Сохранено $time';
   }
-
-  @override
-  String get profileNotBackedUp => 'Нет резервной копии';
 
   @override
   String get profileBackupNow => 'Сохранить сейчас';
@@ -3309,12 +3262,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String letterQuestionStillFits(String path) {
     return '«$path» — это всё ещё про тебя?';
   }
-
-  @override
-  String get profileExportSubject => 'Мои моменты в Intended';
-
-  @override
-  String get profileExportEmpty => 'Пока нечего выгружать.';
 
   @override
   String get pauseEntryTitle => 'минута дыхания';
