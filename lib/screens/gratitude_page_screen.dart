@@ -229,11 +229,15 @@ class _GratitudePageScreenState extends State<GratitudePageScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () => Navigator.of(context).pop(),
-              child: Icon(Icons.close_rounded,
-                  size: 24, color: colors.checkmarkFill),
+            Semantics(
+              label: l10n.commonClose,
+              button: true,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => Navigator.of(context).pop(),
+                child: Icon(Icons.close_rounded,
+                    size: 24, color: colors.checkmarkFill),
+              ),
             ),
             Expanded(
               child: Text(dateStr,

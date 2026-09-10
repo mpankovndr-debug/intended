@@ -10,8 +10,9 @@ import 'package:intended/models/gratitude_entry.dart';
 import 'package:intended/screens/gratitude_page_screen.dart';
 import 'package:intended/theme/theme_provider.dart';
 
-/// The archive door is a bare icon, so without a label VoiceOver reaches a
-/// silent button. Its name is copy, and copy is what tests can hold on to.
+/// Both of the page's buttons, close and the archive door, are bare icons, so
+/// without labels VoiceOver reaches silent buttons. Their names are copy, and
+/// copy is what tests can hold on to.
 Widget _host() {
   return ChangeNotifierProvider(
     create: (_) => ThemeProvider(),
@@ -63,6 +64,20 @@ void main() {
     // a screen that never rendered.
     expect(find.text('What are you thankful for?'), findsOneWidget);
     expect(find.bySemanticsLabel('Past pages'), findsNothing);
+    semantics.dispose();
+  });
+
+  testWidgets('the close button is announced', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await _seed(const []);
+    await tester.pumpWidget(_host());
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Close')),
+      isSemantics(label: 'Close', isButton: true, hasTapAction: true),
+    );
     semantics.dispose();
   });
 }
