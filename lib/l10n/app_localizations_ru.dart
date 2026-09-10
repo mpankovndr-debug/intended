@@ -1008,9 +1008,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get completionQuestion => 'Ты выполнил это сегодня?';
-
-  @override
   String get completionHowDidItLand => 'Как прошло?';
 
   @override
@@ -1047,33 +1044,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get completionKeptOne =>
       'Сохранено — твой первый момент в этом месяце.';
-
-  @override
-  String get completionConfirm => 'Да, у меня получилось!';
-
-  @override
-  String get completionDecline => 'Нет, не сегодня';
-
-  @override
-  String get celebrationNice => 'Отлично';
-
-  @override
-  String get celebrationWellDone => 'Молодец';
-
-  @override
-  String get celebrationYouDidIt => 'У тебя получилось';
-
-  @override
-  String get celebrationGreat => 'Здорово';
-
-  @override
-  String get celebrationWayToGo => 'Так держать';
-
-  @override
-  String get celebrationGoodJob => 'Хорошая работа';
-
-  @override
-  String get celebrationLovely => 'Чудесно';
 
   @override
   String get notifMsg1 => 'Не спеши сегодня. Даже одна мелочь имеет значение.';

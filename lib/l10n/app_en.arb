@@ -682,7 +682,6 @@
       }
     }
   },
-  "completionQuestion": "Did you do this today?",
   "completionHowDidItLand": "How was it?",
   "completionMoodGlad": "Glad I did",
   "completionMoodNeutral": "Neutral",
@@ -699,15 +698,6 @@
     }
   },
   "completionKeptOne": "Kept — your first moment this month.",
-  "completionConfirm": "I did it",
-  "completionDecline": "No, not today",
-  "celebrationNice": "Nice",
-  "celebrationWellDone": "Well done",
-  "celebrationYouDidIt": "You did it",
-  "celebrationGreat": "Great",
-  "celebrationWayToGo": "Way to go",
-  "celebrationGoodJob": "Good job",
-  "celebrationLovely": "Lovely",
   "notifMsg1": "No rush today. Even one small thing counts.",
   "notifMsg2": "You don't have to be productive to deserve rest.",
   "notifMsg3": "Whatever you do today is enough.",

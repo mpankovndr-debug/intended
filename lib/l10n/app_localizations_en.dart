@@ -960,9 +960,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get completionQuestion => 'Did you do this today?';
-
-  @override
   String get completionHowDidItLand => 'How was it?';
 
   @override
@@ -990,33 +987,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get completionKeptOne => 'Kept — your first moment this month.';
-
-  @override
-  String get completionConfirm => 'I did it';
-
-  @override
-  String get completionDecline => 'No, not today';
-
-  @override
-  String get celebrationNice => 'Nice';
-
-  @override
-  String get celebrationWellDone => 'Well done';
-
-  @override
-  String get celebrationYouDidIt => 'You did it';
-
-  @override
-  String get celebrationGreat => 'Great';
-
-  @override
-  String get celebrationWayToGo => 'Way to go';
-
-  @override
-  String get celebrationGoodJob => 'Good job';
-
-  @override
-  String get celebrationLovely => 'Lovely';
 
   @override
   String get notifMsg1 => 'No rush today. Even one small thing counts.';

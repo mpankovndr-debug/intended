@@ -1551,12 +1551,6 @@ abstract class AppLocalizations {
   /// **'\"{title}\" will be removed and any progress lost.'**
   String deleteHabitMessage(String title);
 
-  /// No description provided for @completionQuestion.
-  ///
-  /// In en, this message translates to:
-  /// **'Did you do this today?'**
-  String get completionQuestion;
-
   /// No description provided for @completionHowDidItLand.
   ///
   /// In en, this message translates to:
@@ -1610,60 +1604,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Kept — your first moment this month.'**
   String get completionKeptOne;
-
-  /// No description provided for @completionConfirm.
-  ///
-  /// In en, this message translates to:
-  /// **'I did it'**
-  String get completionConfirm;
-
-  /// No description provided for @completionDecline.
-  ///
-  /// In en, this message translates to:
-  /// **'No, not today'**
-  String get completionDecline;
-
-  /// No description provided for @celebrationNice.
-  ///
-  /// In en, this message translates to:
-  /// **'Nice'**
-  String get celebrationNice;
-
-  /// No description provided for @celebrationWellDone.
-  ///
-  /// In en, this message translates to:
-  /// **'Well done'**
-  String get celebrationWellDone;
-
-  /// No description provided for @celebrationYouDidIt.
-  ///
-  /// In en, this message translates to:
-  /// **'You did it'**
-  String get celebrationYouDidIt;
-
-  /// No description provided for @celebrationGreat.
-  ///
-  /// In en, this message translates to:
-  /// **'Great'**
-  String get celebrationGreat;
-
-  /// No description provided for @celebrationWayToGo.
-  ///
-  /// In en, this message translates to:
-  /// **'Way to go'**
-  String get celebrationWayToGo;
-
-  /// No description provided for @celebrationGoodJob.
-  ///
-  /// In en, this message translates to:
-  /// **'Good job'**
-  String get celebrationGoodJob;
-
-  /// No description provided for @celebrationLovely.
-  ///
-  /// In en, this message translates to:
-  /// **'Lovely'**
-  String get celebrationLovely;
 
   /// No description provided for @notifMsg1.
   ///

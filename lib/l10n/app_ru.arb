@@ -419,7 +419,6 @@
       }
     }
   },
-  "completionQuestion": "Ты выполнил это сегодня?",
   "completionHowDidItLand": "Как прошло?",
   "completionMoodGlad": "Стоило того",
   "completionMoodNeutral": "Нейтрально",
@@ -429,15 +428,6 @@
   "completionSkip": "пропустить",
   "completionKept": "Сохранено — {count, plural, one{{count} момент} few{{count} момента} many{{count} моментов} other{{count} момента}} в этом месяце.",
   "completionKeptOne": "Сохранено — твой первый момент в этом месяце.",
-  "completionConfirm": "Да, у меня получилось!",
-  "completionDecline": "Нет, не сегодня",
-  "celebrationNice": "Отлично",
-  "celebrationWellDone": "Молодец",
-  "celebrationYouDidIt": "У тебя получилось",
-  "celebrationGreat": "Здорово",
-  "celebrationWayToGo": "Так держать",
-  "celebrationGoodJob": "Хорошая работа",
-  "celebrationLovely": "Чудесно",
   "notifMsg1": "Не спеши сегодня. Даже одна мелочь имеет значение.",
   "notifMsg2": "Продуктивность — не условие для отдыха.",
   "notifMsg3": "Всё, что ты делаешь сегодня — уже достаточно.",
