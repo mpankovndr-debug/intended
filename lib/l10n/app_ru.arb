@@ -800,65 +800,10 @@
   "habitOpenCurtains": "Открой шторы",
   "habitTurnOnLamp": "Включи лампу",
   "habitPhoneAcrossRoom": "Оставь телефон подальше",
-  "shareCardWeeklyCheckin": "Недельный чек-ин",
   "shareCardMilestone": "Достижение",
-  "shareCardShowedUpPhrase": "На этой неделе — забота о себе",
-  "shareCardTimes": "{count, plural, =1{раз} other{раз}}",
-  "@shareCardTimes": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "shareCardFocusedOn": "Фокус: {area}",
-  "@shareCardFocusedOn": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
   "shareCardTagline": "намерение важнее совершенства",
-  "shareCardWeeks": "недель",
   "shareCardMilestoneSubtext": "бережного отношения к себе",
-  "shareCardDescriptor": "намерение важнее совершенства",
-  "shareCardSubtitleSingular": "раз я выбираю себя на этой неделе",
-  "shareCardSubtitlePlural": "раз я выбираю себя на этой неделе",
-  "shareCardSubtitleDays": "дней я выбираю себя на этой неделе",
-  "shareCardInsightTwoDays": "{day1} и {day2} — мои дни",
-  "@shareCardInsightTwoDays": {
-    "placeholders": {
-      "day1": {
-        "type": "String"
-      },
-      "day2": {
-        "type": "String"
-      }
-    }
-  },
-  "shareCardInsightOneDay": "{day} — мой день",
-  "@shareCardInsightOneDay": {
-    "placeholders": {
-      "day": {
-        "type": "String"
-      }
-    }
-  },
-  "shareCardInsightFocus": "На этой неделе тянет к «{area}»",
-  "@shareCardInsightFocus": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
   "shareButton": "Поделиться",
-  "sharePickerTitle": "Чем хочешь поделиться?",
-  "shareWeeklySubtitle": "сколько раз удалось позаботиться о себе на этой неделе",
-  "shareShowingUpSubtitle": "по-своему, в своём темпе",
-  "shareFocusAreaSubtitle": "то, к чему ты продолжаешь возвращаться",
-  "shareYourThingSubtitle": "привычка, которая приживается",
   "milestoneShowingUpLabel": "Забота о себе",
   "milestoneAreaLabel": "Область фокуса",
   "milestoneIdentityLabel": "Это - твоё!",
@@ -899,8 +844,6 @@
   "boostOfferFocusDesc": "Твой рост не помещается в рамки? Расширь то, на чём фокусируешься.",
   "boostOfferSwapTitle": "Замены закончились?",
   "boostOfferSwapDesc": "Поиск подходящих привычек — это путь. Получи ещё несколько попыток.",
-  "boostOfferShareTitle": "Поделиться прогрессом?",
-  "boostOfferShareDesc": "Твой путь стоит того, чтобы им делиться - поделись им с близкими.",
   "boostOfferThemeTitle": "Открой обе тёмные темы",
   "boostOfferThemeDesc": "Тёмный уют и Ночное небо — спокойный вид для вечерних проверок.",
   "commonDismiss": "Закрыть",
@@ -910,7 +853,6 @@
   "focusNudgeTitle": "Меньше — значит больше",
   "focusNudgeMessage": "Меньше направлений — глубже рост. Но тебе виднее.",
   "focusNudgeGotIt": "Понятно",
-  "shareError": "Не удалось поделиться. Попробуй ещё раз.",
   "restoreSuccess": "Покупки восстановлены!",
   "restoreNotFound": "Покупки не найдены.",
   "restoreBackupTitle": "С возвращением!",
@@ -1233,7 +1175,6 @@
   "insightsReturnGaps": "Дни между ними: {gaps}.",
   "shareSeasonMoments": "{count, plural, one{{count} момент} few{{count} момента} many{{count} моментов} other{{count} момента}}",
   "shareSeasonReturns": "{count, plural, one{{count} возвращение} few{{count} возвращения} many{{count} возвращений} other{{count} возвращения}}",
-  "shareIncludeHabitNames": "Показывать названия привычек",
   "todayAdoptIntention": "Выбрать другое намерение",
   "staleNudgeTitle": "Кажется, это пока не подходит",
   "staleNudgeBody": "За последние десять дней здесь не было ни одного момента. Хочешь попробовать другое намерение?",

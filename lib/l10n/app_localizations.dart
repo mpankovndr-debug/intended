@@ -3525,35 +3525,11 @@ abstract class AppLocalizations {
   /// **'Leave your phone across the room'**
   String get habitPhoneAcrossRoom;
 
-  /// No description provided for @shareCardWeeklyCheckin.
-  ///
-  /// In en, this message translates to:
-  /// **'Weekly check-in'**
-  String get shareCardWeeklyCheckin;
-
   /// No description provided for @shareCardMilestone.
   ///
   /// In en, this message translates to:
   /// **'Milestone'**
   String get shareCardMilestone;
-
-  /// No description provided for @shareCardShowedUpPhrase.
-  ///
-  /// In en, this message translates to:
-  /// **'I showed up for myself this week'**
-  String get shareCardShowedUpPhrase;
-
-  /// No description provided for @shareCardTimes.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{time} other{times}}'**
-  String shareCardTimes(int count);
-
-  /// No description provided for @shareCardFocusedOn.
-  ///
-  /// In en, this message translates to:
-  /// **'Focused on: {area}'**
-  String shareCardFocusedOn(String area);
 
   /// No description provided for @shareCardTagline.
   ///
@@ -3561,95 +3537,17 @@ abstract class AppLocalizations {
   /// **'intention, not perfection'**
   String get shareCardTagline;
 
-  /// No description provided for @shareCardWeeks.
-  ///
-  /// In en, this message translates to:
-  /// **'weeks'**
-  String get shareCardWeeks;
-
   /// No description provided for @shareCardMilestoneSubtext.
   ///
   /// In en, this message translates to:
   /// **'of being gentle with myself'**
   String get shareCardMilestoneSubtext;
 
-  /// No description provided for @shareCardDescriptor.
-  ///
-  /// In en, this message translates to:
-  /// **'intention, not perfection'**
-  String get shareCardDescriptor;
-
-  /// No description provided for @shareCardSubtitleSingular.
-  ///
-  /// In en, this message translates to:
-  /// **'time I showed up this week'**
-  String get shareCardSubtitleSingular;
-
-  /// No description provided for @shareCardSubtitlePlural.
-  ///
-  /// In en, this message translates to:
-  /// **'times I showed up this week'**
-  String get shareCardSubtitlePlural;
-
-  /// No description provided for @shareCardSubtitleDays.
-  ///
-  /// In en, this message translates to:
-  /// **'days I showed up this week'**
-  String get shareCardSubtitleDays;
-
-  /// No description provided for @shareCardInsightTwoDays.
-  ///
-  /// In en, this message translates to:
-  /// **'{day1} and {day2} are my days'**
-  String shareCardInsightTwoDays(String day1, String day2);
-
-  /// No description provided for @shareCardInsightOneDay.
-  ///
-  /// In en, this message translates to:
-  /// **'{day} is my day'**
-  String shareCardInsightOneDay(String day);
-
-  /// No description provided for @shareCardInsightFocus.
-  ///
-  /// In en, this message translates to:
-  /// **'Drawn to {area} this week'**
-  String shareCardInsightFocus(String area);
-
   /// No description provided for @shareButton.
   ///
   /// In en, this message translates to:
   /// **'Share'**
   String get shareButton;
-
-  /// No description provided for @sharePickerTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'What would you like to share?'**
-  String get sharePickerTitle;
-
-  /// No description provided for @shareWeeklySubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'how many times you showed up this week'**
-  String get shareWeeklySubtitle;
-
-  /// No description provided for @shareShowingUpSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'your own way, your own pace'**
-  String get shareShowingUpSubtitle;
-
-  /// No description provided for @shareFocusAreaSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'the area you keep returning to'**
-  String get shareFocusAreaSubtitle;
-
-  /// No description provided for @shareYourThingSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'the habit that\'s sticking'**
-  String get shareYourThingSubtitle;
 
   /// No description provided for @milestoneShowingUpLabel.
   ///
@@ -3765,18 +3663,6 @@ abstract class AppLocalizations {
   /// **'Finding the right habits takes exploring — get a few more tries.'**
   String get boostOfferSwapDesc;
 
-  /// No description provided for @boostOfferShareTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Share your progress?'**
-  String get boostOfferShareTitle;
-
-  /// No description provided for @boostOfferShareDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'Your journey is worth celebrating — share it with people you care about.'**
-  String get boostOfferShareDesc;
-
   /// No description provided for @boostOfferThemeTitle.
   ///
   /// In en, this message translates to:
@@ -3830,12 +3716,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Got it'**
   String get focusNudgeGotIt;
-
-  /// No description provided for @shareError.
-  ///
-  /// In en, this message translates to:
-  /// **'Could not share. Please try again.'**
-  String get shareError;
 
   /// No description provided for @restoreSuccess.
   ///
@@ -5417,12 +5297,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{I came back once} other{I came back {count} times}}'**
   String shareSeasonReturns(int count);
-
-  /// No description provided for @shareIncludeHabitNames.
-  ///
-  /// In en, this message translates to:
-  /// **'Include my habit names'**
-  String get shareIncludeHabitNames;
 
   /// No description provided for @todayAdoptIntention.
   ///

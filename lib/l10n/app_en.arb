@@ -1171,65 +1171,10 @@
   "habitOpenCurtains": "Open the curtains",
   "habitTurnOnLamp": "Turn on a lamp",
   "habitPhoneAcrossRoom": "Leave your phone across the room",
-  "shareCardWeeklyCheckin": "Weekly check-in",
   "shareCardMilestone": "Milestone",
-  "shareCardShowedUpPhrase": "I showed up for myself this week",
-  "shareCardTimes": "{count, plural, =1{time} other{times}}",
-  "@shareCardTimes": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "shareCardFocusedOn": "Focused on: {area}",
-  "@shareCardFocusedOn": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
   "shareCardTagline": "intention, not perfection",
-  "shareCardWeeks": "weeks",
   "shareCardMilestoneSubtext": "of being gentle with myself",
-  "shareCardDescriptor": "intention, not perfection",
-  "shareCardSubtitleSingular": "time I showed up this week",
-  "shareCardSubtitlePlural": "times I showed up this week",
-  "shareCardSubtitleDays": "days I showed up this week",
-  "shareCardInsightTwoDays": "{day1} and {day2} are my days",
-  "@shareCardInsightTwoDays": {
-    "placeholders": {
-      "day1": {
-        "type": "String"
-      },
-      "day2": {
-        "type": "String"
-      }
-    }
-  },
-  "shareCardInsightOneDay": "{day} is my day",
-  "@shareCardInsightOneDay": {
-    "placeholders": {
-      "day": {
-        "type": "String"
-      }
-    }
-  },
-  "shareCardInsightFocus": "Drawn to {area} this week",
-  "@shareCardInsightFocus": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
   "shareButton": "Share",
-  "sharePickerTitle": "What would you like to share?",
-  "shareWeeklySubtitle": "how many times you showed up this week",
-  "shareShowingUpSubtitle": "your own way, your own pace",
-  "shareFocusAreaSubtitle": "the area you keep returning to",
-  "shareYourThingSubtitle": "the habit that's sticking",
   "milestoneShowingUpLabel": "Showing up",
   "milestoneAreaLabel": "Focus area",
   "milestoneIdentityLabel": "Your thing",
@@ -1270,8 +1215,6 @@
   "boostOfferFocusDesc": "Your growth doesn't fit in a box? Expand what you focus on.",
   "boostOfferSwapTitle": "Out of swaps this month?",
   "boostOfferSwapDesc": "Finding the right habits takes exploring — get a few more tries.",
-  "boostOfferShareTitle": "Share your progress?",
-  "boostOfferShareDesc": "Your journey is worth celebrating — share it with people you care about.",
   "boostOfferThemeTitle": "Unlock both dark themes",
   "boostOfferThemeDesc": "Deep Focus and Night Bloom — a calmer look for evening check-ins.",
   "commonDismiss": "Dismiss",
@@ -1281,7 +1224,6 @@
   "focusNudgeTitle": "Less is more",
   "focusNudgeMessage": "Focus on one area at a time for the best results.",
   "focusNudgeGotIt": "Got it",
-  "shareError": "Could not share. Please try again.",
   "restoreSuccess": "Purchases restored!",
   "restoreNotFound": "No purchases found.",
   "restoreBackupTitle": "Welcome back!",
@@ -1705,7 +1647,6 @@
   },
   "shareSeasonMoments": "{count, plural, =1{1 moment} other{{count} moments}}",
   "shareSeasonReturns": "{count, plural, =1{I came back once} other{I came back {count} times}}",
-  "shareIncludeHabitNames": "Include my habit names",
   "@shareSeasonMoments": {
     "placeholders": {
       "count": {

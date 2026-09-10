@@ -2043,83 +2043,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitPhoneAcrossRoom => 'Leave your phone across the room';
 
   @override
-  String get shareCardWeeklyCheckin => 'Weekly check-in';
-
-  @override
   String get shareCardMilestone => 'Milestone';
-
-  @override
-  String get shareCardShowedUpPhrase => 'I showed up for myself this week';
-
-  @override
-  String shareCardTimes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'times',
-      one: 'time',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String shareCardFocusedOn(String area) {
-    return 'Focused on: $area';
-  }
 
   @override
   String get shareCardTagline => 'intention, not perfection';
 
   @override
-  String get shareCardWeeks => 'weeks';
-
-  @override
   String get shareCardMilestoneSubtext => 'of being gentle with myself';
 
   @override
-  String get shareCardDescriptor => 'intention, not perfection';
-
-  @override
-  String get shareCardSubtitleSingular => 'time I showed up this week';
-
-  @override
-  String get shareCardSubtitlePlural => 'times I showed up this week';
-
-  @override
-  String get shareCardSubtitleDays => 'days I showed up this week';
-
-  @override
-  String shareCardInsightTwoDays(String day1, String day2) {
-    return '$day1 and $day2 are my days';
-  }
-
-  @override
-  String shareCardInsightOneDay(String day) {
-    return '$day is my day';
-  }
-
-  @override
-  String shareCardInsightFocus(String area) {
-    return 'Drawn to $area this week';
-  }
-
-  @override
   String get shareButton => 'Share';
-
-  @override
-  String get sharePickerTitle => 'What would you like to share?';
-
-  @override
-  String get shareWeeklySubtitle => 'how many times you showed up this week';
-
-  @override
-  String get shareShowingUpSubtitle => 'your own way, your own pace';
-
-  @override
-  String get shareFocusAreaSubtitle => 'the area you keep returning to';
-
-  @override
-  String get shareYourThingSubtitle => 'the habit that\'s sticking';
 
   @override
   String get milestoneShowingUpLabel => 'Showing up';
@@ -2196,13 +2129,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Finding the right habits takes exploring — get a few more tries.';
 
   @override
-  String get boostOfferShareTitle => 'Share your progress?';
-
-  @override
-  String get boostOfferShareDesc =>
-      'Your journey is worth celebrating — share it with people you care about.';
-
-  @override
   String get boostOfferThemeTitle => 'Unlock both dark themes';
 
   @override
@@ -2231,9 +2157,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get focusNudgeGotIt => 'Got it';
-
-  @override
-  String get shareError => 'Could not share. Please try again.';
 
   @override
   String get restoreSuccess => 'Purchases restored!';
@@ -3171,9 +3094,6 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get shareIncludeHabitNames => 'Include my habit names';
 
   @override
   String get todayAdoptIntention => 'Adopt a different intention';

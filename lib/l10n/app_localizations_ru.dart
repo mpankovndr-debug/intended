@@ -2108,84 +2108,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitPhoneAcrossRoom => 'Оставь телефон подальше';
 
   @override
-  String get shareCardWeeklyCheckin => 'Недельный чек-ин';
-
-  @override
   String get shareCardMilestone => 'Достижение';
-
-  @override
-  String get shareCardShowedUpPhrase => 'На этой неделе — забота о себе';
-
-  @override
-  String shareCardTimes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'раз',
-      one: 'раз',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String shareCardFocusedOn(String area) {
-    return 'Фокус: $area';
-  }
 
   @override
   String get shareCardTagline => 'намерение важнее совершенства';
 
   @override
-  String get shareCardWeeks => 'недель';
-
-  @override
   String get shareCardMilestoneSubtext => 'бережного отношения к себе';
 
   @override
-  String get shareCardDescriptor => 'намерение важнее совершенства';
-
-  @override
-  String get shareCardSubtitleSingular => 'раз я выбираю себя на этой неделе';
-
-  @override
-  String get shareCardSubtitlePlural => 'раз я выбираю себя на этой неделе';
-
-  @override
-  String get shareCardSubtitleDays => 'дней я выбираю себя на этой неделе';
-
-  @override
-  String shareCardInsightTwoDays(String day1, String day2) {
-    return '$day1 и $day2 — мои дни';
-  }
-
-  @override
-  String shareCardInsightOneDay(String day) {
-    return '$day — мой день';
-  }
-
-  @override
-  String shareCardInsightFocus(String area) {
-    return 'На этой неделе тянет к «$area»';
-  }
-
-  @override
   String get shareButton => 'Поделиться';
-
-  @override
-  String get sharePickerTitle => 'Чем хочешь поделиться?';
-
-  @override
-  String get shareWeeklySubtitle =>
-      'сколько раз удалось позаботиться о себе на этой неделе';
-
-  @override
-  String get shareShowingUpSubtitle => 'по-своему, в своём темпе';
-
-  @override
-  String get shareFocusAreaSubtitle => 'то, к чему ты продолжаешь возвращаться';
-
-  @override
-  String get shareYourThingSubtitle => 'привычка, которая приживается';
 
   @override
   String get milestoneShowingUpLabel => 'Забота о себе';
@@ -2265,13 +2197,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Поиск подходящих привычек — это путь. Получи ещё несколько попыток.';
 
   @override
-  String get boostOfferShareTitle => 'Поделиться прогрессом?';
-
-  @override
-  String get boostOfferShareDesc =>
-      'Твой путь стоит того, чтобы им делиться - поделись им с близкими.';
-
-  @override
   String get boostOfferThemeTitle => 'Открой обе тёмные темы';
 
   @override
@@ -2300,9 +2225,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get focusNudgeGotIt => 'Понятно';
-
-  @override
-  String get shareError => 'Не удалось поделиться. Попробуй ещё раз.';
 
   @override
   String get restoreSuccess => 'Покупки восстановлены!';
@@ -3247,9 +3169,6 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get shareIncludeHabitNames => 'Показывать названия привычек';
 
   @override
   String get todayAdoptIntention => 'Выбрать другое намерение';
