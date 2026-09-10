@@ -1076,42 +1076,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get celebrationLovely => 'Чудесно';
 
   @override
-  String get warmthMsg1 => 'Ничего страшного. Завтра всё ещё впереди.';
-
-  @override
-  String get warmthMsg2 => 'Отдых тоже считается.';
-
-  @override
-  String get warmthMsg4 => 'Не сегодня — и это нормально.';
-
-  @override
-  String get warmthMsg6 => 'Привычка никуда не денется. Она подождёт.';
-
-  @override
-  String get warmthMsg7 => 'Даже мягкий шаг назад — это всё ещё участие.';
-
-  @override
-  String get warmthMsg8 => 'Ничего не потеряно. Ты здесь.';
-
-  @override
-  String get warmthMsg9 => 'Некоторые дни — для отдыха. Может, сегодня такой.';
-
-  @override
-  String get warmthMsg10 =>
-      'Доброта к себе — привычка, которую стоит сохранить.';
-
-  @override
-  String get warmthMsg11 =>
-      'Нет стрика, который можно прервать. Нет оценок, которые можно потерять. Просто ты. Здесь.';
-
-  @override
-  String get warmthMsg13 => 'Просто знай, что тебя достаточно.';
-
-  @override
-  String get warmthMsg15 =>
-      'Прогресс не всегда видим. Иногда это просто выстоять.';
-
-  @override
   String get notifMsg1 => 'Не спеши сегодня. Даже одна мелочь имеет значение.';
 
   @override

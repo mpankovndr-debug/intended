@@ -1019,42 +1019,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get celebrationLovely => 'Lovely';
 
   @override
-  String get warmthMsg1 => 'That\'s okay. Tomorrow is still yours.';
-
-  @override
-  String get warmthMsg2 => 'Rest counts too.';
-
-  @override
-  String get warmthMsg4 => 'Not today — and that\'s allowed.';
-
-  @override
-  String get warmthMsg6 => 'The habit will be here when you\'re ready.';
-
-  @override
-  String get warmthMsg7 => 'Even stepping back gently is still showing up.';
-
-  @override
-  String get warmthMsg8 => 'Nothing is lost. You\'re still here.';
-
-  @override
-  String get warmthMsg9 =>
-      'Some days are for resting. This might be one of them.';
-
-  @override
-  String get warmthMsg10 =>
-      'Kindness toward yourself is a habit worth keeping.';
-
-  @override
-  String get warmthMsg11 => 'No streak to break. No score to lose. Just you.';
-
-  @override
-  String get warmthMsg13 => 'You showed up enough today just by being here.';
-
-  @override
-  String get warmthMsg15 =>
-      'Progress isn\'t only visible. Sometimes it\'s just surviving.';
-
-  @override
   String get notifMsg1 => 'No rush today. Even one small thing counts.';
 
   @override
