@@ -1515,12 +1515,6 @@ abstract class AppLocalizations {
   /// **'Something went wrong'**
   String get swapErrorTitle;
 
-  /// No description provided for @swapErrorMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'We couldn\'t swap this habit. Please try again.'**
-  String get swapErrorMessage;
-
   /// No description provided for @swapLimitTitle.
   ///
   /// In en, this message translates to:
@@ -3423,77 +3417,11 @@ abstract class AppLocalizations {
   /// **'Sand Dune'**
   String get themeSandDune;
 
-  /// No description provided for @browseHabitsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Browse Habits'**
-  String get browseHabitsTitle;
-
-  /// No description provided for @browseHabitsAvailable.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} habits available'**
-  String browseHabitsAvailable(int count);
-
   /// No description provided for @browseHabitsSearch.
   ///
   /// In en, this message translates to:
   /// **'Search habits...'**
   String get browseHabitsSearch;
-
-  /// No description provided for @browseAlreadyAddedTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Already added'**
-  String get browseAlreadyAddedTitle;
-
-  /// No description provided for @browseAlreadyAddedMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'\"{habit}\" is already in your habits.'**
-  String browseAlreadyAddedMessage(String habit);
-
-  /// No description provided for @browseSwapLimitTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Swap limit reached'**
-  String get browseSwapLimitTitle;
-
-  /// No description provided for @browseSwapConfirmTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Swap an existing habit?'**
-  String get browseSwapConfirmTitle;
-
-  /// No description provided for @browseSwapConfirmMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Replace one of your current habits with \"{habit}\".'**
-  String browseSwapConfirmMessage(String habit);
-
-  /// No description provided for @browseSwapRemainingCount.
-  ///
-  /// In en, this message translates to:
-  /// **'You have {count} {count, plural, =1{swap} other{swaps}} remaining this month.'**
-  String browseSwapRemainingCount(int count);
-
-  /// No description provided for @browseChooseHabitToSwap.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose habit to swap'**
-  String get browseChooseHabitToSwap;
-
-  /// No description provided for @browseWhichToReplace.
-  ///
-  /// In en, this message translates to:
-  /// **'Which habit to replace?'**
-  String get browseWhichToReplace;
-
-  /// No description provided for @browseChooseToReplaceMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose one of your current habits to replace with \"{habit}\"'**
-  String browseChooseToReplaceMessage(String habit);
 
   /// No description provided for @browseHabitAddedTitle.
   ///
@@ -4647,84 +4575,6 @@ abstract class AppLocalizations {
   /// **'Skip tips'**
   String get tipSkipAll;
 
-  /// No description provided for @packSwapTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Make room for your new pack'**
-  String get packSwapTitle;
-
-  /// No description provided for @packSwapSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'To keep your space focused, pick which habits to set aside. Your custom habits will always stay.'**
-  String get packSwapSubtitle;
-
-  /// No description provided for @packSwapConfirm.
-  ///
-  /// In en, this message translates to:
-  /// **'Set aside {count} and add {packName}'**
-  String packSwapConfirm(int count, String packName);
-
-  /// No description provided for @packSwapAdded.
-  ///
-  /// In en, this message translates to:
-  /// **'added — {count} new habits ready to go'**
-  String packSwapAdded(int count);
-
-  /// No description provided for @packSwapAllActive.
-  ///
-  /// In en, this message translates to:
-  /// **'All habits from this pack are already active'**
-  String get packSwapAllActive;
-
-  /// No description provided for @packSectionHeader.
-  ///
-  /// In en, this message translates to:
-  /// **'CURATED PACKS'**
-  String get packSectionHeader;
-
-  /// No description provided for @packHabitsCount.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 habit} other{{count} habits}}'**
-  String packHabitsCount(int count);
-
-  /// No description provided for @packFreeBadge.
-  ///
-  /// In en, this message translates to:
-  /// **'Free'**
-  String get packFreeBadge;
-
-  /// No description provided for @packStartButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Start {packName}'**
-  String packStartButton(String packName);
-
-  /// No description provided for @packHabitsInPack.
-  ///
-  /// In en, this message translates to:
-  /// **'HABITS IN THIS PACK'**
-  String get packHabitsInPack;
-
-  /// No description provided for @packAllActive.
-  ///
-  /// In en, this message translates to:
-  /// **'All habits already active'**
-  String get packAllActive;
-
-  /// No description provided for @packHabitActive.
-  ///
-  /// In en, this message translates to:
-  /// **'Active'**
-  String get packHabitActive;
-
-  /// No description provided for @packActiveBadge.
-  ///
-  /// In en, this message translates to:
-  /// **'Active'**
-  String get packActiveBadge;
-
   /// No description provided for @packGentleMorningsName.
   ///
   /// In en, this message translates to:
@@ -4736,12 +4586,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A small morning ritual that doesn\'t feel like a 5am hustle routine'**
   String get packGentleMorningsSubtitle;
-
-  /// No description provided for @packGentleMorningsDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Four tiny habits that work as a gentle sequence — hydrate, breathe fresh air, center yourself, then orient your day. No alarms at dawn required.'**
-  String get packGentleMorningsDescription;
 
   /// No description provided for @packWindingDownName.
   ///
@@ -4755,12 +4599,6 @@ abstract class AppLocalizations {
   /// **'An evening decompression set. Intentionally short.'**
   String get packWindingDownSubtitle;
 
-  /// No description provided for @packWindingDownDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'A small ritual for letting the day go. Stop, reflect, get comfortable, enjoy one thing. That\'s the whole evening plan.'**
-  String get packWindingDownDescription;
-
   /// No description provided for @packTinyResetsName.
   ///
   /// In en, this message translates to:
@@ -4772,12 +4610,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'For mid-week moments when everything feels chaotic'**
   String get packTinyResetsSubtitle;
-
-  /// No description provided for @packTinyResetsDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'When overwhelm hits, these four micro-actions create a small pocket of control. Not a productivity system — a rescue kit.'**
-  String get packTinyResetsDescription;
 
   /// No description provided for @packCreativeSparkName.
   ///
@@ -4791,12 +4623,6 @@ abstract class AppLocalizations {
   /// **'Small acts of making. No talent required.'**
   String get packCreativeSparkSubtitle;
 
-  /// No description provided for @packCreativeSparkDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Three tiny creative habits that get you out of your head and into your hands. Not about being good — about being playful.'**
-  String get packCreativeSparkDescription;
-
   /// No description provided for @packStayConnectedName.
   ///
   /// In en, this message translates to:
@@ -4808,12 +4634,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The people who matter, one small gesture at a time.'**
   String get packStayConnectedSubtitle;
-
-  /// No description provided for @packStayConnectedDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Four micro-habits for staying close to the people in your life. Not grand gestures — just showing up.'**
-  String get packStayConnectedDescription;
 
   /// No description provided for @widgetToday.
   ///

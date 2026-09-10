@@ -669,7 +669,6 @@
     }
   },
   "swapErrorTitle": "Something went wrong",
-  "swapErrorMessage": "We couldn't swap this habit. Please try again.",
   "swapLimitTitle": "Swap this habit?",
   "swapLimitMessage": "You've used all your free swaps this month.\n\nIntended+: Unlimited swaps",
   "swapNoAltTitle": "No alternatives",
@@ -1147,53 +1146,7 @@
   "themeGoldenHour": "Golden Hour",
   "themeNightBloom": "Night Bloom",
   "themeSandDune": "Sand Dune",
-  "browseHabitsTitle": "Browse Habits",
-  "browseHabitsAvailable": "{count} habits available",
-  "@browseHabitsAvailable": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "browseHabitsSearch": "Search habits...",
-  "browseAlreadyAddedTitle": "Already added",
-  "browseAlreadyAddedMessage": "\"{habit}\" is already in your habits.",
-  "@browseAlreadyAddedMessage": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
-  "browseSwapLimitTitle": "Swap limit reached",
-  "browseSwapConfirmTitle": "Swap an existing habit?",
-  "browseSwapConfirmMessage": "Replace one of your current habits with \"{habit}\".",
-  "@browseSwapConfirmMessage": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
-  "browseSwapRemainingCount": "You have {count} {count, plural, =1{swap} other{swaps}} remaining this month.",
-  "@browseSwapRemainingCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "browseChooseHabitToSwap": "Choose habit to swap",
-  "browseWhichToReplace": "Which habit to replace?",
-  "browseChooseToReplaceMessage": "Choose one of your current habits to replace with \"{habit}\"",
-  "@browseChooseToReplaceMessage": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
   "browseHabitAddedTitle": "Habit added",
   "browseHabitAddedMessage": "\"{habit}\" has been added to your habits.",
   "@browseHabitAddedMessage": {
@@ -1452,65 +1405,16 @@
   "tipWidget": "Add Intended to your home screen — long press your wallpaper and add a widget",
   "tipGotIt": "Got it",
   "tipSkipAll": "Skip tips",
-  "packSwapTitle": "Make room for your new pack",
-  "packSwapSubtitle": "To keep your space focused, pick which habits to set aside. Your custom habits will always stay.",
-  "packSwapConfirm": "Set aside {count} and add {packName}",
-  "@packSwapConfirm": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "packName": {
-        "type": "String"
-      }
-    }
-  },
-  "packSwapAdded": "added — {count} new habits ready to go",
-  "@packSwapAdded": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "packSwapAllActive": "All habits from this pack are already active",
-  "packSectionHeader": "CURATED PACKS",
-  "packHabitsCount": "{count, plural, =1{1 habit} other{{count} habits}}",
-  "@packHabitsCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "packFreeBadge": "Free",
-  "packStartButton": "Start {packName}",
-  "@packStartButton": {
-    "placeholders": {
-      "packName": {
-        "type": "String"
-      }
-    }
-  },
-  "packHabitsInPack": "HABITS IN THIS PACK",
-  "packAllActive": "All habits already active",
-  "packHabitActive": "Active",
-  "packActiveBadge": "Active",
   "packGentleMorningsName": "Gentle Mornings",
   "packGentleMorningsSubtitle": "A small morning ritual that doesn't feel like a 5am hustle routine",
-  "packGentleMorningsDescription": "Four tiny habits that work as a gentle sequence — hydrate, breathe fresh air, center yourself, then orient your day. No alarms at dawn required.",
   "packWindingDownName": "Winding Down",
   "packWindingDownSubtitle": "An evening decompression set. Intentionally short.",
-  "packWindingDownDescription": "A small ritual for letting the day go. Stop, reflect, get comfortable, enjoy one thing. That's the whole evening plan.",
   "packTinyResetsName": "Tiny Resets",
   "packTinyResetsSubtitle": "For mid-week moments when everything feels chaotic",
-  "packTinyResetsDescription": "When overwhelm hits, these four micro-actions create a small pocket of control. Not a productivity system — a rescue kit.",
   "packCreativeSparkName": "Creative Spark",
   "packCreativeSparkSubtitle": "Small acts of making. No talent required.",
-  "packCreativeSparkDescription": "Three tiny creative habits that get you out of your head and into your hands. Not about being good — about being playful.",
   "packStayConnectedName": "Stay Connected",
   "packStayConnectedSubtitle": "The people who matter, one small gesture at a time.",
-  "packStayConnectedDescription": "Four micro-habits for staying close to the people in your life. Not grand gestures — just showing up.",
   "widgetToday": "today",
   "widgetMore": "+{n} more",
   "@widgetMore": {

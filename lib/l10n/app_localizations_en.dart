@@ -938,10 +938,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get swapErrorTitle => 'Something went wrong';
 
   @override
-  String get swapErrorMessage =>
-      'We couldn\'t swap this habit. Please try again.';
-
-  @override
   String get swapLimitTitle => 'Swap this habit?';
 
   @override
@@ -2054,56 +2050,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeSandDune => 'Sand Dune';
 
   @override
-  String get browseHabitsTitle => 'Browse Habits';
-
-  @override
-  String browseHabitsAvailable(int count) {
-    return '$count habits available';
-  }
-
-  @override
   String get browseHabitsSearch => 'Search habits...';
-
-  @override
-  String get browseAlreadyAddedTitle => 'Already added';
-
-  @override
-  String browseAlreadyAddedMessage(String habit) {
-    return '\"$habit\" is already in your habits.';
-  }
-
-  @override
-  String get browseSwapLimitTitle => 'Swap limit reached';
-
-  @override
-  String get browseSwapConfirmTitle => 'Swap an existing habit?';
-
-  @override
-  String browseSwapConfirmMessage(String habit) {
-    return 'Replace one of your current habits with \"$habit\".';
-  }
-
-  @override
-  String browseSwapRemainingCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'swaps',
-      one: 'swap',
-    );
-    return 'You have $count $_temp0 remaining this month.';
-  }
-
-  @override
-  String get browseChooseHabitToSwap => 'Choose habit to swap';
-
-  @override
-  String get browseWhichToReplace => 'Which habit to replace?';
-
-  @override
-  String browseChooseToReplaceMessage(String habit) {
-    return 'Choose one of your current habits to replace with \"$habit\"';
-  }
 
   @override
   String get browseHabitAddedTitle => 'Habit added';
@@ -2730,70 +2677,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tipSkipAll => 'Skip tips';
 
   @override
-  String get packSwapTitle => 'Make room for your new pack';
-
-  @override
-  String get packSwapSubtitle =>
-      'To keep your space focused, pick which habits to set aside. Your custom habits will always stay.';
-
-  @override
-  String packSwapConfirm(int count, String packName) {
-    return 'Set aside $count and add $packName';
-  }
-
-  @override
-  String packSwapAdded(int count) {
-    return 'added — $count new habits ready to go';
-  }
-
-  @override
-  String get packSwapAllActive =>
-      'All habits from this pack are already active';
-
-  @override
-  String get packSectionHeader => 'CURATED PACKS';
-
-  @override
-  String packHabitsCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count habits',
-      one: '1 habit',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get packFreeBadge => 'Free';
-
-  @override
-  String packStartButton(String packName) {
-    return 'Start $packName';
-  }
-
-  @override
-  String get packHabitsInPack => 'HABITS IN THIS PACK';
-
-  @override
-  String get packAllActive => 'All habits already active';
-
-  @override
-  String get packHabitActive => 'Active';
-
-  @override
-  String get packActiveBadge => 'Active';
-
-  @override
   String get packGentleMorningsName => 'Gentle Mornings';
 
   @override
   String get packGentleMorningsSubtitle =>
       'A small morning ritual that doesn\'t feel like a 5am hustle routine';
-
-  @override
-  String get packGentleMorningsDescription =>
-      'Four tiny habits that work as a gentle sequence — hydrate, breathe fresh air, center yourself, then orient your day. No alarms at dawn required.';
 
   @override
   String get packWindingDownName => 'Winding Down';
@@ -2803,19 +2691,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'An evening decompression set. Intentionally short.';
 
   @override
-  String get packWindingDownDescription =>
-      'A small ritual for letting the day go. Stop, reflect, get comfortable, enjoy one thing. That\'s the whole evening plan.';
-
-  @override
   String get packTinyResetsName => 'Tiny Resets';
 
   @override
   String get packTinyResetsSubtitle =>
       'For mid-week moments when everything feels chaotic';
-
-  @override
-  String get packTinyResetsDescription =>
-      'When overwhelm hits, these four micro-actions create a small pocket of control. Not a productivity system — a rescue kit.';
 
   @override
   String get packCreativeSparkName => 'Creative Spark';
@@ -2825,19 +2705,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Small acts of making. No talent required.';
 
   @override
-  String get packCreativeSparkDescription =>
-      'Three tiny creative habits that get you out of your head and into your hands. Not about being good — about being playful.';
-
-  @override
   String get packStayConnectedName => 'Stay Connected';
 
   @override
   String get packStayConnectedSubtitle =>
       'The people who matter, one small gesture at a time.';
-
-  @override
-  String get packStayConnectedDescription =>
-      'Four micro-habits for staying close to the people in your life. Not grand gestures — just showing up.';
 
   @override
   String get widgetToday => 'today';

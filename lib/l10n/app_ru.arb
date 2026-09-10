@@ -406,7 +406,6 @@
     }
   },
   "swapErrorTitle": "Что-то пошло не так",
-  "swapErrorMessage": "Не удалось заменить привычку. Попробуй ещё раз.",
   "swapLimitTitle": "Заменить привычку?",
   "swapLimitMessage": "Все бесплатные замены в этом месяце использованы.\n\nIntended+: без ограничений",
   "swapNoAltTitle": "Нет альтернатив",
@@ -776,53 +775,7 @@
   "themeGoldenHour": "Золотой час",
   "themeNightBloom": "Ночное небо",
   "themeSandDune": "Тёплый песок",
-  "browseHabitsTitle": "Все привычки",
-  "browseHabitsAvailable": "Доступно привычек: {count}",
-  "@browseHabitsAvailable": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "browseHabitsSearch": "Поиск привычек...",
-  "browseAlreadyAddedTitle": "Уже добавлена",
-  "browseAlreadyAddedMessage": "«{habit}» уже есть в твоих привычках.",
-  "@browseAlreadyAddedMessage": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
-  "browseSwapLimitTitle": "Лимит замен достигнут",
-  "browseSwapConfirmTitle": "Заменить одну из привычек?",
-  "browseSwapConfirmMessage": "Заменить одну из текущих привычек на «{habit}».",
-  "@browseSwapConfirmMessage": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
-  "browseSwapRemainingCount": "{count, plural, =1{Осталась {count} замена} few{Осталось {count} замены} other{Осталось {count} замен}} в этом месяце.",
-  "@browseSwapRemainingCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "browseChooseHabitToSwap": "Выбери привычку для замены",
-  "browseWhichToReplace": "Какую привычку заменить?",
-  "browseChooseToReplaceMessage": "Выбери, какую из текущих привычек заменить на «{habit}»",
-  "@browseChooseToReplaceMessage": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
   "browseHabitAddedTitle": "Привычка добавлена",
   "browseHabitAddedMessage": "«{habit}» добавлена в твои привычки.",
   "@browseHabitAddedMessage": {
@@ -1081,65 +1034,16 @@
   "tipWidget": "Добавь Intended на главный экран — удерживай экран и добавь виджет",
   "tipGotIt": "Понятно",
   "tipSkipAll": "Пропустить подсказки",
-  "packSwapTitle": "Освободи место для нового набора",
-  "packSwapSubtitle": "Чтобы сохранить порядок, выбери привычки, которые хочешь убрать. Твои собственные останутся с тобой.",
-  "packSwapConfirm": "Убрать {count} и добавить {packName}",
-  "@packSwapConfirm": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "packName": {
-        "type": "String"
-      }
-    }
-  },
-  "packSwapAdded": "добавлен — {count} новых привычек готовы",
-  "@packSwapAdded": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "packSwapAllActive": "Все привычки из этого набора уже активны",
-  "packSectionHeader": "ГОТОВЫЕ НАБОРЫ ПРИВЫЧЕК",
-  "packHabitsCount": "{count, plural, =1{1 привычка} few{{count} привычки} other{{count} привычек}}",
-  "@packHabitsCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "packFreeBadge": "Бесплатно",
-  "packStartButton": "Активировать «{packName}»",
-  "@packStartButton": {
-    "placeholders": {
-      "packName": {
-        "type": "String"
-      }
-    }
-  },
-  "packHabitsInPack": "ПРИВЫЧКИ В НАБОРЕ",
-  "packAllActive": "Все привычки уже активны",
-  "packHabitActive": "Активна",
-  "packActiveBadge": "Активен",
   "packGentleMorningsName": "Мягкое утро",
   "packGentleMorningsSubtitle": "Утренний ритуал, который не похож на подъём в 5 утра",
-  "packGentleMorningsDescription": "Четыре маленькие привычки как мягкая последовательность — выпить воды, подышать свежим воздухом, сосредоточиться и наметить день. Ранний подъём не нужен.",
   "packWindingDownName": "Вечерний покой",
   "packWindingDownSubtitle": "Вечерний набор для перезагрузки. Специально короткий.",
-  "packWindingDownDescription": "Маленький ритуал, чтобы отпустить день. Остановиться, подумать, устроиться поудобнее, насладиться чем-то одним. Вот и весь вечерний план.",
   "packTinyResetsName": "Мини-перезагрузка",
   "packTinyResetsSubtitle": "Когда среди недели всё летит в тартарары",
-  "packTinyResetsDescription": "Когда накрывает — четыре микро-действия создают островок контроля. Не система продуктивности — набор первой помощи.",
   "packCreativeSparkName": "Творческий импульс",
   "packCreativeSparkSubtitle": "Маленькие творческие шаги. Талант не нужен.",
-  "packCreativeSparkDescription": "Три крошечные творческие привычки, которые помогут выйти из головы и начать делать. Не про мастерство — про игру.",
   "packStayConnectedName": "На связи",
   "packStayConnectedSubtitle": "Те, кто важен — один маленький жест за раз.",
-  "packStayConnectedDescription": "Четыре микро-привычки, чтобы оставаться ближе к своим людям. Не грандиозные жесты — просто быть рядом.",
   "widgetToday": "сегодня",
   "widgetMore": "ещё {n}",
   "widgetUpgrade": "Обнови, чтобы узнать больше",

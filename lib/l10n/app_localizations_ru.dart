@@ -986,10 +986,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get swapErrorTitle => 'Что-то пошло не так';
 
   @override
-  String get swapErrorMessage =>
-      'Не удалось заменить привычку. Попробуй ещё раз.';
-
-  @override
   String get swapLimitTitle => 'Заменить привычку?';
 
   @override
@@ -2109,57 +2105,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get themeSandDune => 'Тёплый песок';
 
   @override
-  String get browseHabitsTitle => 'Все привычки';
-
-  @override
-  String browseHabitsAvailable(int count) {
-    return 'Доступно привычек: $count';
-  }
-
-  @override
   String get browseHabitsSearch => 'Поиск привычек...';
-
-  @override
-  String get browseAlreadyAddedTitle => 'Уже добавлена';
-
-  @override
-  String browseAlreadyAddedMessage(String habit) {
-    return '«$habit» уже есть в твоих привычках.';
-  }
-
-  @override
-  String get browseSwapLimitTitle => 'Лимит замен достигнут';
-
-  @override
-  String get browseSwapConfirmTitle => 'Заменить одну из привычек?';
-
-  @override
-  String browseSwapConfirmMessage(String habit) {
-    return 'Заменить одну из текущих привычек на «$habit».';
-  }
-
-  @override
-  String browseSwapRemainingCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'Осталось $count замен',
-      few: 'Осталось $count замены',
-      one: 'Осталась $count замена',
-    );
-    return '$_temp0 в этом месяце.';
-  }
-
-  @override
-  String get browseChooseHabitToSwap => 'Выбери привычку для замены';
-
-  @override
-  String get browseWhichToReplace => 'Какую привычку заменить?';
-
-  @override
-  String browseChooseToReplaceMessage(String habit) {
-    return 'Выбери, какую из текущих привычек заменить на «$habit»';
-  }
 
   @override
   String get browseHabitAddedTitle => 'Привычка добавлена';
@@ -2791,70 +2737,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tipSkipAll => 'Пропустить подсказки';
 
   @override
-  String get packSwapTitle => 'Освободи место для нового набора';
-
-  @override
-  String get packSwapSubtitle =>
-      'Чтобы сохранить порядок, выбери привычки, которые хочешь убрать. Твои собственные останутся с тобой.';
-
-  @override
-  String packSwapConfirm(int count, String packName) {
-    return 'Убрать $count и добавить $packName';
-  }
-
-  @override
-  String packSwapAdded(int count) {
-    return 'добавлен — $count новых привычек готовы';
-  }
-
-  @override
-  String get packSwapAllActive => 'Все привычки из этого набора уже активны';
-
-  @override
-  String get packSectionHeader => 'ГОТОВЫЕ НАБОРЫ ПРИВЫЧЕК';
-
-  @override
-  String packHabitsCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count привычек',
-      few: '$count привычки',
-      one: '1 привычка',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get packFreeBadge => 'Бесплатно';
-
-  @override
-  String packStartButton(String packName) {
-    return 'Активировать «$packName»';
-  }
-
-  @override
-  String get packHabitsInPack => 'ПРИВЫЧКИ В НАБОРЕ';
-
-  @override
-  String get packAllActive => 'Все привычки уже активны';
-
-  @override
-  String get packHabitActive => 'Активна';
-
-  @override
-  String get packActiveBadge => 'Активен';
-
-  @override
   String get packGentleMorningsName => 'Мягкое утро';
 
   @override
   String get packGentleMorningsSubtitle =>
       'Утренний ритуал, который не похож на подъём в 5 утра';
-
-  @override
-  String get packGentleMorningsDescription =>
-      'Четыре маленькие привычки как мягкая последовательность — выпить воды, подышать свежим воздухом, сосредоточиться и наметить день. Ранний подъём не нужен.';
 
   @override
   String get packWindingDownName => 'Вечерний покой';
@@ -2864,19 +2751,11 @@ class AppLocalizationsRu extends AppLocalizations {
       'Вечерний набор для перезагрузки. Специально короткий.';
 
   @override
-  String get packWindingDownDescription =>
-      'Маленький ритуал, чтобы отпустить день. Остановиться, подумать, устроиться поудобнее, насладиться чем-то одним. Вот и весь вечерний план.';
-
-  @override
   String get packTinyResetsName => 'Мини-перезагрузка';
 
   @override
   String get packTinyResetsSubtitle =>
       'Когда среди недели всё летит в тартарары';
-
-  @override
-  String get packTinyResetsDescription =>
-      'Когда накрывает — четыре микро-действия создают островок контроля. Не система продуктивности — набор первой помощи.';
 
   @override
   String get packCreativeSparkName => 'Творческий импульс';
@@ -2886,19 +2765,11 @@ class AppLocalizationsRu extends AppLocalizations {
       'Маленькие творческие шаги. Талант не нужен.';
 
   @override
-  String get packCreativeSparkDescription =>
-      'Три крошечные творческие привычки, которые помогут выйти из головы и начать делать. Не про мастерство — про игру.';
-
-  @override
   String get packStayConnectedName => 'На связи';
 
   @override
   String get packStayConnectedSubtitle =>
       'Те, кто важен — один маленький жест за раз.';
-
-  @override
-  String get packStayConnectedDescription =>
-      'Четыре микро-привычки, чтобы оставаться ближе к своим людям. Не грандиозные жесты — просто быть рядом.';
 
   @override
   String get widgetToday => 'сегодня';
