@@ -123,9 +123,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get focusAreaProductivity => 'Doing one thing';
 
   @override
-  String get focusAreaProductivitySub => 'Starting is the hard part.';
-
-  @override
   String get focusAreaHome => 'Home & organization';
 
   @override
@@ -147,16 +144,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get focusAreaFinances => 'Finances';
 
   @override
-  String get focusAreaFinancesSub => 'Tiny money moves, real peace of mind.';
-
-  @override
   String get focusAreaSelfCare => 'Self-care';
 
   @override
   String get focusAreaSelfCareSub => 'The small luxuries you keep skipping.';
-
-  @override
-  String get focusAreasTitle => 'Focus areas';
 
   @override
   String focusAreasPromptWithName(String name) {
@@ -180,9 +171,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get focusAreasLimitMessage =>
       'You can select up to 2 areas. Deselect one to choose another.';
-
-  @override
-  String get reminderTitle => 'Reminder';
 
   @override
   String get reminderSubtitle => 'Want a gentle daily reminder?';
@@ -253,19 +241,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get habitRevealTitle => 'Here\'s what we picked for you';
-
-  @override
-  String get habitRevealSubtitleDefault => 'Based on your preferences';
-
-  @override
-  String habitRevealSubtitleOneArea(String area) {
-    return 'Based on $area';
-  }
-
-  @override
-  String habitRevealSubtitleTwoAreas(String area1, String area2) {
-    return 'Based on $area1 & $area2';
-  }
 
   @override
   String habitRevealSubtitlePath(String pathTitle) {
@@ -562,20 +537,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planAcceptAddFocus => 'Add it';
 
   @override
-  String get planDecline => 'Not this month';
-
-  @override
-  String planMore(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count more when you\'re ready',
-      one: 'One more when you\'re ready',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get planDone =>
       'Done. In four weeks this page will tell you whether it changed anything.';
 
@@ -704,11 +665,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String insightsReturns(int count) {
-    return '$count times you went quiet for a few days. $count times you came back.';
-  }
-
-  @override
   String get insightsExampleLabel => 'EXAMPLE';
 
   @override
@@ -720,24 +676,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get habitsCreateCustom => 'Write your own intention';
-
-  @override
-  String get habitBreath => 'Three slow breaths';
-
-  @override
-  String get habitPause => 'Ten-second pause';
-
-  @override
-  String get habitWater => 'Mindful water';
-
-  @override
-  String get habitStretch => 'Gentle stretch';
-
-  @override
-  String get habitPriority => 'One priority';
-
-  @override
-  String get habitCheckin => 'Honest check-in';
 
   @override
   String get monthJanuary => 'January';
@@ -1988,9 +1926,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingPhilosophyCta => 'Got it';
 
   @override
-  String get insightsGrowthHint => 'Insights get sharper every week';
-
-  @override
   String get tipGotIt => 'Got it';
 
   @override
@@ -2682,13 +2617,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'You built this practice. Trust where it takes you.';
 
   @override
-  String get adaptiveNotifReducedTitle => 'We\'re stepping back';
-
-  @override
-  String get adaptiveNotifReducedBody =>
-      'You\'ve been checking in regularly — we\'ll remind you less often.';
-
-  @override
   String get adaptiveNotifReengageBody =>
       'It\'s been a little while. Just a gentle hello.';
 
@@ -2844,9 +2772,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menuDidYesterday => 'I did this yesterday';
-
-  @override
-  String get toastKeptYesterday => 'Kept — for yesterday.';
 
   @override
   String get toastAlreadyYesterday => 'Yesterday already has this one.';
@@ -3021,9 +2946,6 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$area — $_temp0 across $_temp1.';
   }
-
-  @override
-  String get momentSheetYesterday => 'yesterday';
 
   @override
   String get insightsPastEmptyTitle => 'A quiet month.';

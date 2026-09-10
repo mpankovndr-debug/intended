@@ -63,7 +63,6 @@
   "focusAreaMood": "Mood",
   "focusAreaMoodSub": "Notice how you feel. That's the first step.",
   "focusAreaProductivity": "Doing one thing",
-  "focusAreaProductivitySub": "Starting is the hard part.",
   "focusAreaHome": "Home & organization",
   "focusAreaHomeSub": "Small tidying, big calm.",
   "focusAreaRelationships": "Relationships",
@@ -71,10 +70,8 @@
   "focusAreaCreativity": "Creativity",
   "focusAreaCreativitySub": "Make something. Anything.",
   "focusAreaFinances": "Finances",
-  "focusAreaFinancesSub": "Tiny money moves, real peace of mind.",
   "focusAreaSelfCare": "Self-care",
   "focusAreaSelfCareSub": "The small luxuries you keep skipping.",
-  "focusAreasTitle": "Focus areas",
   "focusAreasPromptWithName": "What matters to you right now, {name}?",
   "@focusAreasPromptWithName": {
     "placeholders": {
@@ -98,7 +95,6 @@
   "focusAreasChangeLater": "You can change this later.",
   "focusAreasLimitTitle": "Limit Reached",
   "focusAreasLimitMessage": "You can select up to 2 areas. Deselect one to choose another.",
-  "reminderTitle": "Reminder",
   "reminderSubtitle": "Want a gentle daily reminder?",
   "reminderDescription": "Just once a day. No pressure.",
   "reminderDailyToggle": "Gentle daily reminder",
@@ -144,26 +140,6 @@
     "description": "The theme hint when the store reports no free trial on the yearly plan."
   },
   "habitRevealTitle": "Here's what we picked for you",
-  "habitRevealSubtitleDefault": "Based on your preferences",
-  "habitRevealSubtitleOneArea": "Based on {area}",
-  "@habitRevealSubtitleOneArea": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
-  "habitRevealSubtitleTwoAreas": "Based on {area1} & {area2}",
-  "@habitRevealSubtitleTwoAreas": {
-    "placeholders": {
-      "area1": {
-        "type": "String"
-      },
-      "area2": {
-        "type": "String"
-      }
-    }
-  },
   "habitRevealSubtitlePath": "Here's what your {pathTitle} practice looks like.",
   "@habitRevealSubtitlePath": {
     "placeholders": {
@@ -341,8 +317,6 @@
     }
   },
   "planAcceptAddFocus": "Add it",
-  "planDecline": "Not this month",
-  "planMore": "{count, plural, =1{One more when you're ready} other{{count} more when you're ready}}",
   "planDone": "Done. In four weeks this page will tell you whether it changed anything.",
   "planProofMovedReminder": "On {date} you moved your reminder to {time}.",
   "planProofSetAside": "On {date} you set aside {habit}.",
@@ -391,13 +365,6 @@
       "area": {
         "type": "String"
       },
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@planMore": {
-    "placeholders": {
       "count": {
         "type": "int"
       }
@@ -512,7 +479,6 @@
   },
   "insightsThisMonth": "THIS MONTH",
   "insightsDidThings": "You did {count} small things for yourself in {month}.",
-  "insightsReturns": "{count} times you went quiet for a few days. {count} times you came back.",
   "insightsExampleLabel": "EXAMPLE",
   "insightsExampleHeader": "IN A MONTH, THIS PAGE LOOKS LIKE THIS",
   "insightsUnlockNote": "✦ Intended+ reads your month and suggests what to change. It unlocks once you have something to read.",
@@ -536,20 +502,7 @@
       }
     }
   },
-  "@insightsReturns": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "habitsCreateCustom": "Write your own intention",
-  "habitBreath": "Three slow breaths",
-  "habitPause": "Ten-second pause",
-  "habitWater": "Mindful water",
-  "habitStretch": "Gentle stretch",
-  "habitPriority": "One priority",
-  "habitCheckin": "Honest check-in",
   "monthJanuary": "January",
   "monthFebruary": "February",
   "monthMarch": "March",
@@ -1114,7 +1067,6 @@
   "onboardingPhilosophyHeading": "This isn't a tracker.\nIt's a return to yourself.",
   "onboardingPhilosophyBody": "No streaks to maintain. No guilt for skipping.\nYour progress never resets. One small intention is enough.",
   "onboardingPhilosophyCta": "Got it",
-  "insightsGrowthHint": "Insights get sharper every week",
   "tipGotIt": "Got it",
   "packGentleMorningsName": "Gentle Mornings",
   "packGentleMorningsSubtitle": "A small morning ritual that doesn't feel like a 5am hustle routine",
@@ -1402,8 +1354,6 @@
   "notifPathYourOwnWay4": "Your path is your own. Show up however you want.",
   "notifPathYourOwnWay5": "One intention. That's all. The rest is up to you.",
   "notifPathYourOwnWay6": "You built this practice. Trust where it takes you.",
-  "adaptiveNotifReducedTitle": "We're stepping back",
-  "adaptiveNotifReducedBody": "You've been checking in regularly — we'll remind you less often.",
   "adaptiveNotifReengageBody": "It's been a little while. Just a gentle hello.",
   "adaptiveNotifSilentBody": "We noticed you've been away. No pressure — we'll be here when you're ready.",
   "a11yTabHabits": "Habits",
@@ -1528,7 +1478,6 @@
     }
   },
   "menuDidYesterday": "I did this yesterday",
-  "toastKeptYesterday": "Kept — for yesterday.",
   "toastAlreadyYesterday": "Yesterday already has this one.",
   "liftLabel": "WHAT LIFTS YOU",
   "liftLine": "{habit} — glad you did it {glad, plural, =1{once} other{{glad} times}} out of {total}.",
@@ -1614,7 +1563,6 @@
   "habitDimLights": "Dim the lights an hour before sleep",
   "habitMealWithoutPhone": "One meal without your phone",
   "insightsFilterLine": "{area} — {count, plural, =1{one moment} other{{count} moments}} across {days, plural, =1{one day} other{{days} days}}.",
-  "momentSheetYesterday": "yesterday",
   "@insightsFilterLine": {
     "placeholders": {
       "area": {

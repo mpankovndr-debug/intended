@@ -49,7 +49,6 @@
   "focusAreaMood": "Настроение",
   "focusAreaMoodSub": "Замечай, как себя чувствуешь. Это уже шаг.",
   "focusAreaProductivity": "Одно дело",
-  "focusAreaProductivitySub": "Начать — самое трудное.",
   "focusAreaHome": "Дом и порядок",
   "focusAreaHomeSub": "Маленький порядок — большое спокойствие.",
   "focusAreaRelationships": "Отношения",
@@ -57,10 +56,8 @@
   "focusAreaCreativity": "Творчество",
   "focusAreaCreativitySub": "Создавай что угодно.",
   "focusAreaFinances": "Финансы",
-  "focusAreaFinancesSub": "Маленькие шаги к спокойствию за деньги.",
   "focusAreaSelfCare": "Забота о себе",
   "focusAreaSelfCareSub": "Те маленькие радости, которые ты всё время откладываешь.",
-  "focusAreasTitle": "Направления",
   "focusAreasPromptWithName": "Что тебе сейчас важно, {name}?",
   "@focusAreasPromptWithName": {
     "placeholders": {
@@ -84,7 +81,6 @@
   "focusAreasChangeLater": "Это всегда можно изменить позже.",
   "focusAreasLimitTitle": "Пока хватит",
   "focusAreasLimitMessage": "Можно выбрать до 2 направлений. Убери одно, чтобы выбрать другое.",
-  "reminderTitle": "Напоминание",
   "reminderSubtitle": "Хочешь ненавязчивое ежедневное напоминание?",
   "reminderDescription": "Всего раз в день. Без давления.",
   "reminderDailyToggle": "Ежедневное напоминание",
@@ -117,26 +113,6 @@
   "themeSelectionPremiumHintUnspecified": "«Глубокий фокус» и другие темы доступны с Intended+. Попробуй бесплатно после настройки.",
   "themeSelectionPremiumHintNoTrial": "«Глубокий фокус» и другие темы доступны с Intended+.",
   "habitRevealTitle": "Вот, что мы подобрали для тебя",
-  "habitRevealSubtitleDefault": "На основе твоих предпочтений",
-  "habitRevealSubtitleOneArea": "На основе направления «{area}»",
-  "@habitRevealSubtitleOneArea": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
-  "habitRevealSubtitleTwoAreas": "На основе «{area1}» и «{area2}»",
-  "@habitRevealSubtitleTwoAreas": {
-    "placeholders": {
-      "area1": {
-        "type": "String"
-      },
-      "area2": {
-        "type": "String"
-      }
-    }
-  },
   "habitRevealSubtitlePath": "Вот как выглядит твоя практика «{pathTitle}».",
   "@habitRevealSubtitlePath": {
     "placeholders": {
@@ -249,8 +225,6 @@
     }
   },
   "planAcceptAddFocus": "Добавить",
-  "planDecline": "Не в этом месяце",
-  "planMore": "Ещё {count} — когда захочешь",
   "planDone": "Готово. Через четыре недели эта страница скажет, изменилось ли что-нибудь.",
   "planProofMovedReminder": "{date} напоминание перенесено на {time}.",
   "planProofSetAside": "{date} отложено: «{habit}».",
@@ -276,17 +250,10 @@
   "commonListAnd": "{first} и {second}",
   "insightsThisMonth": "В ЭТОМ МЕСЯЦЕ",
   "insightsDidThings": "За {month} {count, plural, one{{count} маленькое дело} few{{count} маленьких дела} many{{count} маленьких дел} other{{count} маленьких дела}} для себя.",
-  "insightsReturns": "{count, plural, one{Одна тихая пауза — и одно возвращение} few{{count} тихие паузы — и столько же возвращений} many{{count} тихих пауз — и столько же возвращений} other{{count} тихие паузы — и столько же возвращений}}.",
   "insightsExampleLabel": "ПРИМЕР",
   "insightsExampleHeader": "ЧЕРЕЗ МЕСЯЦ ЭТА СТРАНИЦА БУДЕТ ТАКОЙ",
   "insightsUnlockNote": "✦ Intended+ читает твой месяц и подсказывает, что изменить. Откроется, когда будет что читать.",
   "habitsCreateCustom": "Напиши своё намерение",
-  "habitBreath": "Три медленных вдоха",
-  "habitPause": "Десять секунд тишины",
-  "habitWater": "Осознанный глоток воды",
-  "habitStretch": "Мягкая растяжка",
-  "habitPriority": "Один приоритет",
-  "habitCheckin": "Честная проверка себя",
   "monthJanuary": "Январь",
   "monthFebruary": "Февраль",
   "monthMarch": "Март",
@@ -743,7 +710,6 @@
   "onboardingPhilosophyHeading": "Это не трекер.\nЭто возвращение к себе.",
   "onboardingPhilosophyBody": "Никаких стриков. Никакой вины за пропуск.\nТвой прогресс не обнуляется. Достаточно одного лишь намерения.",
   "onboardingPhilosophyCta": "Понятно",
-  "insightsGrowthHint": "Инсайты становятся точнее с каждой неделей",
   "tipGotIt": "Понятно",
   "packGentleMorningsName": "Мягкое утро",
   "packGentleMorningsSubtitle": "Утренний ритуал, который не похож на подъём в 5 утра",
@@ -955,8 +921,6 @@
   "notifPathYourOwnWay4": "Твой путь — твой собственный. Приходи как хочешь.",
   "notifPathYourOwnWay5": "Одно намерение. Это всё. Остальное — за тобой.",
   "notifPathYourOwnWay6": "Ты создал(а) эту практику. Доверяй, куда она ведёт.",
-  "adaptiveNotifReducedTitle": "Даём тебе больше пространства",
-  "adaptiveNotifReducedBody": "Ты регулярно отмечаешься — мы будем напоминать реже.",
   "adaptiveNotifReengageBody": "Прошло немного времени. Просто мягкий привет.",
   "adaptiveNotifSilentBody": "Мы заметили, что тебя давно не было. Не переживай, мы подождём.",
   "bloomGentleMornings1": "Полное утро. Это кое-что значит.",
@@ -1042,7 +1006,6 @@
   "rescueLongBody": "Здесь никто ничего не считал, пока тебя не было.",
   "rescueShowAll": "Показать всё",
   "menuDidYesterday": "Я делал это вчера",
-  "toastKeptYesterday": "Сохранено — за вчера.",
   "toastAlreadyYesterday": "За вчера это уже записано.",
   "liftLabel": "ЧТО ТЕБЯ ПОДДЕРЖИВАЕТ",
   "liftLine": "{habit} — {glad, plural, one{{glad} раз} few{{glad} раза} many{{glad} раз} other{{glad} раза}} из {total} были в радость.",
@@ -1086,7 +1049,6 @@
   "habitDimLights": "Приглуши свет за час до сна",
   "habitMealWithoutPhone": "Один приём пищи без телефона",
   "insightsFilterLine": "{area} — {count, plural, one{{count} момент} few{{count} момента} many{{count} моментов} other{{count} момента}} за {days, plural, one{{days} день} few{{days} дня} many{{days} дней} other{{days} дня}}.",
-  "momentSheetYesterday": "вчера",
   "insightsPastEmptyTitle": "Тихий месяц.",
   "insightsPastEmptyBody": "Здесь ничего не собралось — и это не помешало ни одному месяцу после.",
   "faqWhatIsMoment": "Что за квадраты?",

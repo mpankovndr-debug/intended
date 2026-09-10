@@ -122,9 +122,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get focusAreaProductivity => 'Одно дело';
 
   @override
-  String get focusAreaProductivitySub => 'Начать — самое трудное.';
-
-  @override
   String get focusAreaHome => 'Дом и порядок';
 
   @override
@@ -146,17 +143,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get focusAreaFinances => 'Финансы';
 
   @override
-  String get focusAreaFinancesSub => 'Маленькие шаги к спокойствию за деньги.';
-
-  @override
   String get focusAreaSelfCare => 'Забота о себе';
 
   @override
   String get focusAreaSelfCareSub =>
       'Те маленькие радости, которые ты всё время откладываешь.';
-
-  @override
-  String get focusAreasTitle => 'Направления';
 
   @override
   String focusAreasPromptWithName(String name) {
@@ -180,9 +171,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get focusAreasLimitMessage =>
       'Можно выбрать до 2 направлений. Убери одно, чтобы выбрать другое.';
-
-  @override
-  String get reminderTitle => 'Напоминание';
 
   @override
   String get reminderSubtitle => 'Хочешь ненавязчивое ежедневное напоминание?';
@@ -255,19 +243,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get habitRevealTitle => 'Вот, что мы подобрали для тебя';
-
-  @override
-  String get habitRevealSubtitleDefault => 'На основе твоих предпочтений';
-
-  @override
-  String habitRevealSubtitleOneArea(String area) {
-    return 'На основе направления «$area»';
-  }
-
-  @override
-  String habitRevealSubtitleTwoAreas(String area1, String area2) {
-    return 'На основе «$area1» и «$area2»';
-  }
 
   @override
   String habitRevealSubtitlePath(String pathTitle) {
@@ -592,14 +567,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get planAcceptAddFocus => 'Добавить';
 
   @override
-  String get planDecline => 'Не в этом месяце';
-
-  @override
-  String planMore(int count) {
-    return 'Ещё $count — когда захочешь';
-  }
-
-  @override
   String get planDone =>
       'Готово. Через четыре недели эта страница скажет, изменилось ли что-нибудь.';
 
@@ -743,19 +710,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String insightsReturns(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count тихие паузы — и столько же возвращений',
-      many: '$count тихих пауз — и столько же возвращений',
-      few: '$count тихие паузы — и столько же возвращений',
-      one: 'Одна тихая пауза — и одно возвращение',
-    );
-    return '$_temp0.';
-  }
-
-  @override
   String get insightsExampleLabel => 'ПРИМЕР';
 
   @override
@@ -767,24 +721,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get habitsCreateCustom => 'Напиши своё намерение';
-
-  @override
-  String get habitBreath => 'Три медленных вдоха';
-
-  @override
-  String get habitPause => 'Десять секунд тишины';
-
-  @override
-  String get habitWater => 'Осознанный глоток воды';
-
-  @override
-  String get habitStretch => 'Мягкая растяжка';
-
-  @override
-  String get habitPriority => 'Один приоритет';
-
-  @override
-  String get habitCheckin => 'Честная проверка себя';
 
   @override
   String get monthJanuary => 'Январь';
@@ -2052,9 +1988,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingPhilosophyCta => 'Понятно';
 
   @override
-  String get insightsGrowthHint => 'Инсайты становятся точнее с каждой неделей';
-
-  @override
   String get tipGotIt => 'Понятно';
 
   @override
@@ -2749,13 +2682,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Ты создал(а) эту практику. Доверяй, куда она ведёт.';
 
   @override
-  String get adaptiveNotifReducedTitle => 'Даём тебе больше пространства';
-
-  @override
-  String get adaptiveNotifReducedBody =>
-      'Ты регулярно отмечаешься — мы будем напоминать реже.';
-
-  @override
   String get adaptiveNotifReengageBody =>
       'Прошло немного времени. Просто мягкий привет.';
 
@@ -2924,9 +2850,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get menuDidYesterday => 'Я делал это вчера';
-
-  @override
-  String get toastKeptYesterday => 'Сохранено — за вчера.';
 
   @override
   String get toastAlreadyYesterday => 'За вчера это уже записано.';
@@ -3112,9 +3035,6 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '$area — $_temp0 за $_temp1.';
   }
-
-  @override
-  String get momentSheetYesterday => 'вчера';
 
   @override
   String get insightsPastEmptyTitle => 'Тихий месяц.';

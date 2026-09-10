@@ -308,12 +308,6 @@ abstract class AppLocalizations {
   /// **'Doing one thing'**
   String get focusAreaProductivity;
 
-  /// No description provided for @focusAreaProductivitySub.
-  ///
-  /// In en, this message translates to:
-  /// **'Starting is the hard part.'**
-  String get focusAreaProductivitySub;
-
   /// No description provided for @focusAreaHome.
   ///
   /// In en, this message translates to:
@@ -356,12 +350,6 @@ abstract class AppLocalizations {
   /// **'Finances'**
   String get focusAreaFinances;
 
-  /// No description provided for @focusAreaFinancesSub.
-  ///
-  /// In en, this message translates to:
-  /// **'Tiny money moves, real peace of mind.'**
-  String get focusAreaFinancesSub;
-
   /// No description provided for @focusAreaSelfCare.
   ///
   /// In en, this message translates to:
@@ -373,12 +361,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The small luxuries you keep skipping.'**
   String get focusAreaSelfCareSub;
-
-  /// No description provided for @focusAreasTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Focus areas'**
-  String get focusAreasTitle;
 
   /// No description provided for @focusAreasPromptWithName.
   ///
@@ -415,12 +397,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can select up to 2 areas. Deselect one to choose another.'**
   String get focusAreasLimitMessage;
-
-  /// No description provided for @reminderTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Reminder'**
-  String get reminderTitle;
 
   /// No description provided for @reminderSubtitle.
   ///
@@ -529,24 +505,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Here\'s what we picked for you'**
   String get habitRevealTitle;
-
-  /// No description provided for @habitRevealSubtitleDefault.
-  ///
-  /// In en, this message translates to:
-  /// **'Based on your preferences'**
-  String get habitRevealSubtitleDefault;
-
-  /// No description provided for @habitRevealSubtitleOneArea.
-  ///
-  /// In en, this message translates to:
-  /// **'Based on {area}'**
-  String habitRevealSubtitleOneArea(String area);
-
-  /// No description provided for @habitRevealSubtitleTwoAreas.
-  ///
-  /// In en, this message translates to:
-  /// **'Based on {area1} & {area2}'**
-  String habitRevealSubtitleTwoAreas(String area1, String area2);
 
   /// No description provided for @habitRevealSubtitlePath.
   ///
@@ -927,18 +885,6 @@ abstract class AppLocalizations {
   /// **'Add it'**
   String get planAcceptAddFocus;
 
-  /// No description provided for @planDecline.
-  ///
-  /// In en, this message translates to:
-  /// **'Not this month'**
-  String get planDecline;
-
-  /// No description provided for @planMore.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{One more when you\'re ready} other{{count} more when you\'re ready}}'**
-  String planMore(int count);
-
   /// No description provided for @planDone.
   ///
   /// In en, this message translates to:
@@ -1089,12 +1035,6 @@ abstract class AppLocalizations {
   /// **'You did {count} small things for yourself in {month}.'**
   String insightsDidThings(int count, String month);
 
-  /// No description provided for @insightsReturns.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} times you went quiet for a few days. {count} times you came back.'**
-  String insightsReturns(int count);
-
   /// No description provided for @insightsExampleLabel.
   ///
   /// In en, this message translates to:
@@ -1118,42 +1058,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Write your own intention'**
   String get habitsCreateCustom;
-
-  /// No description provided for @habitBreath.
-  ///
-  /// In en, this message translates to:
-  /// **'Three slow breaths'**
-  String get habitBreath;
-
-  /// No description provided for @habitPause.
-  ///
-  /// In en, this message translates to:
-  /// **'Ten-second pause'**
-  String get habitPause;
-
-  /// No description provided for @habitWater.
-  ///
-  /// In en, this message translates to:
-  /// **'Mindful water'**
-  String get habitWater;
-
-  /// No description provided for @habitStretch.
-  ///
-  /// In en, this message translates to:
-  /// **'Gentle stretch'**
-  String get habitStretch;
-
-  /// No description provided for @habitPriority.
-  ///
-  /// In en, this message translates to:
-  /// **'One priority'**
-  String get habitPriority;
-
-  /// No description provided for @habitCheckin.
-  ///
-  /// In en, this message translates to:
-  /// **'Honest check-in'**
-  String get habitCheckin;
 
   /// No description provided for @monthJanuary.
   ///
@@ -3453,12 +3357,6 @@ abstract class AppLocalizations {
   /// **'Got it'**
   String get onboardingPhilosophyCta;
 
-  /// No description provided for @insightsGrowthHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Insights get sharper every week'**
-  String get insightsGrowthHint;
-
   /// No description provided for @tipGotIt.
   ///
   /// In en, this message translates to:
@@ -4644,18 +4542,6 @@ abstract class AppLocalizations {
   /// **'You built this practice. Trust where it takes you.'**
   String get notifPathYourOwnWay6;
 
-  /// No description provided for @adaptiveNotifReducedTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'We\'re stepping back'**
-  String get adaptiveNotifReducedTitle;
-
-  /// No description provided for @adaptiveNotifReducedBody.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'ve been checking in regularly — we\'ll remind you less often.'**
-  String get adaptiveNotifReducedBody;
-
   /// No description provided for @adaptiveNotifReengageBody.
   ///
   /// In en, this message translates to:
@@ -4895,12 +4781,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I did this yesterday'**
   String get menuDidYesterday;
-
-  /// No description provided for @toastKeptYesterday.
-  ///
-  /// In en, this message translates to:
-  /// **'Kept — for yesterday.'**
-  String get toastKeptYesterday;
 
   /// No description provided for @toastAlreadyYesterday.
   ///
@@ -5159,12 +5039,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{area} — {count, plural, =1{one moment} other{{count} moments}} across {days, plural, =1{one day} other{{days} days}}.'**
   String insightsFilterLine(String area, int count, int days);
-
-  /// No description provided for @momentSheetYesterday.
-  ///
-  /// In en, this message translates to:
-  /// **'yesterday'**
-  String get momentSheetYesterday;
 
   /// No description provided for @insightsPastEmptyTitle.
   ///
