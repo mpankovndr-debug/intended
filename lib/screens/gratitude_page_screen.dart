@@ -249,13 +249,19 @@ class _GratitudePageScreenState extends State<GratitudePageScreen> {
             // Only once there is something behind you. An archive door that
             // opens on nothing is a promise of content, which is the failure
             // "silence beats filler" replaced.
+            // A bare icon says nothing to VoiceOver, so the door carries its
+            // name.
             _hasPastPages
-                ? GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => Navigator.of(context)
-                        .push(GratitudeArchiveScreen.route()),
-                    child: Icon(Icons.menu_book_outlined,
-                        size: 22, color: colors.checkmarkFill),
+                ? Semantics(
+                    label: l10n.gratitudePastPages,
+                    button: true,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => Navigator.of(context)
+                          .push(GratitudeArchiveScreen.route()),
+                      child: Icon(Icons.menu_book_outlined,
+                          size: 22, color: colors.checkmarkFill),
+                    ),
                   )
                 : const SizedBox(width: 24),
           ],
