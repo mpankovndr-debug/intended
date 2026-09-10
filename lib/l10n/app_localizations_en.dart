@@ -57,9 +57,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appPlanBoost => 'Boost';
 
   @override
-  String get appUnlockPlus => 'Unlock Intended+';
-
-  @override
   String get welcomeTitle => 'Welcome to Intended';
 
   @override
@@ -1211,15 +1208,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get paywallYearlyPerMonth => '€3.75';
-
-  @override
   String paywallYearlyAnchor(String price) {
     return '$price/month, billed yearly';
   }
-
-  @override
-  String get paywallYearlySave => 'Save 37%';
 
   @override
   String paywallSavePercent(int percent) {
@@ -1307,10 +1298,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingPaywallTitle => 'Intended+ reads your months';
-
-  @override
-  String get onboardingPaywallBody =>
-      'The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.';
 
   @override
   String get onboardingPaywallPrimaryCta => 'Start free trial';
@@ -1501,9 +1488,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileFocusLimitOptions => '• Intended+: Unlimited';
-
-  @override
-  String get profilePaymentTitle => 'Payment';
 
   @override
   String get profileChangeSpace => 'Change your space';
@@ -1958,18 +1942,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareButton => 'Share';
 
   @override
-  String get boostOrDivider => 'or';
-
-  @override
   String get boostGoUnlimited => 'Want more? Go unlimited with Intended+';
 
   @override
   String get boostPurchaseError =>
       'Something went wrong with the purchase. Please try again.';
-
-  @override
-  String get boostBenefit1 =>
-      'Deep Focus and Night Bloom — a calmer look for evening check-ins.';
 
   @override
   String get boostOfferHabitTitle => 'Want one more habit?';

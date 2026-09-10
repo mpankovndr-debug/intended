@@ -57,9 +57,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get appPlanBoost => 'Boost';
 
   @override
-  String get appUnlockPlus => 'Перейти на Intended+';
-
-  @override
   String get welcomeTitle => 'Добро пожаловать в Intended';
 
   @override
@@ -1270,15 +1267,9 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get paywallYearlyPerMonth => '€3,75';
-
-  @override
   String paywallYearlyAnchor(String price) {
     return '$price в месяц при оплате за год';
   }
-
-  @override
-  String get paywallYearlySave => 'Экономия 37%';
 
   @override
   String paywallSavePercent(int percent) {
@@ -1369,10 +1360,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get onboardingPaywallTitle => 'Intended+ читает твои месяцы';
-
-  @override
-  String get onboardingPaywallBody =>
-      'Мозаика показывает, что было, а Intended+ говорит, что это значит. Послание о твоём месяце в четыре строки, а также план на следующий — из того, что было на самом деле, с честным ответом, сработал ли он. Тихое напоминание перед тем, как ты начнёшь пропадать, пока неделю ещё можно изменить. Плюс все десять тем, иконки и виджеты твои с первого дня.';
 
   @override
   String get onboardingPaywallPrimaryCta => 'Начать пробный период';
@@ -1564,9 +1551,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileFocusLimitOptions => '• Intended+: без ограничений';
-
-  @override
-  String get profilePaymentTitle => 'Оплата';
 
   @override
   String get profileChangeSpace => 'Сменить пространство';
@@ -2021,19 +2005,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shareButton => 'Поделиться';
 
   @override
-  String get boostOrDivider => 'или';
-
-  @override
   String get boostGoUnlimited =>
       'Хочешь больше? Безлимитный доступ с Intended+';
 
   @override
   String get boostPurchaseError =>
       'Что-то пошло не так с покупкой. Попробуй ещё раз.';
-
-  @override
-  String get boostBenefit1 =>
-      'Тёмный уют и Ночное небо — спокойный вид для вечерних проверок.';
 
   @override
   String get boostOfferHabitTitle => 'Хочешь ещё одну привычку?';

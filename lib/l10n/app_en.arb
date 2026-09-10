@@ -16,7 +16,6 @@
   "appNameIntendedPlus": "Intended+",
   "appPlanCore": "Core",
   "appPlanBoost": "Boost",
-  "appUnlockPlus": "Unlock Intended+",
   "welcomeTitle": "Welcome to Intended",
   "welcomeTitleWithName": "Welcome to Intended,\n{name}",
   "@welcomeTitleWithName": {
@@ -780,7 +779,6 @@
       }
     }
   },
-  "paywallYearlyPerMonth": "€3.75",
   "paywallYearlyAnchor": "{price}/month, billed yearly",
   "@paywallYearlyAnchor": {
     "placeholders": {
@@ -789,7 +787,6 @@
       }
     }
   },
-  "paywallYearlySave": "Save 37%",
   "paywallSavePercent": "Save {percent}%",
   "@paywallSavePercent": {
     "placeholders": {
@@ -880,7 +877,6 @@
   "paywallPrivacy": "Privacy",
   "paywallFooter": "New features added regularly. Your subscription supports independent development.\nBuilt by one person who cares about this as much as you do.",
   "onboardingPaywallTitle": "Intended+ reads your months",
-  "onboardingPaywallBody": "The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.",
   "onboardingPaywallPrimaryCta": "Start free trial",
   "onboardingPaywallSecondaryCta": "Not now — keep the free version",
   "onboardingPaywallDisclaimerNoTrial": "{price}/year — about {perMonth} a month. Renews automatically until you cancel.",
@@ -964,7 +960,6 @@
   "profileChangeAreas": "Change areas",
   "profileFocusLimitMessage": "You've used your free change this month.",
   "profileFocusLimitOptions": "• Intended+: Unlimited",
-  "profilePaymentTitle": "Payment",
   "profileChangeSpace": "Change your space",
   "profileRefreshTitle": "Refresh habits?",
   "profileRefreshMessage": "You'll get a new set of habits based on your focus areas.",
@@ -1119,10 +1114,8 @@
   "habitPhoneAcrossRoom": "Leave your phone across the room",
   "shareCardTagline": "intention, not perfection",
   "shareButton": "Share",
-  "boostOrDivider": "or",
   "boostGoUnlimited": "Want more? Go unlimited with Intended+",
   "boostPurchaseError": "Something went wrong with the purchase. Please try again.",
-  "boostBenefit1": "Deep Focus and Night Bloom — a calmer look for evening check-ins.",
   "boostOfferHabitTitle": "Want one more habit?",
   "boostOfferHabitDesc": "You're building something meaningful — give yourself room for one more.",
   "boostOfferFocusTitle": "Need another focus area?",

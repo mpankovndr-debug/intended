@@ -194,12 +194,6 @@ abstract class AppLocalizations {
   /// **'Boost'**
   String get appPlanBoost;
 
-  /// No description provided for @appUnlockPlus.
-  ///
-  /// In en, this message translates to:
-  /// **'Unlock Intended+'**
-  String get appUnlockPlus;
-
   /// No description provided for @welcomeTitle.
   ///
   /// In en, this message translates to:
@@ -2001,23 +1995,11 @@ abstract class AppLocalizations {
   /// **'{price}/month'**
   String paywallPricePerMonth(String price);
 
-  /// No description provided for @paywallYearlyPerMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'€3.75'**
-  String get paywallYearlyPerMonth;
-
   /// No description provided for @paywallYearlyAnchor.
   ///
   /// In en, this message translates to:
   /// **'{price}/month, billed yearly'**
   String paywallYearlyAnchor(String price);
-
-  /// No description provided for @paywallYearlySave.
-  ///
-  /// In en, this message translates to:
-  /// **'Save 37%'**
-  String get paywallYearlySave;
 
   /// No description provided for @paywallSavePercent.
   ///
@@ -2162,12 +2144,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Intended+ reads your months'**
   String get onboardingPaywallTitle;
-
-  /// No description provided for @onboardingPaywallBody.
-  ///
-  /// In en, this message translates to:
-  /// **'The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.'**
-  String get onboardingPaywallBody;
 
   /// No description provided for @onboardingPaywallPrimaryCta.
   ///
@@ -2510,12 +2486,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'• Intended+: Unlimited'**
   String get profileFocusLimitOptions;
-
-  /// No description provided for @profilePaymentTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Payment'**
-  String get profilePaymentTitle;
 
   /// No description provided for @profileChangeSpace.
   ///
@@ -3399,12 +3369,6 @@ abstract class AppLocalizations {
   /// **'Share'**
   String get shareButton;
 
-  /// No description provided for @boostOrDivider.
-  ///
-  /// In en, this message translates to:
-  /// **'or'**
-  String get boostOrDivider;
-
   /// No description provided for @boostGoUnlimited.
   ///
   /// In en, this message translates to:
@@ -3416,12 +3380,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong with the purchase. Please try again.'**
   String get boostPurchaseError;
-
-  /// No description provided for @boostBenefit1.
-  ///
-  /// In en, this message translates to:
-  /// **'Deep Focus and Night Bloom — a calmer look for evening check-ins.'**
-  String get boostBenefit1;
 
   /// No description provided for @boostOfferHabitTitle.
   ///
