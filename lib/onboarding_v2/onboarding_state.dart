@@ -592,18 +592,6 @@ class OnboardingState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addHabitFromBrowse(String habit) async {
-    if (!canAddHabit) return;
-    if (!userHabits.contains(habit)) {
-      userHabits.add(habit);
-      _recordAdopted([habit]);
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setStringList('user_habits', userHabits);
-      await _saveHabitAdoptions(prefs);
-      notifyListeners();
-    }
-  }
-
   /// Removes habits from the active list (returns them to the browse pool).
   /// Custom habits are never removed by this method.
   Future<void> setAsideHabits(List<String> habitsToRemove) async {
@@ -1015,20 +1003,10 @@ class OnboardingState extends ChangeNotifier {
     return true;
   }
 
-  // Get total swaps used across all categories (for Browse flow)
+  // Get total swaps used across all categories (the limit is global)
   int getTotalSwapsUsed() {
     _checkMonthlyReset();
     return _swapsUsed.values.fold(0, (sum, count) => sum + count);
-  }
-
-  // Check if user can swap from Browse (free: 2/month, boost: 3/month)
-  bool canSwapFromBrowse() {
-    return getTotalSwapsUsed() < maxSwaps();
-  }
-
-  // Get remaining Browse swaps
-  int getRemainingBrowseSwaps() {
-    return maxSwaps() - getTotalSwapsUsed();
   }
 
 
