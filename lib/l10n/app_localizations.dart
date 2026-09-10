@@ -4287,30 +4287,6 @@ abstract class AppLocalizations {
   /// **'I\'ll show up for myself'**
   String get commitmentCta;
 
-  /// No description provided for @coachMarkFirstCompletionTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Your first check-in'**
-  String get coachMarkFirstCompletionTitle;
-
-  /// No description provided for @coachMarkFirstCompletionBody.
-  ///
-  /// In en, this message translates to:
-  /// **'That\'s it. That\'s the whole practice. Show up when you can, skip when you can\'t.'**
-  String get coachMarkFirstCompletionBody;
-
-  /// No description provided for @coachMarkPinningTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'This one\'s sticking'**
-  String get coachMarkPinningTitle;
-
-  /// No description provided for @coachMarkPinningBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Long-press any habit to pin it to the top. Your anchors deserve the spotlight.'**
-  String get coachMarkPinningBody;
-
   /// No description provided for @coachMarkWidgetTitle.
   ///
   /// In en, this message translates to:
@@ -4323,18 +4299,6 @@ abstract class AppLocalizations {
   /// **'Add an Intended widget to your home or lock screen. A quiet reminder of what matters today.'**
   String get coachMarkWidgetBody;
 
-  /// No description provided for @coachMarkWeeklyReflectionTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Your first reflection is here'**
-  String get coachMarkWeeklyReflectionTitle;
-
-  /// No description provided for @coachMarkWeeklyReflectionBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Every week, Intended looks back at your patterns — gently, never critically. Tap to see your week.'**
-  String get coachMarkWeeklyReflectionBody;
-
   /// No description provided for @coachMarkSmartNotificationsTitle.
   ///
   /// In en, this message translates to:
@@ -4346,30 +4310,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Intended adjusts when and how often it nudges you based on your rhythm. Check in a lot? We step back. Been away? Just one gentle note.'**
   String get coachMarkSmartNotificationsBody;
-
-  /// No description provided for @coachMarkMonthlyReflectionTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'A month of showing up'**
-  String get coachMarkMonthlyReflectionTitle;
-
-  /// No description provided for @coachMarkMonthlyReflectionBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Your monthly reflection finds patterns across weeks that you might not notice day-to-day. It\'s here whenever you want it.'**
-  String get coachMarkMonthlyReflectionBody;
-
-  /// No description provided for @coachMarkReflectionShareTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Worth sharing?'**
-  String get coachMarkReflectionShareTitle;
-
-  /// No description provided for @coachMarkReflectionShareBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Tap the share button to turn this into a card you can send to someone or post. Your data stays private — only the summary is shared.'**
-  String get coachMarkReflectionShareBody;
 
   /// No description provided for @upgradeNudgeBody.
   ///

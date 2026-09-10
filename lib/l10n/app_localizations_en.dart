@@ -2487,20 +2487,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commitmentCta => 'I\'ll show up for myself';
 
   @override
-  String get coachMarkFirstCompletionTitle => 'Your first check-in';
-
-  @override
-  String get coachMarkFirstCompletionBody =>
-      'That\'s it. That\'s the whole practice. Show up when you can, skip when you can\'t.';
-
-  @override
-  String get coachMarkPinningTitle => 'This one\'s sticking';
-
-  @override
-  String get coachMarkPinningBody =>
-      'Long-press any habit to pin it to the top. Your anchors deserve the spotlight.';
-
-  @override
   String get coachMarkWidgetTitle =>
       'See your intentions without opening the app';
 
@@ -2509,33 +2495,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add an Intended widget to your home or lock screen. A quiet reminder of what matters today.';
 
   @override
-  String get coachMarkWeeklyReflectionTitle => 'Your first reflection is here';
-
-  @override
-  String get coachMarkWeeklyReflectionBody =>
-      'Every week, Intended looks back at your patterns — gently, never critically. Tap to see your week.';
-
-  @override
   String get coachMarkSmartNotificationsTitle =>
       'Your reminders learn from you';
 
   @override
   String get coachMarkSmartNotificationsBody =>
       'Intended adjusts when and how often it nudges you based on your rhythm. Check in a lot? We step back. Been away? Just one gentle note.';
-
-  @override
-  String get coachMarkMonthlyReflectionTitle => 'A month of showing up';
-
-  @override
-  String get coachMarkMonthlyReflectionBody =>
-      'Your monthly reflection finds patterns across weeks that you might not notice day-to-day. It\'s here whenever you want it.';
-
-  @override
-  String get coachMarkReflectionShareTitle => 'Worth sharing?';
-
-  @override
-  String get coachMarkReflectionShareBody =>
-      'Tap the share button to turn this into a card you can send to someone or post. Your data stays private — only the summary is shared.';
 
   @override
   String get upgradeNudgeBody =>

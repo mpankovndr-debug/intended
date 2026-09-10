@@ -2557,20 +2557,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get commitmentCta => 'Быть с собой';
 
   @override
-  String get coachMarkFirstCompletionTitle => 'Твоя первая отметка';
-
-  @override
-  String get coachMarkFirstCompletionBody =>
-      'Вот и всё. Вся практика. Приходи, когда можешь, пропускай, когда не получается.';
-
-  @override
-  String get coachMarkPinningTitle => 'Уже входит в привычку';
-
-  @override
-  String get coachMarkPinningBody =>
-      'Долгое нажатие на привычку закрепит её наверху. Твои якоря заслуживают внимания.';
-
-  @override
   String get coachMarkWidgetTitle => 'Твои намерения — без открытия приложения';
 
   @override
@@ -2578,32 +2564,11 @@ class AppLocalizationsRu extends AppLocalizations {
       'Добавь виджет Intended на экран. Тихое напоминание о том, что важно сегодня.';
 
   @override
-  String get coachMarkWeeklyReflectionTitle => 'Твоё первое отражение готово';
-
-  @override
-  String get coachMarkWeeklyReflectionBody =>
-      'Каждую неделю Intended оглядывается на твои шаблоны — мягко, без критики. Нажми, чтобы увидеть свою неделю.';
-
-  @override
   String get coachMarkSmartNotificationsTitle => 'Напоминания учатся у тебя';
 
   @override
   String get coachMarkSmartNotificationsBody =>
       'Intended подстраивает напоминания под твой ритм. Заходишь часто — даём тебе больше пространства. Пропадаешь — одно мягкое сообщение.';
-
-  @override
-  String get coachMarkMonthlyReflectionTitle => 'Месяц твоего присутствия';
-
-  @override
-  String get coachMarkMonthlyReflectionBody =>
-      'Месячное отражение находит закономерности между неделями, которые сложно заметить день за днём.';
-
-  @override
-  String get coachMarkReflectionShareTitle => 'Поделиться?';
-
-  @override
-  String get coachMarkReflectionShareBody =>
-      'Нажми «Поделиться», чтобы превратить это в карточку для друзей. Твои данные остаются приватными — передаётся только итог.';
 
   @override
   String get upgradeNudgeBody =>
