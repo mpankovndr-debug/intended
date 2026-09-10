@@ -3525,83 +3525,17 @@ abstract class AppLocalizations {
   /// **'Leave your phone across the room'**
   String get habitPhoneAcrossRoom;
 
-  /// No description provided for @shareCardMilestone.
-  ///
-  /// In en, this message translates to:
-  /// **'Milestone'**
-  String get shareCardMilestone;
-
   /// No description provided for @shareCardTagline.
   ///
   /// In en, this message translates to:
   /// **'intention, not perfection'**
   String get shareCardTagline;
 
-  /// No description provided for @shareCardMilestoneSubtext.
-  ///
-  /// In en, this message translates to:
-  /// **'of being gentle with myself'**
-  String get shareCardMilestoneSubtext;
-
   /// No description provided for @shareButton.
   ///
   /// In en, this message translates to:
   /// **'Share'**
   String get shareButton;
-
-  /// No description provided for @milestoneShowingUpLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Showing up'**
-  String get milestoneShowingUpLabel;
-
-  /// No description provided for @milestoneAreaLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Focus area'**
-  String get milestoneAreaLabel;
-
-  /// No description provided for @milestoneIdentityLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Your thing'**
-  String get milestoneIdentityLabel;
-
-  /// No description provided for @milestoneShowingUpHero.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} {count, plural, =1{week} other{weeks}}'**
-  String milestoneShowingUpHero(int count);
-
-  /// No description provided for @milestoneShowingUpSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'of showing up — in your own way'**
-  String get milestoneShowingUpSubtitle;
-
-  /// No description provided for @milestoneAreaHero.
-  ///
-  /// In en, this message translates to:
-  /// **'{area}'**
-  String milestoneAreaHero(String area);
-
-  /// No description provided for @milestoneAreaSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'you keep coming back to what matters'**
-  String get milestoneAreaSubtitle;
-
-  /// No description provided for @milestoneIdentityHero.
-  ///
-  /// In en, this message translates to:
-  /// **'{habit}'**
-  String milestoneIdentityHero(String habit);
-
-  /// No description provided for @milestoneIdentitySubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'is becoming your thing'**
-  String get milestoneIdentitySubtitle;
 
   /// No description provided for @boostOrDivider.
   ///

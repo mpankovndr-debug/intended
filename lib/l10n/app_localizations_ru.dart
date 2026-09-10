@@ -2108,57 +2108,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitPhoneAcrossRoom => 'Оставь телефон подальше';
 
   @override
-  String get shareCardMilestone => 'Достижение';
-
-  @override
   String get shareCardTagline => 'намерение важнее совершенства';
 
   @override
-  String get shareCardMilestoneSubtext => 'бережного отношения к себе';
-
-  @override
   String get shareButton => 'Поделиться';
-
-  @override
-  String get milestoneShowingUpLabel => 'Забота о себе';
-
-  @override
-  String get milestoneAreaLabel => 'Область фокуса';
-
-  @override
-  String get milestoneIdentityLabel => 'Это - твоё!';
-
-  @override
-  String milestoneShowingUpHero(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'недель',
-      few: 'недели',
-      one: 'неделя',
-    );
-    return '$count $_temp0';
-  }
-
-  @override
-  String get milestoneShowingUpSubtitle =>
-      'ты продолжаешь заботиться о себе по-своему';
-
-  @override
-  String milestoneAreaHero(String area) {
-    return '$area';
-  }
-
-  @override
-  String get milestoneAreaSubtitle => 'ты возвращаешься к тому, что важно';
-
-  @override
-  String milestoneIdentityHero(String habit) {
-    return '$habit';
-  }
-
-  @override
-  String get milestoneIdentitySubtitle => 'становится твоей привычкой';
 
   @override
   String get boostOrDivider => 'или';

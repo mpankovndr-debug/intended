@@ -800,40 +800,8 @@
   "habitOpenCurtains": "Открой шторы",
   "habitTurnOnLamp": "Включи лампу",
   "habitPhoneAcrossRoom": "Оставь телефон подальше",
-  "shareCardMilestone": "Достижение",
   "shareCardTagline": "намерение важнее совершенства",
-  "shareCardMilestoneSubtext": "бережного отношения к себе",
   "shareButton": "Поделиться",
-  "milestoneShowingUpLabel": "Забота о себе",
-  "milestoneAreaLabel": "Область фокуса",
-  "milestoneIdentityLabel": "Это - твоё!",
-  "milestoneShowingUpHero": "{count} {count, plural, =1{неделя} few{недели} other{недель}}",
-  "@milestoneShowingUpHero": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "milestoneShowingUpSubtitle": "ты продолжаешь заботиться о себе по-своему",
-  "milestoneAreaHero": "{area}",
-  "@milestoneAreaHero": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
-  "milestoneAreaSubtitle": "ты возвращаешься к тому, что важно",
-  "milestoneIdentityHero": "{habit}",
-  "@milestoneIdentityHero": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
-  "milestoneIdentitySubtitle": "становится твоей привычкой",
   "boostOrDivider": "или",
   "boostGoUnlimited": "Хочешь больше? Безлимитный доступ с Intended+",
   "boostPurchaseError": "Что-то пошло не так с покупкой. Попробуй ещё раз.",

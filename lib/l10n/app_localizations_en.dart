@@ -2043,55 +2043,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitPhoneAcrossRoom => 'Leave your phone across the room';
 
   @override
-  String get shareCardMilestone => 'Milestone';
-
-  @override
   String get shareCardTagline => 'intention, not perfection';
 
   @override
-  String get shareCardMilestoneSubtext => 'of being gentle with myself';
-
-  @override
   String get shareButton => 'Share';
-
-  @override
-  String get milestoneShowingUpLabel => 'Showing up';
-
-  @override
-  String get milestoneAreaLabel => 'Focus area';
-
-  @override
-  String get milestoneIdentityLabel => 'Your thing';
-
-  @override
-  String milestoneShowingUpHero(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'weeks',
-      one: 'week',
-    );
-    return '$count $_temp0';
-  }
-
-  @override
-  String get milestoneShowingUpSubtitle => 'of showing up — in your own way';
-
-  @override
-  String milestoneAreaHero(String area) {
-    return '$area';
-  }
-
-  @override
-  String get milestoneAreaSubtitle => 'you keep coming back to what matters';
-
-  @override
-  String milestoneIdentityHero(String habit) {
-    return '$habit';
-  }
-
-  @override
-  String get milestoneIdentitySubtitle => 'is becoming your thing';
 
   @override
   String get boostOrDivider => 'or';

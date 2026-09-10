@@ -1171,40 +1171,8 @@
   "habitOpenCurtains": "Open the curtains",
   "habitTurnOnLamp": "Turn on a lamp",
   "habitPhoneAcrossRoom": "Leave your phone across the room",
-  "shareCardMilestone": "Milestone",
   "shareCardTagline": "intention, not perfection",
-  "shareCardMilestoneSubtext": "of being gentle with myself",
   "shareButton": "Share",
-  "milestoneShowingUpLabel": "Showing up",
-  "milestoneAreaLabel": "Focus area",
-  "milestoneIdentityLabel": "Your thing",
-  "milestoneShowingUpHero": "{count} {count, plural, =1{week} other{weeks}}",
-  "@milestoneShowingUpHero": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "milestoneShowingUpSubtitle": "of showing up — in your own way",
-  "milestoneAreaHero": "{area}",
-  "@milestoneAreaHero": {
-    "placeholders": {
-      "area": {
-        "type": "String"
-      }
-    }
-  },
-  "milestoneAreaSubtitle": "you keep coming back to what matters",
-  "milestoneIdentityHero": "{habit}",
-  "@milestoneIdentityHero": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
-  "milestoneIdentitySubtitle": "is becoming your thing",
   "boostOrDivider": "or",
   "boostGoUnlimited": "Want more? Go unlimited with Intended+",
   "boostPurchaseError": "Something went wrong with the purchase. Please try again.",
