@@ -2061,23 +2061,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'The people who matter, one small gesture at a time.';
 
   @override
-  String get widgetToday => 'today';
-
-  @override
-  String widgetMore(int n) {
-    return '+$n more';
-  }
-
-  @override
-  String get widgetUpgrade => 'Upgrade to see more';
-
-  @override
-  String get widgetNoHabits => 'No habits yet';
-
-  @override
-  String get widgetAllDone => 'All done for today!';
-
-  @override
   String get appIconSectionTitle => 'APP ICON';
 
   @override

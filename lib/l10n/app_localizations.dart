@@ -3579,36 +3579,6 @@ abstract class AppLocalizations {
   /// **'The people who matter, one small gesture at a time.'**
   String get packStayConnectedSubtitle;
 
-  /// No description provided for @widgetToday.
-  ///
-  /// In en, this message translates to:
-  /// **'today'**
-  String get widgetToday;
-
-  /// No description provided for @widgetMore.
-  ///
-  /// In en, this message translates to:
-  /// **'+{n} more'**
-  String widgetMore(int n);
-
-  /// No description provided for @widgetUpgrade.
-  ///
-  /// In en, this message translates to:
-  /// **'Upgrade to see more'**
-  String get widgetUpgrade;
-
-  /// No description provided for @widgetNoHabits.
-  ///
-  /// In en, this message translates to:
-  /// **'No habits yet'**
-  String get widgetNoHabits;
-
-  /// No description provided for @widgetAllDone.
-  ///
-  /// In en, this message translates to:
-  /// **'All done for today!'**
-  String get widgetAllDone;
-
   /// No description provided for @appIconSectionTitle.
   ///
   /// In en, this message translates to:

@@ -1149,18 +1149,6 @@
   "packCreativeSparkSubtitle": "Small acts of making. No talent required.",
   "packStayConnectedName": "Stay Connected",
   "packStayConnectedSubtitle": "The people who matter, one small gesture at a time.",
-  "widgetToday": "today",
-  "widgetMore": "+{n} more",
-  "@widgetMore": {
-    "placeholders": {
-      "n": {
-        "type": "int"
-      }
-    }
-  },
-  "widgetUpgrade": "Upgrade to see more",
-  "widgetNoHabits": "No habits yet",
-  "widgetAllDone": "All done for today!",
   "appIconSectionTitle": "APP ICON",
   "appIconDefault": "Default",
   "appIconMidnight": "Midnight",

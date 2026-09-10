@@ -2125,23 +2125,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Те, кто важен — один маленький жест за раз.';
 
   @override
-  String get widgetToday => 'сегодня';
-
-  @override
-  String widgetMore(int n) {
-    return 'ещё $n';
-  }
-
-  @override
-  String get widgetUpgrade => 'Обнови, чтобы узнать больше';
-
-  @override
-  String get widgetNoHabits => 'Пока нет привычек';
-
-  @override
-  String get widgetAllDone => 'Всё сделано!';
-
-  @override
   String get appIconSectionTitle => 'ИКОНКА ПРИЛОЖЕНИЯ';
 
   @override
