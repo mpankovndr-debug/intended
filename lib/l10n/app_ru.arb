@@ -157,10 +157,8 @@
     }
   },
   "focusAreasStartingPointsSubtext": "Мы выбрали несколько стартовых точек. Добавляй или убирай направления в любое время.",
-  "habitsHoldForOptions": "Удерживай привычку для опций",
   "habitsCompleteOnboarding": "Заверши настройку, чтобы начать",
   "habitsPinned": "ЗАКРЕПЛЁННЫЕ",
-  "habitsSuggestions": "ПРЕДЛОЖЕНИЯ",
   "intentionGentleMornings": "Спокойное начало дня",
   "intentionAnchorsForHardDays": "Устойчивее в трудные дни",
   "intentionQuietFocus": "Сосредоточенность без выгорания",
@@ -283,15 +281,6 @@
   "insightsExampleHeader": "ЧЕРЕЗ МЕСЯЦ ЭТА СТРАНИЦА БУДЕТ ТАКОЙ",
   "insightsUnlockNote": "✦ Intended+ читает твой месяц и подсказывает, что изменить. Откроется, когда будет что читать.",
   "habitsCreateCustom": "Напиши своё намерение",
-  "habitsBrowseAll": "Все привычки",
-  "habitsMoreAvailable": "Ещё {count} доступно",
-  "@habitsMoreAvailable": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "habitBreath": "Три медленных вдоха",
   "habitPause": "Десять секунд тишины",
   "habitWater": "Осознанный глоток воды",
@@ -605,17 +594,6 @@
   "themeGoldenHour": "Золотой час",
   "themeNightBloom": "Ночное небо",
   "themeSandDune": "Тёплый песок",
-  "browseHabitsSearch": "Поиск привычек...",
-  "browseHabitAddedTitle": "Привычка добавлена",
-  "browseHabitAddedMessage": "«{habit}» добавлена в твои привычки.",
-  "@browseHabitAddedMessage": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
-  "browseHabitAddedConfirm": "Отлично!",
   "habitDrinkWater": "Выпей 3 стакана воды",
   "habitThreeSlowBreaths": "Сделай 3 медленных вдоха",
   "habitStretchTenSeconds": "Потянись 30 секунд",
@@ -766,7 +744,6 @@
   "onboardingPhilosophyBody": "Никаких стриков. Никакой вины за пропуск.\nТвой прогресс не обнуляется. Достаточно одного лишь намерения.",
   "onboardingPhilosophyCta": "Понятно",
   "insightsGrowthHint": "Инсайты становятся точнее с каждой неделей",
-  "tipCuratedPack": "Попробуй готовый набор привычек, который можно найти в «Все привычки»",
   "tipGotIt": "Понятно",
   "packGentleMorningsName": "Мягкое утро",
   "packGentleMorningsSubtitle": "Утренний ритуал, который не похож на подъём в 5 утра",

@@ -584,12 +584,6 @@ abstract class AppLocalizations {
   /// **'We\'ve picked some starting points. Add or remove areas anytime.'**
   String get focusAreasStartingPointsSubtext;
 
-  /// No description provided for @habitsHoldForOptions.
-  ///
-  /// In en, this message translates to:
-  /// **'Long press a habit for options'**
-  String get habitsHoldForOptions;
-
   /// No description provided for @habitsCompleteOnboarding.
   ///
   /// In en, this message translates to:
@@ -601,12 +595,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PINNED'**
   String get habitsPinned;
-
-  /// No description provided for @habitsSuggestions.
-  ///
-  /// In en, this message translates to:
-  /// **'SUGGESTIONS'**
-  String get habitsSuggestions;
 
   /// No description provided for @intentionGentleMornings.
   ///
@@ -1130,18 +1118,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Write your own intention'**
   String get habitsCreateCustom;
-
-  /// No description provided for @habitsBrowseAll.
-  ///
-  /// In en, this message translates to:
-  /// **'Browse all habits'**
-  String get habitsBrowseAll;
-
-  /// No description provided for @habitsMoreAvailable.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} more available'**
-  String habitsMoreAvailable(int count);
 
   /// No description provided for @habitBreath.
   ///
@@ -2583,30 +2559,6 @@ abstract class AppLocalizations {
   /// **'Sand Dune'**
   String get themeSandDune;
 
-  /// No description provided for @browseHabitsSearch.
-  ///
-  /// In en, this message translates to:
-  /// **'Search habits...'**
-  String get browseHabitsSearch;
-
-  /// No description provided for @browseHabitAddedTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Habit added'**
-  String get browseHabitAddedTitle;
-
-  /// No description provided for @browseHabitAddedMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'\"{habit}\" has been added to your habits.'**
-  String browseHabitAddedMessage(String habit);
-
-  /// No description provided for @browseHabitAddedConfirm.
-  ///
-  /// In en, this message translates to:
-  /// **'Great!'**
-  String get browseHabitAddedConfirm;
-
   /// No description provided for @habitDrinkWater.
   ///
   /// In en, this message translates to:
@@ -3506,12 +3458,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Insights get sharper every week'**
   String get insightsGrowthHint;
-
-  /// No description provided for @tipCuratedPack.
-  ///
-  /// In en, this message translates to:
-  /// **'Try a curated pack — find them in Browse all habits'**
-  String get tipCuratedPack;
 
   /// No description provided for @tipGotIt.
   ///

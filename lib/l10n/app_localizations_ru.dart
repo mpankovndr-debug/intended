@@ -294,16 +294,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Мы выбрали несколько стартовых точек. Добавляй или убирай направления в любое время.';
 
   @override
-  String get habitsHoldForOptions => 'Удерживай привычку для опций';
-
-  @override
   String get habitsCompleteOnboarding => 'Заверши настройку, чтобы начать';
 
   @override
   String get habitsPinned => 'ЗАКРЕПЛЁННЫЕ';
-
-  @override
-  String get habitsSuggestions => 'ПРЕДЛОЖЕНИЯ';
 
   @override
   String get intentionGentleMornings => 'Спокойное начало дня';
@@ -773,14 +767,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get habitsCreateCustom => 'Напиши своё намерение';
-
-  @override
-  String get habitsBrowseAll => 'Все привычки';
-
-  @override
-  String habitsMoreAvailable(int count) {
-    return 'Ещё $count доступно';
-  }
 
   @override
   String get habitBreath => 'Три медленных вдоха';
@@ -1603,20 +1589,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get themeSandDune => 'Тёплый песок';
 
   @override
-  String get browseHabitsSearch => 'Поиск привычек...';
-
-  @override
-  String get browseHabitAddedTitle => 'Привычка добавлена';
-
-  @override
-  String browseHabitAddedMessage(String habit) {
-    return '«$habit» добавлена в твои привычки.';
-  }
-
-  @override
-  String get browseHabitAddedConfirm => 'Отлично!';
-
-  @override
   String get habitDrinkWater => 'Выпей 3 стакана воды';
 
   @override
@@ -2081,10 +2053,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get insightsGrowthHint => 'Инсайты становятся точнее с каждой неделей';
-
-  @override
-  String get tipCuratedPack =>
-      'Попробуй готовый набор привычек, который можно найти в «Все привычки»';
 
   @override
   String get tipGotIt => 'Понятно';

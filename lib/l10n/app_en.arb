@@ -184,10 +184,8 @@
     }
   },
   "focusAreasStartingPointsSubtext": "We've picked some starting points. Add or remove areas anytime.",
-  "habitsHoldForOptions": "Long press a habit for options",
   "habitsCompleteOnboarding": "Complete onboarding to get started",
   "habitsPinned": "PINNED",
-  "habitsSuggestions": "SUGGESTIONS",
   "intentionGentleMornings": "Starting the day gently",
   "intentionAnchorsForHardDays": "Steadier on hard days",
   "intentionQuietFocus": "Focused, without the burnout",
@@ -546,15 +544,6 @@
     }
   },
   "habitsCreateCustom": "Write your own intention",
-  "habitsBrowseAll": "Browse all habits",
-  "habitsMoreAvailable": "{count} more available",
-  "@habitsMoreAvailable": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "habitBreath": "Three slow breaths",
   "habitPause": "Ten-second pause",
   "habitWater": "Mindful water",
@@ -976,17 +965,6 @@
   "themeGoldenHour": "Golden Hour",
   "themeNightBloom": "Night Bloom",
   "themeSandDune": "Sand Dune",
-  "browseHabitsSearch": "Search habits...",
-  "browseHabitAddedTitle": "Habit added",
-  "browseHabitAddedMessage": "\"{habit}\" has been added to your habits.",
-  "@browseHabitAddedMessage": {
-    "placeholders": {
-      "habit": {
-        "type": "String"
-      }
-    }
-  },
-  "browseHabitAddedConfirm": "Great!",
   "habitDrinkWater": "Drink 3 glasses of water",
   "habitThreeSlowBreaths": "Take 3 slow breaths",
   "habitStretchTenSeconds": "Stretch for 30 seconds",
@@ -1137,7 +1115,6 @@
   "onboardingPhilosophyBody": "No streaks to maintain. No guilt for skipping.\nYour progress never resets. One small intention is enough.",
   "onboardingPhilosophyCta": "Got it",
   "insightsGrowthHint": "Insights get sharper every week",
-  "tipCuratedPack": "Try a curated pack — find them in Browse all habits",
   "tipGotIt": "Got it",
   "packGentleMorningsName": "Gentle Mornings",
   "packGentleMorningsSubtitle": "A small morning ritual that doesn't feel like a 5am hustle routine",

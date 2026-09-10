@@ -293,16 +293,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'We\'ve picked some starting points. Add or remove areas anytime.';
 
   @override
-  String get habitsHoldForOptions => 'Long press a habit for options';
-
-  @override
   String get habitsCompleteOnboarding => 'Complete onboarding to get started';
 
   @override
   String get habitsPinned => 'PINNED';
-
-  @override
-  String get habitsSuggestions => 'SUGGESTIONS';
 
   @override
   String get intentionGentleMornings => 'Starting the day gently';
@@ -726,14 +720,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get habitsCreateCustom => 'Write your own intention';
-
-  @override
-  String get habitsBrowseAll => 'Browse all habits';
-
-  @override
-  String habitsMoreAvailable(int count) {
-    return '$count more available';
-  }
 
   @override
   String get habitBreath => 'Three slow breaths';
@@ -1541,20 +1527,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeSandDune => 'Sand Dune';
 
   @override
-  String get browseHabitsSearch => 'Search habits...';
-
-  @override
-  String get browseHabitAddedTitle => 'Habit added';
-
-  @override
-  String browseHabitAddedMessage(String habit) {
-    return '\"$habit\" has been added to your habits.';
-  }
-
-  @override
-  String get browseHabitAddedConfirm => 'Great!';
-
-  @override
   String get habitDrinkWater => 'Drink 3 glasses of water';
 
   @override
@@ -2017,10 +1989,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get insightsGrowthHint => 'Insights get sharper every week';
-
-  @override
-  String get tipCuratedPack =>
-      'Try a curated pack — find them in Browse all habits';
 
   @override
   String get tipGotIt => 'Got it';
