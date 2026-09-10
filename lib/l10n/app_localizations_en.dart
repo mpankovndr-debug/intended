@@ -2019,21 +2019,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightsGrowthHint => 'Insights get sharper every week';
 
   @override
-  String get tipPinHabit => 'Long press on a habit to pin it to the top';
-
-  @override
   String get tipCuratedPack =>
       'Try a curated pack — find them in Browse all habits';
 
   @override
-  String get tipWidget =>
-      'Add Intended to your home screen — long press your wallpaper and add a widget';
-
-  @override
   String get tipGotIt => 'Got it';
-
-  @override
-  String get tipSkipAll => 'Skip tips';
 
   @override
   String get packGentleMorningsName => 'Gentle Mornings';

@@ -3507,35 +3507,17 @@ abstract class AppLocalizations {
   /// **'Insights get sharper every week'**
   String get insightsGrowthHint;
 
-  /// No description provided for @tipPinHabit.
-  ///
-  /// In en, this message translates to:
-  /// **'Long press on a habit to pin it to the top'**
-  String get tipPinHabit;
-
   /// No description provided for @tipCuratedPack.
   ///
   /// In en, this message translates to:
   /// **'Try a curated pack — find them in Browse all habits'**
   String get tipCuratedPack;
 
-  /// No description provided for @tipWidget.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Intended to your home screen — long press your wallpaper and add a widget'**
-  String get tipWidget;
-
   /// No description provided for @tipGotIt.
   ///
   /// In en, this message translates to:
   /// **'Got it'**
   String get tipGotIt;
-
-  /// No description provided for @tipSkipAll.
-  ///
-  /// In en, this message translates to:
-  /// **'Skip tips'**
-  String get tipSkipAll;
 
   /// No description provided for @packGentleMorningsName.
   ///

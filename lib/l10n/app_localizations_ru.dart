@@ -2083,21 +2083,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get insightsGrowthHint => 'Инсайты становятся точнее с каждой неделей';
 
   @override
-  String get tipPinHabit => 'Удерживай привычку, чтобы закрепить её сверху';
-
-  @override
   String get tipCuratedPack =>
       'Попробуй готовый набор привычек, который можно найти в «Все привычки»';
 
   @override
-  String get tipWidget =>
-      'Добавь Intended на главный экран — удерживай экран и добавь виджет';
-
-  @override
   String get tipGotIt => 'Понятно';
-
-  @override
-  String get tipSkipAll => 'Пропустить подсказки';
 
   @override
   String get packGentleMorningsName => 'Мягкое утро';
