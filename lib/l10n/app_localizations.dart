@@ -4269,30 +4269,6 @@ abstract class AppLocalizations {
   /// **'Your month'**
   String get faqSectionReflections;
 
-  /// No description provided for @faqWeeklyReflection.
-  ///
-  /// In en, this message translates to:
-  /// **'What is a Weekly Reflection?'**
-  String get faqWeeklyReflection;
-
-  /// No description provided for @faqWeeklyReflectionAnswer.
-  ///
-  /// In en, this message translates to:
-  /// **'Every week, Intended generates a reflection card based on your check-in patterns — which habits stuck, your most active days, and gentle observations. Never judgments.'**
-  String get faqWeeklyReflectionAnswer;
-
-  /// No description provided for @faqMonthlyReflection.
-  ///
-  /// In en, this message translates to:
-  /// **'What\'s the Monthly Reflection?'**
-  String get faqMonthlyReflection;
-
-  /// No description provided for @faqMonthlyReflectionAnswer.
-  ///
-  /// In en, this message translates to:
-  /// **'After 30 days, a monthly reflection looks across weeks for patterns you might not notice day-to-day. Available with Intended+.'**
-  String get faqMonthlyReflectionAnswer;
-
   /// No description provided for @faqShareReflection.
   ///
   /// In en, this message translates to:
@@ -4304,18 +4280,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yes — on Your month, tap Share under your season. It becomes a story-sized card with your grid and your season word, sized for Instagram or TikTok. Habit names are never on it unless you put them there.'**
   String get faqShareReflectionAnswer;
-
-  /// No description provided for @faqNoReflection.
-  ///
-  /// In en, this message translates to:
-  /// **'Why don\'t I see a reflection?'**
-  String get faqNoReflection;
-
-  /// No description provided for @faqNoReflectionAnswer.
-  ///
-  /// In en, this message translates to:
-  /// **'Weekly reflections appear after 7 days. Monthly after 30. The more you check in, the richer they become.'**
-  String get faqNoReflectionAnswer;
 
   /// No description provided for @faqHowReflectionsGenerated.
   ///

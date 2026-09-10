@@ -2451,32 +2451,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faqSectionReflections => 'Your month';
 
   @override
-  String get faqWeeklyReflection => 'What is a Weekly Reflection?';
-
-  @override
-  String get faqWeeklyReflectionAnswer =>
-      'Every week, Intended generates a reflection card based on your check-in patterns — which habits stuck, your most active days, and gentle observations. Never judgments.';
-
-  @override
-  String get faqMonthlyReflection => 'What\'s the Monthly Reflection?';
-
-  @override
-  String get faqMonthlyReflectionAnswer =>
-      'After 30 days, a monthly reflection looks across weeks for patterns you might not notice day-to-day. Available with Intended+.';
-
-  @override
   String get faqShareReflection => 'Can I share my reflection?';
 
   @override
   String get faqShareReflectionAnswer =>
       'Yes — on Your month, tap Share under your season. It becomes a story-sized card with your grid and your season word, sized for Instagram or TikTok. Habit names are never on it unless you put them there.';
-
-  @override
-  String get faqNoReflection => 'Why don\'t I see a reflection?';
-
-  @override
-  String get faqNoReflectionAnswer =>
-      'Weekly reflections appear after 7 days. Monthly after 30. The more you check in, the richer they become.';
 
   @override
   String get faqHowReflectionsGenerated => 'How are reflections generated?';

@@ -2514,32 +2514,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get faqSectionReflections => 'Твой месяц';
 
   @override
-  String get faqWeeklyReflection => 'Что такое недельная рефлексия?';
-
-  @override
-  String get faqWeeklyReflectionAnswer =>
-      'Каждую неделю Intended создаёт карточку рефлексии на основе твоих отметок — какие привычки прижились, самые активные дни и мягкие наблюдения. Без оценок.';
-
-  @override
-  String get faqMonthlyReflection => 'Что такое месячная рефлексия?';
-
-  @override
-  String get faqMonthlyReflectionAnswer =>
-      'Через 30 дней месячная рефлексия находит закономерности между неделями. Доступно с Intended+.';
-
-  @override
   String get faqShareReflection => 'Можно поделиться рефлексией?';
 
   @override
   String get faqShareReflectionAnswer =>
       'Да — на «Твоём месяце» нажми «Поделиться» под сезоном. Получится карточка в формате сторис — с сеткой и словом сезона, под Instagram или TikTok. Названия привычек попадают на карточку только по твоему выбору.';
-
-  @override
-  String get faqNoReflection => 'Почему я не вижу рефлексию?';
-
-  @override
-  String get faqNoReflectionAnswer =>
-      'Недельная рефлексия появляется через 7 дней. Месячная — через 30. Чем чаще отмечаетесь, тем богаче рефлексия.';
 
   @override
   String get faqHowReflectionsGenerated => 'Как создаются рефлексии?';
