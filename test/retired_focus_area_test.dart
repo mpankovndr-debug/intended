@@ -142,6 +142,27 @@ void main() {
         expect(ReflectionService.categoryForHabit(entry.key), entry.value);
       }
     });
+
+    test('every action the app can still name resolves to an area', () async {
+      // The two tests above only see titles someone remembered to retire.
+      // "Name 3 things you're grateful for" left the Mood pool when the
+      // gratitude page replaced it, keeping its string for old moments, but
+      // never entered the map — so whoever held it couldn't swap it, and its
+      // new moments recorded no category. A kept string means a card may
+      // still be held, so a kept string must resolve.
+      final s = await _boot(focusAreas: ['Health']);
+      expect(
+        localisedHabitNames.where((n) => s.getCategoryForHabit(n) == null),
+        isEmpty,
+        reason: 'these cannot be swapped',
+      );
+      expect(
+        localisedHabitNames
+            .where((n) => ReflectionService.categoryForHabit(n) == null),
+        isEmpty,
+        reason: 'these would record a moment with no category',
+      );
+    });
   });
 
   group('history is not rewritten', () {

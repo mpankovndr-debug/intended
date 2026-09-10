@@ -421,6 +421,8 @@ class OnboardingState extends ChangeNotifier {
     'Wait 24 hours before one purchase': 'Home & organization',
     'Celebrate one money win': 'Home & organization',
     'Set one small savings goal': 'Home & organization',
+    // Replaced by the gratitude page, not renamed; it lived in Mood.
+    "Name 3 things you're grateful for": 'Mood',
   };
 
   /// Focus areas that no longer exist, and what a saved selection becomes.
