@@ -11,6 +11,7 @@ import 'analytics_service.dart';
 class ShareService {
   static Future<void> shareCard(
     GlobalKey repaintKey, {
+    required String subject,
     required Rect sharePositionOrigin,
     String surface = 'season_card',
   }) async {
@@ -34,7 +35,7 @@ class ShareService {
 
     final result = await Share.shareXFiles(
       [XFile(file.path)],
-      subject: 'My week on Intended',
+      subject: subject,
       sharePositionOrigin: sharePositionOrigin,
     );
     // The sheet opening and the user actually posting are different funnels.

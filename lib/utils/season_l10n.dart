@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../l10n/app_localizations.dart';
 import '../models/season.dart';
 
@@ -59,4 +61,10 @@ class SeasonL10n {
         // hides below the threshold — so this is unreachable rather than copy.
         _ => l10n.shareSeasonEveningLine,
       };
+
+  /// The subject Mail and Messages put on the shared card. The bare month
+  /// (LLLL): Russian's yMMMM appends « г.», and any format with a day turns
+  /// the month genitive («1 сентября») — neither can follow «Мой».
+  static String shareSubject(DateTime month, AppLocalizations l10n) =>
+      l10n.shareSeasonSubject(DateFormat.LLLL(l10n.localeName).format(month));
 }

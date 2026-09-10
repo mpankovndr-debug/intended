@@ -3888,6 +3888,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shareSeasonLabel => 'МОЙ СЕЗОН';
 
   @override
+  String shareSeasonSubject(String month) {
+    return 'Мой $month в Intended';
+  }
+
+  @override
   String get shareSeasonMorningLine => 'Я прихожу сюда, пока день тихий.';
 
   @override

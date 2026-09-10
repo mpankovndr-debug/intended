@@ -3805,6 +3805,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareSeasonLabel => 'MY SEASON';
 
   @override
+  String shareSeasonSubject(String month) {
+    return 'My $month on Intended';
+  }
+
+  @override
   String get shareSeasonMorningLine => 'I come to this before the day starts.';
 
   @override

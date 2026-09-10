@@ -11,6 +11,7 @@ import '../models/moment.dart';
 import '../services/share_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
+import '../utils/season_l10n.dart';
 import '../utils/text_styles.dart';
 import '../widgets/season_share_card.dart';
 
@@ -93,10 +94,14 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
     if (_sharing || !_cardReady) return;
     setState(() => _sharing = true);
     final size = MediaQuery.of(context).size;
+    // The card's own month, not "now" — the pager shares past months too.
+    final subject =
+        SeasonL10n.shareSubject(widget.month, AppLocalizations.of(context));
     try {
       await WidgetsBinding.instance.endOfFrame;
       await ShareService.shareCard(
         _cardKey,
+        subject: subject,
         sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2),
       );
     } finally {

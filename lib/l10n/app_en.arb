@@ -1991,6 +1991,15 @@
   },
   "shareSeasonGaps": "and the gaps are getting shorter",
   "shareSeasonLabel": "MY SEASON",
+  "shareSeasonSubject": "My {month} on Intended",
+  "@shareSeasonSubject": {
+    "description": "Subject line (Mail, Messages) when sharing the season card. Month is the bare month name (DateFormat.LLLL), so Russian gets the nominative «сентябрь»; every Russian month is masculine, so «Мой» always agrees.",
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
   "shareSeasonMorningLine": "I come to this before the day starts.",
   "shareSeasonEveningLine": "I come to this once the day has quieted.",
   "shareSeasonSteadyLine": "A little, most days.",

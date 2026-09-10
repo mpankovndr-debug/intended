@@ -6408,6 +6408,12 @@ abstract class AppLocalizations {
   /// **'MY SEASON'**
   String get shareSeasonLabel;
 
+  /// Subject line (Mail, Messages) when sharing the season card. Month is the bare month name (DateFormat.LLLL), so Russian gets the nominative «сентябрь»; every Russian month is masculine, so «Мой» always agrees.
+  ///
+  /// In en, this message translates to:
+  /// **'My {month} on Intended'**
+  String shareSeasonSubject(String month);
+
   /// No description provided for @shareSeasonMorningLine.
   ///
   /// In en, this message translates to:

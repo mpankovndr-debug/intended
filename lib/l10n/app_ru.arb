@@ -1464,6 +1464,7 @@
   "firstWeekGladdest": "Чаще всего в радость было это: «{habit}».",
   "shareSeasonGaps": "и паузы между ними короче",
   "shareSeasonLabel": "МОЙ СЕЗОН",
+  "shareSeasonSubject": "Мой {month} в Intended",
   "shareSeasonMorningLine": "Я прихожу сюда, пока день тихий.",
   "shareSeasonEveningLine": "Я прихожу сюда, когда день затих.",
   "shareSeasonSteadyLine": "Понемногу, почти каждый день.",
