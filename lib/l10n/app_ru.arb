@@ -474,47 +474,6 @@
   "notifDailyChannelDesc": "Мягкие ежедневные напоминания о привычках",
   "notifWeeklyChannelName": "Еженедельные напоминания",
   "notifWeeklyChannelDesc": "Напоминания для недельной рефлексии",
-  "momentsTitle": "Твои моменты",
-  "momentsSubtitle": "Каждая выполненная привычка сохраняется в твою коллекцию.",
-  "momentsEmptyTitle": "Здесь появятся твои моменты.",
-  "momentsEmptyMessage": "Каждая выполненная привычка становится частью твоей коллекции.",
-  "momentsToday": "Сегодня",
-  "momentsYesterday": "Вчера",
-  "monthSummaryMoments": "{count, plural, =1{1 момент в {month}} few{{count} момента в {month}} other{{count} моментов в {month}}}",
-  "@monthSummaryMoments": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "month": {
-        "type": "String"
-      }
-    }
-  },
-  "monthSummaryIntentions": "{count, plural, =1{1 намерение в этом месяце} few{{count} намерения в этом месяце} other{{count} намерений в этом месяце}}",
-  "@monthSummaryIntentions": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "monthSummaryTopIntention": "Чаще всего: {intention}",
-  "@monthSummaryTopIntention": {
-    "placeholders": {
-      "intention": {
-        "type": "String"
-      }
-    }
-  },
-  "momentsShowAll": "Показать все {count} моментов",
-  "@momentsShowAll": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "paywallTitle": "Открой полный Intended",
   "paywallTitleGentleMornings": "Сделай утро ещё мягче",
   "paywallTitleAnchorsForHardDays": "Больше опор в трудные дни",
@@ -602,7 +561,6 @@
   "profileManage": "Управлять",
   "profileUnlockPlus": "Попробовать Intended+",
   "profileFocusAreas": "Направления",
-  "profileYourMoments": "Твои моменты",
   "profileMomentsNone": "Пока нет",
   "profileMomentsCount": "{count, plural, =1{1 момент} few{{count} момента} other{{count} моментов}}",
   "@profileMomentsCount": {

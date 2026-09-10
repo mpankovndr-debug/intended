@@ -1200,60 +1200,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get notifWeeklyChannelDesc => 'Напоминания для недельной рефлексии';
 
   @override
-  String get momentsTitle => 'Твои моменты';
-
-  @override
-  String get momentsSubtitle =>
-      'Каждая выполненная привычка сохраняется в твою коллекцию.';
-
-  @override
-  String get momentsEmptyTitle => 'Здесь появятся твои моменты.';
-
-  @override
-  String get momentsEmptyMessage =>
-      'Каждая выполненная привычка становится частью твоей коллекции.';
-
-  @override
-  String get momentsToday => 'Сегодня';
-
-  @override
-  String get momentsYesterday => 'Вчера';
-
-  @override
-  String monthSummaryMoments(int count, String month) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count моментов в $month',
-      few: '$count момента в $month',
-      one: '1 момент в $month',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String monthSummaryIntentions(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count намерений в этом месяце',
-      few: '$count намерения в этом месяце',
-      one: '1 намерение в этом месяце',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String monthSummaryTopIntention(String intention) {
-    return 'Чаще всего: $intention';
-  }
-
-  @override
-  String momentsShowAll(int count) {
-    return 'Показать все $count моментов';
-  }
-
-  @override
   String get paywallTitle => 'Открой полный Intended';
 
   @override
@@ -1527,9 +1473,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileFocusAreas => 'Направления';
-
-  @override
-  String get profileYourMoments => 'Твои моменты';
 
   @override
   String get profileMomentsNone => 'Пока нет';

@@ -1881,66 +1881,6 @@ abstract class AppLocalizations {
   /// **'Weekly reflection reminders'**
   String get notifWeeklyChannelDesc;
 
-  /// No description provided for @momentsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Your moments'**
-  String get momentsTitle;
-
-  /// No description provided for @momentsSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Every habit you complete is saved to your collection.'**
-  String get momentsSubtitle;
-
-  /// No description provided for @momentsEmptyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Your moments will appear here.'**
-  String get momentsEmptyTitle;
-
-  /// No description provided for @momentsEmptyMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Every habit you complete becomes part of your collection.'**
-  String get momentsEmptyMessage;
-
-  /// No description provided for @momentsToday.
-  ///
-  /// In en, this message translates to:
-  /// **'Today'**
-  String get momentsToday;
-
-  /// No description provided for @momentsYesterday.
-  ///
-  /// In en, this message translates to:
-  /// **'Yesterday'**
-  String get momentsYesterday;
-
-  /// No description provided for @monthSummaryMoments.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 moment in {month}} other{{count} moments in {month}}}'**
-  String monthSummaryMoments(int count, String month);
-
-  /// No description provided for @monthSummaryIntentions.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 intention this month} other{{count} intentions this month}}'**
-  String monthSummaryIntentions(int count);
-
-  /// No description provided for @monthSummaryTopIntention.
-  ///
-  /// In en, this message translates to:
-  /// **'Your most frequent intention: {intention}'**
-  String monthSummaryTopIntention(String intention);
-
-  /// No description provided for @momentsShowAll.
-  ///
-  /// In en, this message translates to:
-  /// **'Show all {count} moments'**
-  String momentsShowAll(int count);
-
   /// No description provided for @paywallTitle.
   ///
   /// In en, this message translates to:
@@ -2420,12 +2360,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Focus areas'**
   String get profileFocusAreas;
-
-  /// No description provided for @profileYourMoments.
-  ///
-  /// In en, this message translates to:
-  /// **'Your moments'**
-  String get profileYourMoments;
 
   /// No description provided for @profileMomentsNone.
   ///

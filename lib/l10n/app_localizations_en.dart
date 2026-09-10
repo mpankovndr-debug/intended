@@ -1141,58 +1141,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifWeeklyChannelDesc => 'Weekly reflection reminders';
 
   @override
-  String get momentsTitle => 'Your moments';
-
-  @override
-  String get momentsSubtitle =>
-      'Every habit you complete is saved to your collection.';
-
-  @override
-  String get momentsEmptyTitle => 'Your moments will appear here.';
-
-  @override
-  String get momentsEmptyMessage =>
-      'Every habit you complete becomes part of your collection.';
-
-  @override
-  String get momentsToday => 'Today';
-
-  @override
-  String get momentsYesterday => 'Yesterday';
-
-  @override
-  String monthSummaryMoments(int count, String month) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count moments in $month',
-      one: '1 moment in $month',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String monthSummaryIntentions(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count intentions this month',
-      one: '1 intention this month',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String monthSummaryTopIntention(String intention) {
-    return 'Your most frequent intention: $intention';
-  }
-
-  @override
-  String momentsShowAll(int count) {
-    return 'Show all $count moments';
-  }
-
-  @override
   String get paywallTitle => 'Get the full Intended experience';
 
   @override
@@ -1462,9 +1410,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileFocusAreas => 'Focus areas';
-
-  @override
-  String get profileYourMoments => 'Your moments';
 
   @override
   String get profileMomentsNone => 'None yet';

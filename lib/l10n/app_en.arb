@@ -744,47 +744,6 @@
   "notifDailyChannelDesc": "Gentle daily habit reminders",
   "notifWeeklyChannelName": "Weekly Reminders",
   "notifWeeklyChannelDesc": "Weekly reflection reminders",
-  "momentsTitle": "Your moments",
-  "momentsSubtitle": "Every habit you complete is saved to your collection.",
-  "momentsEmptyTitle": "Your moments will appear here.",
-  "momentsEmptyMessage": "Every habit you complete becomes part of your collection.",
-  "momentsToday": "Today",
-  "momentsYesterday": "Yesterday",
-  "monthSummaryMoments": "{count, plural, =1{1 moment in {month}} other{{count} moments in {month}}}",
-  "@monthSummaryMoments": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "month": {
-        "type": "String"
-      }
-    }
-  },
-  "monthSummaryIntentions": "{count, plural, =1{1 intention this month} other{{count} intentions this month}}",
-  "@monthSummaryIntentions": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "monthSummaryTopIntention": "Your most frequent intention: {intention}",
-  "@monthSummaryTopIntention": {
-    "placeholders": {
-      "intention": {
-        "type": "String"
-      }
-    }
-  },
-  "momentsShowAll": "Show all {count} moments",
-  "@momentsShowAll": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "paywallTitle": "Get the full Intended experience",
   "paywallTitleGentleMornings": "Make your mornings even gentler",
   "paywallTitleAnchorsForHardDays": "More anchors for the hard days",
@@ -965,7 +924,6 @@
   "profileManage": "Manage",
   "profileUnlockPlus": "Try Intended+",
   "profileFocusAreas": "Focus areas",
-  "profileYourMoments": "Your moments",
   "profileMomentsNone": "None yet",
   "profileMomentsCount": "{count, plural, =1{1 moment} other{{count} moments}}",
   "@profileMomentsCount": {
