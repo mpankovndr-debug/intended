@@ -1242,42 +1242,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Все десять тем, премиум-иконки и виджеты для главного экрана';
 
   @override
-  String get paywallGroupRoom => 'Больше пространства';
-
-  @override
-  String get paywallGroupRoomA => 'Безлимитные привычки и области фокуса';
-
-  @override
-  String get paywallGroupRoomB => 'Без ограничений на свои привычки';
-
-  @override
-  String get paywallGroupDiscovery => 'Больше открытий';
-
-  @override
-  String get paywallGroupDiscoveryA => 'Вся библиотека привычек и подборки';
-
-  @override
-  String get paywallGroupDiscoveryB => 'Безлимитные замены и обновления';
-
-  @override
-  String get paywallGroupReflection => 'Больше рефлексии';
-
-  @override
-  String get paywallGroupReflectionA => 'Месячные и недельные наблюдения';
-
-  @override
-  String get paywallGroupReflectionB => 'Карточки для публикации';
-
-  @override
-  String get paywallGroupYou => 'Больше тебя';
-
-  @override
-  String get paywallGroupYouA => '10 красивых тем и иконки';
-
-  @override
-  String get paywallGroupYouB => 'Премиум-виджеты для главного экрана';
-
-  @override
   String get paywallMonthly => 'Ежемесячно';
 
   @override

@@ -1183,42 +1183,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'All ten themes, premium icons and home-screen widgets';
 
   @override
-  String get paywallGroupRoom => 'More room';
-
-  @override
-  String get paywallGroupRoomA => 'Unlimited habits & focus areas';
-
-  @override
-  String get paywallGroupRoomB => 'No ceiling on custom habits';
-
-  @override
-  String get paywallGroupDiscovery => 'More discovery';
-
-  @override
-  String get paywallGroupDiscoveryA => 'Full habit library & curated routines';
-
-  @override
-  String get paywallGroupDiscoveryB => 'Unlimited swaps & refreshes';
-
-  @override
-  String get paywallGroupReflection => 'More reflection';
-
-  @override
-  String get paywallGroupReflectionA => 'Monthly & weekly insights';
-
-  @override
-  String get paywallGroupReflectionB => 'Shareable moment cards';
-
-  @override
-  String get paywallGroupYou => 'More you';
-
-  @override
-  String get paywallGroupYouA => '10 beautiful themes & app icons';
-
-  @override
-  String get paywallGroupYouB => 'Premium widgets for your home screen';
-
-  @override
   String get paywallMonthly => 'Monthly';
 
   @override
