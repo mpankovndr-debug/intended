@@ -5,6 +5,11 @@ Design spec, September 2026. Written from a design conversation; nothing here is
 Code references point at `origin/fix/trial-length-and-stale-prices`, the branch the device build runs.
 `main` is 35 commits behind it (Pause, the season rewrite, the store copy), so read the code there, not on `main`.
 
+**Decided (27 Sep):** build on `fix/trial-length-and-stale-prices` (going into `main`); the 14-day start
+rule, with a short first month asking for less (§2.1); no "hours for yourself" figure (§3.7); the theme
+picker moves to Profile; no night sky or stars in onboarding, because the North star is a metaphor, not
+a visual.
+
 Copy rule for everything below: **no em dashes in new copy.** Use a colon, a full stop or a comma.
 The English ARB on the device branch already has 77 of them; a sweep is a separate job.
 
@@ -76,6 +81,17 @@ Worked examples:
 | 17 Sep (14 days left) | September | 30 Nov | 75 days |
 | 18 Sep (13 days left) | Sep 18 to Oct 31 | 31 Dec | 105 days |
 | **29 Sep** | Sep 29 to Oct 31 | **31 Dec** | 94 days |
+
+**A short first month asks for less.** Under the 14-day rule, month 1 runs 14 to 31 days, or 31 to 44
+when the leftover days fold in.
+- **Under 21 days:** onboarding suggests two actions, not three, and says why: "You have 16 days until
+  October, so start with two." Fewer actions means each one gets enough tries to be read fairly at the
+  first plan. (21 is a starting value; tune it.)
+- **The first plan scales its thresholds** to the days month 1 actually had. A set-aside nudge tuned for
+  30 days must not fire on 16 (CLAUDE.md: thresholds are set by the sentence). Pure static, unit-tested.
+- **Too short or too thin to read:** month 2 stays *Try a few* and says so plainly: "Sixteen days isn't
+  long enough to tell what stuck. October is for trying too."
+- The sentence and the end date don't change.
 
 So a chapter runs 11 to 15 weeks. If "never longer than a quarter" must be strict, lower the threshold to
 7 days (range 69 to 99 days) and accept that month 1 can be as short as 8 days. Signing up on 29 or 30
@@ -282,20 +298,11 @@ Show `planProof*` under the plan's "Done" line on the day it is accepted, and pu
 and season rows. That is a day of work, it fixes a CLAUDE.md violation, and it answers "I don't remember
 what my September plan was".
 
-### 3.7 "You made 10 hours for yourself": not as an estimate
+### 3.7 "Hours for yourself": dropped
 
-- No action has a duration today: the catalog is 102 actions with none recorded, and custom actions
-  have none.
-- Actions are tiny by design ("Two minutes a day. That's the whole ask."). My rough estimate: 42 mostly
-  one-to-two-minute actions come to one to one-and-a-half hours, not 10. The number would be either small (it reads
-  as failure) or inflated (it's false).
-- Needing "it's an indication" on every render is the sign the number isn't backed.
-- What is real: **pause minutes** (a pause is recorded only when completed, 60 s). "2 minutes of breath"
-  is true today.
-- The alternative that gives the same "tangible" feeling honestly is the lens (§3.2): "19 evenings this
-  month you did something to let the day go."
-- If you still want time after this, build it in full: an authored duration for all 102 catalog actions,
-  an optional duration on custom actions, and a stated floor ("at least 1 h 20 min"), never an estimate.
+Decided against: no action has a recorded duration, and an estimate would need "it's an indication" on
+every render. The lens (§3.2) carries the same "in real life" feeling from data that exists. Pause
+minutes stay, because they are measured.
 
 ---
 
@@ -363,20 +370,21 @@ onboarding, not the person. The reward is the first tile landing.
 > Everything here starts with one sentence. Yours.
 
 **1. Pick a direction** (replaces the path list)
-Visual: a night sky; the paths are stars. Tapping one brightens it and shows its title and subtitle; the
-rest dim.
+Visual: a vertical stack of wide glass cards, each tinted with its path's own `accentColor` and a small
+line icon. The chosen card brightens and gains a soft glowing edge; the rest stay quiet. No stars or
+night sky: the North star is a metaphor, not a picture.
 > **What would you like more of?**
 > Pick the closest one. You'll say it your own way next.
-Options: the existing path titles and subtitles. "Your own way" becomes the star *Something else*.
+Options: the existing path titles and subtitles. "Your own way" becomes *Something else*.
 
 **2. Say it your way** (replaces the commitment screen)
 > **Say it your way.**
 > I want to *[let the day go before I sleep]*
 > Chips: *slow down in the evenings* · *stop scrolling in bed* · *sleep a bit earlier*
 > Only you see this. You can change it later.
-> Button: **Hold to make it yours** (a 1.2 s press, rising haptic; the star flares)
+> Button: **Hold to make it yours** (a 1.2 s press with a rising haptic; the fill completes and glows)
 
-Then the sentence rises and becomes the star:
+Then the sentence settles at the top of the screen:
 > **Your first chapter runs until 31 December.**
 > At the end, you decide what changed.
 
@@ -386,6 +394,8 @@ Then the sentence rises and becomes the star:
 **3. Three small things**
 > **Start with three small things.**
 > Each takes a minute or two. Pick the ones you'd actually do.
+> (When month 1 is under 21 days: **Start with two small things.** You have 16 days until October, so
+> start with two.)
 Cards come from the path's `starterActions` plus a few from its catalog. A chosen card drops into a tray
 labelled *Your first month*. Focus areas show as small chips with a *change* link (no separate screen).
 
@@ -428,7 +438,7 @@ Second beat: a few days pass (a soft fade), then a tile lands with a glow ring.
 **9. Paywall** (existing, after the first moment, per §5.4)
 Headline tie-in: **Intended+ reads your chapter and suggests one change a month.**
 
-**Theme picker:** move it to Profile; it doesn't serve the story. (Your call.)
+**Theme picker:** moves to Profile (decided); it doesn't serve the story.
 
 **Cost:** about 9 decisions against about 5 today. Part cards auto-advance, step 4 is skippable and step 6
 is one tap. Track each step's completion in `AnalyticsService` so the drop-off is visible, not guessed.
@@ -456,163 +466,141 @@ that already exists:
 
 ---
 
-## 8. ChatGPT design prompts
+## 8. ChatGPT concept prompts
 
-Use one conversation. Attach the two current Insights screenshots, paste the **style block** once, then
-send **one screen per message**. Image models handle one dense screen far better than a board of ten.
+Concepts to see the direction, not final designs. Open a new ChatGPT chat, attach the two Insights
+screenshots **and one of Today**, paste the setup once, then send **one prompt per message**. Image
+models handle one screen far better than a board of ten, and asking for two variations gives you
+something to compare.
 
-### 8.1 Style block (paste first)
-
-```
-You are designing screens for "Intended", an iOS habit app. The attached screenshots are the current
-app: match their visual language exactly.
-
-Canvas: iPhone 15, 393×852 pt, portrait, status bar at the top. Output a single realistic screen.
-
-Visual system (from the attached screenshots):
-- Background: deep indigo night, #2A2C47 to #2E314B, with faint misty pine silhouettes at the edges
-  and very subtle diagonal rain streaks. Calm, dim, never black.
-- One large frosted-glass sheet holds the content: fill about #3B3F67 at partial opacity, 32 pt corner
-  radius, 1 pt hairline border slightly lighter than the fill. Sections inside the sheet are separated
-  by hairline dividers, not separate cards.
-- Type: Sora. Page title 34 pt bold; hero line 30 pt; card headline 20 pt semibold; body 15 pt; meta
-  13 pt. Section eyebrows are small caps, letter-spaced, lavender (for example "THIS MONTH").
-  Text is warm off-white; secondary text is muted lavender-grey.
-- Category colours (sampled from the screenshots): Health burnt orange #B15438, Self-care violet #8169B7,
-  Mood sage green #647D53, Home ochre #A37539. Tiles are rounded squares (about 12 pt radius) with a soft
-  inner gradient, 8 pt gaps. After the last tile there is exactly one faint ghost tile (#454870); never
-  draw empty outlines.
-- Legend chips: pill outline, a coloured dot, label and count ("Health 16").
-- Floating bottom tab bar: a glass pill with three line icons (check, bar chart, person).
-
-Hard rules:
-- No streaks, flames, scores, percentages toward a goal, progress bars toward a goal, or countdowns.
-- No padlocks. Locked text fades out mid-sentence instead.
-- No confetti, trophies, badges or stars-as-rewards.
-- No empty slots for days without activity. Days are never the unit; each square is one thing done.
-- No em dashes in any text. Use a colon, a full stop or a comma.
-- Use the copy given for each screen exactly, and nothing else.
-```
-
-### 8.2 Onboarding screens (one message each)
-
-Use the copy from §6 verbatim. Per-screen direction:
+### Setup (paste first, with the screenshots attached)
 
 ```
-Screen: Onboarding 1, "Pick a direction". Same background, no glass sheet. A night sky fills the upper
-two thirds: nine small stars, loosely arranged like a constellation, each with a short label beneath in
-13 pt lavender (Gentle Mornings, Anchors for Hard Days, Quiet Focus, Winding Down, Softer Nights,
-Looking Up, Closer to People, Moving a Little, Through a Hard Season) and a tenth, dimmer star labelled
-"Something else". "Winding Down" is selected: brighter, with a soft halo, while the others dim to 40%.
-Below the sky, a small glass card shows "Winding Down" and "A small ritual for letting the day go".
-Top: four tiny marks "I II III IV", with I highlighted. Title near the bottom: "What would you like more
-of?" Subtitle: "Pick the closest one. You'll say it your own way next." Primary button: "Continue".
+I'm redesigning screens for Intended, a calm iOS habit app. The attached screenshots are the current
+app. Keep its look: deep indigo night background with faint misty pines, one frosted-glass sheet per
+screen, Sora type, lavender small-caps labels, rounded-square tiles in four category colours (orange
+Health, violet Self-care, sage Mood, ochre Home). iPhone portrait, a realistic UI mockup, not an
+illustration.
+Never draw: streaks, flames, scores, progress bars toward a goal, countdowns, padlocks, confetti,
+trophies, empty squares for missed days, or em dashes.
+I'll send one screen per message. For each, show two variations side by side, and use my text exactly.
+```
+
+### Today
+
+```
+Today screen. Top: small date "Saturday, 27 September", then a large line "Letting the day go".
+Under it a thin line of warm light with the words "a minute of breath" (it opens a breathing
+exercise). Then four glass action cards:
+1. "Take 3 slow breaths" with a small grey line "after I pour my coffee". Done: a very pale violet
+   wash and a tiny row of 4 violet tiles at the right edge. Not grey, no strikethrough.
+2. "Dim the lights an hour before sleep", line "after dinner". Pending: a thin orange bar on the left.
+3. "Write one line about today". Pending, no second line.
+4. "Stretch for one minute", line "when I get into bed". Pending.
+At the bottom, a quiet line with a small plus: "Add something of your own". Floating glass tab bar.
 ```
 
 ```
-Screen: Onboarding 2, "Say it your way". The selected star is now centred near the top with a soft halo.
-Big 30 pt text: "I want to" followed on the next line by an editable, underlined field containing
-"let the day go before I sleep" with a text cursor. Beneath: three outline chips, "slow down in the
-evenings", "stop scrolling in bed", "sleep a bit earlier". Meta line: "Only you see this. You can
-change it later." Bottom: a wide pill button "Hold to make it yours" with a fill sweeping left to
-right, about 60% complete, to show a press-and-hold. Marks "I II III IV" at the top, I highlighted.
+A storyboard of four phone frames, left to right, showing one tap on Today:
+1. A finger taps "Take 3 slow breaths" and a violet wash spreads across the card from the touch point.
+2. A bottom sheet asks "How was it?" with three pills: "Glad I did" (chosen, glowing), "Neutral",
+   "Took effort".
+3. The card has shrunk into one violet rounded-square tile, flying into the month's mosaic (five rows
+   of coloured tiles) inside the sheet; the other violet tiles brighten slightly.
+4. The tile has landed in the next free spot with a soft glow and a thin ring around it. Under the
+   mosaic: "42 small things this month" and, smaller, "You came back, after 3 quiet days."
+```
+
+### Insights
+
+```
+Insights screen, "This week". Top: small caps "CHAPTER 1 · UNTIL 30 NOVEMBER", then in quotes, large:
+"I want to let the day go before I sleep." Under it three small segments in a row: "Sep · Try a few"
+(lit), "Oct · Keep what stuck" and "Nov · Make it lighter" (dim). They show where you are in time and
+must not look like a progress bar. Then a segmented control: "This week" (selected), "This month",
+"Over time". One glass sheet, rows split by hairlines, each ending in a chevron:
+"5 evenings this week, you did something to let the day go." above a single row of 11 small tiles.
+"You came back on Tuesday, after 2 quiet days." beside one tile wearing a glowing ring.
+"Most reached for: Take 3 slow breaths, 4 times."
+"2 minutes of breath. Afterwards: a little calmer."
+"Your plan: on 1 September you moved your reminder to 21:30."
 ```
 
 ```
-Screen: Onboarding 3, "Three small things". Title "Start with three small things." Subtitle "Each takes
-a minute or two. Pick the ones you'd actually do." Six action cards in a 2-column grid, each a glass
-tile with a category-colour dot and a label: "Screens away 20 minutes before bed", "Dim the lights an
-hour before sleep", "Take 5 deep belly breaths", "Do absolutely nothing for 30 seconds", "Take 3 slow
-breaths", "Write one line about today". Three are selected, with a category wash and a check. At the
-bottom a tray labelled "Your first month" holds three small coloured tiles. Small chips "Health" and
-"Self-care" with a "change" link. Marks: II highlighted.
+Insights screen, "Over time". Same header, with "Over time" selected. Rows, each with a small status
+pill on the right ("Ready" bright, "Forming" muted) and a chevron:
+YOUR SEASON: "Continuous", Ready. "No quiet stretch of two days or more all month."
+WHEN YOU SHOW UP: "Evenings", Ready. "31 of your 42 moments came after 6 pm."
+COMING BACK: "1 return so far", Forming. "The trend shows after 3."
+WHAT LIFTS YOU: "Take 3 slow breaths", Forming. "Glad you did it 4 of 7 times. Ready in about 3 weeks."
 ```
 
 ```
-Screen: Onboarding 4, "When will they happen?" Title "When will they happen?" Subtitle "Tie each one to
-something you already do." Three glass rows, each a sentence: "After I [pour my coffee], I'll take 3
-slow breaths." The bracketed part is a violet pill. The second row's pill is empty and focused, with
-chips below it: "brush my teeth", "sit down at my desk", "get into bed", "Other". Link at the bottom:
-"Skip for now". Marks: II highlighted.
+A bottom sheet opened by tapping "Continuous" on Insights. Title "Continuous". Text: "You didn't go
+quiet for two days or more at any point this month." Two large numbers with small captions: "24" /
+"days you did something" and "1" / "day, your longest quiet stretch". Then four thin horizontal lines,
+each with a word at both ends (Morning and Evening, Steady and Bursts, Returning and Continuous,
+Focused and Wandering) and a small glowing dot showing where September sat; the Continuous dot is
+the brightest. Caption: "Your month is named after the line it leaned on hardest."
+```
+
+### Onboarding
+
+The flow borrows three well-known patterns (from memory of these apps, not checked this session):
+- **One question per screen, big calm type**, as Headspace and Calm do.
+- **Questions interleaved with full-screen cards that teach the idea**, Noom's pattern. This is where
+  the "chapters that explain the concept" go.
+- **A plan you seal yourself**, as in Fabulous's signed contract. Here it's the "hold to make it yours"
+  button.
+
+Take the mechanics, not their aesthetic, the same lesson as commit d278169.
+
+```
+Onboarding, step 1. No glass sheet, just the background. A thin four-part indicator at the very top,
+first part lit. Title: "What would you like more of?" Subtitle: "Pick the closest one. You'll say it
+your own way next." A vertical stack of wide glass cards, each softly tinted in its own colour with a
+small line icon: "Gentle Mornings · A soft, intentional way to start the day", "Winding Down · A small
+ritual for letting the day go" (selected: brighter, glowing edge, a check), "Softer Nights · For sleep
+that doesn't fight you", "Quiet Focus · Get things done without the burnout", "Something else".
+No stars, no night sky.
 ```
 
 ```
-Screen: Onboarding 6, "Try it". Centre: a small glass sheet with a mosaic of 5 tiles (orange, violet,
-green, violet, orange) and one ghost tile; a sixth violet tile is mid-flight, landing with a soft glow.
-Title "Every time you do one, a square appears." Below, smaller: "Miss a few days and nothing is lost.
-When you come back, the app marks the return, not the gap." One tile carries a thin glowing ring.
-Marks: III highlighted.
+Onboarding, step 2. Calm and mostly empty. Large text in the middle: "I want to", and on the next line,
+underlined and editable with a cursor: "let the day go before I sleep". Three small outline chips below:
+"slow down in the evenings", "stop scrolling in bed", "sleep a bit earlier". A small grey line: "Only
+you see this. You can change it later." At the bottom, a wide pill button "Hold to make it yours" with
+its fill sweeping left to right, about half full.
 ```
 
 ```
-Screen: Onboarding 8, "Do one now". Title "Do one now." Three action cards stacked; the top one is
-pressed, with a violet wash spreading from the touch point. Below, the person's own mosaic: one violet
-tile, freshly landed with a glow, and one ghost tile. Caption under it: "That's the first square of
-your chapter." Link: "I'll do it later". Marks: IV highlighted.
-```
-
-For the part cards (I–IV), one message is enough:
-
-```
-Screen: an onboarding part card. Full-bleed background only. Centred: a large Roman numeral "II" in Sora
-at 64 pt, low-opacity lavender; beneath it "How you'll get there" at 30 pt; beneath that, in 17 pt
-muted text, "Not by trying hard. By starting small." Nothing else on screen.
-```
-
-### 8.3 Insights screens (one message each)
-
-```
-Screen: Insights, "This week". Top: an eyebrow "CHAPTER 1 · UNTIL 30 NOVEMBER"; below it the sentence
-in 26 pt, in quotes: "I want to let the day go before I sleep." Below that, a three-part calendar track:
-three rounded segments labelled "Sep · Try a few" (highlighted), "Oct · Keep what stuck" and
-"Nov · Make it lighter" (dim). It marks position in time only and must not look like a progress bar.
-Below, a segmented control: "This week" (selected), "This month", "Over time".
-Then one glass sheet with hairline-separated rows, each ending in a small chevron:
-1. Eyebrow "THIS WEEK". Headline: "5 evenings this week, you did something to let the day go."
-   A single row of 11 small tiles in category colours, then "11 small things".
-2. A small tile with a glowing ring, then "You came back on Tuesday, after 2 quiet days."
-3. "Most reached for: Take 3 slow breaths, 4 times. You were glad you did, 3 times."
-4. Two small violet circles with a dot in the centre, then "2 minutes of breath. Afterwards you said:
-   a little calmer."
-5. Eyebrow "YOUR SEPTEMBER PLAN". "On 1 September you moved your reminder to 21:30."
-Floating tab bar at the bottom, middle icon active.
+Onboarding explainer card, shown between steps. Only the background and centred text: a small "II" in
+lavender, the line "How you'll get there" large, and under it "Not by trying hard. By starting small."
+The four-part indicator at the top, second part lit.
 ```
 
 ```
-Screen: Insights, "Over time". The same chapter header and segmented control, with "Over time" selected.
-One glass sheet of rows, each with an eyebrow, a value, a status pill on the right ("Ready" in
-off-white, or "Forming" in muted lavender) and a chevron:
-1. YOUR SEASON: "Continuous", Ready. "No quiet stretch of two days or more all month."
-2. WHEN YOU SHOW UP: "Evenings", Ready. "31 of your 42 moments came after 6 pm."
-3. COMING BACK: "1 return so far", Forming. "The trend shows after 3."
-4. WHAT LIFTS YOU: "Take 3 slow breaths", Forming. "Glad you did it 4 times out of 7. Ready in about
-   3 weeks."
-5. YOUR MONTHS: "August: Evening".
+Onboarding, step 3. Title: "Start with two small things." Subtitle: "You have 16 days until October,
+so start with two." Six glass action cards in two columns: "Screens away 20 minutes before bed", "Dim
+the lights an hour before sleep", "Take 5 deep belly breaths", "Do absolutely nothing for 30 seconds",
+"Take 3 slow breaths", "Write one line about today". Two are chosen (a colour wash and a check).
+A tray at the bottom labelled "Your first weeks" holds two small tiles.
 ```
 
 ```
-Screen: Insights deep-dive sheet for the season "Continuous". A bottom sheet over the dimmed Insights
-page, with a grabber. Eyebrow "YOUR SEASON · SEPTEMBER". Title "Continuous" at 30 pt.
-"What it means" (meta), then: "You didn't go quiet for two days or more at any point this month."
-"The evidence" (meta), then two facts in large numerals with small captions: "24 different days you did
-something" and "1 day, your longest quiet stretch".
-"Why this word" (meta): four horizontal lines, each with both ends labelled in 13 pt and a small glowing
-marker: Morning to Evening (marker far right), Steady to Bursts (marker left of centre), Returning to
-Continuous (marker at the far right, brightest, labelled "strongest"), Focused to Wandering (marker
-near the centre). Caption: "Your month is named after the line it leaned on hardest."
-Footer row: "August: Evening" with a chevron.
+Onboarding, "Try it". A small glass sheet in the middle holds a mosaic of 5 coloured tiles and one
+faint ghost tile; a sixth violet tile is landing with a soft glow, and one earlier tile has a thin
+glowing ring. Above: "Every time you do one, a square appears." Below: "Miss a few days and nothing is
+lost. When you come back, the app marks the return, not the gap." A demo card "Take 3 slow breaths"
+with a gently pulsing "Tap to try".
 ```
 
 ```
-Screen: Insights deep-dive sheet for the plan. Eyebrow "YOUR SEPTEMBER PLAN". Title "Reminder at 21:30".
-"What you chose": "On 1 September you moved your reminder to 21:30."
-"Why it was suggested": "In August, 18 of your 39 moments came after 21:00."
-"Since then": a quiet two-bar comparison labelled "26 days before: 14" and "26 days since: 22", no axes.
-Two buttons: "Keep it" (filled) and "Undo" (outline).
+Onboarding, the last step before the paywall. Title "Do one now." Three action cards; the top one is
+mid-tap with a violet wash. Below, an otherwise empty glass sheet holding exactly one fresh violet tile
+with a glow, and one faint ghost tile after it. Caption: "That's the first square of your chapter."
+Small link: "I'll do it later".
 ```
-
-A third prompt for the completion motion (§5) is best done as a storyboard: "six frames left to right
-showing…" plus the §5 steps.
 
 ---
 
