@@ -9,6 +9,8 @@ import '../services/moments_service.dart';
 import '../theme/theme_provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/category_colors.dart';
+import '../theme/category_glyphs.dart';
+import '../utils/habit_l10n.dart';
 import '../utils/text_styles.dart';
 
 /// The completion sheet, in two steps (§5.2).
@@ -22,6 +24,11 @@ import '../utils/text_styles.dart';
 /// the end of the row is what explains that completions accumulate into a
 /// month; a static row would just be a row. If the animation is ever dropped,
 /// drop the row with it and use words only.
+///
+/// The mood pills select; Done submits. The pills used to submit on tap,
+/// which made mood-then-note — the order everyone reaches for — impossible,
+/// and left a tiny "skip" a thumb-width from "add a note". Done with nothing
+/// selected *is* the skip, so the skip link no longer exists to mis-tap.
 class HabitCompletionModal extends StatefulWidget {
   const HabitCompletionModal({
     super.key,
@@ -58,8 +65,9 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
 
   bool _showStep2 = false;
   bool _noteOpen = false;
+  bool _tileLanded = false;
 
-  /// Set once the mood tap has written mood + note. Guards the dispose-time
+  /// Set once Done has written mood + note. Guards the dispose-time
   /// save below from writing a second time.
   bool _annotated = false;
   MomentMood? _mood;
@@ -72,6 +80,15 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
       duration: const Duration(milliseconds: 900),
       vsync: this,
     );
+    // One light tap at the overshoot apex (~55% of the tween), so the body
+    // feels the tile land in the month. Light, not medium: Done already
+    // fired medium, and two equal impacts in a second read as a stutter.
+    _tileController.addListener(() {
+      if (!_tileLanded && _tileController.value >= 0.55) {
+        _tileLanded = true;
+        HapticFeedback.lightImpact();
+      }
+    });
     // Overshoot slightly so the tile lands rather than merely appears.
     _tileScale = TweenSequence<double>([
       TweenSequenceItem(
@@ -102,28 +119,42 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
     // A note typed and then dismissed by tapping the barrier used to vanish:
     // the moment was already recorded, so there was no second chance to
     // attach it. Fire-and-forget is safe here — annotate only touches
-    // storage, never this context.
-    if (!_annotated && _noteController.text.trim().isNotEmpty) {
-      MomentsService.annotate(widget.momentId, note: _noteController.text);
+    // storage, never this context. The mood needs no salvage: it was
+    // persisted on tap. Log it here so analytics matches storage.
+    if (!_annotated) {
+      if (_mood != null) {
+        AnalyticsService.logMoodResponse(_mood!.key);
+      }
+      if (_noteController.text.trim().isNotEmpty) {
+        MomentsService.annotate(widget.momentId, note: _noteController.text);
+      }
     }
     _tileController.dispose();
     _noteController.dispose();
     super.dispose();
   }
 
-  Future<void> _selectMood(MomentMood? mood) async {
+  void _pickMood(MomentMood mood) {
+    if (_showStep2) return;
+    HapticFeedback.selectionClick();
+    setState(() => _mood = mood);
+    // Persisted on tap, not on Done: the sheet is barrier-dismissible, and
+    // an answer given then swiped away should still count. `annotate` keeps
+    // the old mood when passed null, so switching pills simply overwrites —
+    // there is no deselect back to none.
+    MomentsService.annotate(widget.momentId, mood: mood);
+  }
+
+  Future<void> _submit() async {
     if (_showStep2) return;
     HapticFeedback.mediumImpact();
-    AnalyticsService.logMoodResponse(mood?.key);
-    setState(() {
-      _mood = mood;
-      _showStep2 = true;
-    });
+    AnalyticsService.logMoodResponse(_mood?.key);
+    setState(() => _showStep2 = true);
 
     _annotated = true;
     await MomentsService.annotate(
       widget.momentId,
-      mood: mood,
+      mood: _mood,
       note: _noteController.text,
     );
 
@@ -142,8 +173,13 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
 
   String _timeLabel() {
     final local = widget.completedAt.toLocal();
-    final hour = local.hour % 12 == 0 ? 12 : local.hour % 12;
     final minute = local.minute.toString().padLeft(2, '0');
+    // Follow the device's clock convention: «10:57 PM» on an otherwise
+    // Russian sheet reads as foreign as an untranslated word would.
+    if (MediaQuery.of(context).alwaysUse24HourFormat) {
+      return '${local.hour}:$minute';
+    }
+    final hour = local.hour % 12 == 0 ? 12 : local.hour % 12;
     final suffix = local.hour < 12 ? 'AM' : 'PM';
     return '$hour:$minute $suffix';
   }
@@ -216,8 +252,18 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // Step 1 only: step 2's hero is the landing tile, and on small
+        // phones the sheet plus keyboard needs the height back.
+        Image.asset(
+          CategoryGlyphs.of(widget.category),
+          width: 54,
+          height: 54,
+        ),
+        const SizedBox(height: 8),
         Text(
-          widget.habitTitle,
+          // The stored name is a canonical English ID; render through the
+          // resolver or a Russian sheet shows the raw English string.
+          localizeHabitName(widget.habitTitle, l10n),
           textAlign: TextAlign.center,
           style: AppTextStyles.h2(context),
         ),
@@ -238,15 +284,19 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
           ),
         ),
         const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(child: _moodPill(l10n.completionMoodGlad, MomentMood.gladIDid, colors)),
-            const SizedBox(width: 8),
-            Expanded(child: _moodPill(l10n.completionMoodNeutral, MomentMood.neutral, colors)),
-            const SizedBox(width: 8),
-            Expanded(child: _moodPill(l10n.completionMoodTookEffort, MomentMood.tookEffort, colors)),
-          ],
+        // IntrinsicHeight + stretch: «Было непросто» wraps to two lines and
+        // its pill towered over the other two until all three shared height.
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: _moodPill(l10n.completionMoodGlad, MomentMood.gladIDid, colors)),
+              const SizedBox(width: 8),
+              Expanded(child: _moodPill(l10n.completionMoodNeutral, MomentMood.neutral, colors)),
+              const SizedBox(width: 8),
+              Expanded(child: _moodPill(l10n.completionMoodTookEffort, MomentMood.tookEffort, colors)),
+            ],
+          ),
         ),
         const SizedBox(height: 18),
         if (_noteOpen)
@@ -256,42 +306,80 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
             maxLines: 3,
             minLines: 1,
             autofocus: true,
-            // Return closes the keyboard instead of adding a line. Without
-            // this the field had no exit at all: the keyboard covered Skip,
-            // and the only way out was tapping a mood — which submits. A
-            // 280-character note doesn't need paragraphs; it needs a door.
+            // Return closes the keyboard instead of adding a line: the
+            // keyboard can cover the Done button, and a 280-character note
+            // doesn't need paragraphs; it needs a door.
             textInputAction: TextInputAction.done,
             onSubmitted: (_) => FocusScope.of(context).unfocus(),
             placeholder: l10n.completionNoteHint,
             style: AppTextStyles.body(context),
             decoration: BoxDecoration(
-              color: colors.bgGradientTop.withValues(alpha: 0.5),
+              color: _themedFill(colors).withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(14),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           )
         else
+          // A full-width outlined target, not a text link: the old link sat
+          // millimetres above "skip" and the two were routinely confused.
           CupertinoButton(
             padding: EdgeInsets.zero,
             minimumSize: Size.zero,
             onPressed: () => setState(() => _noteOpen = true),
-            child: Text(
-              l10n.completionAddNote,
-              style: AppTextStyles.body(context).copyWith(
-                color: colors.textSecondary,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 13),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: Color.lerp(
+                    colors.textDisabled,
+                    colors.ctaPrimary,
+                    0.3,
+                  )!
+                      .withValues(alpha: 0.6),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    CupertinoIcons.pencil,
+                    size: 16,
+                    color: colors.textSecondary,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    l10n.completionAddNote,
+                    style: AppTextStyles.body(context).copyWith(
+                      fontSize: 14,
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-        const SizedBox(height: 10),
-        CupertinoButton(
-          padding: EdgeInsets.zero,
-          minimumSize: Size.zero,
-          onPressed: () => _selectMood(null),
-          child: Text(
-            l10n.completionSkip,
-            style: AppTextStyles.body(context).copyWith(
-              fontSize: 14,
-              color: colors.textDisabled,
+        const SizedBox(height: 14),
+        // Deliberately quiet — the same tint as an unselected pill, so the
+        // darkest thing on the sheet is the mood the user chose, not the
+        // exit. A dark primary button here shouted over the answer.
+        SizedBox(
+          width: double.infinity,
+          child: CupertinoButton(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            minimumSize: Size.zero,
+            borderRadius: BorderRadius.circular(18),
+            color: _themedFill(colors).withValues(alpha: 0.55),
+            onPressed: _submit,
+            child: Text(
+              l10n.commonDone,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.body(context).copyWith(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: colors.textPrimary,
+              ),
             ),
           ),
         ),
@@ -299,20 +387,34 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
     );
   }
 
+  /// Quiet fills lean toward the theme's own hue: bgGradientTop faded over
+  /// the near-white card washes out to grey. 12% of ctaPrimary restores the
+  /// tint (violet, blue, warm) without competing with the selected pill.
+  Color _themedFill(AppColorScheme colors) =>
+      Color.lerp(colors.bgGradientTop, colors.ctaPrimary, 0.12)!;
+
   Widget _moodPill(String label, MomentMood mood, AppColorScheme colors) {
+    final selected = _mood == mood;
+    final fg = selected ? colors.buttonText : colors.textPrimary;
+    // Words only, no faces: a frown on "took effort" graded hard-but-worth-it
+    // as a wrong answer, which is the judgement this worth scale exists to
+    // avoid (see MomentMood). The month grid already carries the answer as
+    // a tint; the pill needs nothing but its label.
     return CupertinoButton(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
       minimumSize: Size.zero,
       borderRadius: BorderRadius.circular(16),
-      color: colors.bgGradientTop.withValues(alpha: 0.55),
-      onPressed: () => _selectMood(mood),
+      color: selected
+          ? colors.buttonDark
+          : _themedFill(colors).withValues(alpha: 0.55),
+      onPressed: () => _pickMood(mood),
       child: Text(
         label,
         textAlign: TextAlign.center,
         style: AppTextStyles.body(context).copyWith(
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: FontWeight.w600,
-          color: colors.textPrimary,
+          color: fg,
         ),
       ),
     );
@@ -353,7 +455,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
         ),
         const SizedBox(height: 24),
         Text(
-          widget.habitTitle,
+          localizeHabitName(widget.habitTitle, l10n),
           textAlign: TextAlign.center,
           style: AppTextStyles.h2(context),
         ),

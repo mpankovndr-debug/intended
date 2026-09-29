@@ -13,14 +13,16 @@ import '../utils/text_styles.dart';
 
 /// Opens the full paywall modal. Use after [showBoostOfferSheet] returns
 /// `'paywall'` to show the paywall from the correct context.
-void openPaywallFromContext(BuildContext context, {String source = 'boost', bool triggeredByCeiling = false}) {
+void openPaywallFromContext(BuildContext context,
+    {String source = 'boost', bool triggeredByCeiling = false}) {
   if (!context.mounted) return;
   if (context.read<RevenueCatService>().isPremium) return;
   showCupertinoModalPopup(
     context: context,
     barrierColor: Colors.black.withOpacity(0.5),
     filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-    builder: (_) => PaywallScreen(source: source, triggeredByCeiling: triggeredByCeiling),
+    builder: (_) =>
+        PaywallScreen(source: source, triggeredByCeiling: triggeredByCeiling),
   );
 }
 
@@ -71,10 +73,7 @@ class _BoostOfferSheet extends StatefulWidget {
 }
 
 class _BoostOfferSheetState extends State<_BoostOfferSheet> {
-  bool _isLoading = false;
-
-
-
+  final bool _isLoading = false;
 
   void _openPaywall() {
     Navigator.pop(context, 'paywall');
@@ -114,8 +113,7 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                     ],
               stops: const [0.0, 0.5, 1.0],
             ),
-            borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(32)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
             border: Border.all(
               color: isDark
                   ? colors.borderCard.withOpacity(0.4)

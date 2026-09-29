@@ -27,6 +27,7 @@ class SeasonShareScreen extends StatefulWidget {
   const SeasonShareScreen({
     super.key,
     required this.seasonWord,
+    required this.seasonPole,
     required this.month,
     required this.moments,
     required this.returnCount,
@@ -34,6 +35,8 @@ class SeasonShareScreen extends StatefulWidget {
   });
 
   final String seasonWord;
+  final String seasonPole;
+
   /// First day of the month being shared — the pager can share past months,
   /// so "now" is not necessarily the month on the card (review finding #10).
   final DateTime month;
@@ -239,9 +242,12 @@ class _SeasonShareScreenState extends State<SeasonShareScreen>
                 final themeProvider = context.watch<ThemeProvider>();
                 final locale = Localizations.localeOf(context).toString();
                 return SeasonShareCard(
-                  monthLabel:
-                      DateFormat.yMMMM(locale).format(widget.month),
+                  // Standalone month + year, not yMMMM: Russian's yMMMM ends
+                  // in « г.», which uppercases to a stray "Г." in a headline.
+                  monthLabel: '${DateFormat.LLLL(locale).format(widget.month)} '
+                      '${widget.month.year}',
                   seasonWord: widget.seasonWord,
+                  seasonPole: widget.seasonPole,
                   moments: widget.moments,
                   returnCount: widget.returnCount,
                   gapsShortening: widget.gapsShortening,

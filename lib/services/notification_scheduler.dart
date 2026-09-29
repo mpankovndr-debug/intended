@@ -1,15 +1,22 @@
+import 'dart:ui' show Locale, PlatformDispatcher;
+
 import '../l10n/app_localizations.dart';
 import '../models/intention_path.dart';
+import '../models/letter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+import 'analytics_service.dart';
 import 'app_usage_service.dart';
+import 'moments_service.dart';
 import 'notification_messages.dart';
 import 'notification_preferences_service.dart';
+import 'pause_launcher.dart';
 import 'week_stats_service.dart';
 
 /// Adaptive notification frequency tiers.
@@ -32,6 +39,24 @@ class NotificationScheduler {
   /// Listeners should switch to the Progress tab (index 1).
   static final ValueNotifier<int> pendingTabSwitch = ValueNotifier<int>(-1);
 
+  /// The daily notification's "minute of breath" action (iOS category and
+  /// action ids — registered once at initialize, referenced by scheduleDaily).
+  static const String _pauseCategoryId = 'daily_pause';
+  static const String _pauseActionId = 'open_pause';
+
+  /// True when the app was cold-started by the pause action button — the
+  /// response callback does not fire for launches from terminated, so the
+  /// launcher asks this at startup.
+  static Future<bool> launchedFromPauseAction() async {
+    try {
+      final details = await _plugin.getNotificationAppLaunchDetails();
+      return details?.didNotificationLaunchApp == true &&
+          details?.notificationResponse?.actionId == _pauseActionId;
+    } catch (_) {
+      return false;
+    }
+  }
+
   static Future<void> initialize() async {
     tz.initializeTimeZones();
     final tzInfo = await FlutterTimezone.getLocalTimezone();
@@ -39,12 +64,33 @@ class NotificationScheduler {
 
     const androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iosSettings = DarwinInitializationSettings(
+    // Action titles are baked at registration time, before any BuildContext
+    // exists, so the locale comes from the platform dispatcher — the same
+    // pattern main() uses for cold-start rescheduling.
+    final locale = PlatformDispatcher.instance.locale;
+    final actionL10n = lookupAppLocalizations(
+      locale.languageCode == 'ru' ? const Locale('ru') : const Locale('en'),
+    );
+    final iosSettings = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
       requestSoundPermission: false,
+      notificationCategories: [
+        DarwinNotificationCategory(
+          _pauseCategoryId,
+          actions: [
+            // foreground: the action opens the app into the Pause screen —
+            // there is no background version of a breathing exercise.
+            DarwinNotificationAction.plain(
+              _pauseActionId,
+              actionL10n.pauseNotifAction,
+              options: {DarwinNotificationActionOption.foreground},
+            ),
+          ],
+        ),
+      ],
     );
-    const settings = InitializationSettings(
+    final settings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
     );
@@ -52,9 +98,22 @@ class NotificationScheduler {
     await _plugin.initialize(
       settings,
       onDidReceiveNotificationResponse: (response) {
+        // The action button routes to the Pause and nothing else; the body
+        // tap keeps its original meaning.
+        if (response.actionId == _pauseActionId) {
+          AnalyticsService.logNotificationOpened('pause_action');
+          PauseLauncher.pending.value = 'notification';
+          return;
+        }
         AppUsageService.incrementNotificationsTapped();
-        // Weekly notification (ID 100) → navigate to Progress tab
-        if (response.id == 100) {
+        AnalyticsService.logNotificationOpened(switch (response.id) {
+          100 => 'weekly',
+          _monthlyLetterId => 'monthly_letter',
+          _ => 'daily',
+        });
+        // Weekly (100) and the monthly letter (101) both land on the
+        // Progress tab — that's where the letter lives.
+        if (response.id == 100 || response.id == _monthlyLetterId) {
           pendingTabSwitch.value = 1; // Progress tab index
         }
       },
@@ -210,6 +269,7 @@ class NotificationScheduler {
             presentAlert: true,
             presentBadge: false,
             presentSound: true,
+            categoryIdentifier: _pauseCategoryId,
           ),
           android: AndroidNotificationDetails(
             'daily_reminders',
@@ -298,6 +358,57 @@ class NotificationScheduler {
     );
   }
 
+  static const int _monthlyLetterId = 101;
+
+  /// «Твоё письмо за август готово» on the 1st of next month, 10:00 — a
+  /// call, not a report. Deliberately numberless: the weekly above bakes
+  /// this week's count into a repeating notification, so three quiet weeks
+  /// replay the same stale number; the letter must never do that.
+  ///
+  /// Scheduled only once the letter for the *current* month already
+  /// computes: moments only accumulate within a month, so a letter that
+  /// exists now still exists on the 1st — and if it doesn't exist yet,
+  /// nothing is promised. Each app open re-runs this via [rescheduleAll],
+  /// so it arms itself the day the threshold is crossed.
+  static Future<void> scheduleMonthlyLetter(AppLocalizations l10n) async {
+    final moments = await MomentsService.momentsForMonth(DateTime.now());
+    if (Letter.read(moments) == null) return;
+
+    final now = tz.TZDateTime.now(tz.local);
+    final firstOfNext = now.month == 12
+        ? tz.TZDateTime(tz.local, now.year + 1, 1, 1, 10)
+        : tz.TZDateTime(tz.local, now.year, now.month + 1, 1, 10);
+
+    // Standalone month name (LLLL): «август», not the in-context «августа».
+    final month = DateFormat('LLLL', l10n.localeName).format(now);
+
+    await _plugin.zonedSchedule(
+      _monthlyLetterId,
+      '',
+      l10n.notifMonthlyLetter(month),
+      firstOfNext,
+      NotificationDetails(
+        iOS: const DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: false,
+          presentSound: true,
+        ),
+        // Same channel as the weekly: both are the reflection cadence.
+        android: AndroidNotificationDetails(
+          'weekly_reminders',
+          l10n.notifWeeklyChannelName,
+          channelDescription: l10n.notifWeeklyChannelDesc,
+          importance: Importance.defaultImportance,
+          priority: Priority.defaultPriority,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: null,
+    );
+  }
+
   static Future<int> pendingDailyCount() async {
     final pending = await _plugin.pendingNotificationRequests();
     return pending.where((n) => n.id >= 0 && n.id <= 6).length;
@@ -316,18 +427,84 @@ class NotificationScheduler {
     }
   }
 
+  /// Rebuilds the queue when the app's language has changed since it was
+  /// built.
+  ///
+  /// A notification carries its text, not a reference to it, so switching the
+  /// phone from Russian to English left up to a week of Russian reminders
+  /// queued — and the monthly letter for up to a month. Nothing noticed:
+  /// [refreshTimezone] is the only other automatic rebuild and it fires on a
+  /// zone change, not a language one.
+  ///
+  /// Silent on a first run and on installs predating the stamp: with nothing
+  /// to compare against, the queue is already in whatever language built it,
+  /// and rebuilding would only reshuffle which message comes next.
+  static Future<void> refreshLocale(AppLocalizations? l10n) async {
+    if (l10n == null) return;
+    final previous = await NotificationPreferencesService.getScheduledLocale();
+    final enabled = await NotificationPreferencesService.isEnabled();
+
+    if (needsLocaleRebuild(
+      scheduled: previous,
+      current: l10n.localeName,
+      remindersEnabled: enabled,
+    )) {
+      // Stamps the new language itself.
+      await rescheduleAll(l10n);
+      return;
+    }
+
+    // Nothing is queued in the wrong language, but the stamp may still be
+    // stale — a first run, or a switch made while reminders were off. Record
+    // where we are, so turning reminders on later doesn't read as a change
+    // and rebuild a queue that was already correct.
+    if (previous != l10n.localeName) {
+      await NotificationPreferencesService.setScheduledLocale(l10n.localeName);
+    }
+  }
+
+  /// Whether the queue has to be rebuilt for a language change.
+  ///
+  /// Pure, and separate from [refreshLocale], because the rule is the part
+  /// worth testing and the rebuild is a plugin call that a test cannot make.
+  ///
+  /// [scheduled] is null on a first run and on installs predating the stamp.
+  /// Null never rebuilds: with nothing to compare against, the queue is
+  /// already in whatever language built it, and rebuilding would only
+  /// reshuffle which message comes next for no reason.
+  static bool needsLocaleRebuild({
+    required String? scheduled,
+    required String current,
+    required bool remindersEnabled,
+  }) {
+    if (scheduled == null) return false;
+    if (scheduled == current) return false;
+    // Nothing queued means nothing queued in the wrong language.
+    return remindersEnabled;
+  }
+
   static Future<void> cancelAll() async {
     await _plugin.cancelAll();
   }
 
   static Future<void> rescheduleAll(AppLocalizations l10n) async {
     await cancelAll();
+
+    // Stamped here and nowhere else: this is the only path that rebuilds the
+    // *whole* queue in one language. [scheduleDaily] alone would leave the
+    // weekly and the monthly letter still speaking the old one, and a stamp
+    // written there would claim otherwise.
+    await NotificationPreferencesService.setScheduledLocale(l10n.localeName);
+
     await scheduleDaily(l10n);
 
     final weeklyEnabled =
         await NotificationPreferencesService.isWeeklyEnabled();
     if (weeklyEnabled) {
       await scheduleWeekly(l10n);
+      // The monthly letter rides the same preference: both are the
+      // reflection cadence, and a separate toggle would need its own UI.
+      await scheduleMonthlyLetter(l10n);
     }
   }
 }

@@ -22,22 +22,18 @@ class FocusAreasScreen extends StatelessWidget {
   static const List<String> areas = [
     'Health',
     'Mood',
-    'Productivity',
     'Home & organization',
     'Relationships',
     'Creativity',
-    'Finances',
     'Self-care',
   ];
 
   static const Map<String, IconData> areaIcons = {
     'Health': CupertinoIcons.heart,
     'Mood': CupertinoIcons.smiley,
-    'Productivity': CupertinoIcons.checkmark_circle,
     'Home & organization': CupertinoIcons.house,
     'Relationships': CupertinoIcons.person_2,
     'Creativity': CupertinoIcons.paintbrush,
-    'Finances': CupertinoIcons.money_dollar_circle,
     'Self-care': CupertinoIcons.sparkles,
   };
 
@@ -50,16 +46,12 @@ class FocusAreasScreen extends StatelessWidget {
         return l10n.focusAreaHealth;
       case 'Mood':
         return l10n.focusAreaMood;
-      case 'Productivity':
-        return l10n.focusAreaProductivity;
       case 'Home & organization':
         return l10n.focusAreaHome;
       case 'Relationships':
         return l10n.focusAreaRelationships;
       case 'Creativity':
         return l10n.focusAreaCreativity;
-      case 'Finances':
-        return l10n.focusAreaFinances;
       case 'Self-care':
         return l10n.focusAreaSelfCare;
       default:
@@ -74,16 +66,12 @@ class FocusAreasScreen extends StatelessWidget {
         return l10n.focusAreaHealthSub;
       case 'Mood':
         return l10n.focusAreaMoodSub;
-      case 'Productivity':
-        return l10n.focusAreaProductivitySub;
       case 'Home & organization':
         return l10n.focusAreaHomeSub;
       case 'Relationships':
         return l10n.focusAreaRelationshipsSub;
       case 'Creativity':
         return l10n.focusAreaCreativitySub;
-      case 'Finances':
-        return l10n.focusAreaFinancesSub;
       case 'Self-care':
         return l10n.focusAreaSelfCareSub;
       default:

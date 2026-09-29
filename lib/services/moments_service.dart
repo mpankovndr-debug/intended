@@ -147,6 +147,41 @@ class MomentsService {
     });
   }
 
+  /// Moves every moment recorded under [from] to [to], returning how many
+  /// moved.
+  ///
+  /// A rename used to migrate the `habit_done_*` keys and leave the moments
+  /// under the old name, so one action's history split across the two stores
+  /// and everything joining on `habitName` — the ranking, the letter, the
+  /// plan, the milestone — silently dropped everything before the rename.
+  ///
+  /// Rewriting rather than aliasing, because the sibling store already made
+  /// that choice: `renameCustomHabit` rewrites the completion keys and
+  /// removes the originals. One rename cannot mean two different things.
+  ///
+  /// No rollup rewrite: [MomentRollup] buckets by hour, weekday, category and
+  /// mood, and holds no habit dimension, so a rename cannot change it.
+  static Future<int> renameHabit(String from, String to) async {
+    if (from == to) return 0;
+    final all = await getAll();
+    var moved = 0;
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].habitName != from) continue;
+      // `id` is deliberately left alone: the backup merge dedupes on it, so a
+      // rewritten id would resurrect every renamed moment as a duplicate.
+      all[i] = all[i].copyWith(habitName: to);
+      moved++;
+    }
+    if (moved == 0) return 0;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _key,
+      jsonEncode(all.map((m) => m.toJson()).toList()),
+    );
+    return moved;
+  }
+
   /// Gives a focus area to moments recorded before their custom action had
   /// one (the static map was loaded at launch and never refreshed, so any
   /// custom made mid-session recorded `category: null`).

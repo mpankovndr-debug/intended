@@ -51,6 +51,55 @@ class Rescue {
     return Rescue(quietDays: quiet);
   }
 
+  /// The one action worth putting in front of someone who has been away.
+  ///
+  /// The reduced screen used to show whichever action sorted first — pinned,
+  /// else the first custom, else the top of the catalogue — which meant a
+  /// returning user could be handed the one thing they had never once done.
+  /// This offers what they actually lived before the gap. Coming back to the
+  /// thing that was working is a smaller ask than coming back to item #1.
+  ///
+  /// Null when nothing in [among] has ever been completed: no evidence, so no
+  /// opinion, and the caller keeps its own ordering.
+  static String? mostLived({
+    required List<String> among,
+    required List<Moment> moments,
+  }) {
+    if (among.isEmpty || moments.isEmpty) return null;
+
+    final counts = <String, int>{};
+    final latest = <String, DateTime>{};
+    for (final m in moments) {
+      if (!among.contains(m.habitName)) continue;
+      counts[m.habitName] = (counts[m.habitName] ?? 0) + 1;
+      final seen = latest[m.habitName];
+      if (seen == null || m.completedAt.isAfter(seen)) {
+        latest[m.habitName] = m.completedAt;
+      }
+    }
+    if (counts.isEmpty) return null;
+
+    // Explicit tiebreaks, walking [among] in its own order so the last one is
+    // the caller's ordering: most moments, then most recently lived, then
+    // first. Dart's sort is not stable, and a rescue that offered a different
+    // action on each open would be the opposite of an anchor.
+    String? best;
+    for (final habit in among) {
+      if (!counts.containsKey(habit)) continue;
+      if (best == null) {
+        best = habit;
+        continue;
+      }
+      final byCount = counts[habit]!.compareTo(counts[best]!);
+      if (byCount > 0) {
+        best = habit;
+      } else if (byCount == 0 && latest[habit]!.isAfter(latest[best]!)) {
+        best = habit;
+      }
+    }
+    return best;
+  }
+
   static DateTime _wallDay(Moment m) {
     final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
     return DateTime.utc(local.year, local.month, local.day);

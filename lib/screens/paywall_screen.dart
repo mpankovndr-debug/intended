@@ -28,6 +28,12 @@ class _PaywallScreenState extends State<PaywallScreen>
     with SingleTickerProviderStateMixin {
   String _selectedPlan = 'yearly'; // monthly, yearly, lifetime
   bool _isLoading = false;
+
+  /// True once shown-and-resolved: purchase completed, or the instant pop
+  /// for an already-premium user. Anything else that unmounts this screen
+  /// counts as a dismissal — dispose is the one choke point all the pop
+  /// paths (close button, barrier, back swipe) share.
+  bool _outcomeLogged = false;
   late final AnimationController _bulletController;
   late final List<Animation<double>> _bulletAnimations;
 
@@ -39,6 +45,7 @@ class _PaywallScreenState extends State<PaywallScreen>
       if (!mounted) return;
       final rc = context.read<RevenueCatService>();
       if (rc.isPremium) {
+        _outcomeLogged = true;
         Navigator.of(context).pop();
         return;
       }
@@ -66,6 +73,9 @@ class _PaywallScreenState extends State<PaywallScreen>
 
   @override
   void dispose() {
+    if (!_outcomeLogged) {
+      AnalyticsService.logPaywallDismissed(widget.source);
+    }
     _bulletController.dispose();
     super.dispose();
   }
@@ -212,11 +222,11 @@ class _PaywallScreenState extends State<PaywallScreen>
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: Column(
                             children: [
-                              _buildAnimatedBullet(0, CupertinoIcons.chart_bar_alt_fill, l10n.paywallFeature1),
+                              _buildAnimatedBullet(0, CupertinoIcons.envelope_fill, l10n.paywallFeature1),
                               const SizedBox(height: 10),
                               _buildAnimatedBullet(1, CupertinoIcons.square_grid_2x2_fill, l10n.paywallFeature2),
                               const SizedBox(height: 10),
-                              _buildAnimatedBullet(2, CupertinoIcons.paintbrush_fill, l10n.paywallFeature3),
+                              _buildAnimatedBullet(2, CupertinoIcons.bubble_left_fill, l10n.paywallFeature3),
                               const SizedBox(height: 10),
                               _buildAnimatedBullet(3, CupertinoIcons.heart_fill, l10n.paywallFeature4),
                               const SizedBox(height: 10),
@@ -438,11 +448,11 @@ class _PaywallScreenState extends State<PaywallScreen>
           label: l10n.paywallLifetime,
           price: lifetimePrice,
           pricePerPeriod: l10n.paywallLifetimePeriod,
-          badge: _PricingBadge(
-            text: l10n.paywallLifetimeBadge,
-            primaryColor: colors.buttonDark,
-            secondaryColor: colors.buttonDark,
-          ),
+          // No badge. "Launch price" promised a rise that never came: lifetime
+          // went €69.99 → €49.99 while both subscriptions went up, so the badge
+          // had been contradicting the price history across two revisions.
+          // €49.99 one-time next to €44.99/year argues for itself.
+          badge: null,
           isSelected: _selectedPlan == 'lifetime',
           isDark: isDark,
           onTap: () => setState(() => _selectedPlan = 'lifetime'),
@@ -678,6 +688,7 @@ class _PaywallScreenState extends State<PaywallScreen>
                           .purchasePlan(_selectedPlan);
                       if (mounted && success) {
                         AnalyticsService.logPurchaseCompleted(_selectedPlan);
+                        _outcomeLogged = true;
                         Navigator.pop(context);
                       } else {
                         AnalyticsService.logPurchaseCancelled();
@@ -696,7 +707,15 @@ class _PaywallScreenState extends State<PaywallScreen>
                 : Text(
                     _selectedPlan == 'lifetime'
                         ? l10n.paywallCtaLifetime
-                        : l10n.paywallCtaTrial,
+                        : l10n.paywallCtaTrial(
+                            context
+                                .read<RevenueCatService>()
+                                .trialDaysForPlan(_selectedPlan),
+                          ),
+                    // «Начать 14-дневный пробный период» wraps where the
+                    // English never does, and a wrapped Text fills the button
+                    // and left-aligns every line unless told otherwise.
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: AppTextStyles.bodyFont(context),
                       fontSize: 17,
@@ -716,10 +735,18 @@ class _PaywallScreenState extends State<PaywallScreen>
     if (_selectedPlan == 'lifetime') {
       text = l10n.paywallLifetimeHint;
     } else {
-      final price = _selectedPlan == 'yearly'
-          ? '${rc.yearlyPriceString ?? l10n.paywallYearlyPrice}/${l10n.paywallYearly.toLowerCase()}'
-          : '${rc.monthlyPriceString ?? l10n.paywallMonthlyPrice}/${l10n.paywallMonthly.toLowerCase()}';
-      text = l10n.paywallTrialHint(price);
+      // The billing period belongs to the sentence, not to the price: Russian
+      // can't take «/ежегодно» after a slash, so each locale spells its own.
+      final days = rc.trialDaysForPlan(_selectedPlan);
+      text = _selectedPlan == 'yearly'
+          ? l10n.paywallTrialHintYearly(
+              days,
+              rc.yearlyPriceString ?? l10n.paywallYearlyPrice,
+            )
+          : l10n.paywallTrialHintMonthly(
+              days,
+              rc.monthlyPriceString ?? l10n.paywallMonthlyPrice,
+            );
     }
     return Text(
       text,

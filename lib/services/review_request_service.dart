@@ -1,188 +1,199 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../l10n/app_localizations.dart';
-
-/// Asks the user for an App Store review at peak emotional moments.
+/// Asks for an App Store review at peak moments, through Apple's own sheet.
 ///
-/// Architecture:
-///   • Multiple peak-moment entry points (habit completions, milestones,
-///     weekly reflection, curated pack completion). All share one shown-state
-///     so the user is never asked more than once per 30 days.
-///   • Tapping "Rate" opens the App Store `?action=write-review` page
-///     directly. We deliberately do *not* use the native [InAppReview] modal:
-///     Apple's guidelines say not to gate `SKStoreReviewController` behind
-///     your own prompt, and it silently no-ops once a user is past its
-///     3-per-365-days limit (and throughout TestFlight) — which is what made
-///     "Rate" appear to do nothing at all.
-///   • Two-strike user dismissals → never ask again.
-///   • Each trigger ID is recorded so the same moment never asks twice,
-///     even if the user later returns to that screen / hits that count again.
-///   • Same-session paywall lockout: if a paywall was shown this session,
-///     don't pile a review prompt on top. The session flag lives in memory,
-///     not [SharedPreferences], so it resets on cold launch.
+/// Why the native sheet now: [InAppReview.requestReview] lets someone leave a
+/// rating without leaving the app — one tap on a star. What this replaces
+/// showed a dialog of ours and, on "Rate", opened the write-review page in the
+/// App Store. That path costs a tap, an app switch, and then a *written*
+/// review, and almost nobody reaches the end of it.
+///
+/// The scar behind the old design was real: the native sheet silently no-ops
+/// throughout TestFlight and once someone is past Apple's 3-per-365-days
+/// ceiling, which is what made "Rate" look like it did nothing. Two things
+/// settle it. We never gate the sheet behind a prompt of our own, so no button
+/// of ours can appear broken; and Profile carries a plain "Rate Intended" row
+/// that opens the App Store directly for anyone who goes looking. The sheet is
+/// opportunistic, the Profile row is reliable.
+///
+/// Everything deciding *whether* to ask is a pure static below. A policy that
+/// needs a BuildContext can't be tested, and this one went untested for a
+/// whole release.
 class ReviewRequestService {
   ReviewRequestService._();
 
   // ── Storage keys ──────────────────────────────────────────────
   static const _lastAskKey = 'review_last_ask_at_iso';
-  static const _dismissedCountKey = 'review_dismissed_count';
   static const _shownTriggersKey = 'review_shown_triggers';
 
-  // ── Limits ────────────────────────────────────────────────────
-  static const _cooldown = Duration(days: 30);
-  static const _maxDismissals = 2;
+  /// Written only by the dialog this service no longer shows. Still read, so
+  /// that anyone who told the old prompt "Not yet" twice stays opted out —
+  /// they made a choice and it should survive the rewrite. Nobody can add to
+  /// this count any more.
+  static const _legacyDismissedKey = 'review_dismissed_count';
+  static const legacyMaxDismissals = 2;
 
-  // App Store ID — used by the URL fallback.
-  static const _appStoreId = '6759798275';
+  // ── Limits ────────────────────────────────────────────────────
+  /// Ours, on top of Apple's own 3-per-365-days. Apple counts sheets it chose
+  /// to render; we count times we asked, which is the number we can act on.
+  static const cooldown = Duration(days: 30);
+
+  static const appStoreId = '6759798275';
+
+  // ── Trigger ids. Persisted — never rename. ────────────────────
+  static const triggerAllDoneToday = 'all_done_today';
+  static const triggerCompletions7 = 'completions_7';
+  static const triggerMilestone5 = 'milestone_habits_5';
+
+  /// The month read itself back to you. In v2 this is the peak moment in the
+  /// app — a season is a sentence about who you were, and the letter ends in a
+  /// question. Every other trigger here is someone ticking a box.
+  static const triggerSeasonRead = 'season_read';
+  static const triggerLetterRead = 'letter_read';
 
   // In-memory session flag. Reset every cold launch.
   static bool _paywallShownThisSession = false;
 
-  /// Call from any paywall's initState so the review prompt knows to
-  /// stand down for the rest of the session.
-  static void markPaywallShown() {
-    _paywallShownThisSession = true;
+  /// Call from any paywall's initState so the review ask stands down for the
+  /// rest of the session. Nobody should be asked to rate an app in the same
+  /// sitting they were asked to pay for it.
+  static void markPaywallShown() => _paywallShownThisSession = true;
+
+  @visibleForTesting
+  static void resetSessionForTest() => _paywallShownThisSession = false;
+
+  // ── Pure policy ───────────────────────────────────────────────
+
+  /// Which trigger a completion earns, or null for none.
+  ///
+  /// Order matters: finishing the day outranks any count, and the 7th
+  /// completion is checked before the 5th, so once someone is past 7 the
+  /// smaller milestone can no longer fire behind them.
+  @visibleForTesting
+  static String? triggerForCompletion({
+    required int totalCompletions,
+    required bool allDoneToday,
+  }) {
+    if (allDoneToday) return triggerAllDoneToday;
+    if (totalCompletions >= 7) return triggerCompletions7;
+    if (totalCompletions == 5) return triggerMilestone5;
+    return null;
   }
 
-  // ── Public entry points (peak emotional moments) ──────────────
+  /// Which trigger a month page earns, or null.
+  ///
+  /// The letter outranks the season: it's the longer read and it lands last.
+  /// Both are gated on the month having actually resolved — a "Beginning"
+  /// season is the app saying it doesn't know you yet, which is the worst
+  /// possible moment to ask for five stars.
+  @visibleForTesting
+  static String? triggerForMonthRead({
+    required bool seasonResolved,
+    required bool letterShown,
+  }) {
+    if (letterShown) return triggerLetterRead;
+    if (seasonResolved) return triggerSeasonRead;
+    return null;
+  }
 
-  /// Habit-completion check. Called after each habit is marked done.
-  /// Fires on the first all-habits-done day, the 7th total completion,
-  /// or when the user crosses the small "5 completions" habit milestone.
-  static Future<void> checkAndPrompt(
-    BuildContext context, {
+  /// Whether we may ask right now. Pure, so the whole policy is testable.
+  @visibleForTesting
+  static bool mayAsk({
+    required String trigger,
+    required bool paywallShownThisSession,
+    required List<String> shownTriggers,
+    required int legacyDismissedCount,
+    required DateTime? lastAskAt,
+    required DateTime now,
+  }) {
+    if (paywallShownThisSession) return false;
+    if (legacyDismissedCount >= legacyMaxDismissals) return false;
+    if (shownTriggers.contains(trigger)) return false;
+    if (lastAskAt != null && now.difference(lastAskAt) < cooldown) return false;
+    return true;
+  }
+
+  // ── Entry points ──────────────────────────────────────────────
+
+  /// After a habit completion. No BuildContext: the native sheet doesn't need
+  /// one, and not taking one is what let the policy above become testable.
+  static Future<void> checkAndPrompt({
     required int totalCompletions,
     required bool allDoneToday,
   }) async {
-    if (allDoneToday) {
-      await _maybePrompt(context, trigger: 'all_done_today');
-      return;
-    }
-    if (totalCompletions >= 7) {
-      await _maybePrompt(context, trigger: 'completions_7');
-      return;
-    }
-    if (totalCompletions == 5) {
-      // Original "5 habit completions" milestone — small but real moment.
-      await _maybePrompt(context, trigger: 'milestone_habits_5');
-    }
-  }
-
-  /// Fired when the user views their weekly reflection for the first time
-  /// with real (non-zero) data. The reflection card builds organically on
-  /// Sundays — this hook ensures we ask in the moment it lands.
-
-  /// Fired when every habit in a curated pack has been completed today.
-  /// The [packId] dedupes per pack — completing Gentle Mornings twice
-  /// won't ask twice, but completing Gentle Mornings then Winding Down
-  /// could (subject to the 30-day cooldown).
-  static Future<void> onCuratedPackCompleted(
-    BuildContext context, {
-    required String packId,
-  }) async {
-    await _maybePrompt(context, trigger: 'curated_pack:$packId');
-  }
-
-  // ── Internal: gating + presentation ───────────────────────────
-
-  static Future<void> _maybePrompt(
-    BuildContext context, {
-    required String trigger,
-  }) async {
-    // 1. Block review prompts that share a session with a paywall.
-    if (_paywallShownThisSession) return;
-
-    final prefs = await SharedPreferences.getInstance();
-
-    // 2. Hard stop after 2 dismissals.
-    final dismissed = prefs.getInt(_dismissedCountKey) ?? 0;
-    if (dismissed >= _maxDismissals) return;
-
-    // 3. Each trigger fires at most once.
-    final shown = prefs.getStringList(_shownTriggersKey) ?? const [];
-    if (shown.contains(trigger)) return;
-
-    // 4. 30-day cooldown across all triggers.
-    final lastIso = prefs.getString(_lastAskKey);
-    if (lastIso != null) {
-      final lastAt = DateTime.tryParse(lastIso);
-      if (lastAt != null && DateTime.now().difference(lastAt) < _cooldown) {
-        return;
-      }
-    }
-
-    // 5. Async gap — context may have been disposed.
-    if (!context.mounted) return;
-
-    // Persist BEFORE prompting so a crash mid-prompt doesn't double-ask.
-    await prefs.setString(_lastAskKey, DateTime.now().toIso8601String());
-    await prefs.setStringList(_shownTriggersKey, [...shown, trigger]);
-
-    if (!context.mounted) return;
-    await _showPrompt(context);
-  }
-
-  static Future<void> _showPrompt(BuildContext context) async {
-    final l10n = AppLocalizations.of(context);
-    final result = await showCupertinoDialog<String>(
-      context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        content: Text(l10n.reviewPromptMessage),
-        actions: [
-          CupertinoDialogAction(
-            onPressed: () => Navigator.of(ctx).pop('not_yet'),
-            child: Text(l10n.reviewPromptNotYet),
-          ),
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            onPressed: () => Navigator.of(ctx).pop('rate'),
-            child: Text(l10n.reviewPromptRate),
-          ),
-        ],
-      ),
+    final trigger = triggerForCompletion(
+      totalCompletions: totalCompletions,
+      allDoneToday: allDoneToday,
     );
-
-    if (result == 'rate') {
-      await _openReview();
-    } else if (result == 'not_yet') {
-      final prefs = await SharedPreferences.getInstance();
-      final count = (prefs.getInt(_dismissedCountKey) ?? 0) + 1;
-      await prefs.setInt(_dismissedCountKey, count);
-      debugPrint('[ReviewRequest] Dismissed ($count/$_maxDismissals)');
-    }
+    if (trigger == null) return;
+    await _maybeAsk(trigger);
   }
 
-  /// Opens the App Store review page. The user has already tapped "Rate",
-  /// so this must always land somewhere visible — see the class doc for why
-  /// the native modal is not used here.
-  static Future<void> _openReview() async {
-    // itms-apps:// hands off to the App Store app directly. The https://
-    // universal link is the fallback: it works, but can bounce through Safari
-    // depending on how the device resolves the link.
+  /// After the month page has loaded and rendered a real reading.
+  static Future<void> onMonthRead({
+    required bool seasonResolved,
+    required bool letterShown,
+  }) async {
+    final trigger = triggerForMonthRead(
+      seasonResolved: seasonResolved,
+      letterShown: letterShown,
+    );
+    if (trigger == null) return;
+    await _maybeAsk(trigger);
+  }
+
+  static Future<void> _maybeAsk(String trigger) async {
+    final prefs = await SharedPreferences.getInstance();
+    final allowed = mayAsk(
+      trigger: trigger,
+      paywallShownThisSession: _paywallShownThisSession,
+      shownTriggers: prefs.getStringList(_shownTriggersKey) ?? const [],
+      legacyDismissedCount: prefs.getInt(_legacyDismissedKey) ?? 0,
+      lastAskAt: DateTime.tryParse(prefs.getString(_lastAskKey) ?? ''),
+      now: DateTime.now(),
+    );
+    if (!allowed) return;
+
+    final review = InAppReview.instance;
+    if (!await review.isAvailable()) {
+      debugPrint('[ReviewRequest] sheet unavailable, skipping "$trigger"');
+      return;
+    }
+
+    // Record before asking: a crash mid-sheet must not earn a second ask, and
+    // Apple may decline to render without telling us either way.
+    final shown = prefs.getStringList(_shownTriggersKey) ?? const [];
+    await prefs.setStringList(_shownTriggersKey, [...shown, trigger]);
+    await prefs.setString(_lastAskKey, DateTime.now().toIso8601String());
+
+    await review.requestReview();
+    debugPrint('[ReviewRequest] requested on "$trigger"');
+  }
+
+  /// The reliable path: opens the App Store review page directly. Wired to a
+  /// Profile row, so someone who decides to rate is never at the mercy of
+  /// whether Apple felt like showing the sheet.
+  static Future<void> openStoreListing() async {
     final candidates = [
       Uri.parse(
-        'itms-apps://apps.apple.com/app/id$_appStoreId?action=write-review',
+        'itms-apps://apps.apple.com/app/id$appStoreId?action=write-review',
       ),
       Uri.parse(
-        'https://apps.apple.com/app/id$_appStoreId?action=write-review',
+        'https://apps.apple.com/app/id$appStoreId?action=write-review',
       ),
     ];
 
     for (final uri in candidates) {
       try {
-        if (await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-          debugPrint('[ReviewRequest] Opened $uri');
-          return;
-        }
+        if (await launchUrl(uri, mode: LaunchMode.externalApplication)) return;
         debugPrint('[ReviewRequest] launchUrl declined $uri');
       } catch (e) {
-        debugPrint('[ReviewRequest] Error opening $uri: $e');
+        debugPrint('[ReviewRequest] error opening $uri: $e');
       }
     }
-
-    debugPrint('[ReviewRequest] Could not open the App Store review page');
+    debugPrint('[ReviewRequest] could not open the App Store review page');
   }
 }

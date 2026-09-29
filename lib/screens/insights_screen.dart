@@ -12,15 +12,19 @@ import '../models/drift.dart';
 import '../models/first_week.dart';
 import '../models/intention_path.dart';
 import '../models/letter.dart';
+import '../models/letter_offer_policy.dart';
 import '../models/lift.dart';
 import '../models/month_plan.dart';
 import '../models/season.dart';
+import '../services/review_request_service.dart';
 import '../services/season_service.dart';
 import '../onboarding_v2/onboarding_state.dart';
 import '../services/moments_service.dart';
 import '../services/notification_preferences_service.dart';
 import '../services/notification_scheduler.dart';
 import '../services/analytics_service.dart';
+import '../models/settled_action.dart';
+import '../services/habit_history_service.dart';
 import '../services/plan_service.dart';
 import 'paywall_screen.dart';
 import 'season_share_screen.dart';
@@ -28,9 +32,11 @@ import '../state/user_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/habit_l10n.dart';
+import '../utils/season_l10n.dart';
 import '../utils/text_styles.dart';
 import '../main.dart' show AppBackground;
 import '../theme/category_colors.dart';
+import '../widgets/dashed_border_box.dart';
 import '../widgets/moment_grid.dart';
 
 /// The month view (§5.3, §5.4). Replaces the old progress screen.
@@ -73,6 +79,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Set<String> _declinedNudges = const {};
   AcceptedNudge? _acceptedThisMonth;
   PlanProof? _proof;
+
+  /// The action steady enough to offer its slot back, or null.
+  ///
+  /// Computed in the load rather than in build, because unlike every other
+  /// plan input it reads three months of `habit_done_*` from disk — the plan
+  /// itself only ever sees last month's moments.
+  SettledAction? _settled;
   /// Legend filter: when set, the grid recedes to this focus area.
   String? _gridFilter;
 
@@ -112,12 +125,22 @@ class _InsightsScreenState extends State<InsightsScreen> {
   @override
   void initState() {
     super.initState();
+    // Logged on visibility, not construction: this State is built once for
+    // the tab bar and lives across the whole session.
+    if (widget.isActive) AnalyticsService.logScreenView('insights');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && widget.isActive) _maybeOfferLetterPaywall();
+    });
     _load();
   }
 
   @override
   void didUpdateWidget(covariant InsightsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.isActive && !oldWidget.isActive) {
+      AnalyticsService.logScreenView('insights');
+      _maybeOfferLetterPaywall();
+    }
     // Re-read when the tab becomes visible; a moment may have landed since.
     if (widget.isActive && !oldWidget.isActive) {
       final jump = InsightsScreen.jumpTo.value;
@@ -131,6 +154,9 @@ class _InsightsScreenState extends State<InsightsScreen> {
   }
 
   Future<void> _load() async {
+    // Read before the first await: reaching for an inherited widget across an
+    // async gap is the classic way to touch a disposed element.
+    final onboarding = context.read<OnboardingState>();
     final now = DateTime.now();
     final monthKey = SeasonService.monthKeyFor(now);
     final moments = await MomentsService.momentsForMonth(_anchor);
@@ -153,13 +179,37 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final proof = await PlanService.proof();
     final prefs = await SharedPreferences.getInstance();
     final filterHintDone = prefs.getBool('grid_filter_hint_done') ?? false;
+    // Drift compares this week against an average built before any weekday
+    // mask existed, so a recent mask has to silence it (§Drift).
+    final maskChangedAtRaw =
+        prefs.getString(OnboardingState.customHabitDaysChangedAtKey);
+    final maskChangedAt =
+        maskChangedAtRaw == null ? null : DateTime.tryParse(maskChangedAtRaw);
+
+    // The give-back rule: three closed months of the permanent completion
+    // record. `moments_collection` is capped at 1000 and cannot reach back
+    // this far, so this is the one reader that goes to `habit_done_*`.
+    final candidates = onboarding.visibleHabits();
+    final settled = SettledAction.read(
+      candidates: candidates,
+      monthCounts: await HabitHistoryService.monthCountsFor(
+        candidates,
+        HabitHistoryService.closedMonthsBefore(now),
+      ),
+      customHabits: onboarding.customHabits,
+      atCeiling:
+          onboarding.userHabits.length >= OnboardingState.maxActiveHabits,
+      pinnedHabit: onboarding.pinnedHabit,
+      declinedRecently: await PlanService.giveBackCooldown(now),
+    );
+
     if (!mounted) return;
     setState(() {
       _moments = moments;
       _lastMonth = lastMonth;
       _season = season;
       _archive = archive;
-      _drift = Drift.read(moments);
+      _drift = Drift.read(moments, maskChangedAt: maskChangedAt);
       // Given the season and the reminder so it can avoid repeating the
       // card above it, and can ask a question with a real alternative in it.
       _letter = Letter.read(
@@ -179,6 +229,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       _declinedNudges = declined;
       _acceptedThisMonth = accepted;
       _proof = proof;
+      _settled = settled;
       _filterHintDone = filterHintDone;
       // Ranked from the full history, not the month: eight weeks of taps
       // straddle a month boundary by definition.
@@ -198,6 +249,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
           '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
       _loaded = true;
     });
+
+    // The peak moment in v2. A season is a sentence about who you were and the
+    // letter ends in a question — both land harder than the seventh tick of a
+    // box, which is where every other review trigger used to sit. Gated on the
+    // month having actually resolved: a "Beginning" season is the app saying
+    // it doesn't know you yet, and that is the worst moment to ask for stars.
+    await ReviewRequestService.onMonthRead(
+      seasonResolved: season.pole != Season.beginning,
+      letterShown: _letter != null,
+    );
   }
 
   @override
@@ -285,8 +346,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
               // Always the last section (design review, SS3/SS4): Share
               // serves the whole page, so it follows whatever the tier and
               // the month put above it.
-              if (_shareWord(l10n) != null)
-                _shareRow(l10n, colors, _shareWord(l10n)!),
+              if (_sharePole != null) _shareRow(l10n, colors, _sharePole!),
             ]),
             // The example stands apart (device review, SS7): inside the
             // user's own sheet it read as their data wearing a costume. Out
@@ -870,7 +930,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     OnboardingState onboarding,
   ) {
     final habits = onboarding.userHabits.take(3).toList();
-    final areas = onboarding.focusAreas.join(' and ');
+    final areas = localizeCategoryList(onboarding.focusAreas, l10n);
 
     return _card(
       colors: colors,
@@ -895,7 +955,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    habit,
+                    localizeHabitName(habit, l10n),
                     style: AppTextStyles.body(context)
                         .copyWith(color: colors.textPrimary),
                   ),
@@ -1006,15 +1066,49 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// blurs behind the sheet, so the paywall arrives over the app rather than
   /// replacing it. This button did nothing at all until the design review
   /// caught it.
-  Future<void> _showPaywall() {
+  Future<void> _showPaywall({String source = 'insights_teaser'}) {
     return showCupertinoModalPopup(
       context: context,
       // Deeper than the paywall's 50%: the page behind is context,
       // not content, and at half-dim it still competed (SS1).
       barrierColor: const Color(0x99000000),
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      builder: (context) => const PaywallScreen(source: 'insights_teaser'),
+      builder: (context) => PaywallScreen(source: source),
     );
+  }
+
+  /// The one proactive paywall: fires on a visit to this tab, at most once
+  /// a month, only after day four, and only when this month's letter has
+  /// actually computed — the user lands on the page where the dissolving
+  /// letter is already visible behind the sheet. Policy in
+  /// [LetterOfferPolicy]; this method only gathers inputs and shows.
+  Future<void> _maybeOfferLetterPaywall() async {
+    final paid = context.read<UserState>().hasSubscription;
+    final moments = await MomentsService.momentsForMonth(DateTime.now());
+    final prefs = await SharedPreferences.getInstance();
+    final firstLaunchRaw = prefs.getString('first_launch_date');
+    final should = LetterOfferPolicy.shouldOffer(
+      hasSubscription: paid,
+      letterExists: Letter.read(moments) != null,
+      firstLaunch:
+          firstLaunchRaw == null ? null : DateTime.tryParse(firstLaunchRaw),
+      now: DateTime.now(),
+      lastOfferedMonth: prefs.getString(LetterOfferPolicy.lastOfferedPrefsKey),
+    );
+    if (!should) return;
+    if (!mounted) return;
+    // Not just mounted: never push a paywall over whatever sheet or route
+    // the user opened while we were reading prefs.
+    if (ModalRoute.of(context)?.isCurrent != true) return;
+    // Remember before showing, so a crash after this line costs us one
+    // offer rather than showing one on every launch.
+    await prefs.setString(
+      LetterOfferPolicy.lastOfferedPrefsKey,
+      LetterOfferPolicy.monthKey(DateTime.now()),
+    );
+    if (!mounted) return;
+    if (ModalRoute.of(context)?.isCurrent != true) return;
+    await _showPaywall(source: 'letter_teaser');
   }
 
   /// A real sentence that runs out of ink partway across.
@@ -1061,10 +1155,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
       'Health',
     ];
 
-    return Opacity(
-      opacity: 0.72,
-      child: _card(
-        colors: colors,
+    // The dashed frame sits outside the Opacity so the sample fades while its
+    // boundary stays legible — §5.4's warning is that at full strength, and
+    // with no frame at all, someone screenshots this believing it's their own
+    // month.
+    return DashedBorderBox(
+      color: colors.textSecondary.withValues(alpha: 0.45),
+      child: Opacity(
+        opacity: 0.72,
+        child: _card(
+          colors: colors,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1144,6 +1244,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
               style: _cardMeta(colors).copyWith(height: 1.45),
             ),
           ],
+          ),
         ),
       ),
     );
@@ -1164,20 +1265,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
     if (season == null) return const SizedBox.shrink();
 
     final forming = season.pole == Season.beginning;
-    final (word, line) = switch (season.pole) {
-      Season.morning => (l10n.seasonMorning, l10n.seasonMorningLine),
-      Season.evening => (l10n.seasonEvening, l10n.seasonEveningLine),
-      Season.steady => (l10n.seasonSteady, l10n.seasonSteadyLine),
-      Season.bursts => (l10n.seasonBursts, l10n.seasonBurstsLine),
-      Season.returning => (l10n.seasonReturning, l10n.seasonReturningLine),
-      Season.continuous => (l10n.seasonContinuous, l10n.seasonContinuousLine),
-      Season.focused => (l10n.seasonFocused, l10n.seasonFocusedLine),
-      Season.wandering => (l10n.seasonWandering, l10n.seasonWanderingLine),
-      _ => (
-          l10n.seasonBeginning,
-          l10n.seasonBeginningLine(season.sampleSize),
-        ),
-    };
+    final word = SeasonL10n.word(season.pole, l10n);
+    final line = SeasonL10n.line(season.pole, l10n, season.sampleSize);
 
     return _card(
       colors: colors,
@@ -1229,13 +1318,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// The Share row, always the last section of the sheet (design review,
   /// SS3/SS4): it shares the page the user just read, so it follows whatever
   /// the tier and the month put above it instead of stranding mid-scroll.
-  Widget _shareRow(AppLocalizations l10n, AppColorScheme colors, String word) {
+  Widget _shareRow(AppLocalizations l10n, AppColorScheme colors, String pole) {
     return Align(
       alignment: Alignment.center,
       child: CupertinoButton(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         minimumSize: Size.zero,
-        onPressed: () => _shareSeason(word),
+        onPressed: () => _shareSeason(l10n, pole),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -1258,12 +1347,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
     );
   }
 
-  /// The localized season word when the month has one — the thing Share
-  /// puts on the story. Null while forming, which is also when the row hides.
-  String? _shareWord(AppLocalizations l10n) {
+  /// The pole when the month has one. Null while forming, which is also when
+  /// the Share row hides.
+  ///
+  /// The pole travels rather than the word: the card needs both the word and
+  /// the first-person line, and resolving them from one key in one place is
+  /// what stops the two from drifting apart.
+  String? get _sharePole {
     final season = _season;
     if (season == null || season.pole == Season.beginning) return null;
-    return _seasonWord(l10n, season.pole);
+    return season.pole;
   }
 
   /// Opens the monthly card (§5.5).
@@ -1272,7 +1365,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// grid, the count, the wordmark, and "intention, not perfection" at a size
   /// that survives a thumbnail. What is worth reading in the app and what is
   /// worth posting are not the same picture.
-  Future<void> _shareSeason(String seasonWord) async {
+  Future<void> _shareSeason(AppLocalizations l10n, String pole) async {
     // The paywall's presentation exactly (design review): a modal over the
     // live page, which stays visible behind it — dimmed and blurred. A pushed
     // route would repaint its own background instead, and no amount of filter
@@ -1282,7 +1375,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
       barrierColor: const Color(0x80000000),
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
       builder: (_) => SeasonShareScreen(
-        seasonWord: seasonWord,
+        seasonWord: SeasonL10n.word(pole, l10n),
+        seasonPole: pole,
         month: _anchor,
         moments: _moments,
         returnCount: _returnCount,
@@ -1409,6 +1503,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
       remindersEnabled: _remindersEnabled,
       hasPinnedHabit: onboarding.pinnedHabit != null,
       declinedIds: _declinedNudges,
+      settled: _settled,
     );
   }
 
@@ -1595,6 +1690,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           localizeHabitName(nudge.habitName!, l10n),
           nudge.count,
         ),
+      NudgeKind.giveBack => _giveBackText(l10n, nudge),
       NudgeKind.keepAnchor => l10n.planNudgeKeepAnchor(
           localizeHabitName(nudge.habitName!, l10n),
           nudge.count,
@@ -1606,10 +1702,40 @@ class _InsightsScreenState extends State<InsightsScreen> {
     };
   }
 
+  /// The give-back card is the only one quoting three months, so it needs
+  /// their names beside their counts.
+  ///
+  /// The months are the three that closed before today — the same window
+  /// [SettledAction] counted, derived the same way, so the sentence can never
+  /// name a month the rule didn't read. Each locale arranges them its own way:
+  /// English says "in July", Russian names the month and drops the
+  /// preposition, because the formatter yields «июль» and «в июль» is not a
+  /// thing anyone writes.
+  String _giveBackText(AppLocalizations l10n, PlanNudge nudge) {
+    final locale = Localizations.localeOf(context).toString();
+    final counts = nudge.monthCounts!;
+    final now = DateTime.now();
+    // DateTime normalises an underflowing month, so January - 1 is December.
+    final names = [
+      for (var i = 1; i <= SettledAction.monthsRequired; i++)
+        DateFormat.LLLL(locale).format(DateTime(now.year, now.month - i)),
+    ];
+    return l10n.planNudgeGiveBack(
+      localizeHabitName(nudge.habitName!, l10n),
+      counts[0],
+      names[0],
+      counts[1],
+      names[1],
+      counts[2],
+      names[2],
+    );
+  }
+
   String _acceptLabel(AppLocalizations l10n, NudgeKind kind) {
     return switch (kind) {
       NudgeKind.moveReminder => l10n.planAcceptMoveReminder,
       NudgeKind.setAside => l10n.planAcceptSetAside,
+      NudgeKind.giveBack => l10n.planAcceptGiveBack,
       NudgeKind.keepAnchor => l10n.planAcceptKeepAnchor,
       NudgeKind.addFocusArea => l10n.planAcceptAddFocus,
     };
@@ -1632,6 +1758,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
         ),
       NudgeKind.setAside =>
         l10n.planProofSetAside(date, localizeHabitName(proof.subject, l10n)),
+      NudgeKind.giveBack =>
+        l10n.planProofGaveBack(date, localizeHabitName(proof.subject, l10n)),
       NudgeKind.keepAnchor =>
         l10n.planProofPinned(date, localizeHabitName(proof.subject, l10n)),
       NudgeKind.addFocusArea => l10n.planProofAddedFocus(
@@ -1686,6 +1814,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
         await NotificationScheduler.rescheduleAll(l10n);
       case NudgeKind.setAside:
         await onboarding.setAsideHabits([nudge.habitName!]);
+      case NudgeKind.giveBack:
+        // The same door, deliberately: the action returns to the browse pool
+        // exactly as a set-aside does. One removal path, not two.
+        await onboarding.setAsideHabits([nudge.habitName!]);
       case NudgeKind.keepAnchor:
         await onboarding.pinHabit(nudge.habitName!);
       case NudgeKind.addFocusArea:
@@ -1733,17 +1865,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// a history page.
   static const int _archiveMonths = 4;
 
-  String _seasonWord(AppLocalizations l10n, String pole) => switch (pole) {
-        Season.morning => l10n.seasonMorning,
-        Season.evening => l10n.seasonEvening,
-        Season.steady => l10n.seasonSteady,
-        Season.bursts => l10n.seasonBursts,
-        Season.returning => l10n.seasonReturning,
-        Season.continuous => l10n.seasonContinuous,
-        Season.focused => l10n.seasonFocused,
-        Season.wandering => l10n.seasonWandering,
-        _ => l10n.seasonBeginning,
-      };
+  String _seasonWord(AppLocalizations l10n, String pole) =>
+      SeasonL10n.word(pole, l10n);
 
   /// The so-far card: every moment named in full, while that is possible.
   ///

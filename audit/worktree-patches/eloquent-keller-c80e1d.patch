@@ -1,0 +1,205 @@
+diff --git a/ios/IntendedWidget/IntendedBasicWidget.swift b/ios/IntendedWidget/IntendedBasicWidget.swift
+index 29d1c84..3085291 100644
+--- a/ios/IntendedWidget/IntendedBasicWidget.swift
++++ b/ios/IntendedWidget/IntendedBasicWidget.swift
+@@ -242,8 +242,10 @@ struct IntendedBasicWidget: Widget {
+                 BasicWidgetEntryView(entry: entry)
+             }
+         }
+-        .configurationDisplayName("Intended")
+-        .description("Track your daily habits at a glance.")
++        // Gallery copy lives in <locale>.lproj/Localizable.strings; WidgetKit
++        // resolves the keys in the extension's own bundle.
++        .configurationDisplayName(LocalizedStringKey("widget.basic.name"))
++        .description(LocalizedStringKey("widget.basic.description"))
+         .supportedFamilies([.systemSmall, .systemMedium])
+     }
+ }
+diff --git a/ios/IntendedWidget/IntendedLockScreenWidget.swift b/ios/IntendedWidget/IntendedLockScreenWidget.swift
+index d9ecc11..f55a28a 100644
+--- a/ios/IntendedWidget/IntendedLockScreenWidget.swift
++++ b/ios/IntendedWidget/IntendedLockScreenWidget.swift
+@@ -158,8 +158,10 @@ struct IntendedLockScreenWidget: Widget {
+         StaticConfiguration(kind: kind, provider: LockScreenProvider()) { entry in
+             LockScreenEntryView(entry: entry)
+         }
+-        .configurationDisplayName("Intended")
+-        .description("Quick glance at your daily progress.")
++        // Gallery copy lives in <locale>.lproj/Localizable.strings; WidgetKit
++        // resolves the keys in the extension's own bundle.
++        .configurationDisplayName(LocalizedStringKey("widget.lockScreen.name"))
++        .description(LocalizedStringKey("widget.lockScreen.description"))
+         .supportedFamilies([.accessoryCircular, .accessoryInline, .accessoryRectangular])
+     }
+ }
+diff --git a/ios/IntendedWidget/IntendedPremiumWidget.swift b/ios/IntendedWidget/IntendedPremiumWidget.swift
+index 24df271..8af4b69 100644
+--- a/ios/IntendedWidget/IntendedPremiumWidget.swift
++++ b/ios/IntendedWidget/IntendedPremiumWidget.swift
+@@ -475,6 +475,19 @@ struct PremiumLargeView: View {
+ struct IntendedPremiumWidget: Widget {
+     let kind: String = "IntendedPremiumWidget"
+ 
++    /// Gallery copy lives in <locale>.lproj/Localizable.strings; WidgetKit
++    /// resolves the keys in the extension's own bundle.
++    ///
++    /// Tap-to-record is `HabitRow`'s `Button(intent:)`, which exists only on
++    /// iOS 17 — below that the rows are display-only, so the gallery must not
++    /// promise a tap it can't keep.
++    private var descriptionKey: LocalizedStringKey {
++        if #available(iOS 17.0, *) {
++            return LocalizedStringKey("widget.detailed.description")
++        }
++        return LocalizedStringKey("widget.detailed.description.displayOnly")
++    }
++
+     var body: some WidgetConfiguration {
+         StaticConfiguration(kind: kind, provider: PremiumProvider()) { entry in
+             if #available(iOS 17.0, *) {
+@@ -490,8 +503,8 @@ struct IntendedPremiumWidget: Widget {
+                 PremiumWidgetEntryView(entry: entry)
+             }
+         }
+-        .configurationDisplayName("Intended — Detailed")
+-        .description("See your habits, progress, and daily message.")
++        .configurationDisplayName(LocalizedStringKey("widget.detailed.name"))
++        .description(descriptionKey)
+         .supportedFamilies([.systemMedium, .systemLarge])
+     }
+ }
+diff --git a/ios/IntendedWidget/WidgetData.swift b/ios/IntendedWidget/WidgetData.swift
+index 453227c..7b50646 100644
+--- a/ios/IntendedWidget/WidgetData.swift
++++ b/ios/IntendedWidget/WidgetData.swift
+@@ -60,34 +60,45 @@ struct WidgetContent {
+     let theme: ThemeData
+     let locale: String
+ 
+-    static let placeholder = WidgetContent(
+-        habits: [
+-            HabitEntry(name: "Drink water", done: true, colorHex: "FF6B9BD2"),
+-            HabitEntry(name: "Read 10 pages", done: false, colorHex: "FF8B9A6B"),
+-            HabitEntry(name: "Take a walk", done: true, colorHex: "FFD96766"),
+-        ],
+-        completedCount: 2,
+-        totalCount: 4,
+-        greeting: "Do what feels right today",
+-        isPremium: false,
+-        monthTiles: [],
+-        theme: ThemeData(
+-            id: "warmClay",
+-            isDark: false,
+-            bgTop: "FFF2D4B0",
+-            bgBottom: "FFD49A70",
+-            bg1: "FFF5EDE0",
+-            bg2: "FFE8DCC8",
+-            bg3: "FFDDD1C0",
+-            textPrimary: "FF3C342A",
+-            textSecondary: "FF9A8A78",
+-            textTertiary: "FF9B8A7A",
+-            accent: "FF7A6A58",
+-            cardBg: "FFF9EBE0",
+-            cardBgOpacity: 0.28,
+-            checkmark: "FF7A6A58"
+-        ),
+-        locale: "en"
++    /// What WidgetKit redacts into grey bars before the first timeline
++    /// loads. The habit names only ever set bar widths; the greeting and
++    /// locale still follow the device, so the bars are the right shape for
++    /// the language the snapshot will arrive in.
++    static var placeholder: WidgetContent {
++        let locale = WidgetStrings.deviceLocale
++        return WidgetContent(
++            habits: [
++                HabitEntry(name: "Drink water", done: true, colorHex: "FF6B9BD2"),
++                HabitEntry(name: "Read 10 pages", done: false, colorHex: "FF8B9A6B"),
++                HabitEntry(name: "Take a walk", done: true, colorHex: "FFD96766"),
++            ],
++            completedCount: 2,
++            totalCount: 4,
++            greeting: WidgetStrings(locale: locale).defaultGreeting,
++            isPremium: false,
++            monthTiles: [],
++            theme: placeholderTheme,
++            locale: locale
++        )
++    }
++
++    /// Warm Clay — what a widget renders in until the app has written
++    /// `widget_theme`.
++    static let placeholderTheme = ThemeData(
++        id: "warmClay",
++        isDark: false,
++        bgTop: "FFF2D4B0",
++        bgBottom: "FFD49A70",
++        bg1: "FFF5EDE0",
++        bg2: "FFE8DCC8",
++        bg3: "FFDDD1C0",
++        textPrimary: "FF3C342A",
++        textSecondary: "FF9A8A78",
++        textTertiary: "FF9B8A7A",
++        accent: "FF7A6A58",
++        cardBg: "FFF9EBE0",
++        cardBgOpacity: 0.28,
++        checkmark: "FF7A6A58"
+     )
+ }
+ 
+@@ -109,17 +120,22 @@ func loadWidgetContent() -> WidgetContent {
+ 
+     let completedCount = defaults.integer(forKey: "widget_completed_count")
+     let totalCount = defaults.integer(forKey: "widget_total_count")
+-    let greeting = defaults.string(forKey: "widget_greeting") ?? "Do what feels right today"
+     let isPremium = defaults.bool(forKey: "widget_is_premium")
+     var monthTiles: [String] = []
+     if let tilesJson = defaults.string(forKey: "widget_month_tiles"),
+        let tilesData = tilesJson.data(using: .utf8) {
+         monthTiles = (try? JSONDecoder().decode([String].self, from: tilesData)) ?? []
+     }
+-    let locale = defaults.string(forKey: "widget_locale") ?? "en"
++
++    // The app's locale wins once it has written one — the habit names it
++    // writes are already in that language, and the chrome around them has
++    // to match the names, not the phone. Before that, the device decides.
++    let locale = defaults.string(forKey: "widget_locale") ?? WidgetStrings.deviceLocale
++    let greeting = defaults.string(forKey: "widget_greeting")
++        ?? WidgetStrings(locale: locale).defaultGreeting
+ 
+     // Parse theme
+-    var theme = WidgetContent.placeholder.theme
++    var theme = WidgetContent.placeholderTheme
+     if let themeJson = defaults.string(forKey: "widget_theme"),
+        let themeData = themeJson.data(using: .utf8) {
+         theme = (try? JSONDecoder().decode(ThemeData.self, from: themeData)) ?? theme
+@@ -202,6 +218,31 @@ extension Color {
+ struct WidgetStrings {
+     let locale: String
+ 
++    /// The language the views speak before the app has ever written
++    /// `widget_locale`: the one iOS resolved for this bundle. `Bundle.main`
++    /// is the extension itself, and it ships exactly en and ru, so this is
++    /// always one of the two. It is also the resolution WidgetKit uses to
++    /// pick the gallery name and description out of Localizable.strings, so
++    /// a preview and the caption beneath it can't disagree — which they did
++    /// when this was a hardcoded "en".
++    ///
++    /// `Locale.preferredLanguages.first` would be wrong here: a phone set to
++    /// German, then Russian, gets Russian gallery copy because the bundle
++    /// has no German, and the views must make the same choice.
++    static var deviceLocale: String {
++        let resolved = Bundle.main.preferredLocalizations.first ?? "en"
++        return resolved.hasPrefix("ru") ? "ru" : "en"
++    }
++
++    /// The intention line before the app has written one. The app sends
++    /// the user's chosen intention (refreshHomeWidget in main.dart), so the
++    /// fallback is the one intention that's true of someone who hasn't
++    /// chosen yet — `intentionYourOwnWay` in app_en.arb / app_ru.arb —
++    /// rather than a stock affirmation the rest of the app no longer uses.
++    var defaultGreeting: String {
++        locale == "ru" ? "Свой путь" : "Your own way"
++    }
++
+     var today: String {
+         locale == "ru" ? "сегодня" : "today"
+     }

@@ -44,12 +44,12 @@ class CuratedPacks {
         'Four tiny habits that work as a gentle sequence — hydrate, breathe '
         "fresh air, center yourself, then orient your day. No alarms at dawn "
         'required.',
-    focusAreas: ['Health', 'Productivity'],
+    focusAreas: ['Health', 'Mood'],
     habitIds: [
-      'Drink a glass of water',
-      'Step outside for 30 seconds',
+      'Drink 3 glasses of water',
+      'Step outside for 5 minutes',
       'Take 3 slow breaths',
-      'Set one priority',
+      'Plan tomorrow in one sentence',
     ],
     tier: CuratedPackTier.free,
     sortOrder: 0,
@@ -65,8 +65,8 @@ class CuratedPacks {
         "comfortable, enjoy one thing. That's the whole evening plan.",
     focusAreas: ['Self-care', 'Mood'],
     habitIds: [
-      'Do absolutely nothing for 30 seconds',
-      "Notice one thing you're grateful for",
+      'Do absolutely nothing for 5 minutes',
+      "Name 3 things you're grateful for",
       'Put on something comfortable',
       'Listen to one song you love',
     ],
@@ -82,9 +82,9 @@ class CuratedPacks {
     description:
         'When overwhelm hits, these four micro-actions create a small pocket '
         'of control. Not a productivity system — a rescue kit.',
-    focusAreas: ['Productivity', 'Home & organization', 'Health', 'Self-care'],
+    focusAreas: ['Home & organization', 'Health', 'Self-care'],
     habitIds: [
-      'Do a 30-second reset',
+      'Do a 1-minute reset',
       'Tidy one small thing',
       'Take 3 slow breaths',
       'Do one kind thing for yourself',
@@ -103,8 +103,8 @@ class CuratedPacks {
         'your hands. Not about being good — about being playful.',
     focusAreas: ['Creativity'],
     habitIds: [
-      'Draw one simple shape',
-      'Capture one idea',
+      'Doodle for 5 minutes',
+      "Write down what's in your head",
       'Take one photo of something you like',
     ],
     tier: CuratedPackTier.premium,
@@ -121,7 +121,7 @@ class CuratedPacks {
         'Not grand gestures — just showing up.',
     focusAreas: ['Relationships'],
     habitIds: [
-      'Send one message to someone',
+      'Send one message to someone you care about',
       'Reach out to someone you miss',
       'Give one genuine compliment',
       'Ask someone how they are',

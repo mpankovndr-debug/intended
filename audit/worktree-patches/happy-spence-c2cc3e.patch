@@ -1,0 +1,177 @@
+diff --git a/lib/screens/profile_screen.dart b/lib/screens/profile_screen.dart
+index e54359d..16659c9 100644
+--- a/lib/screens/profile_screen.dart
++++ b/lib/screens/profile_screen.dart
+@@ -1413,7 +1413,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
+                           ),
+                           const SizedBox(height: 8),
+ 
+-                          FutureBuilder<int>(
++                          // Listens to the moments revision, not just build:
++                          // this tab lives in an IndexedStack that never
++                          // rebuilds on tab switch, so a launch-time future
++                          // showed «1 момент» while the archive said 2.
++                          ValueListenableBuilder<int>(
++                            valueListenable: MomentsService.revision,
++                            builder: (context, _, __) => FutureBuilder<int>(
+                             future: MomentsService.getCount(),
+                             builder: (context, snapshot) {
+                               final count = snapshot.data ?? 0;
+@@ -1458,6 +1464,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
+                                 ),
+                               );
+                             },
++                            ),
+                           ),
+                         ],
+                       ),
+diff --git a/lib/services/backup_service.dart b/lib/services/backup_service.dart
+index 6e478e9..c4ab34a 100644
+--- a/lib/services/backup_service.dart
++++ b/lib/services/backup_service.dart
+@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
+ import 'package:flutter/foundation.dart';
+ import 'package:shared_preferences/shared_preferences.dart';
+ 
++import 'moments_service.dart';
++
+ class BackupService extends ChangeNotifier {
+   DateTime? _lastBackupTime;
+   bool _isBackingUp = false;
+@@ -195,6 +197,7 @@ class BackupService extends ChangeNotifier {
+       // the local side has nothing, and the two irreplaceable collections —
+       // moments and frozen seasons — are merged as unions, local winning on
+       // conflict. Signing in can only ever add.
++      var momentsRestored = false;
+       for (final entry in data.entries) {
+         // Restore original key name if it was sanitized
+         final originalKey = keyMap[entry.key] as String? ?? entry.key;
+@@ -206,6 +209,7 @@ class BackupService extends ChangeNotifier {
+               originalKey,
+               _mergeMoments(prefs.getString(originalKey), value),
+             );
++            momentsRestored = true;
+           } else if (originalKey == 'seasons_by_month' && value is String) {
+             await prefs.setString(
+               originalKey,
+@@ -232,6 +236,10 @@ class BackupService extends ChangeNotifier {
+         }
+       }
+ 
++      // This restore wrote the moments blob behind MomentsService's back;
++      // tell it so listeners (the profile count row) re-read.
++      if (momentsRestored) MomentsService.notifyExternallyChanged();
++
+       // The union this device now holds is richer than either side was;
+       // push it up so the next device to sign in gets everything too.
+       backup();
+diff --git a/lib/services/moments_service.dart b/lib/services/moments_service.dart
+index 51cbbcb..205a95e 100644
+--- a/lib/services/moments_service.dart
++++ b/lib/services/moments_service.dart
+@@ -1,4 +1,5 @@
+ import 'dart:convert';
++import 'package:flutter/foundation.dart';
+ import '../l10n/app_localizations.dart';
+ import 'package:shared_preferences/shared_preferences.dart';
+ import '../models/moment.dart';
+@@ -9,6 +10,19 @@ class MomentsService {
+   static const String _rollupKey = 'moments_rollup';
+   static const int _maxMoments = 1000;
+ 
++  /// Bumped on every write to the moments store. Long-lived UI that shows an
++  /// aggregate must listen to this rather than read once at build — the
++  /// profile tab sits in an IndexedStack that never rebuilds on tab switch,
++  /// so its count row froze at the launch-time value while the archive
++  /// showed the truth.
++  static final ValueNotifier<int> revision = ValueNotifier<int>(0);
++
++  static void _bump() => revision.value++;
++
++  /// For writers that touch the moments pref blob without going through this
++  /// service — backup restore merges `moments_collection` directly.
++  static void notifyExternallyChanged() => _bump();
++
+   /// Records a new moment. Call this every time a habit is completed.
+   ///
+   /// The rollup is rewritten in the same call so it can never lag behind the
+@@ -28,6 +42,7 @@ class MomentsService {
+     final encoded = jsonEncode(all.map((m) => m.toJson()).toList());
+     await prefs.setString(_key, encoded);
+     await _writeRollup(prefs, all);
++    _bump();
+   }
+ 
+   /// Attaches mood and note to an already-recorded moment — the two-step
+@@ -48,6 +63,7 @@ class MomentsService {
+       jsonEncode(all.map((m) => m.toJson()).toList()),
+     );
+     await _writeRollup(prefs, all);
++    _bump();
+   }
+ 
+   /// Every moment in [anchor]'s calendar month, oldest first. Bucketed by the
+@@ -177,6 +193,7 @@ class MomentsService {
+       jsonEncode(all.map((m) => m.toJson()).toList()),
+     );
+     await _writeRollup(prefs, all);
++    _bump();
+     return repaired;
+   }
+ 
+diff --git a/test/moments_service_test.dart b/test/moments_service_test.dart
+index d441a3d..f3fa411 100644
+--- a/test/moments_service_test.dart
++++ b/test/moments_service_test.dart
+@@ -65,4 +65,51 @@ void main() {
+     final all = await MomentsService.getAll();
+     expect(all.single.source, 'widget');
+   });
++
++  // The profile count row froze at its launch-time value because nothing
++  // told it the store had changed — the tab sits in an IndexedStack and
++  // never rebuilds on tab switch. Every write must bump [revision]; a write
++  // that changed nothing must not, so listeners don't re-read for no reason.
++  group('revision', () {
++    test('record bumps it', () async {
++      final before = MomentsService.revision.value;
++      await MomentsService.record(_at(DateTime(2026, 8, 13, 9)));
++      expect(MomentsService.revision.value, before + 1);
++    });
++
++    test('annotate bumps it when the annotation lands', () async {
++      await MomentsService.record(_at(DateTime(2026, 8, 13, 9)));
++      final id = (await MomentsService.getAll()).single.id;
++      final before = MomentsService.revision.value;
++      await MomentsService.annotate(id, note: 'gentle');
++      expect(MomentsService.revision.value, before + 1);
++    });
++
++    test('a no-op annotate does not bump it', () async {
++      await MomentsService.record(_at(DateTime(2026, 8, 13, 9)));
++      final before = MomentsService.revision.value;
++      await MomentsService.annotate('no-such-id', note: 'lost');
++      await MomentsService.annotate('any-id'); // neither mood nor note
++      expect(MomentsService.revision.value, before);
++    });
++
++    test('backfill bumps it only when something was repaired', () async {
++      await MomentsService.record(Moment.create(
++        habitName: 'Evening pages',
++        at: DateTime(2026, 8, 13, 21),
++        id: 'uncategorised',
++      ));
++      final before = MomentsService.revision.value;
++
++      final none =
++          await MomentsService.backfillCustomCategories({'Unknown': 'Mind'});
++      expect(none, 0);
++      expect(MomentsService.revision.value, before);
++
++      final repaired = await MomentsService
++          .backfillCustomCategories({'Evening pages': 'Mind'});
++      expect(repaired, 1);
++      expect(MomentsService.revision.value, before + 1);
++    });
++  });
+ }

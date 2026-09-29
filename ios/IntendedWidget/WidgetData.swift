@@ -10,16 +10,20 @@ struct HabitEntry: Codable {
     let rawName: String?
     let done: Bool
     let colorHex: String?
+    /// Wall-clock time of today's moment ("07:40"), already formatted for the
+    /// user's locale from the moment's own offset. Nil until done.
+    let doneAt: String?
 
     /// The key to use when recording completions — always the raw English name.
     var trackingName: String { rawName ?? name }
 
     /// Convenience init that defaults rawName to nil (for placeholders / backwards compat).
-    init(name: String, rawName: String? = nil, done: Bool, colorHex: String?) {
+    init(name: String, rawName: String? = nil, done: Bool, colorHex: String?, doneAt: String? = nil) {
         self.name = name
         self.rawName = rawName
         self.done = done
         self.colorHex = colorHex
+        self.doneAt = doneAt
     }
 }
 
@@ -48,6 +52,11 @@ struct ThemeData: Codable {
     }
 }
 
+struct LegendEntry: Codable {
+    let label: String
+    let hex: String
+}
+
 struct WidgetContent {
     let habits: [HabitEntry]
     let completedCount: Int
@@ -57,6 +66,17 @@ struct WidgetContent {
     /// This month's moments as ARGB hex colours, oldest first — the mosaic
     /// the premium widget grows in its spare space.
     let monthTiles: [String]
+    /// "August · 23 moments" — composed and localised by the app.
+    let eyebrowSmall: String
+    /// "August 23 · 37 moments · back 2 times".
+    let eyebrowLarge: String
+    /// Focus areas with counts, most first, at most five.
+    let legend: [LegendEntry]
+    /// Caption under the faded month for non-subscribers (fade, never padlock).
+    let monthUnlock: String
+    /// Painted backgrounds rendered by the app into the app group, or nil.
+    let artSquarePath: String?
+    let artWidePath: String?
     let theme: ThemeData
     let locale: String
 
@@ -71,6 +91,16 @@ struct WidgetContent {
         greeting: "Do what feels right today",
         isPremium: false,
         monthTiles: [],
+        eyebrowSmall: "August · 23 moments",
+        eyebrowLarge: "August 23 · 37 moments · back 2 times",
+        legend: [
+            LegendEntry(label: "Health 14", hex: "FFD96766"),
+            LegendEntry(label: "Self-care 11", hex: "FFB8A089"),
+            LegendEntry(label: "Mood 5", hex: "FF9B8299"),
+        ],
+        monthUnlock: "Intended+ — the whole month in colour",
+        artSquarePath: nil,
+        artWidePath: nil,
         theme: ThemeData(
             id: "warmClay",
             isDark: false,
@@ -117,6 +147,20 @@ func loadWidgetContent() -> WidgetContent {
         monthTiles = (try? JSONDecoder().decode([String].self, from: tilesData)) ?? []
     }
     let locale = defaults.string(forKey: "widget_locale") ?? "en"
+    let eyebrowSmall = defaults.string(forKey: "widget_eyebrow_small") ?? ""
+    let eyebrowLarge = defaults.string(forKey: "widget_eyebrow_large") ?? ""
+    var legend: [LegendEntry] = []
+    if let legendJson = defaults.string(forKey: "widget_legend"),
+       let legendData = legendJson.data(using: .utf8) {
+        legend = (try? JSONDecoder().decode([LegendEntry].self, from: legendData)) ?? []
+    }
+    let monthUnlock = defaults.string(forKey: "widget_month_unlock") ?? ""
+    // Art paths are written by the app; an empty string means "this theme has none".
+    func artPath(_ key: String) -> String? {
+        guard let path = defaults.string(forKey: key), !path.isEmpty,
+              FileManager.default.fileExists(atPath: path) else { return nil }
+        return path
+    }
 
     // Parse theme
     var theme = WidgetContent.placeholder.theme
@@ -132,31 +176,15 @@ func loadWidgetContent() -> WidgetContent {
         greeting: greeting,
         isPremium: isPremium,
         monthTiles: monthTiles,
+        eyebrowSmall: eyebrowSmall,
+        eyebrowLarge: eyebrowLarge,
+        legend: legend,
+        monthUnlock: monthUnlock,
+        artSquarePath: artPath("widget_art_square"),
+        artWidePath: artPath("widget_art_wide"),
         theme: theme,
         locale: locale
     )
-}
-
-// MARK: - Shared views
-
-/// The month in miniature: one rounded square per moment, wrapping is not
-/// needed at widget scale — the newest tiles matter, so overflow drops the
-/// oldest from the front.
-struct TileRow: View {
-    let hexes: [String]
-    var size: CGFloat = 10
-    var spacing: CGFloat = 3
-    var maxTiles: Int = 12
-
-    var body: some View {
-        HStack(spacing: spacing) {
-            ForEach(Array(hexes.suffix(maxTiles).enumerated()), id: \.offset) { _, hex in
-                RoundedRectangle(cornerRadius: size * 0.28)
-                    .fill(Color(argbHex: hex))
-                    .frame(width: size, height: size)
-            }
-        }
-    }
 }
 
 // MARK: - Color helpers
@@ -230,6 +258,10 @@ struct WidgetStrings {
 
     var noHabits: String {
         locale == "ru" ? "Пока нет привычек" : "No habits yet"
+    }
+
+    var pauseTitle: String {
+        locale == "ru" ? "минута дыхания" : "a minute of breath"
     }
 
     var allDone: String {

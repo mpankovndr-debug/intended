@@ -1,0 +1,142 @@
+diff --git a/ios/IntendedWidget/IntendedPremiumWidget.swift b/ios/IntendedWidget/IntendedPremiumWidget.swift
+index 24df271..f51757f 100644
+--- a/ios/IntendedWidget/IntendedPremiumWidget.swift
++++ b/ios/IntendedWidget/IntendedPremiumWidget.swift
+@@ -138,7 +138,9 @@ struct PremiumMediumView: View {
+         let accent = Color(argbHex: theme.accent)
+ 
+         Group {
+-            if showUpgrade {
++            if isEmpty {
++                emptyContent(textPrimary: textPrimary, textSecondary: textSecondary, accent: accent)
++            } else if showUpgrade {
+                 degradedView(textPrimary: textPrimary, textSecondary: textSecondary, accent: accent)
+             } else {
+                 premiumMediumContent(textPrimary: textPrimary, textSecondary: textSecondary, accent: accent)
+@@ -150,26 +152,33 @@ struct PremiumMediumView: View {
+     private var isEmpty: Bool { content.totalCount == 0 }
+     private var allDone: Bool { content.totalCount > 0 && content.completedCount == content.totalCount }
+ 
++    /// Nothing recorded yet: there is nothing to withhold, so a free reader and
++    /// an Intended+ reader see exactly the same thing. Deliberately no upgrade
++    /// line — this reader hasn't finished onboarding, and "see your habits"
++    /// would name habits that don't exist.
+     @ViewBuilder
+-    private func premiumMediumContent(textPrimary: Color, textSecondary: Color, accent: Color) -> some View {
+-        if isEmpty {
+-            HStack(spacing: 0) {
+-                VStack(alignment: .leading, spacing: 0) {
+-                    Text(content.greeting)
+-                        .font(.system(size: 14, weight: .medium))
+-                        .foregroundColor(textPrimary)
+-                        .lineLimit(2)
+-                    Spacer(minLength: 4)
+-                    Text(strings.noHabits)
+-                        .font(.system(size: 13, weight: .medium))
+-                        .foregroundColor(textSecondary)
+-                }
+-                .frame(maxWidth: .infinity, alignment: .leading)
+-                Image(systemName: "leaf")
+-                    .font(.system(size: 28))
+-                    .foregroundColor(accent.opacity(0.5))
++    private func emptyContent(textPrimary: Color, textSecondary: Color, accent: Color) -> some View {
++        HStack(spacing: 0) {
++            VStack(alignment: .leading, spacing: 0) {
++                Text(content.greeting)
++                    .font(.system(size: 14, weight: .medium))
++                    .foregroundColor(textPrimary)
++                    .lineLimit(2)
++                Spacer(minLength: 4)
++                Text(strings.noHabits)
++                    .font(.system(size: 13, weight: .medium))
++                    .foregroundColor(textSecondary)
+             }
+-        } else if allDone {
++            .frame(maxWidth: .infinity, alignment: .leading)
++            Image(systemName: "leaf")
++                .font(.system(size: 28))
++                .foregroundColor(accent.opacity(0.5))
++        }
++    }
++
++    @ViewBuilder
++    private func premiumMediumContent(textPrimary: Color, textSecondary: Color, accent: Color) -> some View {
++        if allDone {
+             HStack(alignment: .center, spacing: 12) {
+                 VStack(alignment: .leading, spacing: 0) {
+                     Text(content.greeting)
+@@ -287,7 +296,9 @@ struct PremiumLargeView: View {
+         let accent = Color(argbHex: theme.accent)
+ 
+         Group {
+-            if showUpgrade {
++            if isEmpty {
++                emptyContent(textPrimary: textPrimary, textSecondary: textSecondary, accent: accent)
++            } else if showUpgrade {
+                 degradedLargeView(textPrimary: textPrimary, textSecondary: textSecondary, accent: accent)
+             } else {
+                 premiumLargeContent(textPrimary: textPrimary, textSecondary: textSecondary, accent: accent)
+@@ -299,33 +310,40 @@ struct PremiumLargeView: View {
+     private var isEmpty: Bool { content.totalCount == 0 }
+     private var allDone: Bool { content.totalCount > 0 && content.completedCount == content.totalCount }
+ 
++    /// Nothing recorded yet: there is nothing to withhold, so a free reader and
++    /// an Intended+ reader see exactly the same thing. Deliberately no upgrade
++    /// line — this reader hasn't finished onboarding, and "see your habits"
++    /// would name habits that don't exist.
+     @ViewBuilder
+-    private func premiumLargeContent(textPrimary: Color, textSecondary: Color, accent: Color) -> some View {
+-        if isEmpty {
+-            VStack(spacing: 0) {
+-                HStack {
+-                    VStack(alignment: .leading, spacing: 4) {
+-                        Text("Intended")
+-                            .font(.system(size: 13, weight: .semibold))
+-                            .foregroundColor(textSecondary)
+-                        Text(content.greeting)
+-                            .font(.system(size: 16, weight: .medium))
+-                            .foregroundColor(textPrimary)
+-                            .lineLimit(2)
+-                    }
+-                    Spacer()
++    private func emptyContent(textPrimary: Color, textSecondary: Color, accent: Color) -> some View {
++        VStack(spacing: 0) {
++            HStack {
++                VStack(alignment: .leading, spacing: 4) {
++                    Text("Intended")
++                        .font(.system(size: 13, weight: .semibold))
++                        .foregroundColor(textSecondary)
++                    Text(content.greeting)
++                        .font(.system(size: 16, weight: .medium))
++                        .foregroundColor(textPrimary)
++                        .lineLimit(2)
+                 }
+                 Spacer()
+-                Image(systemName: "leaf")
+-                    .font(.system(size: 36))
+-                    .foregroundColor(accent.opacity(0.5))
+-                Text(strings.noHabits)
+-                    .font(.system(size: 14, weight: .medium))
+-                    .foregroundColor(textSecondary)
+-                    .padding(.top, 8)
+-                Spacer()
+             }
+-        } else if allDone {
++            Spacer()
++            Image(systemName: "leaf")
++                .font(.system(size: 36))
++                .foregroundColor(accent.opacity(0.5))
++            Text(strings.noHabits)
++                .font(.system(size: 14, weight: .medium))
++                .foregroundColor(textSecondary)
++                .padding(.top, 8)
++            Spacer()
++        }
++    }
++
++    @ViewBuilder
++    private func premiumLargeContent(textPrimary: Color, textSecondary: Color, accent: Color) -> some View {
++        if allDone {
+             VStack(spacing: 0) {
+                 HStack(alignment: .top) {
+                     VStack(alignment: .leading, spacing: 4) {

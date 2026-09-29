@@ -206,6 +206,90 @@ class PlanService {
     );
   }
 
+  /// How long a declined give-back stays quiet.
+  ///
+  /// Every other nudge uses the per-month decline, and that is enough for them
+  /// because next month brings new evidence. Settled evidence barely moves —
+  /// steady is steady — so the same machinery would re-ask every month, and a
+  /// monthly "are you sure it isn't yours?" is a nag wearing a compliment.
+  /// Declining this offer means *keep holding it for me*, which deserves a
+  /// season of quiet.
+  static const int giveBackCooldownMonths = 3;
+
+  /// Actions whose give-back was declined inside the cooldown.
+  ///
+  /// Read from the existing per-month decline maps — no new storage. Ids are
+  /// `giveBack:{title}`, so the title is everything after the first colon.
+  static Future<Set<String>> giveBackCooldown(DateTime now) async {
+    const prefix = 'giveBack:';
+    final all = await _declined();
+    final habits = <String>{};
+    for (var i = 0; i < giveBackCooldownMonths; i++) {
+      final month = DateTime(now.year, now.month - i);
+      final key =
+          '${month.year}-${month.month.toString().padLeft(2, '0')}';
+      for (final id in all[key] ?? const <String>{}) {
+        if (id.startsWith(prefix)) habits.add(id.substring(prefix.length));
+      }
+    }
+    return habits;
+  }
+
+  /// Carries every record that names an action across a rename.
+  ///
+  /// A nudge id is `kind:subject` ([PlanNudge.id]) and an accepted change
+  /// stores its `subject` outright, so both hold the title the action had at
+  /// the time. Left alone, a rename makes a decline stop matching and the
+  /// suggestion the user already passed on comes back — and a proof goes on
+  /// naming an action under a name it no longer has.
+  ///
+  /// Splits on the *first* colon only: a subject may contain one, the kind
+  /// never does.
+  static Future<void> renameSubject(String from, String to) async {
+    if (from == to) return;
+    final prefs = await SharedPreferences.getInstance();
+
+    String swap(String id) {
+      final i = id.indexOf(':');
+      if (i == -1) return id;
+      return id.substring(i + 1) == from ? '${id.substring(0, i)}:$to' : id;
+    }
+
+    final declined = await _declined();
+    var touched = false;
+    final nextDeclined = declined.map((month, ids) {
+      final swapped = ids.map(swap).toSet();
+      if (swapped.difference(ids).isNotEmpty) touched = true;
+      return MapEntry(month, swapped);
+    });
+    if (touched) {
+      await prefs.setString(
+        _declinedKey,
+        jsonEncode(nextDeclined.map((k, v) => MapEntry(k, v.toList()))),
+      );
+    }
+
+    final accepted = await acceptedNudges();
+    if (accepted.any((a) => a.subject == from)) {
+      final next = [
+        for (final a in accepted)
+          a.subject == from
+              ? AcceptedNudge(
+                  kind: a.kind,
+                  subject: to,
+                  monthKey: a.monthKey,
+                  acceptedOn: a.acceptedOn,
+                  before: a.before,
+                )
+              : a,
+      ];
+      await prefs.setString(
+        _acceptedKey,
+        jsonEncode([for (final a in next) a.toJson()]),
+      );
+    }
+  }
+
   static Future<Map<String, Set<String>>> _declined() async {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_declinedKey);

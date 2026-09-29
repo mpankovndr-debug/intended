@@ -111,10 +111,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get focusAreaMoodSub => 'Notice how you feel. That\'s the first step.';
 
   @override
-  String get focusAreaProductivity => 'Productivity';
+  String get focusAreaProductivity => 'Doing one thing';
 
   @override
-  String get focusAreaProductivitySub => 'One thing at a time. That\'s plenty.';
+  String get focusAreaProductivitySub => 'Starting is the hard part.';
 
   @override
   String get focusAreaHome => 'Home & organization';
@@ -224,8 +224,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeSelectionConfirm => 'This feels right';
 
   @override
-  String get themeSelectionPremiumHint =>
-      'Deep Focus and more themes are available with Intended+. Try it free for 7 days after setup.';
+  String themeSelectionPremiumHint(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return 'Deep Focus and more themes are available with Intended+. Try it free for $_temp0 after setup.';
+  }
 
   @override
   String get habitRevealTitle => 'Here\'s what we picked for you';
@@ -521,6 +528,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planAcceptKeepAnchor => 'Pin it';
 
   @override
+  String planNudgeGiveBack(
+      String habit, int c1, String m1, int c2, String m2, int c3, String m3) {
+    String _temp0 = intl.Intl.pluralLogic(
+      c1,
+      locale: localeName,
+      other: '$c1 times',
+      one: 'once',
+    );
+    return '$habit looks like it\'s yours now — $_temp0 in $m1, $c2 in $m2, $c3 in $m3. Keep it here, or make room for something new?';
+  }
+
+  @override
+  String get planAcceptGiveBack => 'Make room';
+
+  @override
+  String planProofGaveBack(String date, String habit) {
+    return 'On $date you gave $habit its slot back.';
+  }
+
+  @override
   String get planAcceptAddFocus => 'Add it';
 
   @override
@@ -646,6 +673,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String insightsStartingMeta(String areas, String time) {
     return '$areas · a reminder at $time';
+  }
+
+  @override
+  String commonListAnd(String first, String second) {
+    return '$first and $second';
   }
 
   @override
@@ -805,14 +837,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editHabitTitle => 'Edit habit';
 
   @override
+  String get habitShowOnLabel => 'Show this on';
+
+  @override
   String get editHabitSave => 'Save';
 
   @override
-  String get customHabitCreatedTitle => 'Habit created';
+  String get customHabitCreatedTitle => 'Intention created';
 
   @override
   String customHabitCreatedMessage(String title) {
-    return '\"$title\" has been added to your habits.';
+    return '\"$title\" has been added to your intentions.';
   }
 
   @override
@@ -905,7 +940,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completionQuestion => 'Did you do this today?';
 
   @override
-  String get completionHowDidItLand => 'How did that land?';
+  String get completionHowDidItLand => 'How was it?';
 
   @override
   String get completionMoodGlad => 'Glad I did';
@@ -917,7 +952,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completionMoodTookEffort => 'Took effort';
 
   @override
-  String get completionAddNote => '+ add a note';
+  String get completionAddNote => 'add a note';
 
   @override
   String get completionNoteHint => 'Anything you want to remember?';
@@ -1589,6 +1624,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallYearlyPeriod => 'per year';
 
   @override
+  String paywallPricePerYear(String price) {
+    return '$price/year';
+  }
+
+  @override
+  String paywallPricePerMonth(String price) {
+    return '$price/month';
+  }
+
+  @override
   String get paywallYearlyPerMonth => '€3.75';
 
   @override
@@ -1614,17 +1659,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallLifetimePeriod => 'one-time';
 
   @override
-  String get paywallLifetimeBadge => 'Launch price';
-
-  @override
-  String get paywallCtaTrial => 'Start 7-day free trial';
+  String paywallCtaTrial(int days) {
+    return 'Start $days-day free trial';
+  }
 
   @override
   String get paywallCtaLifetime => 'Get lifetime access';
 
   @override
-  String paywallTrialHint(String price) {
-    return '7 days free, then $price. Cancel anytime.';
+  String paywallTrialHintYearly(int days, String price) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0 free, then $price/year. Renews automatically until you cancel.';
+  }
+
+  @override
+  String paywallTrialHintMonthly(int days, String price) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0 free, then $price/month. Renews automatically until you cancel.';
   }
 
   @override
@@ -1666,8 +1727,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingPaywallSecondaryCta => 'Not now — keep the free version';
 
   @override
-  String onboardingPaywallDisclaimer(String price) {
-    return '7 days free, then $price/year — about €3.75 a month. Cancel anytime.';
+  String onboardingPaywallDisclaimer(int days, String price, String perMonth) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0 free, then $price/year — about $perMonth a month. Renews automatically until you cancel.';
   }
 
   @override
@@ -1781,6 +1848,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileHelpSupport => 'Help & Support';
 
   @override
+  String get profileRateApp => 'Rate Intended';
+
+  @override
   String get profilePrivacy => 'Privacy Policy';
 
   @override
@@ -1840,9 +1910,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileFocusLimitOptions => '• Intended+: Unlimited';
-
-  @override
-  String get profilePayAmount => 'Pay €0.99';
 
   @override
   String get profilePaymentTitle => 'Payment';
@@ -2030,7 +2097,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitWalkToWindow => 'Walk to the window and back';
 
   @override
-  String get habitBellyBreaths => 'Take 5 deep belly breaths';
+  String get habitBellyBreaths => 'Take 5 slow, deep breaths';
 
   @override
   String get habitBodyScan => '2-minute body scan';
@@ -2040,6 +2107,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get habitMindfulMeal => 'Eat one meal mindfully';
+
+  @override
+  String get habitEatAfterWaking => 'Eat after waking up';
+
+  @override
+  String get habitProperMeal => 'Eat one proper meal';
+
+  @override
+  String get habitDrinkWarm => 'Drink something warm';
+
+  @override
+  String get habitTakeMedication => 'Take your medication';
+
+  @override
+  String get habitGetOutside => 'Get outside for a few minutes';
+
+  @override
+  String get habitMoveBody => 'Move your body a little';
+
+  @override
+  String get habitBedEarly => 'Get into bed early';
 
   @override
   String get habitTenSecondPause => 'One-minute pause';
@@ -2078,37 +2166,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitPermissionToRest => 'Give yourself permission to rest';
 
   @override
-  String get habitSetPriority => 'Set one priority today';
-
-  @override
   String get habitPlanTomorrow => 'Plan tomorrow in one sentence';
 
   @override
   String get habitThirtySecondReset => 'Do a 1-minute reset';
-
-  @override
-  String get habitWriteIdea => 'Unsubscribe from an unnecessary email list';
-
-  @override
-  String get habitFinishTinyTask => 'Finish one tiny task';
-
-  @override
-  String get habitDeclutterDesk => 'Declutter your desk';
-
-  @override
-  String get habitReviewCalendar => 'Review your calendar';
-
-  @override
-  String get habitTurnOffNotification => 'Turn off one notification';
-
-  @override
-  String get habitCloseTab => 'Close unnecessary browser tabs';
-
-  @override
-  String get habitArchiveEmails => 'Archive 5 old emails';
-
-  @override
-  String get habitUpdateTodo => 'Update one to-do item';
 
   @override
   String get habitTidyOneThing => 'Tidy one small thing';
@@ -2183,13 +2244,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitCelebrateOthers => 'Celebrate someone else\'s win';
 
   @override
-  String get habitWriteSentence => 'Write a short story';
+  String get habitWriteSentence => 'Write down what\'s in your head';
 
   @override
   String get habitDoodle => 'Doodle for 5 minutes';
-
-  @override
-  String get habitCaptureIdea => 'Capture one idea';
 
   @override
   String get habitNoticeBeauty => 'Notice one beautiful thing';
@@ -2198,61 +2256,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitTakePhoto => 'Take one photo of something you like';
 
   @override
-  String get habitDrawShape => 'Draw something simple';
-
-  @override
   String get habitHumTune => 'Hum a tune you enjoy';
 
   @override
-  String get habitRearrange => 'Rearrange something small';
-
-  @override
   String get habitTryNewWord => 'Learn one new word';
-
-  @override
-  String get habitCreateTinyThing => 'Play a short melody';
-
-  @override
-  String get habitPlayCreative => 'Play with one creative medium';
-
-  @override
-  String get habitImagine => 'Do a vocal warm-up';
-
-  @override
-  String get habitCheckBalance => 'Try one financial tip';
-
-  @override
-  String get habitMoveToSavings => 'Move €3/\$3 to savings';
-
-  @override
-  String get habitReviewSubscription => 'Review one subscription';
-
-  @override
-  String get habitNoteExpense => 'Note 3 expenses';
-
-  @override
-  String get habitFinancialTip => 'Read one financial tip';
-
-  @override
-  String get habitDeleteReceipt => 'Delete one old receipt';
-
-  @override
-  String get habitUpdateBudget => 'Treat yourself';
-
-  @override
-  String get habitReviewBill => 'Review necessity of one subscription';
-
-  @override
-  String get habitPriceCheck => 'Price-check one item before buying';
-
-  @override
-  String get habitWait24Hours => 'Wait 24 hours before a big purchase';
-
-  @override
-  String get habitCelebrateMoneyWin => 'Celebrate one money win';
-
-  @override
-  String get habitSavingsGoal => 'Set one savings goal';
 
   @override
   String get habitSitStill => 'Sit still for 1 minute';
@@ -2290,6 +2297,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get habitDoNothing => 'Do absolutely nothing for 5 minutes';
+
+  @override
+  String get habitGetOutOfBed => 'Get out of bed';
+
+  @override
+  String get habitBrushTeeth => 'Brush your teeth';
+
+  @override
+  String get habitWashFace => 'Wash your face';
+
+  @override
+  String get habitTakeShower => 'Take a shower';
+
+  @override
+  String get habitCleanClothes => 'Put on clean clothes';
+
+  @override
+  String get habitBrushHair => 'Brush your hair';
+
+  @override
+  String get habitOpenCurtains => 'Open the curtains';
+
+  @override
+  String get habitTurnOnLamp => 'Turn on a lamp';
+
+  @override
+  String get habitPhoneAcrossRoom => 'Leave your phone across the room';
 
   @override
   String get shareCardWeeklyCheckin => 'Weekly check-in';
@@ -2862,16 +2896,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tap the share button to turn this into a card you can send to someone or post. Your data stays private — only the summary is shared.';
 
   @override
-  String get reviewPromptMessage =>
-      'Enjoying Intended? A quick rating helps others find a gentler way to build habits.';
-
-  @override
-  String get reviewPromptRate => 'Rate now';
-
-  @override
-  String get reviewPromptNotYet => 'Not yet';
-
-  @override
   String get upgradeNudgeBody =>
       'Your practice is growing. Intended+ gives you room to grow with it.';
 
@@ -2889,6 +2913,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String notifWeeklyDynamicN(int count) {
     return 'Your week is on the page — $count moments in it.';
+  }
+
+  @override
+  String notifMonthlyLetter(String month) {
+    return 'Your $month letter is ready.';
   }
 
   @override
@@ -3087,8 +3116,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faqPricing => 'How much does it cost?';
 
   @override
-  String get faqPricingAnswer =>
-      'Monthly: €6.99. Yearly: €49.99 (5 months free). Lifetime: €89.99. All include a 7-day free trial.';
+  String faqPricingAnswer(
+      String monthly, String yearly, String lifetime, int days) {
+    return 'Monthly: $monthly. Yearly: $yearly. Lifetime: $lifetime, one-time. Both subscriptions start with a $days-day free trial.';
+  }
 
   @override
   String get faqFreeVersion => 'Can I use it for free?';
@@ -3133,6 +3164,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get faqDeleteAppAnswer =>
       'Data is local, so deleting removes everything. Subscriptions can be restored through the App Store.';
+
+  @override
+  String faqQuestionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count questions',
+      one: '1 question',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get faqSectionTroubleshooting => 'Troubleshooting';
@@ -3497,7 +3539,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todayAdoptIntention => 'Adopt a different intention';
 
   @override
-  String get todaySwapHint => 'Not landing? Hold to swap.';
+  String get staleNudgeTitle => 'This one doesn\'t seem to fit';
+
+  @override
+  String get staleNudgeBody =>
+      'No moments here in the last ten days. Want to try a different intention?';
+
+  @override
+  String get staleNudgeChange => 'Change my intention';
+
+  @override
+  String get staleNudgeKeep => 'Leave it as is';
 
   @override
   String rescueTitle(int count) {
@@ -3586,7 +3638,35 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get shareSeasonGaps => 'My gaps are getting shorter.';
+  String get shareSeasonGaps => 'and the gaps are getting shorter';
+
+  @override
+  String get shareSeasonLabel => 'MY SEASON';
+
+  @override
+  String get shareSeasonMorningLine => 'I come to this before the day starts.';
+
+  @override
+  String get shareSeasonEveningLine =>
+      'I come to this once the day has quieted.';
+
+  @override
+  String get shareSeasonSteadyLine => 'A little, most days.';
+
+  @override
+  String get shareSeasonBurstsLine => 'I arrive in waves, and they come back.';
+
+  @override
+  String get shareSeasonReturningLine => 'I go quiet, and I find my way back.';
+
+  @override
+  String get shareSeasonContinuousLine => 'I keep a thread running all month.';
+
+  @override
+  String get shareSeasonFocusedLine => 'One thing has most of my attention.';
+
+  @override
+  String get shareSeasonWanderingLine => 'I follow what I need.';
 
   @override
   String get pathMoreIntentions => 'MORE INTENTIONS';
@@ -3761,4 +3841,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileExportEmpty => 'Nothing to export yet.';
+
+  @override
+  String get pauseEntryTitle => 'a minute of breath';
+
+  @override
+  String get pauseLeave => 'enough for now';
+
+  @override
+  String get pauseBreathIn => 'in';
+
+  @override
+  String get pauseBreathOut => 'out';
+
+  @override
+  String get pauseCheckInQuestion => 'How are you feeling now?';
+
+  @override
+  String get pauseCheckInTense => 'Still tense';
+
+  @override
+  String get pauseCheckInNeutral => 'A little calmer';
+
+  @override
+  String get pauseCheckInCalm => 'It lifted';
+
+  @override
+  String get pauseNotifAction => 'A minute of breath';
+
+  @override
+  String get pauseHealthTitle => 'Save to Apple Health?';
+
+  @override
+  String get pauseHealthBody =>
+      'Each completed pause can appear in Apple Health as a mindful minute — your answer here too. Intended never reads anything from Health.';
+
+  @override
+  String get pauseHealthSave => 'Save to Health';
+
+  @override
+  String widgetMomentsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count moments',
+      one: '$count moment',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String widgetReturnsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'back $count times',
+      one: 'back once',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get widgetMonthUnlock => 'Intended+ — the whole month in colour';
 }

@@ -111,10 +111,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get focusAreaMoodSub => 'Замечай, как себя чувствуешь. Это уже шаг.';
 
   @override
-  String get focusAreaProductivity => 'Продуктивность';
+  String get focusAreaProductivity => 'Одно дело';
 
   @override
-  String get focusAreaProductivitySub => 'По одному делу. Этого достаточно.';
+  String get focusAreaProductivitySub => 'Начать — самое трудное.';
 
   @override
   String get focusAreaHome => 'Дом и порядок';
@@ -225,8 +225,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get themeSelectionConfirm => 'Мне это подходит';
 
   @override
-  String get themeSelectionPremiumHint =>
-      '«Глубокий фокус» и другие темы доступны с Intended+. Попробуй бесплатно 7 дней после настройки.';
+  String themeSelectionPremiumHint(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days дня',
+      many: '$days дней',
+      few: '$days дня',
+      one: '$days день',
+    );
+    return '«Глубокий фокус» и другие темы доступны с Intended+. Попробуй бесплатно $_temp0 после настройки.';
+  }
 
   @override
   String get habitRevealTitle => 'Вот, что мы подобрали для тебя';
@@ -312,7 +321,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get insightsTeaserNoGap =>
-      'Под этими квадратами есть «почему». Intended+ находит его — и превращает в план на следующий месяц.';
+      'Под этими квадратами есть «почему». Intended+ находит его и превращает в план на следующий месяц.';
 
   @override
   String get driftLabel => 'ПРЯМО СЕЙЧАС';
@@ -347,20 +356,20 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get seasonMorning => 'Раннее';
+  String get seasonMorning => 'Утро';
 
   @override
   String get seasonMorningLine =>
       'Ты приходишь сюда рано. День начинается с тебя.';
 
   @override
-  String get seasonEvening => 'Вечернее';
+  String get seasonEvening => 'Вечер';
 
   @override
-  String get seasonEveningLine => 'Ты приходишь сюда, когда день затих.';
+  String get seasonEveningLine => 'Ты приходишь сюда, когда день затихает.';
 
   @override
-  String get seasonSteady => 'Ровное';
+  String get seasonSteady => 'Постоянство';
 
   @override
   String get seasonSteadyLine =>
@@ -379,21 +388,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get seasonReturningLine => 'Ты затихаешь — и находишь дорогу обратно.';
 
   @override
-  String get seasonContinuous => 'Непрерывное';
+  String get seasonContinuous => 'Нить';
 
   @override
   String get seasonContinuousLine =>
       'Ты держишь нить весь месяц — она ни разу не прервалась.';
 
   @override
-  String get seasonFocused => 'Сосредоточенное';
+  String get seasonFocused => 'Фокус';
 
   @override
   String get seasonFocusedLine =>
       'Одно занимало большую часть твоего внимания.';
 
   @override
-  String get seasonWandering => 'Блуждание';
+  String get seasonWandering => 'Поиск';
 
   @override
   String get seasonWanderingLine =>
@@ -548,6 +557,28 @@ class AppLocalizationsRu extends AppLocalizations {
   String get planAcceptKeepAnchor => 'Закрепить';
 
   @override
+  String planNudgeGiveBack(
+      String habit, int c1, String m1, int c2, String m2, int c3, String m3) {
+    String _temp0 = intl.Intl.pluralLogic(
+      c1,
+      locale: localeName,
+      other: '$c1 раза',
+      many: '$c1 раз',
+      few: '$c1 раза',
+      one: '$c1 раз',
+    );
+    return 'Похоже, «$habit» — уже часть тебя: $m1 — $_temp0, $m2 — $c2, $m3 — $c3. Оставить или освободить место для нового?';
+  }
+
+  @override
+  String get planAcceptGiveBack => 'Освободить место';
+
+  @override
+  String planProofGaveBack(String date, String habit) {
+    return '$date освобождено место: «$habit».';
+  }
+
+  @override
   String get planAcceptAddFocus => 'Добавить';
 
   @override
@@ -555,7 +586,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String planMore(int count) {
-    return 'Ещё $count — когда будете готовы';
+    return 'Ещё $count — когда захочешь';
   }
 
   @override
@@ -629,7 +660,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'В этом месяце есть закономерность, которую пока не видно: фокус, который выбран, и фокус, которым ты живёшь, не совпадают.';
 
   @override
-  String get insightsTeaserCta => 'Посмотреть, что заметил Intended+';
+  String get insightsTeaserCta => 'Узнать, что заметил Intended+';
 
   @override
   String get insightsExampleSummary => '37 маленьких дел для себя.';
@@ -677,11 +708,24 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String commonListAnd(String first, String second) {
+    return '$first и $second';
+  }
+
+  @override
   String get insightsThisMonth => 'В ЭТОМ МЕСЯЦЕ';
 
   @override
   String insightsDidThings(int count, String month) {
-    return 'За $month — $count маленьких дел для себя.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count маленьких дела',
+      many: '$count маленьких дел',
+      few: '$count маленьких дела',
+      one: '$count маленькое дело',
+    );
+    return 'За $month $_temp0 для себя.';
   }
 
   @override
@@ -842,14 +886,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get editHabitTitle => 'Редактировать привычку';
 
   @override
+  String get habitShowOnLabel => 'Когда показывать';
+
+  @override
   String get editHabitSave => 'Сохранить';
 
   @override
-  String get customHabitCreatedTitle => 'Привычка создана';
+  String get customHabitCreatedTitle => 'Намерение создано';
 
   @override
   String customHabitCreatedMessage(String title) {
-    return '«$title» добавлена в твои привычки.';
+    return '«$title» добавлено в твои намерения.';
   }
 
   @override
@@ -942,7 +989,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get completionQuestion => 'Ты выполнил это сегодня?';
 
   @override
-  String get completionHowDidItLand => 'Как это отозвалось?';
+  String get completionHowDidItLand => 'Как прошло?';
 
   @override
   String get completionMoodGlad => 'Стоило того';
@@ -954,7 +1001,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get completionMoodTookEffort => 'Было непросто';
 
   @override
-  String get completionAddNote => '+ добавить заметку';
+  String get completionAddNote => 'добавить заметку';
 
   @override
   String get completionNoteHint => 'Хочешь что-то запомнить?';
@@ -964,7 +1011,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String completionKept(int count) {
-    return 'Сохранено — $count моментов в этом месяце.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count момента',
+      many: '$count моментов',
+      few: '$count момента',
+      one: '$count момент',
+    );
+    return 'Сохранено — $_temp0 в этом месяце.';
   }
 
   @override
@@ -1542,7 +1597,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get paywallDescription =>
-      'Intended+ превращает ежедневную практику в настоящее понимание себя.';
+      'Intended+ превращает твою ежедневную практику в глубокое понимание себя.';
 
   @override
   String get paywallCeilingTitle => 'Ты строишь что-то хорошее';
@@ -1553,19 +1608,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get paywallFeature1 =>
-      'Письмо о твоём месяце — четыре строки, которые заканчиваются вопросом';
+      'Письмо о твоём месяце: четыре строки, последняя — вопрос, который хочется сохранить';
 
   @override
   String get paywallFeature2 =>
-      'План на следующий месяц из фактов этого — и честная проверка, сработал ли';
+      'План на следующий месяц из того, что показал этот — и честная проверка, сработал ли он';
 
   @override
   String get paywallFeature3 =>
-      'Предупреждение о дрейфе: тихое слово до паузы, а не после';
+      'Предупреждение о дрейфе: тихое слово до паузы, а не после неё';
 
   @override
   String get paywallFeature4 =>
-      'Все десять тем, премиум-иконки и виджеты для экрана';
+      'Все десять тем, премиум-иконки и виджеты для главного экрана';
 
   @override
   String get paywallGroupRoom => 'Больше пространства';
@@ -1601,7 +1656,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paywallGroupYouA => '10 красивых тем и иконки';
 
   @override
-  String get paywallGroupYouB => 'Премиум-виджеты для домашнего экрана';
+  String get paywallGroupYouB => 'Премиум-виджеты для главного экрана';
 
   @override
   String get paywallMonthly => 'Ежемесячно';
@@ -1620,6 +1675,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get paywallYearlyPeriod => 'в год';
+
+  @override
+  String paywallPricePerYear(String price) {
+    return '$price в год';
+  }
+
+  @override
+  String paywallPricePerMonth(String price) {
+    return '$price в месяц';
+  }
 
   @override
   String get paywallYearlyPerMonth => '€3,75';
@@ -1647,17 +1712,37 @@ class AppLocalizationsRu extends AppLocalizations {
   String get paywallLifetimePeriod => 'один раз';
 
   @override
-  String get paywallLifetimeBadge => 'Цена запуска';
-
-  @override
-  String get paywallCtaTrial => 'Начать 7-дневный пробный период';
+  String paywallCtaTrial(int days) {
+    return 'Начать $days-дневный пробный период';
+  }
 
   @override
   String get paywallCtaLifetime => 'Получить навсегда';
 
   @override
-  String paywallTrialHint(String price) {
-    return '7 дней бесплатно, затем $price. Отмена в любое время.';
+  String paywallTrialHintYearly(int days, String price) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days дня',
+      many: '$days дней',
+      few: '$days дня',
+      one: '$days день',
+    );
+    return '$_temp0 бесплатно, затем $price в год. Продлевается автоматически, пока не отменишь.';
+  }
+
+  @override
+  String paywallTrialHintMonthly(int days, String price) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days дня',
+      many: '$days дней',
+      few: '$days дня',
+      one: '$days день',
+    );
+    return '$_temp0 бесплатно, затем $price в месяц. Продлевается автоматически, пока не отменишь.';
   }
 
   @override
@@ -1701,8 +1786,16 @@ class AppLocalizationsRu extends AppLocalizations {
       'Не сейчас — остаться на бесплатной';
 
   @override
-  String onboardingPaywallDisclaimer(String price) {
-    return '7 дней бесплатно, дальше $price в год — около €3,75 в месяц. Отменить можно в любой момент.';
+  String onboardingPaywallDisclaimer(int days, String price, String perMonth) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days дня',
+      many: '$days дней',
+      few: '$days дня',
+      one: '$days день',
+    );
+    return '$_temp0 бесплатно, дальше $price в год — около $perMonth в месяц. Продлевается автоматически, пока не отменишь.';
   }
 
   @override
@@ -1817,6 +1910,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileHelpSupport => 'Помощь и поддержка';
 
   @override
+  String get profileRateApp => 'Оценить Intended';
+
+  @override
   String get profilePrivacy => 'Политика конфиденциальности';
 
   @override
@@ -1875,9 +1971,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileFocusLimitOptions => '• Intended+: без ограничений';
-
-  @override
-  String get profilePayAmount => 'Оплатить €0,99';
 
   @override
   String get profilePaymentTitle => 'Оплата';
@@ -2065,7 +2158,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitWalkToWindow => 'Дойди до окна и обратно';
 
   @override
-  String get habitBellyBreaths => 'Сделай 5 глубоких вдохов животом';
+  String get habitBellyBreaths => 'Сделай 5 медленных глубоких вдохов';
 
   @override
   String get habitBodyScan => 'Последи за телом - 2 минуты';
@@ -2075,6 +2168,27 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get habitMindfulMeal => 'Один осознанный приём пищи';
+
+  @override
+  String get habitEatAfterWaking => 'Поешь после пробуждения';
+
+  @override
+  String get habitProperMeal => 'Поешь нормально хотя бы раз';
+
+  @override
+  String get habitDrinkWarm => 'Выпей что-нибудь тёплое';
+
+  @override
+  String get habitTakeMedication => 'Прими лекарство';
+
+  @override
+  String get habitGetOutside => 'Выйди на улицу на пару минут';
+
+  @override
+  String get habitMoveBody => 'Немного подвигайся';
+
+  @override
+  String get habitBedEarly => 'Ляг пораньше';
 
   @override
   String get habitTenSecondPause => 'Пауза на 1 минуту';
@@ -2105,7 +2219,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Назови 3 вещи, за которые чувствуешь благодарность';
 
   @override
-  String get habitSmileGently => 'Добро улыбнись себе';
+  String get habitSmileGently => 'Улыбнись себе по-доброму';
 
   @override
   String get habitAskNeed => 'Спроси себя: «Что мне сейчас нужно?»';
@@ -2114,37 +2228,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitPermissionToRest => 'Разреши себе отдохнуть';
 
   @override
-  String get habitSetPriority => 'Определи один приоритет на сегодня';
-
-  @override
   String get habitPlanTomorrow => 'Опиши завтрашний день одним предложением';
 
   @override
   String get habitThirtySecondReset => 'Перезагрузка на 1 минуту';
-
-  @override
-  String get habitWriteIdea => 'Отпишись от ненужной рассылки';
-
-  @override
-  String get habitFinishTinyTask => 'Заверши одно маленькое дело';
-
-  @override
-  String get habitDeclutterDesk => 'Убери лишнее со стола';
-
-  @override
-  String get habitReviewCalendar => 'Загляни в календарь';
-
-  @override
-  String get habitTurnOffNotification => 'Отключи одно уведомление';
-
-  @override
-  String get habitCloseTab => 'Закрой ненужные вкладки';
-
-  @override
-  String get habitArchiveEmails => 'Архивируй 5 старых имейлов';
-
-  @override
-  String get habitUpdateTodo => 'Обнови один пункт в списке дел';
 
   @override
   String get habitTidyOneThing => 'Убери одну мелочь';
@@ -2219,13 +2306,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitCelebrateOthers => 'Порадуйся за чью-то победу';
 
   @override
-  String get habitWriteSentence => 'Напиши короткий рассказ';
+  String get habitWriteSentence => 'Запиши, что в голове';
 
   @override
   String get habitDoodle => 'Рисуй каракули 5 минут';
-
-  @override
-  String get habitCaptureIdea => 'Запиши одну идею';
 
   @override
   String get habitNoticeBeauty => 'Заметь одну красивую вещь';
@@ -2234,61 +2318,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitTakePhoto => 'Сфотографируй что-то, что нравится';
 
   @override
-  String get habitDrawShape => 'Нарисуй что-то простое';
-
-  @override
   String get habitHumTune => 'Напой мелодию, которая нравится';
 
   @override
-  String get habitRearrange => 'Переставь что-нибудь небольшое';
-
-  @override
   String get habitTryNewWord => 'Выучи одно новое слово';
-
-  @override
-  String get habitCreateTinyThing => 'Сыграй одну короткую мелодию';
-
-  @override
-  String get habitPlayCreative => 'Поиграй с одним творческим материалом';
-
-  @override
-  String get habitImagine => 'Сделай одну распевку';
-
-  @override
-  String get habitCheckBalance => 'Попробуй один финансовый совет';
-
-  @override
-  String get habitMoveToSavings => 'Отложи ₽300 в копилку';
-
-  @override
-  String get habitReviewSubscription => 'Проверь одну подписку';
-
-  @override
-  String get habitNoteExpense => 'Запиши 3 траты';
-
-  @override
-  String get habitFinancialTip => 'Прочитай один финансовый совет';
-
-  @override
-  String get habitDeleteReceipt => 'Удали один старый чек';
-
-  @override
-  String get habitUpdateBudget => 'Побалуй себя';
-
-  @override
-  String get habitReviewBill => 'Проверь необходимость одной подписки';
-
-  @override
-  String get habitPriceCheck => 'Сравни цену перед покупкой';
-
-  @override
-  String get habitWait24Hours => 'Подожди 24 часа перед большой покупкой';
-
-  @override
-  String get habitCelebrateMoneyWin => 'Порадуйся одной финансовой победе';
-
-  @override
-  String get habitSavingsGoal => 'Поставь одну цель для накоплений';
 
   @override
   String get habitSitStill => 'Посиди тихо 1 минуту';
@@ -2326,6 +2359,33 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get habitDoNothing => 'Ничего не делай 5 минут';
+
+  @override
+  String get habitGetOutOfBed => 'Встань с кровати';
+
+  @override
+  String get habitBrushTeeth => 'Почисти зубы';
+
+  @override
+  String get habitWashFace => 'Умойся';
+
+  @override
+  String get habitTakeShower => 'Прими душ';
+
+  @override
+  String get habitCleanClothes => 'Надень чистое';
+
+  @override
+  String get habitBrushHair => 'Причешись';
+
+  @override
+  String get habitOpenCurtains => 'Открой шторы';
+
+  @override
+  String get habitTurnOnLamp => 'Включи лампу';
+
+  @override
+  String get habitPhoneAcrossRoom => 'Оставь телефон подальше';
 
   @override
   String get shareCardWeeklyCheckin => 'Недельный чек-ин';
@@ -2591,11 +2651,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get insightsGrowthHint => 'Инсайты становятся точнее с каждой неделей';
 
   @override
-  String get tipPinHabit => 'Удерживайте привычку, чтобы закрепить её сверху';
+  String get tipPinHabit => 'Удерживай привычку, чтобы закрепить её сверху';
 
   @override
   String get tipCuratedPack =>
-      'Попробуйте готовый набор привычек, который можно найти в «Все привычки»';
+      'Попробуй готовый набор привычек, который можно найти в «Все привычки»';
 
   @override
   String get tipWidget =>
@@ -2753,8 +2813,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get appIconSky => 'Небо';
 
   @override
-  String get legalDisclaimerPrefix =>
-      'Нажимая «Продолжить», вы соглашаетесь с нашими ';
+  String get legalDisclaimerPrefix => 'Продолжая, ты соглашаешься с нашими ';
 
   @override
   String get legalDisclaimerTerms => 'Условиями';
@@ -2800,14 +2859,14 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pathYourOwnWaySubtitle =>
-      'Я знаю, что мне нужно — просто дайте инструменты';
+      'Я знаю, что мне нужно — просто дай инструменты';
 
   @override
   String get intentionPathHeadline => 'Что привело тебя сюда?';
 
   @override
   String get intentionPathSubtext =>
-      'Это задаст тон ближайшим 30 дням. Выбери то, что подходит сегодня — будущая ты скажет спасибо.';
+      'Это задаст тон ближайшим 30 дням. Выбери то, что подходит сегодня — потом скажешь себе спасибо.';
 
   @override
   String intentionPathUpdateFocusAreas(String pathName) {
@@ -2902,16 +2961,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Нажми «Поделиться», чтобы превратить это в карточку для друзей. Твои данные остаются приватными — передаётся только итог.';
 
   @override
-  String get reviewPromptMessage =>
-      'Нравится Intended? Быстрая оценка поможет другим найти мягкий подход к привычкам.';
-
-  @override
-  String get reviewPromptRate => 'Оценить';
-
-  @override
-  String get reviewPromptNotYet => 'Не сейчас';
-
-  @override
   String get upgradeNudgeBody =>
       'Твоя практика растёт. Intended+ даёт пространство расти вместе с ней.';
 
@@ -2929,6 +2978,11 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String notifWeeklyDynamicN(int count) {
     return 'Твоя неделя на странице — в ней моментов: $count.';
+  }
+
+  @override
+  String notifMonthlyLetter(String month) {
+    return 'Твоё письмо за $month готово.';
   }
 
   @override
@@ -3127,8 +3181,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get faqPricing => 'Сколько стоит?';
 
   @override
-  String get faqPricingAnswer =>
-      'Ежемесячно: €6.99. Годовой: €49.99 (5 месяцев бесплатно). Навсегда: €89.99. Все включают 7 дней пробного периода.';
+  String faqPricingAnswer(
+      String monthly, String yearly, String lifetime, int days) {
+    return 'Ежемесячно: $monthly. Годовой: $yearly. Навсегда: $lifetime, разовая покупка. Обе подписки начинаются с $days-дневного бесплатного периода.';
+  }
 
   @override
   String get faqFreeVersion => 'Можно пользоваться бесплатно?';
@@ -3151,7 +3207,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Настройки iPhone → твоё имя → Подписки → Intended → Отменить.';
 
   @override
-  String get faqSectionPrivacy => 'Конфиденциальность';
+  String get faqSectionPrivacy => 'Приватность';
 
   @override
   String get faqDataStorage => 'Где хранятся мои данные?';
@@ -3175,6 +3231,19 @@ class AppLocalizationsRu extends AppLocalizations {
       'Данные локальные, поэтому удаление стирает всё. Подписки можно восстановить через App Store.';
 
   @override
+  String faqQuestionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count вопроса',
+      many: '$count вопросов',
+      few: '$count вопроса',
+      one: '$count вопрос',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get faqSectionTroubleshooting => 'Устранение неполадок';
 
   @override
@@ -3182,7 +3251,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get faqCrashAnswer =>
-      'Закройте и откройте снова. Убедитесь, что установлена последняя версия.';
+      'Закрой и открой снова. Убедись, что установлена последняя версия.';
 
   @override
   String get faqHabitsGone => 'Мои привычки пропали.';
@@ -3493,7 +3562,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get planRhythmHeader => 'ТВОЙ РИТМ';
 
   @override
-  String get planUse => 'Взять этот план';
+  String get planUse => 'Выбрать этот план';
 
   @override
   String get planAdjust => 'Изменить';
@@ -3506,7 +3575,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String insightsReturnGaps(String gaps) {
-    return 'с промежутками в $gaps дней.';
+    return 'Дни между ними: $gaps.';
   }
 
   @override
@@ -3527,10 +3596,10 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Я возвращался $count раза',
-      many: 'Я возвращался $count раз',
-      few: 'Я возвращался $count раза',
-      one: 'Я возвращался $count раз',
+      other: '$count возвращения',
+      many: '$count возвращений',
+      few: '$count возвращения',
+      one: '$count возвращение',
     );
     return '$_temp0';
   }
@@ -3542,7 +3611,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get todayAdoptIntention => 'Выбрать другое намерение';
 
   @override
-  String get todaySwapHint => 'Не заходит? Удерживайте, чтобы заменить.';
+  String get staleNudgeTitle => 'Кажется, это пока не подходит';
+
+  @override
+  String get staleNudgeBody =>
+      'За последние десять дней здесь не было ни одного момента. Хочешь попробовать другое намерение?';
+
+  @override
+  String get staleNudgeChange => 'Изменить намерение';
+
+  @override
+  String get staleNudgeKeep => 'Оставить как есть';
 
   @override
   String rescueTitle(int count) {
@@ -3646,7 +3725,34 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get shareSeasonGaps => 'Мои паузы становятся короче.';
+  String get shareSeasonGaps => 'и паузы между ними короче';
+
+  @override
+  String get shareSeasonLabel => 'МОЙ СЕЗОН';
+
+  @override
+  String get shareSeasonMorningLine => 'Я прихожу сюда, пока день тихий.';
+
+  @override
+  String get shareSeasonEveningLine => 'Я прихожу сюда, когда день затих.';
+
+  @override
+  String get shareSeasonSteadyLine => 'Понемногу, почти каждый день.';
+
+  @override
+  String get shareSeasonBurstsLine => 'Волнами. И волны возвращаются.';
+
+  @override
+  String get shareSeasonReturningLine => 'Я затихаю — и нахожу дорогу обратно.';
+
+  @override
+  String get shareSeasonContinuousLine => 'Я держу нить весь месяц.';
+
+  @override
+  String get shareSeasonFocusedLine => 'Одно занимает почти всё внимание.';
+
+  @override
+  String get shareSeasonWanderingLine => 'Я иду за тем, что нужно сейчас.';
 
   @override
   String get pathMoreIntentions => 'ЕЩЁ НАМЕРЕНИЯ';
@@ -3700,10 +3806,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get intentionThroughAHardSeason => 'Бережнее к себе в это время';
 
   @override
-  String get habitScreensAwayBed => 'Убрать экраны за 20 минут до сна';
+  String get habitScreensAwayBed => 'Убери экраны за 20 минут до сна';
 
   @override
-  String get habitDimLights => 'Приглушить свет за час до сна';
+  String get habitDimLights => 'Приглуши свет за час до сна';
 
   @override
   String get habitMealWithoutPhone => 'Один приём пищи без телефона';
@@ -3825,4 +3931,70 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileExportEmpty => 'Пока нечего выгружать.';
+
+  @override
+  String get pauseEntryTitle => 'минута дыхания';
+
+  @override
+  String get pauseLeave => 'пока достаточно';
+
+  @override
+  String get pauseBreathIn => 'вдох';
+
+  @override
+  String get pauseBreathOut => 'выдох';
+
+  @override
+  String get pauseCheckInQuestion => 'Как чувствуешь себя сейчас?';
+
+  @override
+  String get pauseCheckInTense => 'Всё ещё в напряжении';
+
+  @override
+  String get pauseCheckInNeutral => 'Стало спокойнее';
+
+  @override
+  String get pauseCheckInCalm => 'Отпустило';
+
+  @override
+  String get pauseNotifAction => 'Минута дыхания';
+
+  @override
+  String get pauseHealthTitle => 'Сохранять в Apple Health?';
+
+  @override
+  String get pauseHealthBody =>
+      'Каждая завершённая пауза может появляться в Apple Health как минута осознанности — и твой ответ тоже. Intended ничего не читает из Health.';
+
+  @override
+  String get pauseHealthSave => 'Сохранять';
+
+  @override
+  String widgetMomentsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count момента',
+      many: '$count моментов',
+      few: '$count момента',
+      one: '$count момент',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String widgetReturnsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count возвращения',
+      many: '$count возвращений',
+      few: '$count возвращения',
+      one: '$count возвращение',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get widgetMonthUnlock => 'Intended+ — весь месяц в цвете';
 }

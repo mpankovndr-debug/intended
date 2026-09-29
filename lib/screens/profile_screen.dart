@@ -37,6 +37,7 @@ import 'paywall_screen.dart';
 import 'subscription_management_modal.dart';
 import '../widgets/theme_picker.dart';
 import '../services/auth_service.dart';
+import '../services/review_request_service.dart';
 import '../services/revenue_cat_service.dart';
 import '../services/moments_service.dart';
 import '../services/notification_scheduler.dart';
@@ -199,16 +200,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return l10n.focusAreaHealth;
       case 'Mood':
         return l10n.focusAreaMood;
-      case 'Productivity':
-        return l10n.focusAreaProductivity;
       case 'Home & organization':
         return l10n.focusAreaHome;
       case 'Relationships':
         return l10n.focusAreaRelationships;
       case 'Creativity':
         return l10n.focusAreaCreativity;
-      case 'Finances':
-        return l10n.focusAreaFinances;
       case 'Self-care':
         return l10n.focusAreaSelfCare;
       default:
@@ -659,11 +656,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           plan = l10n.paywallMonthly;
           final monthlyPrice =
               rc.monthlyPriceString ?? l10n.paywallMonthlyPrice;
-          price = '$monthlyPrice/${l10n.paywallMonthly.toLowerCase()}';
+          price = l10n.paywallPricePerMonth(monthlyPrice);
         } else if (productId.contains('yearly')) {
           plan = l10n.paywallYearly;
           final yearlyPrice = rc.yearlyPriceString ?? l10n.paywallYearlyPrice;
-          price = '$yearlyPrice/${l10n.paywallYearly.toLowerCase()}';
+          price = l10n.paywallPricePerYear(yearlyPrice);
         }
         final expDate = entitlement.expirationDate;
         if (expDate != null) {
@@ -1506,7 +1503,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Expanded(
                                 child: Text(
                                   l10n.profileDailyReminders,
-                                  maxLines: 1,
+                                  // Two lines, not one: Russian runs longer
+                                  // than English here and "Ежедневные
+                                  // напоминания" was losing its second word to
+                                  // an ellipsis. The row has the height.
+                                  maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontFamily: AppTextStyles.bodyFont(context),
@@ -1813,7 +1814,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     const SizedBox(height: 2),
                                     Text(
                                       l10n.profileWeeklySubtitle,
-                                      maxLines: 1,
+                                      maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontFamily:
@@ -2051,6 +2052,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   builder: (_) => const FaqScreen(),
                                 ),
                               ),
+                            ),
+                          ),
+                          Container(
+                            height: 1,
+                            color: colors.ctaPrimary.withOpacity(0.1),
+                          ),
+                          // The reliable half of the review flow. Apple's sheet
+                          // is opportunistic — it declines to render more often
+                          // than not — so someone who decides to rate needs a
+                          // door that always opens.
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: _ProfileButton(
+                              iconContainer: Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: colors.accentRegular.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: Icon(
+                                  CupertinoIcons.star,
+                                  size: 20,
+                                  color: colors.textMutedBrown,
+                                ),
+                              ),
+                              title: l10n.profileRateApp,
+                              onTap: ReviewRequestService.openStoreListing,
                             ),
                           ),
                           Container(

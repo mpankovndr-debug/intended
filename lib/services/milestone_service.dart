@@ -28,6 +28,9 @@ class MilestoneService {
     for (final entry in OnboardingState.habitsByCategory.entries) {
       if (entry.value.contains(habit)) return entry.key;
     }
+    // An action from a retired focus area, still held by whoever had it.
+    final retired = OnboardingState.retiredHabitCategories[habit];
+    if (retired != null) return retired;
     // Check custom habit focus areas (loaded by ReflectionService)
     return ReflectionService.customHabitFocusAreaFor(habit);
   }

@@ -105,10 +105,18 @@ void main() {
 
   test('every focus area the app can assign has a hue', () {
     // A category key that stops matching fails silently to the neutral
-    // swatch, so the two lists are pinned together here.
+    // swatch, so every assignable area is pinned to a hue here.
+    //
+    // Subset, not equality: a retired focus area keeps its hue for as long as
+    // moments recorded under it exist, and those are never rewritten. Finances
+    // is no longer offered, but a square completed under it in August 2026
+    // stays teal forever — dropping the hue would repaint somebody's archived
+    // month grey.
     expect(
-      CategoryColors.categories.toSet(),
-      OnboardingState.habitsByCategory.keys.toSet(),
+      OnboardingState.habitsByCategory.keys.toSet()
+          .difference(CategoryColors.categories.toSet()),
+      isEmpty,
+      reason: 'a focus area the app can assign has no hue',
     );
   });
 

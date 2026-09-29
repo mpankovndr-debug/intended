@@ -1,0 +1,19 @@
+diff --git a/ios/IntendedWidget/HabitCompletionIntent.swift b/ios/IntendedWidget/HabitCompletionIntent.swift
+index c67b046..b1d7fd0 100644
+--- a/ios/IntendedWidget/HabitCompletionIntent.swift
++++ b/ios/IntendedWidget/HabitCompletionIntent.swift
+@@ -9,6 +9,14 @@ struct CompleteHabitIntent: AppIntent {
+     static var title: LocalizedStringResource = "Complete Habit"
+     static var description = IntentDescription("Mark a habit as completed from the widget")
+ 
++    /// Widget-only. The sole caller is the premium widget's `Button(intent:)`.
++    /// Left at the default (`true`) this action was listed in the Shortcuts app
++    /// for every user, in English only, with a free-text parameter that has to
++    /// equal the habit's raw storage key (`HabitEntry.trackingName`) — so a
++    /// Russian user typing «Прогулка» recorded nothing. Hiding it keeps the
++    /// widget buttons working and removes the broken surface.
++    static var isDiscoverable: Bool = false
++
+     @Parameter(title: "Habit Name")
+     var habitName: String
+ 

@@ -58,4 +58,69 @@ void main() {
     );
     expect(Rescue.read([moment], now: _today)!.quietDays, 6);
   });
+
+  group('the one card a returning user sees', () {
+    Moment did(String habit, int daysAgo) => Moment.create(
+          habitName: habit,
+          category: 'Health',
+          at: _today.subtract(Duration(days: daysAgo)),
+        );
+
+    test('offers what they actually lived, not what sorts first', () {
+      // 'Breathe' leads the list and was never once completed. Offering it to
+      // someone coming back after a gap hands them the thing that already
+      // wasn't working.
+      final habit = Rescue.mostLived(
+        among: const ['Breathe', 'Walk', 'Water'],
+        moments: [did('Walk', 30), did('Walk', 28), did('Water', 26)],
+      );
+      expect(habit, 'Walk');
+    });
+
+    test('has no opinion when nothing was ever completed', () {
+      expect(
+        Rescue.mostLived(among: const ['Breathe', 'Walk'], moments: const []),
+        isNull,
+      );
+      expect(
+        Rescue.mostLived(
+          among: const ['Breathe', 'Walk'],
+          moments: [did('Something else entirely', 9)],
+        ),
+        isNull,
+      );
+    });
+
+    test('a tie goes to the one lived most recently', () {
+      final habit = Rescue.mostLived(
+        among: const ['Walk', 'Water'],
+        moments: [did('Walk', 40), did('Walk', 39), did('Water', 9), did('Water', 8)],
+      );
+      expect(habit, 'Water');
+    });
+
+    test('a total tie is broken by order, and never wobbles', () {
+      // Same count, same day: the answer must be the same on every open, or
+      // the reduced screen offers a different action each time someone opens
+      // it — the opposite of an anchor.
+      List<Moment> history() => [did('Walk', 9), did('Water', 9)];
+      final first = Rescue.mostLived(
+        among: const ['Walk', 'Water'],
+        moments: history(),
+      );
+      expect(first, 'Walk');
+      expect(
+        Rescue.mostLived(among: const ['Walk', 'Water'], moments: history()),
+        first,
+      );
+    });
+
+    test('ignores actions the user no longer has', () {
+      final habit = Rescue.mostLived(
+        among: const ['Water'],
+        moments: [did('Walk', 30), did('Walk', 29), did('Water', 28)],
+      );
+      expect(habit, 'Water');
+    });
+  });
 }

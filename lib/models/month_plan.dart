@@ -1,4 +1,5 @@
 import 'moment.dart';
+import 'settled_action.dart';
 
 /// The four changes the app is willing to propose.
 ///
@@ -17,6 +18,11 @@ enum NudgeKind {
   /// Return an action to the pool it came from. Never "delete", never "fail".
   setAside,
 
+  /// Offer back the slot of an action that has been steady for a season.
+  /// The other half of [setAside]'s question: that one finds a slot holding
+  /// something unused, this one a slot that no longer needs holding.
+  giveBack,
+
   /// Pin the action that carried the month to the top of Today.
   keepAnchor,
 
@@ -33,7 +39,10 @@ enum NudgeGroup { actions, rhythm }
 
 extension NudgeKindGroup on NudgeKind {
   NudgeGroup get group => switch (this) {
-        NudgeKind.setAside || NudgeKind.keepAnchor => NudgeGroup.actions,
+        NudgeKind.setAside ||
+        NudgeKind.giveBack ||
+        NudgeKind.keepAnchor =>
+          NudgeGroup.actions,
         NudgeKind.moveReminder ||
         NudgeKind.addFocusArea =>
           NudgeGroup.rhythm,
@@ -49,6 +58,7 @@ class PlanNudge {
     this.habitName,
     this.focusArea,
     this.hour,
+    this.monthCounts,
   });
 
   final NudgeKind kind;
@@ -66,6 +76,13 @@ class PlanNudge {
 
   /// Local hour to move the reminder to.
   final int? hour;
+
+  /// Per-month day counts behind a [NudgeKind.giveBack], most recent first.
+  ///
+  /// This card quotes three numbers where every other quotes one, and a nudge
+  /// carries the evidence that produced it — so the sentence and the rule can
+  /// never be computed from two different reads.
+  final List<int>? monthCounts;
 
   /// Stable identity for "this exact suggestion", so declining the set-aside
   /// of one action doesn't silence the set-aside of another.
@@ -135,6 +152,7 @@ class MonthPlan {
     required bool remindersEnabled,
     required bool hasPinnedHabit,
     Set<String> declinedIds = const {},
+    SettledAction? settled,
   }) {
     if (lastMonth.length < minMoments) {
       return MonthPlan(monthKey: monthKey, nudges: const []);
@@ -145,6 +163,7 @@ class MonthPlan {
       if (remindersEnabled) _moveReminder(lastMonth, reminderHour),
       _addFocusArea(lastMonth, focusAreas),
       _setAside(lastMonth, counts, activeHabits, customHabits),
+      _giveBack(settled),
       _keepAnchor(counts, activeHabits, hasPinnedHabit),
     ].whereType<PlanNudge>().where((n) => !declinedIds.contains(n.id)).toList()
       // Ties fall back to the order the kinds are declared in, so the same
@@ -284,6 +303,36 @@ class MonthPlan {
     );
   }
 
+  /// Offer back the slot of an action that has been steady for a season.
+  ///
+  /// The rule is [SettledAction.read], computed elsewhere and handed in: it
+  /// reads three months of `habit_done_*`, and this class only ever sees last
+  /// month's moments. The plan stays the single ranker — one decision a month
+  /// — but it is not the place this particular evidence is gathered.
+  ///
+  /// Fixed confidence, a constant rather than a computed share: nothing
+  /// rate-shaped enters this feature, even internally. It sits below
+  /// `_setAside` (0.25–1.0) and above `_keepAnchor` (0.2), which encodes two
+  /// decisions. Below set-aside, because a wrong set-aside returns something
+  /// unused to the pool while a wrong give-back pulls the scaffolding out from
+  /// under the user's strongest practice — when unsure which conversation to
+  /// open, open the one that is cheap if wrong. Above keep-anchor, because the
+  /// plan must never propose pinning an action one month and releasing it the
+  /// next; when the same habit qualifies for both, this is the one voice.
+  static PlanNudge? _giveBack(SettledAction? settled) {
+    if (settled == null) return null;
+    // The copy quotes three months by name. Without three counts the sentence
+    // cannot be filled, and a half-filled finding is not rendered at all.
+    if (settled.monthCounts.length < SettledAction.monthsRequired) return null;
+    return PlanNudge(
+      kind: NudgeKind.giveBack,
+      confidence: _giveBackConfidence,
+      count: settled.monthCounts.first,
+      habitName: settled.habitName,
+      monthCounts: settled.monthCounts,
+    );
+  }
+
   /// Pin the action that carried the month.
   ///
   /// Deliberately the weakest of the four, and it exists mostly as the
@@ -346,5 +395,8 @@ class MonthPlan {
   static const int _minHabitsRemaining = 2;
 
   static const int _minAnchorCount = 3;
+
+  /// Between `_setAside`'s range and `_keepAnchor`'s 0.2 — see [_giveBack].
+  static const double _giveBackConfidence = 0.22;
   static const double _keepAnchorConfidence = 0.2;
 }

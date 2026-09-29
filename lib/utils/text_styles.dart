@@ -37,6 +37,19 @@ class AppTextStyles {
     return locale == 'ru' ? _bodyFontRu : _bodyFontEn;
   }
 
+  /// The display face for [localeName] — for surfaces that compose their own
+  /// text styles rather than calling into this class, like the share card.
+  ///
+  /// Sora carries no Cyrillic whatsoever: 0 of the 64 letters А–я are in the
+  /// font file. Russian set in Sora does not produce tofu — iOS substitutes
+  /// the system face silently — it simply stops being the brand, which is why
+  /// this went unnoticed. Montserrat is the Cyrillic display face.
+  ///
+  /// Takes the locale name rather than a `BuildContext` so the choice stays a
+  /// pure function that a test can call.
+  static String displayFontFor(String localeName) =>
+      localeName.startsWith('ru') ? _bodyFontRu : _headerFont;
+
   /// Adjust font size for Russian text (8% smaller)
   static double _localizedSize(double base, String locale) {
     if (locale == 'ru') {

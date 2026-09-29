@@ -259,7 +259,8 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
     HapticFeedback.mediumImpact();
 
     if (shouldUpdateAreas) {
-      onboardingState.applyPathDefaults(path.defaultFocusAreas, path.id.key);
+      await onboardingState.applyPathDefaults(
+          path.defaultFocusAreas, path.id.key);
       await onboardingState.setSelectedIntentionPath(path.id.key);
       await onboardingState.generateUserHabits();
     } else {

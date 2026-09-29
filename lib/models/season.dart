@@ -50,6 +50,16 @@ class Season {
   /// would be inventing a pattern from noise (§4.4).
   static const int minMoments = 10;
 
+  /// Which axis wins an exact tie. Returning first because coming back is the
+  /// reading this app exists to make (§4.3); spread last because "one area or
+  /// several" is the least a month is about.
+  static const List<SeasonAxis> axisPriority = [
+    SeasonAxis.returning,
+    SeasonAxis.rhythmOfDay,
+    SeasonAxis.pacing,
+    SeasonAxis.spread,
+  ];
+
   /// Poles. Stable storage keys; the display words are localised separately.
   static const String morning = 'morning';
   static const String evening = 'evening';
@@ -118,8 +128,21 @@ class Season {
     // Name the month after whichever axis it leans on hardest. A month that
     // is mildly everything gets the clearest of its mild leanings rather than
     // an average, which would be true of every month and describe none.
-    final strongest =
-        readings.reduce((a, b) => a.strength >= b.strength ? a : b);
+    //
+    // All four strengths now span the same 0..1, which is what makes this
+    // comparison mean anything: the four formulas used to have four different
+    // ranges, and the axis with the highest ceiling won regardless of what
+    // the month actually did.
+    //
+    // Ties break on [axisPriority], explicitly. Leaving it to whichever way
+    // `reduce` happened to fold would make the word depend on list order —
+    // the same class of bug as an unstable sort in the plan's ranking.
+    final strongest = readings.reduce((a, b) {
+      if (a.strength != b.strength) return a.strength > b.strength ? a : b;
+      return axisPriority.indexOf(a.axis) <= axisPriority.indexOf(b.axis)
+          ? a
+          : b;
+    });
 
     return Season(
       monthKey: monthKey,
@@ -142,29 +165,38 @@ class Season {
     );
   }
 
-  /// Steady ↔ Bursts — how evenly moments spread across the days they landed
-  /// on. A month with four moments on each of five days is steady; one with
-  /// sixteen on a single day and one each on four others is bursts.
+  /// Two weeks of runway before "most days" can mean anything. Without it,
+  /// everything logged on a single day divides by one and reads as perfect
+  /// constancy.
+  static const int minHorizonDays = 14;
+
+  /// Returns needed for a full-strength [returning]. One comeback is an
+  /// incident; three is a month whose shape *is* coming back.
+  static const int returnsForFullStrength = 3;
+
+  /// A quiet stretch this long or longer is a gap, not a day off.
+  static const int quietDaysForGap = 2;
+
+  /// Share of moments in one area at or above which a month reads [focused].
+  static const double focusedShare = 0.6;
+
+  /// Steady ↔ Bursts — how much of the month you were actually present for.
+  ///
+  /// This used to be the coefficient of variation of moments-per-day across
+  /// *active days only*, and empty days never entered the arithmetic. A month
+  /// touched on three days and a month touched on twelve both scored 0.5 —
+  /// the maximum — so the axis could not tell them apart, and "a little, most
+  /// days" asserted a frequency nothing had computed.
   static SeasonReading _readPacing(List<Moment> moments) {
-    final perDay = <DateTime, int>{};
-    for (final m in moments) {
-      final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
-      final day = DateTime.utc(local.year, local.month, local.day);
-      perDay[day] = (perDay[day] ?? 0) + 1;
-    }
-    final counts = perDay.values.toList();
-    final mean = moments.length / counts.length;
-    final variance = counts
-            .map((c) => (c - mean) * (c - mean))
-            .reduce((a, b) => a + b) /
-        counts.length;
-    // Coefficient of variation: spread relative to the average, so a busy
-    // month and a quiet one are judged on the same scale.
-    final cv = mean == 0 ? 0.0 : (variance <= 0 ? 0.0 : _sqrt(variance) / mean);
+    final days = _activeDays(moments);
+    final lastDay = days.map((d) => d.day).reduce((a, b) => a > b ? a : b);
+    final horizon = lastDay < minHorizonDays ? minHorizonDays : lastDay;
+    final density = days.length / horizon;
     return SeasonReading(
       axis: SeasonAxis.pacing,
-      pole: cv < 0.5 ? steady : bursts,
-      strength: (cv - 0.5).abs().clamp(0.0, 1.0),
+      pole: density >= 0.5 ? steady : bursts,
+      // Each side spans its own half of the axis, so both poles can reach 1.0.
+      strength: ((density - 0.5).abs() / 0.5).clamp(0.0, 1.0),
     );
   }
 
@@ -172,26 +204,34 @@ class Season {
   /// or was it unbroken? Neither is better; returning is the one worth naming
   /// because it is the mechanic this app replaces streaks with (§4.3).
   static SeasonReading _readReturning(List<Moment> moments) {
-    final days = <DateTime>{};
-    for (final m in moments) {
-      final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
-      days.add(DateTime.utc(local.year, local.month, local.day));
-    }
-    final sorted = days.toList()..sort();
+    final sorted = _activeDays(moments).toList()..sort();
     var gaps = 0;
     for (var i = 1; i < sorted.length; i++) {
-      if (sorted[i].difference(sorted[i - 1]).inDays - 1 >= 2) gaps++;
+      if (sorted[i].difference(sorted[i - 1]).inDays - 1 >= quietDaysForGap) {
+        gaps++;
+      }
     }
+
+    if (gaps > 0) {
+      return SeasonReading(
+        axis: SeasonAxis.returning,
+        pole: returning,
+        strength: (gaps / returnsForFullStrength).clamp(0.0, 1.0),
+      );
+    }
+
+    // Unbroken — but a thread across four days is not the same claim as one
+    // across twenty-six. Review finding #8 was right that Returning must be
+    // able to outrank Continuous; the fix for it was a flat 0.6 floor here,
+    // which silently put three other words out of reach for good. The reach
+    // now comes from measuring the thread instead of propping it up.
+    final lastDay = sorted.last.day;
+    final horizon = lastDay < minHorizonDays ? minHorizonDays : lastDay;
+    final span = sorted.last.difference(sorted.first).inDays + 1;
     return SeasonReading(
       axis: SeasonAxis.returning,
-      pole: gaps > 0 ? returning : continuous,
-      // A month with real comebacks outranks an unbroken one — the old
-      // formula gave zero gaps 0.6 and one gap 0.3, which meant the user who
-      // most embodied §4.3 was the least likely to be named for it (review
-      // finding #8). Continuous keeps a solid-but-beatable 0.6; Returning
-      // starts above it and grows with each return.
-      strength:
-          gaps == 0 ? 0.6 : (0.65 + 0.1 * (gaps - 1)).clamp(0.65, 0.95),
+      pole: continuous,
+      strength: (span / horizon).clamp(0.0, 1.0),
     );
   }
 
@@ -211,18 +251,26 @@ class Season {
     }
     final top = counts.values.reduce((a, b) => a > b ? a : b);
     final share = top / moments.length;
+    // Normalised per side. The old `(share - 0.6).abs()` capped Focused at
+    // 0.4 — a share cannot exceed 1.0 — so Focused could never outrank an
+    // axis with a 0.6 floor, and never once won.
     return SeasonReading(
       axis: SeasonAxis.spread,
-      pole: share >= 0.6 ? focused : wandering,
-      strength: (share - 0.6).abs().clamp(0.0, 1.0),
+      pole: share >= focusedShare ? focused : wandering,
+      strength: share >= focusedShare
+          ? ((share - focusedShare) / (1 - focusedShare)).clamp(0.0, 1.0)
+          : ((focusedShare - share) / focusedShare).clamp(0.0, 1.0),
     );
   }
 
-  static double _sqrt(double v) {
-    var x = v;
-    for (var i = 0; i < 20; i++) {
-      x = 0.5 * (x + v / x);
+  /// The distinct days moments landed on, read from each moment's own recorded
+  /// offset — never the device's current zone.
+  static Set<DateTime> _activeDays(List<Moment> moments) {
+    final days = <DateTime>{};
+    for (final m in moments) {
+      final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));
+      days.add(DateTime.utc(local.year, local.month, local.day));
     }
-    return x;
+    return days;
   }
 }

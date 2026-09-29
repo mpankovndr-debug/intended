@@ -148,7 +148,10 @@ class _FocusAreaCardState extends State<FocusAreaCard>
                           const SizedBox(height: 2),
                           Text(
                             widget.subtitle!,
-                            maxLines: 1,
+                            // Russian runs past one line here — "Замечай, как
+                            // себя чувствуешь. Это уже шаг." lost its ending
+                            // to an ellipsis, and the sentence needs its end.
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontFamily: AppTextStyles.bodyFont(context),

@@ -1,0 +1,355 @@
+diff --git a/ios/IntendedWidget/IntendedBasicWidget.swift b/ios/IntendedWidget/IntendedBasicWidget.swift
+index 29d1c84..090c37f 100644
+--- a/ios/IntendedWidget/IntendedBasicWidget.swift
++++ b/ios/IntendedWidget/IntendedBasicWidget.swift
+@@ -5,11 +5,11 @@ import SwiftUI
+ 
+ struct BasicProvider: TimelineProvider {
+     func placeholder(in context: Context) -> BasicEntry {
+-        BasicEntry(date: Date(), content: .placeholder)
++        BasicEntry(date: Date(), content: .sample(locale: widgetLocale()))
+     }
+ 
+     func getSnapshot(in context: Context, completion: @escaping (BasicEntry) -> Void) {
+-        completion(BasicEntry(date: Date(), content: loadWidgetContent()))
++        completion(BasicEntry(date: Date(), content: snapshotContent(in: context)))
+     }
+ 
+     func getTimeline(in context: Context, completion: @escaping (Timeline<BasicEntry>) -> Void) {
+@@ -242,8 +242,10 @@ struct IntendedBasicWidget: Widget {
+                 BasicWidgetEntryView(entry: entry)
+             }
+         }
+-        .configurationDisplayName("Intended")
+-        .description("Track your daily habits at a glance.")
++        // Gallery copy lives in <locale>.lproj/Localizable.strings; WidgetKit
++        // resolves the keys in the extension's own bundle.
++        .configurationDisplayName(LocalizedStringKey("widget.basic.name"))
++        .description(LocalizedStringKey("widget.basic.description"))
+         .supportedFamilies([.systemSmall, .systemMedium])
+     }
+ }
+diff --git a/ios/IntendedWidget/IntendedLockScreenWidget.swift b/ios/IntendedWidget/IntendedLockScreenWidget.swift
+index d9ecc11..9cd5503 100644
+--- a/ios/IntendedWidget/IntendedLockScreenWidget.swift
++++ b/ios/IntendedWidget/IntendedLockScreenWidget.swift
+@@ -5,11 +5,11 @@ import SwiftUI
+ 
+ struct LockScreenProvider: TimelineProvider {
+     func placeholder(in context: Context) -> LockScreenEntry {
+-        LockScreenEntry(date: Date(), content: .placeholder)
++        LockScreenEntry(date: Date(), content: .sample(locale: widgetLocale()))
+     }
+ 
+     func getSnapshot(in context: Context, completion: @escaping (LockScreenEntry) -> Void) {
+-        completion(LockScreenEntry(date: Date(), content: loadWidgetContent()))
++        completion(LockScreenEntry(date: Date(), content: snapshotContent(in: context)))
+     }
+ 
+     func getTimeline(in context: Context, completion: @escaping (Timeline<LockScreenEntry>) -> Void) {
+@@ -158,8 +158,10 @@ struct IntendedLockScreenWidget: Widget {
+         StaticConfiguration(kind: kind, provider: LockScreenProvider()) { entry in
+             LockScreenEntryView(entry: entry)
+         }
+-        .configurationDisplayName("Intended")
+-        .description("Quick glance at your daily progress.")
++        // Gallery copy lives in <locale>.lproj/Localizable.strings; WidgetKit
++        // resolves the keys in the extension's own bundle.
++        .configurationDisplayName(LocalizedStringKey("widget.lockScreen.name"))
++        .description(LocalizedStringKey("widget.lockScreen.description"))
+         .supportedFamilies([.accessoryCircular, .accessoryInline, .accessoryRectangular])
+     }
+ }
+diff --git a/ios/IntendedWidget/IntendedPremiumWidget.swift b/ios/IntendedWidget/IntendedPremiumWidget.swift
+index 24df271..4b41a2b 100644
+--- a/ios/IntendedWidget/IntendedPremiumWidget.swift
++++ b/ios/IntendedWidget/IntendedPremiumWidget.swift
+@@ -6,11 +6,11 @@ import AppIntents
+ 
+ struct PremiumProvider: TimelineProvider {
+     func placeholder(in context: Context) -> PremiumEntry {
+-        PremiumEntry(date: Date(), content: .placeholder)
++        PremiumEntry(date: Date(), content: .sample(locale: widgetLocale()))
+     }
+ 
+     func getSnapshot(in context: Context, completion: @escaping (PremiumEntry) -> Void) {
+-        completion(PremiumEntry(date: Date(), content: loadWidgetContent()))
++        completion(PremiumEntry(date: Date(), content: snapshotContent(in: context)))
+     }
+ 
+     func getTimeline(in context: Context, completion: @escaping (Timeline<PremiumEntry>) -> Void) {
+@@ -475,6 +475,19 @@ struct PremiumLargeView: View {
+ struct IntendedPremiumWidget: Widget {
+     let kind: String = "IntendedPremiumWidget"
+ 
++    /// Gallery copy lives in <locale>.lproj/Localizable.strings; WidgetKit
++    /// resolves the keys in the extension's own bundle.
++    ///
++    /// Tap-to-record is `HabitRow`'s `Button(intent:)`, which exists only on
++    /// iOS 17 — below that the rows are display-only, so the gallery must not
++    /// promise a tap it can't keep.
++    private var descriptionKey: LocalizedStringKey {
++        if #available(iOS 17.0, *) {
++            return LocalizedStringKey("widget.detailed.description")
++        }
++        return LocalizedStringKey("widget.detailed.description.displayOnly")
++    }
++
+     var body: some WidgetConfiguration {
+         StaticConfiguration(kind: kind, provider: PremiumProvider()) { entry in
+             if #available(iOS 17.0, *) {
+@@ -490,8 +503,8 @@ struct IntendedPremiumWidget: Widget {
+                 PremiumWidgetEntryView(entry: entry)
+             }
+         }
+-        .configurationDisplayName("Intended — Detailed")
+-        .description("See your habits, progress, and daily message.")
++        .configurationDisplayName(LocalizedStringKey("widget.detailed.name"))
++        .description(descriptionKey)
+         .supportedFamilies([.systemMedium, .systemLarge])
+     }
+ }
+diff --git a/ios/IntendedWidget/WidgetData.swift b/ios/IntendedWidget/WidgetData.swift
+index 453227c..5922b34 100644
+--- a/ios/IntendedWidget/WidgetData.swift
++++ b/ios/IntendedWidget/WidgetData.swift
+@@ -1,5 +1,6 @@
+ import Foundation
+ import SwiftUI
++import WidgetKit
+ 
+ // MARK: - Shared data model for widget rendering
+ 
+@@ -60,45 +61,127 @@ struct WidgetContent {
+     let theme: ThemeData
+     let locale: String
+ 
+-    static let placeholder = WidgetContent(
+-        habits: [
+-            HabitEntry(name: "Drink water", done: true, colorHex: "FF6B9BD2"),
+-            HabitEntry(name: "Read 10 pages", done: false, colorHex: "FF8B9A6B"),
+-            HabitEntry(name: "Take a walk", done: true, colorHex: "FFD96766"),
+-        ],
+-        completedCount: 2,
+-        totalCount: 4,
+-        greeting: "Do what feels right today",
+-        isPremium: false,
+-        monthTiles: [],
+-        theme: ThemeData(
+-            id: "warmClay",
+-            isDark: false,
+-            bgTop: "FFF2D4B0",
+-            bgBottom: "FFD49A70",
+-            bg1: "FFF5EDE0",
+-            bg2: "FFE8DCC8",
+-            bg3: "FFDDD1C0",
+-            textPrimary: "FF3C342A",
+-            textSecondary: "FF9A8A78",
+-            textTertiary: "FF9B8A7A",
+-            accent: "FF7A6A58",
+-            cardBg: "FFF9EBE0",
+-            cardBgOpacity: 0.28,
+-            checkmark: "FF7A6A58"
+-        ),
+-        locale: "en"
++    /// The app's default theme (warmClay, `AppColors.warmClay`), for the
++    /// sample day and for any write that arrives without a theme.
++    static let sampleTheme = ThemeData(
++        id: "warmClay",
++        isDark: false,
++        bgTop: "FFF2D4B0",
++        bgBottom: "FFD49A70",
++        bg1: "FFF5EDE0",
++        bg2: "FFE8DCC8",
++        bg3: "FFDDD1C0",
++        textPrimary: "FF3C342A",
++        textSecondary: "FF9A8A78",
++        textTertiary: "FF9B8A7A",
++        accent: "FF7A6A58",
++        cardBg: "FFF9EBE0",
++        cardBgOpacity: 0.28,
++        checkmark: "FF7A6A58"
+     )
++
++    /// A realistic day, for the widget gallery and the redacted placeholder
++    /// only — never for a Home Screen, where every square and tick is a
++    /// claim about the user.
++    ///
++    /// Everything here is what the app would write for a real user on the
++    /// default theme, so the preview is the widget and not a mock-up of it:
++    /// the intention is a real path phrase, the four actions are catalogue
++    /// habits under their own focus-area dot colours (`AppColors
++    /// .categoryColors`, as `WidgetService` writes them), and the month row
++    /// is mood-tinted tiles from `CategoryColors.of(_:warmClay, mood:)` —
++    /// the last two being today's two completions. Sample names follow the
++    /// reader's language, like every other string the views show.
++    ///
++    /// `isPremium` is true: the gallery shows the widget, not its paywall.
++    static func sample(locale: String) -> WidgetContent {
++        let strings = WidgetStrings(locale: locale)
++        let names = strings.sampleHabits
++        return WidgetContent(
++            habits: [
++                HabitEntry(name: names[0], done: true, colorHex: "FF7B9E8A"),  // Home & organization
++                HabitEntry(name: names[1], done: false, colorHex: "FFB48BA3"), // Creativity
++                HabitEntry(name: names[2], done: true, colorHex: "FFD96766"),  // Health
++                HabitEntry(name: names[3], done: false, colorHex: "FF9B8299"), // Mood
++            ],
++            completedCount: 2,
++            totalCount: 4,
++            greeting: strings.sampleIntention,
++            isPremium: true,
++            monthTiles: [
++                "FFE5896E", "FF88AC6F", "FFD6943F", "FFE8957B", "FFC390D0", "FF93B37D",
++                "FFE5896E", "FFD08A2D", "FF88AC6F", "FFC89AD4", "FFE37D5E", "FFD6943F",
++                "FF88AC6F", "FFC390D0", "FF7CA461", "FFC89AD4", "FFD99F51", "FFE8957B",
++            ],
++            theme: sampleTheme,
++            locale: locale
++        )
++    }
++
++    /// Before the app has written an intention, the widget's first line is
++    /// the app's name. Not a stock phrase: the app retired those in favour
++    /// of the intention (§4.1), and the name reads the same in every locale.
++    static let unwrittenGreeting = "Intended"
++
++    /// Nothing written yet: what a Home Screen shows before the app's first
++    /// write (and if the app group cannot be opened at all). Empty, not the
++    /// sample — a sample day on a real Home Screen would be four claims
++    /// about the user that nothing computed.
++    static func empty(locale: String) -> WidgetContent {
++        WidgetContent(
++            habits: [],
++            completedCount: 0,
++            totalCount: 0,
++            greeting: unwrittenGreeting,
++            isPremium: false,
++            monthTiles: [],
++            theme: sampleTheme,
++            locale: locale
++        )
++    }
++
++    /// The same content with the paid layout on.
++    func unlocked() -> WidgetContent {
++        WidgetContent(
++            habits: habits,
++            completedCount: completedCount,
++            totalCount: totalCount,
++            greeting: greeting,
++            isPremium: true,
++            monthTiles: monthTiles,
++            theme: theme,
++            locale: locale
++        )
++    }
++}
++
++// MARK: - Locale
++
++/// The language the views speak: what the app last wrote, else the device's
++/// first preferred language. Narrowed to the two the views can render — the
++/// app resolves its own locale against the same two, so a stored value is
++/// only ever "en" or "ru", and the fallback stays on the same footing.
++func widgetLocale(_ defaults: UserDefaults? = UserDefaults(suiteName: appGroupId)) -> String {
++    if let stored = defaults?.string(forKey: "widget_locale") {
++        return stored
++    }
++    let tag = Locale.preferredLanguages.first ?? "en"
++    let code = Locale(identifier: tag).language.languageCode?.identifier ?? "en"
++    return code == "ru" ? "ru" : "en"
+ }
+ 
+ // MARK: - UserDefaults loading
+ 
+ let appGroupId = "group.com.intendedapp.ios"
+ 
++/// What the app last wrote to the app group — only ever that, so a Home
++/// Screen never shows a day that didn't happen. Before the first write this
++/// is the empty state, in the device's language.
+ func loadWidgetContent() -> WidgetContent {
+     guard let defaults = UserDefaults(suiteName: appGroupId) else {
+-        return .placeholder
++        return .empty(locale: widgetLocale(nil))
+     }
++    let locale = widgetLocale(defaults)
+ 
+     // Parse habits
+     var habits: [HabitEntry] = []
+@@ -109,17 +192,16 @@ func loadWidgetContent() -> WidgetContent {
+ 
+     let completedCount = defaults.integer(forKey: "widget_completed_count")
+     let totalCount = defaults.integer(forKey: "widget_total_count")
+-    let greeting = defaults.string(forKey: "widget_greeting") ?? "Do what feels right today"
++    let greeting = defaults.string(forKey: "widget_greeting") ?? WidgetContent.unwrittenGreeting
+     let isPremium = defaults.bool(forKey: "widget_is_premium")
+     var monthTiles: [String] = []
+     if let tilesJson = defaults.string(forKey: "widget_month_tiles"),
+        let tilesData = tilesJson.data(using: .utf8) {
+         monthTiles = (try? JSONDecoder().decode([String].self, from: tilesData)) ?? []
+     }
+-    let locale = defaults.string(forKey: "widget_locale") ?? "en"
+ 
+     // Parse theme
+-    var theme = WidgetContent.placeholder.theme
++    var theme = WidgetContent.sampleTheme
+     if let themeJson = defaults.string(forKey: "widget_theme"),
+        let themeData = themeJson.data(using: .utf8) {
+         theme = (try? JSONDecoder().decode(ThemeData.self, from: themeData)) ?? theme
+@@ -137,6 +219,26 @@ func loadWidgetContent() -> WidgetContent {
+     )
+ }
+ 
++// MARK: - Snapshot policy
++
++/// What a snapshot shows. One rule for all three providers, so the gallery
++/// can't drift between them.
++///
++/// The widget gallery (`context.isPreview`) is a catalogue, and the HIG
++/// asks for a realistic preview there: the user's own day when the app has
++/// written one, and the sample day before it has — never "0/0 today". The
++/// paid layout is always on in the gallery, so it shows the widget rather
++/// than its paywall; what the placed widget then shows is the app's call.
++///
++/// Off the gallery — the transient snapshot WidgetKit takes as a widget is
++/// placed — only what the app wrote is shown. The sample never reaches a
++/// Home Screen.
++func snapshotContent(in context: TimelineProviderContext) -> WidgetContent {
++    let written = loadWidgetContent()
++    guard context.isPreview else { return written }
++    return written.habits.isEmpty ? .sample(locale: written.locale) : written.unlocked()
++}
++
+ // MARK: - Shared views
+ 
+ /// The month in miniature: one rounded square per moment, wrapping is not
+@@ -235,6 +337,28 @@ struct WidgetStrings {
+     var allDone: String {
+         locale == "ru" ? "Всё сделано!" : "All done for today!"
+     }
++
++    // Sample day (gallery only). Real app copy, so the preview is the widget
++    // as the app would fill it: `intentionGentleMornings` and four catalogue
++    // habits' display names (`habitMakeBed`, `habitCaptureIdea`,
++    // `habitDrinkWater`, `habitTenSecondPause`) from app_en.arb / app_ru.arb.
++
++    var sampleIntention: String {
++        locale == "ru" ? "Спокойное начало дня" : "Starting the day gently"
++    }
++
++    /// Home & organization, Creativity, Health, Mood — in that order.
++    /// `WidgetContent.sample` indexes its dot colours the same way. The order
++    /// is set by the smallest surfaces: the two shortest names lead, because
++    /// the lock-screen rectangle shows only the first two in `.caption2` and
++    /// truncates anything longer in either language; and the three rows a
++    /// medium widget shows carry three distinct dot colours (Mood and
++    /// Creativity are both mauve, so they are kept apart).
++    var sampleHabits: [String] {
++        locale == "ru"
++            ? ["Заправь кровать", "Запиши одну идею", "Выпей 3 стакана воды", "Пауза на 1 минуту"]
++            : ["Make your bed", "Capture one idea", "Drink 3 glasses of water", "One-minute pause"]
++    }
+ }
+ 
+ // MARK: - Widget background helper

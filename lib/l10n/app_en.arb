@@ -46,8 +46,8 @@
   "focusAreaHealthSub": "Your body will thank you.",
   "focusAreaMood": "Mood",
   "focusAreaMoodSub": "Notice how you feel. That's the first step.",
-  "focusAreaProductivity": "Productivity",
-  "focusAreaProductivitySub": "One thing at a time. That's plenty.",
+  "focusAreaProductivity": "Doing one thing",
+  "focusAreaProductivitySub": "Starting is the hard part.",
   "focusAreaHome": "Home & organization",
   "focusAreaHomeSub": "Small tidying, big calm.",
   "focusAreaRelationships": "Relationships",
@@ -111,7 +111,14 @@
   "themeSelectionTitle": "Choose your space",
   "themeSelectionSubtitle": "You can always change this later.",
   "themeSelectionConfirm": "This feels right",
-  "themeSelectionPremiumHint": "Deep Focus and more themes are available with Intended+. Try it free for 7 days after setup.",
+  "themeSelectionPremiumHint": "Deep Focus and more themes are available with Intended+. Try it free for {days, plural, =1{1 day} other{{days} days}} after setup.",
+  "@themeSelectionPremiumHint": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "habitRevealTitle": "Here's what we picked for you",
   "habitRevealSubtitleDefault": "Based on your preferences",
   "habitRevealSubtitleOneArea": "Based on {area}",
@@ -273,6 +280,44 @@
   "planAcceptMoveReminder": "Move it",
   "planAcceptSetAside": "Set it aside",
   "planAcceptKeepAnchor": "Pin it",
+  "planNudgeGiveBack": "{habit} looks like it's yours now — {c1, plural, =1{once} other{{c1} times}} in {m1}, {c2} in {m2}, {c3} in {m3}. Keep it here, or make room for something new?",
+  "@planNudgeGiveBack": {
+    "placeholders": {
+      "habit": {
+        "type": "String"
+      },
+      "c1": {
+        "type": "int"
+      },
+      "m1": {
+        "type": "String"
+      },
+      "c2": {
+        "type": "int"
+      },
+      "m2": {
+        "type": "String"
+      },
+      "c3": {
+        "type": "int"
+      },
+      "m3": {
+        "type": "String"
+      }
+    }
+  },
+  "planAcceptGiveBack": "Make room",
+  "planProofGaveBack": "On {date} you gave {habit} its slot back.",
+  "@planProofGaveBack": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "habit": {
+        "type": "String"
+      }
+    }
+  },
   "planAcceptAddFocus": "Add it",
   "planDecline": "Not this month",
   "planMore": "{count, plural, =1{One more when you're ready} other{{count} more when you're ready}}",
@@ -430,6 +475,18 @@
   },
   "insightsStartingWith": "WHAT YOU'RE STARTING WITH",
   "insightsStartingMeta": "{areas} · a reminder at {time}",
+  "commonListAnd": "{first} and {second}",
+  "@commonListAnd": {
+    "description": "Joins the last two entries of a list. The caller joins anything before them with commas, so this only ever sees the final pair.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
   "insightsThisMonth": "THIS MONTH",
   "insightsDidThings": "You did {count} small things for yourself in {month}.",
   "insightsReturns": "{count} times you went quiet for a few days. {count} times you came back.",
@@ -520,9 +577,10 @@
   "customHabitFocusAreaLabel": "Which area is this for?",
   "customHabitSubmit": "Add to my habits",
   "editHabitTitle": "Edit habit",
+  "habitShowOnLabel": "Show this on",
   "editHabitSave": "Save",
-  "customHabitCreatedTitle": "Habit created",
-  "customHabitCreatedMessage": "\"{title}\" has been added to your habits.",
+  "customHabitCreatedTitle": "Intention created",
+  "customHabitCreatedMessage": "\"{title}\" has been added to your intentions.",
   "@customHabitCreatedMessage": {
     "placeholders": {
       "title": {
@@ -599,11 +657,11 @@
     }
   },
   "completionQuestion": "Did you do this today?",
-  "completionHowDidItLand": "How did that land?",
+  "completionHowDidItLand": "How was it?",
   "completionMoodGlad": "Glad I did",
   "completionMoodNeutral": "Neutral",
   "completionMoodTookEffort": "Took effort",
-  "completionAddNote": "+ add a note",
+  "completionAddNote": "add a note",
   "completionNoteHint": "Anything you want to remember?",
   "completionSkip": "skip",
   "completionKept": "Kept — {count} moments this month.",
@@ -829,6 +887,24 @@
   "paywallYearly": "Yearly",
   "paywallYearlyPrice": "€44.99",
   "paywallYearlyPeriod": "per year",
+  "paywallPricePerYear": "{price}/year",
+  "@paywallPricePerYear": {
+    "description": "Price with its billing period. Russian cannot take a slashed adverb, so each locale spells this itself — never build it by lowercasing the plan label.",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallPricePerMonth": "{price}/month",
+  "@paywallPricePerMonth": {
+    "description": "See paywallPricePerYear.",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "paywallYearlyPerMonth": "€3.75",
   "paywallYearlyAnchor": "{price}/month, billed yearly",
   "@paywallYearlyAnchor": {
@@ -850,12 +926,34 @@
   "paywallLifetime": "Lifetime",
   "paywallLifetimePrice": "€49.99",
   "paywallLifetimePeriod": "one-time",
-  "paywallLifetimeBadge": "Launch price",
-  "paywallCtaTrial": "Start 7-day free trial",
-  "paywallCtaLifetime": "Get lifetime access",
-  "paywallTrialHint": "7 days free, then {price}. Cancel anytime.",
-  "@paywallTrialHint": {
+  "paywallCtaTrial": "Start {days}-day free trial",
+  "@paywallCtaTrial": {
     "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallCtaLifetime": "Get lifetime access",
+  "paywallTrialHintYearly": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year. Renews automatically until you cancel.",
+  "@paywallTrialHintYearly": {
+    "description": "Billing period is spelled per locale — never glue the price to the plan label.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paywallTrialHintMonthly": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/month. Renews automatically until you cancel.",
+  "@paywallTrialHintMonthly": {
+    "description": "Billing period is spelled per locale — never glue the price to the plan label.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
       "price": {
         "type": "String"
       }
@@ -873,10 +971,16 @@
   "onboardingPaywallBody": "The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.",
   "onboardingPaywallPrimaryCta": "Start free trial",
   "onboardingPaywallSecondaryCta": "Not now — keep the free version",
-  "onboardingPaywallDisclaimer": "7 days free, then {price}/year — about €3.75 a month. Cancel anytime.",
+  "onboardingPaywallDisclaimer": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Renews automatically until you cancel.",
   "@onboardingPaywallDisclaimer": {
     "placeholders": {
+      "days": {
+        "type": "int"
+      },
       "price": {
+        "type": "String"
+      },
+      "perMonth": {
         "type": "String"
       }
     }
@@ -921,6 +1025,7 @@
   "profileAppearance": "Appearance",
   "profileSupport": "SUPPORT",
   "profileHelpSupport": "Help & Support",
+  "profileRateApp": "Rate Intended",
   "profilePrivacy": "Privacy Policy",
   "profileTerms": "Terms of Use",
   "profileConnectAccount": "CONNECT ACCOUNT",
@@ -940,7 +1045,6 @@
   "profileChangeAreas": "Change areas",
   "profileFocusLimitMessage": "You've used your free change this month.",
   "profileFocusLimitOptions": "• Intended+: Unlimited",
-  "profilePayAmount": "Pay €0.99",
   "profilePaymentTitle": "Payment",
   "profileChangeSpace": "Change your space",
   "profileRefreshTitle": "Refresh habits?",
@@ -1036,10 +1140,17 @@
   "habitCloseEyes": "Close your eyes for 30 seconds",
   "habitNeckRolls": "Do 5 gentle neck rolls",
   "habitWalkToWindow": "Walk to the window and back",
-  "habitBellyBreaths": "Take 5 deep belly breaths",
+  "habitBellyBreaths": "Take 5 slow, deep breaths",
   "habitBodyScan": "2-minute body scan",
   "habitGentleMovement": "5 minutes of gentle stretching",
   "habitMindfulMeal": "Eat one meal mindfully",
+  "habitEatAfterWaking": "Eat after waking up",
+  "habitProperMeal": "Eat one proper meal",
+  "habitDrinkWarm": "Drink something warm",
+  "habitTakeMedication": "Take your medication",
+  "habitGetOutside": "Get outside for a few minutes",
+  "habitMoveBody": "Move your body a little",
+  "habitBedEarly": "Get into bed early",
   "habitTenSecondPause": "One-minute pause",
   "habitNoticeFeeling": "Notice one thing you feel",
   "habitGroundingBreath": "Three grounding breaths",
@@ -1052,17 +1163,8 @@
   "habitSmileGently": "Smile kindly at yourself",
   "habitAskNeed": "Ask yourself \"what do I need right now?\"",
   "habitPermissionToRest": "Give yourself permission to rest",
-  "habitSetPriority": "Set one priority today",
   "habitPlanTomorrow": "Plan tomorrow in one sentence",
   "habitThirtySecondReset": "Do a 1-minute reset",
-  "habitWriteIdea": "Unsubscribe from an unnecessary email list",
-  "habitFinishTinyTask": "Finish one tiny task",
-  "habitDeclutterDesk": "Declutter your desk",
-  "habitReviewCalendar": "Review your calendar",
-  "habitTurnOffNotification": "Turn off one notification",
-  "habitCloseTab": "Close unnecessary browser tabs",
-  "habitArchiveEmails": "Archive 5 old emails",
-  "habitUpdateTodo": "Update one to-do item",
   "habitTidyOneThing": "Tidy one small thing",
   "habitPutBack": "Put one thing back where it belongs",
   "habitWipeSurface": "Wipe one surface",
@@ -1087,30 +1189,12 @@
   "habitTellMeaning": "Tell someone what they mean to you",
   "habitOfferHelp": "Offer help to someone",
   "habitCelebrateOthers": "Celebrate someone else's win",
-  "habitWriteSentence": "Write a short story",
+  "habitWriteSentence": "Write down what's in your head",
   "habitDoodle": "Doodle for 5 minutes",
-  "habitCaptureIdea": "Capture one idea",
   "habitNoticeBeauty": "Notice one beautiful thing",
   "habitTakePhoto": "Take one photo of something you like",
-  "habitDrawShape": "Draw something simple",
   "habitHumTune": "Hum a tune you enjoy",
-  "habitRearrange": "Rearrange something small",
   "habitTryNewWord": "Learn one new word",
-  "habitCreateTinyThing": "Play a short melody",
-  "habitPlayCreative": "Play with one creative medium",
-  "habitImagine": "Do a vocal warm-up",
-  "habitCheckBalance": "Try one financial tip",
-  "habitMoveToSavings": "Move €3/$3 to savings",
-  "habitReviewSubscription": "Review one subscription",
-  "habitNoteExpense": "Note 3 expenses",
-  "habitFinancialTip": "Read one financial tip",
-  "habitDeleteReceipt": "Delete one old receipt",
-  "habitUpdateBudget": "Treat yourself",
-  "habitReviewBill": "Review necessity of one subscription",
-  "habitPriceCheck": "Price-check one item before buying",
-  "habitWait24Hours": "Wait 24 hours before a big purchase",
-  "habitCelebrateMoneyWin": "Celebrate one money win",
-  "habitSavingsGoal": "Set one savings goal",
   "habitSitStill": "Sit still for 1 minute",
   "habitKindThing": "Do one kind thing for yourself",
   "habitDrinkSlowly": "Drink a cup of tasty coffee",
@@ -1123,6 +1207,15 @@
   "habitPutOnComfortable": "Put on something comfortable",
   "habitListenToSong": "Listen to one song you love",
   "habitDoNothing": "Do absolutely nothing for 5 minutes",
+  "habitGetOutOfBed": "Get out of bed",
+  "habitBrushTeeth": "Brush your teeth",
+  "habitWashFace": "Wash your face",
+  "habitTakeShower": "Take a shower",
+  "habitCleanClothes": "Put on clean clothes",
+  "habitBrushHair": "Brush your hair",
+  "habitOpenCurtains": "Open the curtains",
+  "habitTurnOnLamp": "Turn on a lamp",
+  "habitPhoneAcrossRoom": "Leave your phone across the room",
   "shareCardWeeklyCheckin": "Weekly check-in",
   "shareCardMilestone": "Milestone",
   "shareCardShowedUpPhrase": "I showed up for myself this week",
@@ -1403,9 +1496,6 @@
   "coachMarkMonthlyReflectionBody": "Your monthly reflection finds patterns across weeks that you might not notice day-to-day. It's here whenever you want it.",
   "coachMarkReflectionShareTitle": "Worth sharing?",
   "coachMarkReflectionShareBody": "Tap the share button to turn this into a card you can send to someone or post. Your data stays private — only the summary is shared.",
-  "reviewPromptMessage": "Enjoying Intended? A quick rating helps others find a gentler way to build habits.",
-  "reviewPromptRate": "Rate now",
-  "reviewPromptNotYet": "Not yet",
   "upgradeNudgeBody": "Your practice is growing. Intended+ gives you room to grow with it.",
   "upgradeNudgeLearnMore": "Learn more",
   "notifWeeklyDynamic0": "Your week's page is ready. Every week is a fresh start.",
@@ -1415,6 +1505,14 @@
     "placeholders": {
       "count": {
         "type": "int"
+      }
+    }
+  },
+  "notifMonthlyLetter": "Your {month} letter is ready.",
+  "@notifMonthlyLetter": {
+    "placeholders": {
+      "month": {
+        "type": "String"
       }
     }
   },
@@ -1475,7 +1573,23 @@
   "faqWhatIsPlus": "What is Intended+?",
   "faqWhatIsPlusAnswer": "Intended+ is the reading of your month: the drift warning before a quiet stretch, a four-line letter, next month's plan built from this month's evidence, what actually lifts you, the season's explanation and archive — plus all ten themes, premium icons and widgets.",
   "faqPricing": "How much does it cost?",
-  "faqPricingAnswer": "Monthly: €6.99. Yearly: €49.99 (5 months free). Lifetime: €89.99. All include a 7-day free trial.",
+  "faqPricingAnswer": "Monthly: {monthly}. Yearly: {yearly}. Lifetime: {lifetime}, one-time. Both subscriptions start with a {days}-day free trial.",
+  "@faqPricingAnswer": {
+    "placeholders": {
+      "monthly": {
+        "type": "String"
+      },
+      "yearly": {
+        "type": "String"
+      },
+      "lifetime": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "faqFreeVersion": "Can I use it for free?",
   "faqFreeVersionAnswer": "Yes. Free includes intention paths, 2 custom habits, 2 focus areas, weekly reflections, smart notifications, and widgets.",
   "faqRestore": "How do I restore my purchase?",
@@ -1489,6 +1603,15 @@
   "faqDataSellingAnswer": "No. We use anonymous crash reports to fix bugs. Never your habit data.",
   "faqDeleteApp": "What if I delete the app?",
   "faqDeleteAppAnswer": "Data is local, so deleting removes everything. Subscriptions can be restored through the App Store.",
+  "faqQuestionCount": "{count, plural, =1{1 question} other{{count} questions}}",
+  "@faqQuestionCount": {
+    "description": "Count hint under each FAQ category card. Live counts run 3-7, so Russian needs few/many, not a single form.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "faqSectionTroubleshooting": "Troubleshooting",
   "faqCrash": "The app crashed.",
   "faqCrashAnswer": "Try closing and reopening. Make sure you have the latest version.",
@@ -1666,7 +1789,10 @@
     }
   },
   "todayAdoptIntention": "Adopt a different intention",
-  "todaySwapHint": "Not landing? Hold to swap.",
+  "staleNudgeTitle": "This one doesn't seem to fit",
+  "staleNudgeBody": "No moments here in the last ten days. Want to try a different intention?",
+  "staleNudgeChange": "Change my intention",
+  "staleNudgeKeep": "Leave it as is",
   "rescueTitle": "{count} quiet days. That's allowed.",
   "rescueBody": "Just this one today?",
   "rescueLongTitle": "It's been a while. That's allowed.",
@@ -1727,7 +1853,16 @@
       }
     }
   },
-  "shareSeasonGaps": "My gaps are getting shorter.",
+  "shareSeasonGaps": "and the gaps are getting shorter",
+  "shareSeasonLabel": "MY SEASON",
+  "shareSeasonMorningLine": "I come to this before the day starts.",
+  "shareSeasonEveningLine": "I come to this once the day has quieted.",
+  "shareSeasonSteadyLine": "A little, most days.",
+  "shareSeasonBurstsLine": "I arrive in waves, and they come back.",
+  "shareSeasonReturningLine": "I go quiet, and I find my way back.",
+  "shareSeasonContinuousLine": "I keep a thread running all month.",
+  "shareSeasonFocusedLine": "One thing has most of my attention.",
+  "shareSeasonWanderingLine": "I follow what I need.",
   "pathMoreIntentions": "MORE INTENTIONS",
   "pathSofterNightsTitle": "Softer Nights",
   "pathSofterNightsSubtitle": "For sleep that doesn't fight you",
@@ -1802,5 +1937,39 @@
     }
   },
   "profileExportSubject": "My Intended moments",
-  "profileExportEmpty": "Nothing to export yet."
+  "profileExportEmpty": "Nothing to export yet.",
+  "pauseEntryTitle": "a minute of breath",
+  "pauseLeave": "enough for now",
+  "pauseBreathIn": "in",
+  "pauseBreathOut": "out",
+  "pauseCheckInQuestion": "How are you feeling now?",
+  "pauseCheckInTense": "Still tense",
+  "pauseCheckInNeutral": "A little calmer",
+  "pauseCheckInCalm": "It lifted",
+  "pauseNotifAction": "A minute of breath",
+  "pauseHealthTitle": "Save to Apple Health?",
+  "pauseHealthBody": "Each completed pause can appear in Apple Health as a mindful minute — your answer here too. Intended never reads anything from Health.",
+  "pauseHealthSave": "Save to Health",
+  "widgetMomentsCount": "{count, plural, one{{count} moment} other{{count} moments}}",
+  "@widgetMomentsCount": {
+    "description": "Widget eyebrow: how many moments this month. Joined with ' · ' to the month name.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "widgetReturnsCount": "{count, plural, one{back once} other{back {count} times}}",
+  "@widgetReturnsCount": {
+    "description": "Widget eyebrow: returns after quiet stretches this month. Only rendered when count > 0.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "widgetMonthUnlock": "Intended+ — the whole month in colour",
+  "@widgetMonthUnlock": {
+    "description": "Large widget, not subscribed: caption under the faded month mosaic."
+  }
 }

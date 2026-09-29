@@ -170,12 +170,12 @@ class _UpgradeNudgeBannerState extends State<UpgradeNudgeBanner>
                         CupertinoButton(
                           padding: EdgeInsets.zero,
                           onPressed: _dismiss,
+                          minimumSize: const Size(28, 28),
                           child: Icon(
                             CupertinoIcons.xmark,
                             size: 14,
                             color: colors.textSecondary.withOpacity(0.5),
                           ),
-                          minimumSize: const Size(28, 28),
                         ),
                       ],
                     ),

@@ -1,0 +1,43 @@
+diff --git a/assets/images/intended_icon_forest.png b/assets/images/intended_icon_forest.png
+deleted file mode 100644
+index 3f83dd2..0000000
+Binary files a/assets/images/intended_icon_forest.png and /dev/null differ
+diff --git a/assets/images/intended_icon_rose.png b/assets/images/intended_icon_rose.png
+deleted file mode 100644
+index 6539cf3..0000000
+Binary files a/assets/images/intended_icon_rose.png and /dev/null differ
+diff --git a/assets/images/intended_icon_sky.png b/assets/images/intended_icon_sky.png
+deleted file mode 100644
+index 77a277a..0000000
+Binary files a/assets/images/intended_icon_sky.png and /dev/null differ
+diff --git a/lib/widgets/app_icon_picker.dart b/lib/widgets/app_icon_picker.dart
+index c493c7a..79738f9 100644
+--- a/lib/widgets/app_icon_picker.dart
++++ b/lib/widgets/app_icon_picker.dart
+@@ -57,7 +57,7 @@ class _AppIconPickerState extends State<AppIconPicker> {
+       name: (l10n) => l10n.appIconRose,
+       previewBg: const Color(0xFFF0C0C2),
+       previewAccent: const Color(0xFFB5676A),
+-      assetPath: 'assets/images/intended_icon_rose.png',
++      assetPath: 'assets/images/intended-icon-softdusk-1024.png',
+       isPremium: true,
+     ),
+     (
+@@ -65,7 +65,7 @@ class _AppIconPickerState extends State<AppIconPicker> {
+       name: (l10n) => l10n.appIconForest,
+       previewBg: const Color(0xFFD5E2D0),
+       previewAccent: const Color(0xFF6B8F6B),
+-      assetPath: 'assets/images/intended_icon_forest.png',
++      assetPath: 'assets/images/intended-icon-forestfloor-1024.png',
+       isPremium: true,
+     ),
+     (
+@@ -73,7 +73,7 @@ class _AppIconPickerState extends State<AppIconPicker> {
+       name: (l10n) => l10n.appIconSky,
+       previewBg: const Color(0xFFC8D8E8),
+       previewAccent: const Color(0xFF4A6E96),
+-      assetPath: 'assets/images/intended_icon_sky.png',
++      assetPath: 'assets/images/intended-icon-clearsky-1024.png',
+       isPremium: true,
+     ),
+   ];
