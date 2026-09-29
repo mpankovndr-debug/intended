@@ -406,8 +406,7 @@ Then the sentence settles at the top of the screen:
 **3. Three small things**
 > **Start with three small things.**
 > Each takes a minute or two. Pick the ones you'd actually do.
-> (When month 1 is under 21 days: **Start with two small things.** You have 16 days until October, so
-> start with two.)
+> (When month 1 is under 21 days: **Start with two small things.** You have 16 days until October.)
 Cards come from the path's `starterActions` plus a few from its catalog. A chosen card drops into a tray
 labelled *Your first month*. Focus areas show as small chips with a *change* link (no separate screen).
 
