@@ -84,8 +84,7 @@ Worked examples:
 
 **A short first month asks for less.** Under the 14-day rule, month 1 runs 14 to 31 days, or 31 to 44
 when the leftover days fold in.
-- **Under 21 days:** onboarding suggests two actions, not three, and says why: "You have 16 days until
-  October, so start with two." Fewer actions means each one gets enough tries to be read fairly at the
+- **Under 21 days:** onboarding suggests two actions, not three, and says why: "You have 16 days until October." Fewer actions means each one gets enough tries to be read fairly at the
   first plan. (21 is a starting value; tune it.)
 - **The first plan scales its thresholds** to the days month 1 actually had. A set-aside nudge tuned for
   30 days must not fire on 16 (CLAUDE.md: thresholds are set by the sentence). Pure static, unit-tested.
@@ -359,6 +358,19 @@ Current flow (verified): Welcome → path list (`TellUsAboutYouScreen`) → "One
 (`CommitmentScreen`) → reminder → `HabitRevealScreen` → app. The paywall comes after the first
 completed action (handoff §5.4). Focus areas already default from the path (`defaultFocusAreas`).
 
+**Theme:** onboarding renders in **Iris**, the default for fresh installs (`theme_provider.dart:11`). Iris
+is a light theme; only Deep Focus and Night Bloom are dark.
+
+**Concept review, 29 Sep** (ChatGPT board): the flow reads well. Fix these before building:
+- The first-moment screen shows exactly one ghost tile, never a row of outlined squares.
+- The demo must show the return (ring plus "Miss a few days and nothing is lost"), and no invented
+  slogans.
+- Path cards use the path's `accentColor` or an icon, never the category colours: in the mosaic those
+  colours mean Health, Self-care, Mood and Home.
+- The person's sentence is the largest text on its screen.
+- No media-style icons or stock wellness imagery (the model drew a pause glyph and a lotus).
+- One fixed four-part indicator on every screen.
+
 New flow: a short book in four parts. The part cards are the "chapters that explain the concept". They
 are full-screen onboarding cards, not overlays on the app (CLAUDE.md keeps overlays for the widget). A
 four-mark track (I II III IV) sits at the top and fills as you pass each part; that measures the
@@ -580,8 +592,7 @@ The four-part indicator at the top, second part lit.
 ```
 
 ```
-Onboarding, step 3. Title: "Start with two small things." Subtitle: "You have 16 days until October,
-so start with two." Six glass action cards in two columns: "Screens away 20 minutes before bed", "Dim
+Onboarding, step 3. Title: "Start with two small things." Subtitle: "You have 16 days until October." Six glass action cards in two columns: "Screens away 20 minutes before bed", "Dim
 the lights an hour before sleep", "Take 5 deep belly breaths", "Do absolutely nothing for 30 seconds",
 "Take 3 slow breaths", "Write one line about today". Two are chosen (a colour wash and a check).
 A tray at the bottom labelled "Your first weeks" holds two small tiles.
