@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../services/chapter_service.dart';
 import '../services/plan_service.dart';
 import '../services/season_service.dart';
 import '../widgets/app_toast.dart';
@@ -861,8 +862,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   /// Everything the app knows, as one JSON file into the share sheet.
   ///
   /// Plain export, no lock-in: moments with their moods and notes, frozen
-  /// seasons, accepted plan changes, and the current setup. Local-first
-  /// privacy is only credible when the data has a door.
+  /// seasons, accepted plan changes, chapters, and the current setup.
+  /// Local-first privacy is only credible when the data has a door.
   Future<void> _exportData() async {
     final l10n = AppLocalizations.of(context);
     try {
@@ -870,6 +871,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final moments = await MomentsService.getAll();
       final seasons = await SeasonService.archive();
       final accepted = await PlanService.acceptedNudges();
+      final chapters = await ChapterService.all();
 
       final payload = const JsonEncoder.withIndent('  ').convert({
         'app': 'Intended',
@@ -881,6 +883,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'moments': [for (final m in moments) m.toJson()],
         'seasons': seasons.map((k, v) => MapEntry(k, v.toJson())),
         'acceptedPlanChanges': [for (final a in accepted) a.toJson()],
+        'chapters': [for (final c in chapters) c.toJson()],
       });
 
       final dir = await getTemporaryDirectory();
