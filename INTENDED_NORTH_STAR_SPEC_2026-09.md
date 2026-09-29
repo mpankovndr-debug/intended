@@ -189,6 +189,18 @@ The year view is this screen at the year level: one row per chapter. Build it in
 - **Paid:** the stage-aware plan, and the explanation layer of long-term patterns (§3.4), in line with
   "season word free, explanation paid".
 
+
+### 2.6 People who already use the app
+
+Everyone who onboarded before chapters has a path and moments but no sentence and no chapter. They
+must not get an empty chapter header, and they must not be sent back through onboarding.
+
+- Insights shows one card in the header's place: **"Put it in your own words."** It opens the sentence
+  screen (§6, step 2) prefilled from their current path.
+- Holding to confirm starts chapter 1 **from that day**, with the 14-day rule. Their earlier moments
+  stay in their months, outside any chapter; nothing is backdated.
+- Until they do, Insights works exactly as it does today. The card is the only change.
+
 ---
 
 ## 3. Insights, rebuilt around three horizons
@@ -455,6 +467,23 @@ Headline tie-in: **Intended+ reads your chapter and suggests one change a month.
 
 **Theme picker:** moves to Profile (decided); it doesn't serve the story.
 
+**Where the chapter lives in onboarding.** The hold on step 2 is the moment chapter 1 is created
+(`Chapter.start`: sentence, path, today's date and offset, the 14-day rule). Everything after it reads
+from that chapter:
+
+| Step | What comes from the chapter |
+|---|---|
+| 2, after the hold | "Your first chapter runs until {end date}." "At the end, you decide what changed." |
+| 3, three small things | Month 1 is *Try a few*. Under 21 days it asks for two, with "You have {n} days until {month}." |
+| 7, what you'll get back | "At the end of the chapter: you decide what changed." |
+| 8, first moment | "That's the first square of your chapter." The tile is the chapter's first moment. |
+| 9, paywall | "Intended+ reads your chapter and suggests one change a month." |
+
+The concept board (`design/onboarding_concept_2026-09-29.webp`) does **not** yet show the two screens
+that introduce the chapter: the reveal after the hold, and *What you'll get back*. As drawn, a new user
+first meets the word "chapter" on the last screen, without being told what one is. Draw those two
+screens before building.
+
 **Cost:** about 9 decisions against about 5 today. Part cards auto-advance, step 4 is skippable and step 6
 is one tap. Track each step's completion in `AnalyticsService` so the drop-off is visible, not guessed.
 
@@ -620,15 +649,21 @@ Small link: "I'll do it later".
 
 ## 9. Build order
 
-1. **Plan says what you chose; chevrons and deep-dive sheets for season and plan** (§3.5, §3.6). This is
-   the answer to "a month paid and I don't see the value".
-2. **This week and the lens** (§3.2, §3.3).
-3. **Completion motion** (§5), on a device.
-4. **Sentence, chapters and the new onboarding** (§1, §2, §6).
-5. **Cues** (§4), which can ship with onboarding step 4.
-6. **Year view** (§2.4), in November.
+Revised 29 Sep: the onboarding concept is settled and it goes first.
 
-Every new string goes into both ARBs, then `flutter gen-l10n`. Russian display type uses Montserrat.
+1. **`Chapter` model and `ChapterService`**, pure and unit-tested: the 14-day rule, `stageOn`, the
+   short-first-month threshold, persistence, backup and export. Everything else reads from this.
+2. **The new onboarding** (§6): new screens in `lib/onboarding_v2/`, chapter 1 created on the hold, the
+   first moment before the paywall, and the theme picker moved to Profile.
+3. **The chapter header on Insights** (sentence, end date, month track) and the "Put it in your own
+   words" card for existing users (§2.6). Without it, the sentence written in onboarding goes nowhere.
+4. **The plan says what you chose** (§3.6). About a day, independent of the rest; can go at any point.
+5. **This week, the lens and the deep-dive sheets** (§3.2 to §3.5).
+6. **The chapter ending** (§2.3). **Hard deadline: 31 December.** Anyone who onboards between now and
+   mid-October has a chapter that ends on 31 December, so the ending must be live before then.
+7. **Completion motion** (§5), on a device.
+8. **Cues** (§4). The onboarding step can ship with item 2; the Today line and hold menu follow.
+9. **Year view** (§2.4).
 
 ## Sources
 
