@@ -370,6 +370,10 @@ is a light theme; only Deep Focus and Night Bloom are dark.
 - The person's sentence is the largest text on its screen.
 - No media-style icons or stock wellness imagery (the model drew a pause glyph and a lotus).
 - One fixed four-part indicator on every screen.
+- **Second board:** part cards carry no numeral. In a sans-serif typeface "II" is two bars, which is the
+  pause glyph. The indicator already says where you are.
+- A return is a solid tile wearing a glow ring, with its caption directly beneath it. A pale outlined
+  square reads as an empty slot.
 
 New flow: a short book in four parts. The part cards are the "chapters that explain the concept". They
 are full-screen onboarding cards, not overlays on the app (CLAUDE.md keeps overlays for the widget). A
@@ -585,8 +589,8 @@ its fill sweeping left to right, about half full.
 ```
 
 ```
-Onboarding explainer card, shown between steps. Only the background and centred text: a small "II" in
-lavender, the line "How you'll get there" large, and under it "Not by trying hard. By starting small."
+Onboarding explainer card, shown between steps. Only the background and centred text: the line "How you'll get there"
+large, and under it "Not by trying hard. By starting small."
 The four-part indicator at the top, second part lit.
 ```
 
