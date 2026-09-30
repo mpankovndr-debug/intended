@@ -387,26 +387,31 @@ is a light theme; only Deep Focus and Night Bloom are dark.
 - A return is a solid tile wearing a glow ring, with its caption directly beneath it. A pale outlined
   square reads as an empty slot.
 
-**Final flow (decided 30 Sep): nine screens.** Each one either asks for a decision or teaches
-something the app relies on. The board (`design/onboarding_concept_2026-09-30.webp`) shows screens 2 to 8.
-It also shows two screens that were cut (the explainer card and *What you'll get back*) and draws the
-chapter as its own screen, which is now folded into screen 3.
+**Final flow (decided 30 Sep): seven screens, eight when a reminder is asked.** Each one either asks for
+a decision or teaches something the app relies on. It takes the content of board B
+(`design/onboarding_concept_2026-09-30.webp`) and one idea from the shorter board A: the demo tap *is*
+the real first moment, so "Try it" and "Do one now" are one screen. People value what they made only
+when they finish it (Norton, Mochon & Ariely 2012); a demo tile that is thrown away and then repeated
+asks for the same tap twice.
 
-A four-dot indicator groups the steps: dot 1 for screens 2 and 3, dot 2 for screens 4 to 6, dot 3 for
-screen 7, dot 4 for screen 8. It is one widget, so it cannot drift from screen to screen.
+**Theme:** built for Iris first (the default, lavender); the other nine themes follow once Iris is
+right. **Dots:** three, grouping screens 2–3, 4–6 and 7; the paywall has none.
 
 **1. Welcome** (existing screen, unchanged)
 
 **2. Pick a direction** (replaces the path list)
-Visual: a vertical stack of wide glass cards, each with its path icon and tinted with its path's own
-`accentColor`. The chosen card brightens and gains a soft glowing edge. No stars or night sky: the North
-star is a metaphor, not a picture.
+Wide glass cards, each with its path icon tinted in the path's `accentColor`. The chosen card brightens
+and gains a soft glowing edge. No stars or night sky.
 > **What would you like more of?**
 > Pick the closest one. You'll say it your own way next.
 Options: the existing path titles and subtitles. "Your own way" becomes *Something else*.
-Icons: only 5 icon files exist for 10 paths (`assets/icons`). `path_anchors_for_hard_days.svg` and
-`path_quiet_focus.svg` are referenced but missing, and three paths share an icon. Nothing renders
-`IntentionPath.iconAsset` today, so this is invisible now and becomes visible on this screen.
+**Icons:** none exist. The five `assets/icons/path_*.svg` files are identical grey-circle placeholders
+and two referenced files are missing; nothing renders `IntentionPath.iconAsset` today. Proposed: built-in
+Cupertino line icons (already used 84 times in the app), stored as `IconData` on the model, and the
+placeholders deleted. Gentle Mornings `sunrise`, Quiet Focus `eyeglasses`, Winding Down `sunset`,
+Softer Nights `moon_stars`, Looking Up `cloud_sun`, Closer to People `person_2`, Through a Hard Season
+`umbrella`, Something else `pencil`. **No good built-in match:** Anchors for Hard Days (no anchor) and
+Moving a Little (no walking figure). Pending: two custom SVGs, or the closest built-ins.
 
 **3. Say it your way, then the chapter** (replaces the commitment screen; one screen, two states)
 > **Say it your way.**
@@ -415,8 +420,8 @@ Icons: only 5 icon files exist for 10 paths (`assets/icons`). `path_anchors_for_
 > Only you see this. You can change it later.
 > Button: **Hold to make it yours** (a 1.2 s press with a rising haptic; the fill completes and glows)
 
-The hold creates chapter 1 (`ChapterService.start`). Then, on the same screen, the sentence moves up and
-shrinks into quotes, the chips fade, and the chapter appears:
+The hold creates chapter 1 (`ChapterService.start`). On the same screen the sentence moves up into
+quotes, the chips fade, and the chapter appears:
 > **Your first chapter runs until {31 December}.**
 > At the end, you decide what changed.
 > Three segments: *Oct · Try a few* (lit), *Nov · Keep what stuck*, *Dec · Make it lighter*.
@@ -424,39 +429,31 @@ shrinks into quotes, the chips fade, and the chapter appears:
 > Button: **Continue**
 
 **4. Start small** (replaces today's action reveal)
-> **Start with three small things.**
-> Each takes a minute or two. Pick the ones you'd actually do.
+> **Start with three small things.** Each takes a minute or two. Pick the ones you'd actually do.
 > When `Chapter.suggestedFirstActions` is 2: **Start with two small things.** You have {16} days until {October}.
-Cards come from the path's `starterActions` plus a few from its catalog. Chosen cards drop into a tray.
-Focus areas show as small chips with a *change* link; there is no separate focus-areas screen.
+Cards come from the path's `starterActions` plus a few from its catalog. Focus areas show as small chips
+with a *change* link; there is no separate focus-areas screen.
 
 **5. After I…** (skippable)
-> **When will they happen?**
-> Tie each one to something you already do.
+> **When will they happen?** Tie each one to something you already do.
 > After I *[pour my coffee]*, I'll *take 3 slow breaths*.
-The sentence assembles as the chips are tapped. Link: *Skip for now*. **No concept image yet.**
+Chips: *brush my teeth* · *finish dinner* · *get into bed* · *Other*. Link: *Skip for now*.
 
-**6. A nudge** (shown only when screen 5 was skipped)
-Someone who tied an action to "after I pour my coffee" already has their prompt. The existing reminder
-screen appears only when no cue was set; the reminder stays available in Profile (*Daily reminders*).
-> **Want a nudge as well?**
-> One quiet reminder a day. Or none.
+**6. A nudge** (only when screen 5 was skipped)
+The existing reminder screen; the reminder stays available in Profile (*Daily reminders*).
 
-**7. Try it**
-One mosaic teaches both ideas: tap the demo action and a tile lands; the last tile is solid with a glow
-ring, with its caption directly under the mosaic.
+**7. Try it: the first real moment**
 > **Every time you do one, a square appears.**
-> **Miss a few days and nothing is lost.** When you come back, the app marks the return, not the gap.
-
-**8. Do one now**
-> **Do one now.**
-> The chosen actions. Tapping one runs the real completion flow; the first tile lands in the person's
-> own mosaic, followed by exactly one ghost tile.
+The chosen actions as cards. Tapping one runs the real completion flow; the tile flies into the
+person's own mosaic and lands in the next free spot with a glow, followed by exactly one faint *solid*
+ghost tile. Tiles are plain colour, never icons: the sheet shows "the tile the month page shows"
+(`habit_completion_modal.dart`).
 > **That's the first square of your chapter.**
+> Miss a few days and nothing is lost. When you come back, the app marks the return, not the gap.
 > Link: *I'll do it later*
 
-**9. Paywall** (existing, after the first moment, per handoff §5.4)
-Headline tie-in: **Intended+ reads your chapter and suggests one change a month.**
+**8. Paywall** (existing, after the first moment, per handoff §5.4)
+> **A gentler way to keep going.** Your first square is already yours.
 
 **Cut, with reasons:**
 - *Part and explainer cards.* They carried one slogan each, and "By starting small" is the next screen's
@@ -475,10 +472,9 @@ sentence, path, today's date and offset, the 14-day rule). Everything after it r
 |---|---|
 | 3, after the hold | "Your first chapter runs until {end date}." The three month segments. |
 | 4, start small | Two or three actions from `suggestedFirstActions`, with "You have {n} days until {month}." |
-| 8, first moment | "That's the first square of your chapter." The tile is the chapter's first moment. |
-| 9, paywall | "Intended+ reads your chapter and suggests one change a month." |
+| 7, try it | "That's the first square of your chapter." The tile is the chapter's first moment. |
 
-**Cost:** nine screens with Welcome and the paywall; eight for anyone who sets a cue. Today's flow is
+**Cost:** seven screens with Welcome and the paywall; eight when the reminder is asked. Today's flow is
 about six. Track each screen's completion in `AnalyticsService` so drop-off is visible, not guessed.
 ---
 
