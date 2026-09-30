@@ -61,6 +61,17 @@ class OnboardingState extends ChangeNotifier {
   /// [visibleHabits], which no longer truncates anything.
   static const int maxActiveHabits = 6;
 
+  /// The focus areas a person can choose from. Retired areas are not here;
+  /// they live on only in [retiredFocusAreas], for migrating old choices.
+  static const List<String> focusAreaOptions = [
+    'Health',
+    'Mood',
+    'Home & organization',
+    'Relationships',
+    'Creativity',
+    'Self-care',
+  ];
+
   /// Whether another action can be added without breaking that ceiling.
   bool get canAddHabit => userHabits.length < maxActiveHabits;
 
@@ -636,6 +647,28 @@ class OnboardingState extends ChangeNotifier {
       await prefs.remove('pinned_habit');
     }
 
+    notifyListeners();
+  }
+
+  /// The actions chosen on "Start small" (spec §6, screen 4): exactly these,
+  /// then any of the person's own. The path's starter actions count as spent,
+  /// so a later refresh draws from the focus areas like any other path.
+  Future<void> adoptChosenActions(List<String> chosen) async {
+    final previous = userHabits.toSet();
+    userHabits = [
+      ...chosen,
+      ..._customHabits.where((custom) => !chosen.contains(custom)),
+    ];
+    _recordAdopted(userHabits.where((h) => !previous.contains(h)));
+    _startersAppliedForPath = _selectedIntentionPath;
+    final pinnedCleared =
+        _pinnedHabit != null && !userHabits.contains(_pinnedHabit);
+    if (pinnedCleared) _pinnedHabit = null;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('user_habits', userHabits);
+    await _saveHabitAdoptions(prefs);
+    await prefs.setString(_startersAppliedForPathKey, _selectedIntentionPath);
+    if (pinnedCleared) await prefs.remove('pinned_habit');
     notifyListeners();
   }
 

@@ -10,6 +10,8 @@ import 'package:intended/models/intention_path.dart';
 import 'package:intended/onboarding_v2/direction_screen.dart';
 import 'package:intended/onboarding_v2/onboarding_state.dart';
 import 'package:intended/onboarding_v2/sentence_screen.dart';
+import 'package:intended/onboarding_v2/start_small_screen.dart';
+import 'package:intended/theme/category_glyphs.dart';
 import 'package:intended/onboarding_v2/widgets/hold_to_confirm_button.dart';
 import 'package:intended/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -89,6 +91,9 @@ Future<void> _mount(
     );
     for (final path in IntentionPathId.values.map(IntentionPath.getById)) {
       await precacheImage(AssetImage(path.iconAsset), context);
+    }
+    for (final area in [...OnboardingState.focusAreaOptions, null]) {
+      await precacheImage(AssetImage(CategoryGlyphs.of(area)), context);
     }
   });
   await tester.pumpAndSettle();
@@ -174,5 +179,50 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
       await capture();
     }
+  }, skip: _dir == null);
+
+  Future<OnboardingState> sealed(DateTime at) async {
+    final state = await _windingDown();
+    final path = IntentionPath.getById(IntentionPathId.windingDown);
+    await state.applyPathDefaults(path.defaultFocusAreas, path.id.key);
+    await state.sealSentence('let the day go before I sleep',
+        pathKey: path.id.key, at: at);
+    return state;
+  }
+
+  Future<void> chooseTwo(WidgetTester tester) async {
+    final cards = tester.widgetList<ActionCard>(find.byType(ActionCard));
+    for (final action in cards.take(3).skip(1).map((c) => c.action).toList()) {
+      await tester.tap(
+          find.byWidgetPredicate((w) => w is ActionCard && w.action == action));
+      await tester.pump();
+    }
+    await tester.pumpAndSettle();
+  }
+
+  for (final locale in const [Locale('en'), Locale('ru')]) {
+    final lc = locale.languageCode;
+    testWidgets('start small, $lc', (tester) async {
+      await _mount(tester, StartSmallScreen(onContinue: () {}),
+          state: await sealed(DateTime(2026, 9, 1, 12)), locale: locale);
+      await chooseTwo(tester);
+      await _shot(tester, '$_dir/onboarding_4_start_small_$lc.png');
+    }, skip: _dir == null);
+
+    testWidgets('start small, short month, $lc', (tester) async {
+      await _mount(tester, StartSmallScreen(onContinue: () {}),
+          state: await sealed(DateTime(2026, 9, 11, 12)), locale: locale);
+      await chooseTwo(tester);
+      await _shot(tester, '$_dir/onboarding_4_start_small_short_$lc.png');
+    }, skip: _dir == null);
+  }
+
+  testWidgets('start small, focus sheet', (tester) async {
+    await _mount(tester, StartSmallScreen(onContinue: () {}),
+        state: await sealed(DateTime(2026, 9, 1, 12)),
+        locale: const Locale('en'));
+    await tester.tap(find.text('change'));
+    await tester.pumpAndSettle();
+    await _shot(tester, '$_dir/onboarding_4_focus_sheet_en.png');
   }, skip: _dir == null);
 }

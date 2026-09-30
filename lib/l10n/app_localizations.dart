@@ -4809,6 +4809,42 @@ abstract class AppLocalizations {
   /// **'Chapter one'**
   String get onboardingChapterOne;
 
+  /// No description provided for @onboardingStartTitleThree.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with three small things.'**
+  String get onboardingStartTitleThree;
+
+  /// No description provided for @onboardingStartTitleTwo.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with two small things.'**
+  String get onboardingStartTitleTwo;
+
+  /// No description provided for @onboardingStartSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Each takes a minute or two. Pick the ones you\'d actually do.'**
+  String get onboardingStartSubtitle;
+
+  /// No description provided for @onboardingStartShortMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, one{You have 1 day until {month}.} other{You have {days} days until {month}.}}'**
+  String onboardingStartShortMonth(int days, String month);
+
+  /// No description provided for @onboardingStartFocusChange.
+  ///
+  /// In en, this message translates to:
+  /// **'change'**
+  String get onboardingStartFocusChange;
+
+  /// No description provided for @onboardingStartCap.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s as many as Today holds.'**
+  String get onboardingStartCap;
+
   /// No description provided for @chapterStageTry.
   ///
   /// In en, this message translates to:

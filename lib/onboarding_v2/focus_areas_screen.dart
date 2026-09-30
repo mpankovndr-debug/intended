@@ -19,14 +19,7 @@ import '../widgets/onboarding_progress_bar.dart';
 class FocusAreasScreen extends StatelessWidget {
   const FocusAreasScreen({super.key});
 
-  static const List<String> areas = [
-    'Health',
-    'Mood',
-    'Home & organization',
-    'Relationships',
-    'Creativity',
-    'Self-care',
-  ];
+  static const List<String> areas = OnboardingState.focusAreaOptions;
 
   static const Map<String, IconData> areaIcons = {
     'Health': CupertinoIcons.heart,

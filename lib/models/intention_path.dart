@@ -95,6 +95,12 @@ class IntentionPath {
       titleKey: 'pathGentleMorningsTitle',
       subtitleKey: 'pathGentleMorningsSubtitle',
       defaultFocusAreas: const ['Health', 'Mood'],
+      starterActions: const [
+        'Open the curtains',
+        'Drink something warm',
+        'Stretch for 30 seconds',
+        'Make your bed',
+      ],
       accentColor: const Color(0xFFE09A4A), // warm amber — sunrise
     ),
     IntentionPath(
@@ -103,6 +109,12 @@ class IntentionPath {
       titleKey: 'pathAnchorsForHardDaysTitle',
       subtitleKey: 'pathAnchorsForHardDaysSubtitle',
       defaultFocusAreas: const ['Mood', 'Self-care'],
+      starterActions: const [
+        'Feel your feet on the ground',
+        'Place hand on heart for 30 seconds',
+        'Take 5 slow, deep breaths',
+        'Do one kind thing for yourself',
+      ],
       accentColor: const Color(0xFF7AA090), // sage teal — stillness
     ),
     IntentionPath(
@@ -111,6 +123,12 @@ class IntentionPath {
       titleKey: 'pathQuietFocusTitle',
       subtitleKey: 'pathQuietFocusSubtitle',
       defaultFocusAreas: const ['Self-care', 'Mood'],
+      starterActions: const [
+        'Leave your phone across the room',
+        'Look away from your screen for 30 seconds',
+        'Stand up and roll your shoulders',
+        'Rest for 5 minutes',
+      ],
       accentColor: const Color(0xFF6E8FB5), // muted blue — focused stillness
     ),
     IntentionPath(
@@ -119,6 +137,12 @@ class IntentionPath {
       titleKey: 'pathWindingDownTitle',
       subtitleKey: 'pathWindingDownSubtitle',
       defaultFocusAreas: const ['Health', 'Mood'],
+      starterActions: const [
+        'Light a scented candle',
+        'Drink something warm',
+        'Put on something comfortable',
+        'Notice one thing you feel',
+      ],
       accentColor: const Color(0xFF9285B5), // dusty lavender — dusk
     ),
     IntentionPath(

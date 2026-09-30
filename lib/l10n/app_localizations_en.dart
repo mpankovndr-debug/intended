@@ -2856,6 +2856,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingChapterOne => 'Chapter one';
 
   @override
+  String get onboardingStartTitleThree => 'Start with three small things.';
+
+  @override
+  String get onboardingStartTitleTwo => 'Start with two small things.';
+
+  @override
+  String get onboardingStartSubtitle =>
+      'Each takes a minute or two. Pick the ones you\'d actually do.';
+
+  @override
+  String onboardingStartShortMonth(int days, String month) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'You have $days days until $month.',
+      one: 'You have 1 day until $month.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get onboardingStartFocusChange => 'change';
+
+  @override
+  String get onboardingStartCap => 'That\'s as many as Today holds.';
+
+  @override
   String get chapterStageTry => 'Try a few';
 
   @override

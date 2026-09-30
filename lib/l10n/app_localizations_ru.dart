@@ -2931,6 +2931,35 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingChapterOne => 'Глава первая';
 
   @override
+  String get onboardingStartTitleThree => 'Начни с трёх маленьких дел.';
+
+  @override
+  String get onboardingStartTitleTwo => 'Начни с двух маленьких дел.';
+
+  @override
+  String get onboardingStartSubtitle =>
+      'Каждое займёт минуту-другую. Выбери те, что правда будешь делать.';
+
+  @override
+  String onboardingStartShortMonth(int days, String month) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'До $month $days дня.',
+      many: 'До $month $days дней.',
+      few: 'До $month $days дня.',
+      one: 'До $month $days день.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get onboardingStartFocusChange => 'изменить';
+
+  @override
+  String get onboardingStartCap => 'Больше на экран «Сегодня» не поместится.';
+
+  @override
   String get chapterStageTry => 'Пробовать';
 
   @override
