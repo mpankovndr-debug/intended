@@ -60,6 +60,10 @@ extension IntentionPathVoice on IntentionPathId {
 
 class IntentionPath {
   final IntentionPathId id;
+
+  /// The path's glyph, in the same soft style as the focus-area glyphs.
+  /// Three paths share one with the focus area they are about (Quiet Focus,
+  /// Closer to People, Your own way); the rest have their own.
   final String iconAsset;
   final String titleKey;
   final String subtitleKey;
@@ -87,7 +91,7 @@ class IntentionPath {
   static final List<IntentionPath> _all = [
     IntentionPath(
       id: IntentionPathId.gentleMornings,
-      iconAsset: 'assets/icons/path_gentle_mornings.svg',
+      iconAsset: 'assets/glyphs/path_sun.png',
       titleKey: 'pathGentleMorningsTitle',
       subtitleKey: 'pathGentleMorningsSubtitle',
       defaultFocusAreas: const ['Health', 'Mood'],
@@ -95,7 +99,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.anchorsForHardDays,
-      iconAsset: 'assets/icons/path_anchors_for_hard_days.svg',
+      iconAsset: 'assets/glyphs/path_anchor.png',
       titleKey: 'pathAnchorsForHardDaysTitle',
       subtitleKey: 'pathAnchorsForHardDaysSubtitle',
       defaultFocusAreas: const ['Mood', 'Self-care'],
@@ -103,7 +107,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.quietFocus,
-      iconAsset: 'assets/icons/path_quiet_focus.svg',
+      iconAsset: 'assets/glyphs/productivity_plane.png',
       titleKey: 'pathQuietFocusTitle',
       subtitleKey: 'pathQuietFocusSubtitle',
       defaultFocusAreas: const ['Self-care', 'Mood'],
@@ -111,7 +115,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.windingDown,
-      iconAsset: 'assets/icons/path_winding_down.svg',
+      iconAsset: 'assets/glyphs/path_candle.png',
       titleKey: 'pathWindingDownTitle',
       subtitleKey: 'pathWindingDownSubtitle',
       defaultFocusAreas: const ['Health', 'Mood'],
@@ -119,7 +123,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.softerNights,
-      iconAsset: 'assets/icons/path_winding_down.svg',
+      iconAsset: 'assets/glyphs/path_moon.png',
       titleKey: 'pathSofterNightsTitle',
       subtitleKey: 'pathSofterNightsSubtitle',
       defaultFocusAreas: const ['Health', 'Self-care'],
@@ -133,7 +137,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.lookingUp,
-      iconAsset: 'assets/icons/path_finding_calm.svg',
+      iconAsset: 'assets/glyphs/path_kite.png',
       titleKey: 'pathLookingUpTitle',
       subtitleKey: 'pathLookingUpSubtitle',
       defaultFocusAreas: const ['Mood', 'Health'],
@@ -147,7 +151,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.closerToPeople,
-      iconAsset: 'assets/icons/path_gratitude_self_love.svg',
+      iconAsset: 'assets/glyphs/relationships_hearts.png',
       titleKey: 'pathCloserToPeopleTitle',
       subtitleKey: 'pathCloserToPeopleSubtitle',
       defaultFocusAreas: const ['Relationships', 'Mood'],
@@ -161,7 +165,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.movingALittle,
-      iconAsset: 'assets/icons/path_gentle_mornings.svg',
+      iconAsset: 'assets/glyphs/path_shoe.png',
       titleKey: 'pathMovingALittleTitle',
       subtitleKey: 'pathMovingALittleSubtitle',
       defaultFocusAreas: const ['Health', 'Self-care'],
@@ -175,7 +179,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.throughAHardSeason,
-      iconAsset: 'assets/icons/path_finding_calm.svg',
+      iconAsset: 'assets/glyphs/path_umbrella.png',
       titleKey: 'pathThroughAHardSeasonTitle',
       subtitleKey: 'pathThroughAHardSeasonSubtitle',
       defaultFocusAreas: const ['Self-care', 'Mood'],
@@ -191,7 +195,7 @@ class IntentionPath {
     // Not surfaced in [pickerOptions].
     IntentionPath(
       id: IntentionPathId.yourOwnWay,
-      iconAsset: 'assets/icons/path_your_own_way.svg',
+      iconAsset: 'assets/glyphs/custom_star.png',
       titleKey: 'pathYourOwnWayTitle',
       subtitleKey: 'pathYourOwnWaySubtitle',
       defaultFocusAreas: const [],

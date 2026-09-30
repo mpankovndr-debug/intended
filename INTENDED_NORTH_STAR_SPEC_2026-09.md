@@ -405,13 +405,13 @@ and gains a soft glowing edge. No stars or night sky.
 > **What would you like more of?**
 > Pick the closest one. You'll say it your own way next.
 Options: the existing path titles and subtitles. "Your own way" becomes *Something else*.
-**Icons:** none exist. The five `assets/icons/path_*.svg` files are identical grey-circle placeholders
-and two referenced files are missing; nothing renders `IntentionPath.iconAsset` today. Proposed: built-in
-Cupertino line icons (already used 84 times in the app), stored as `IconData` on the model, and the
-placeholders deleted. Gentle Mornings `sunrise`, Quiet Focus `eyeglasses`, Winding Down `sunset`,
-Softer Nights `moon_stars`, Looking Up `cloud_sun`, Closer to People `person_2`, Through a Hard Season
-`umbrella`, Something else `pencil`. **No good built-in match:** Anchors for Hard Days (no anchor) and
-Moving a Little (no walking figure). Pending: two custom SVGs, or the closest built-ins.
+**Icons (done 30 Sep):** glyphs in the same soft style as the focus-area set, in `assets/glyphs/`.
+Seven new, generated to match the set with their sparkles lightened to its colour: Gentle Mornings
+`path_sun`, Anchors for Hard Days `path_anchor`, Winding Down `path_candle`, Softer Nights `path_moon`,
+Looking Up `path_kite`, Moving a Little `path_shoe`, Through a Hard Season `path_umbrella`. Three
+shared with their focus area: Quiet Focus `productivity_plane`, Closer to People
+`relationships_hearts`, Something else `custom_star`. The grey placeholders are gone, and
+`test/intention_path_assets_test.dart` fails if a path points at a missing or shared file.
 
 **3. Say it your way, then the chapter** (replaces the commitment screen; one screen, two states)
 > **Say it your way.**
