@@ -37,7 +37,7 @@ import 'screens/habit_completion_modal.dart';
 import 'models/moment.dart';
 import 'models/rescue.dart';
 import 'services/moments_service.dart';
-import 'services/milestone_service.dart';
+import 'services/completion_service.dart';
 import 'services/reflection_service.dart';
 import 'services/season_service.dart';
 import 'utils/profanity_filter.dart'; // Add this
@@ -2894,16 +2894,8 @@ class _HabitCardState extends State<_HabitCard>
     // No confirmation step (§5.2) — the tap *is* the completion. Record it
     // first so the sheet only has to ask how it landed, and so a dismissed
     // sheet still leaves the moment safely stored.
-    await HabitTracker.markDone(widget.habitTitle);
-    AnalyticsService.logHabitCompleted(widget.habitTitle);
-
-    final category = ReflectionService.categoryForHabit(widget.habitTitle);
-    final moment = Moment.create(
-      habitName: widget.habitTitle,
-      category: category,
-    );
-    await MomentsService.record(moment);
-    MilestoneService.invalidate();
+    final moment = await CompletionService.record(widget.habitTitle);
+    final category = moment.category;
     if (mounted) context.read<BackupService>().backup();
 
     final monthCategories = await MomentsService.categoriesForMonth(
@@ -3101,16 +3093,9 @@ class _HabitCardState extends State<_HabitCard>
     // not today. A Moment without its `habit_done_` key left anything
     // counting from one store disagreeing with anything counting from the
     // other, for the same habit.
-    await HabitTracker.markDone(widget.habitTitle, on: yesterday);
-
-    final category = ReflectionService.categoryForHabit(widget.habitTitle);
-    final moment = Moment.create(
-      habitName: widget.habitTitle,
-      category: category,
-      at: yesterday,
-    );
-    await MomentsService.record(moment);
-    MilestoneService.invalidate();
+    final moment =
+        await CompletionService.record(widget.habitTitle, on: yesterday);
+    final category = moment.category;
     if (!mounted) return;
     context.read<BackupService>().backup();
     HapticFeedback.lightImpact();
@@ -6840,17 +6825,7 @@ class _HabitActionScreenState extends State<HabitActionScreen> {
     });
 
     HapticFeedback.heavyImpact();
-    await HabitTracker.markDone(widget.habitTitle);
-    AnalyticsService.logHabitCompleted(widget.habitTitle);
-
-    // Record the moment
-    await MomentsService.record(
-      Moment.create(
-        habitName: widget.habitTitle,
-        category: ReflectionService.categoryForHabit(widget.habitTitle),
-      ),
-    );
-    MilestoneService.invalidate();
+    await CompletionService.record(widget.habitTitle);
     if (mounted) context.read<BackupService>().backup();
 
     // Update home screen widget

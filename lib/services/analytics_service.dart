@@ -97,11 +97,13 @@ class AnalyticsService {
 
   // ── Habit Events ──────────────────────────────────────────────
 
-  static void logHabitCompleted(String habitName) {
-    _analytics.logEvent(
-      name: 'habit_completed',
-      parameters: {'habit_name': habitName},
-    );
+  static Future<void> logHabitCompleted(String habitName) async {
+    try {
+      await _analytics.logEvent(
+        name: 'habit_completed',
+        parameters: {'habit_name': habitName},
+      );
+    } catch (_) {}
   }
 
   static void logCustomHabitCreated(String habitName) {
