@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/chapter.dart';
 import '../models/intention_path.dart';
 import '../services/action_cues.dart';
 import '../services/analytics_service.dart';
@@ -526,6 +527,21 @@ class OnboardingState extends ChangeNotifier {
   static const _prefSentence = 'onboarding_sentence';
   static const _prefSentencePath = 'onboarding_sentence_path';
   static const _prefSentenceSealedAt = 'onboarding_sentence_sealed_at';
+
+  /// The chapter the sealed sentence will open, for the screens after the
+  /// seal to read before onboarding finishes and writes the real one: its
+  /// dates come from the moment of sealing, as the real one's will.
+  /// Before a seal, dated [now].
+  Chapter previewChapter({DateTime Function()? now}) {
+    final at = _sentenceSealedAt ?? (now ?? DateTime.now)();
+    return Chapter.start(
+      id: 'preview',
+      sentence: _sentence ?? '…',
+      pathKey: _selectedIntentionPath,
+      startedAt: at,
+      offsetMinutes: at.toLocal().timeZoneOffset.inMinutes,
+    );
+  }
 
   /// Seals the sentence (spec §6, screen 3). The chapter itself is written
   /// only when onboarding finishes, so someone who quits halfway leaves no

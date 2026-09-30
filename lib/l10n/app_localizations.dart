@@ -4899,6 +4899,36 @@ abstract class AppLocalizations {
   /// **'get into bed'**
   String get cuePresetBed;
 
+  /// No description provided for @onboardingTryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Every time you do one, a square appears.'**
+  String get onboardingTryTitle;
+
+  /// No description provided for @onboardingTrySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Do one of them now, then tap it.'**
+  String get onboardingTrySubtitle;
+
+  /// No description provided for @onboardingTryFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s the first square of your chapter.'**
+  String get onboardingTryFirst;
+
+  /// No description provided for @onboardingTryReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'Miss a few days and nothing is lost. When you come back, the app marks the return, not the gap.'**
+  String get onboardingTryReturn;
+
+  /// No description provided for @onboardingTryLater.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll do it later'**
+  String get onboardingTryLater;
+
   /// No description provided for @chapterStageTry.
   ///
   /// In en, this message translates to:

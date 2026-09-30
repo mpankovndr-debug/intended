@@ -6,7 +6,6 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
-import '../models/chapter.dart';
 import '../models/intention_path.dart';
 import '../models/start_small.dart';
 import '../services/analytics_service.dart';
@@ -62,18 +61,6 @@ class _StartSmallScreenState extends State<StartSmallScreen> {
   IntentionPath _path(OnboardingState state) => IntentionPath.getById(
       IntentionPathId.fromKey(state.selectedIntentionPath));
 
-  /// The chapter onboarding will write, for its first month's length.
-  Chapter _chapter(OnboardingState state) {
-    final at = state.sentenceSealedAt ?? (widget.now ?? DateTime.now)();
-    return Chapter.start(
-      id: 'preview',
-      sentence: state.sentence ?? '…',
-      pathKey: state.selectedIntentionPath,
-      startedAt: at,
-      offsetMinutes: at.toLocal().timeZoneOffset.inMinutes,
-    );
-  }
-
   /// What is on offer, plus anything chosen that no longer is (after a focus
   /// change): a chosen action is never hidden (CLAUDE.md).
   List<String> _shown(OnboardingState state) {
@@ -127,7 +114,7 @@ class _StartSmallScreenState extends State<StartSmallScreen> {
     final state = context.watch<OnboardingState>();
     final colors = context.watch<ThemeProvider>().colors;
     final locale = Localizations.localeOf(context).toString();
-    final chapter = _chapter(state);
+    final chapter = state.previewChapter(now: widget.now);
     final short = chapter.suggestedFirstActions < 3;
     final shown = _shown(state);
     final body = AppTextStyles.bodyFont(context);

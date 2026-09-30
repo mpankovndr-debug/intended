@@ -2988,6 +2988,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cuePresetBed => 'лягу в кровать';
 
   @override
+  String get onboardingTryTitle =>
+      'За каждое сделанное дело появляется квадрат.';
+
+  @override
+  String get onboardingTrySubtitle =>
+      'Сделай одно из них сейчас и нажми на него.';
+
+  @override
+  String get onboardingTryFirst => 'Это первый квадрат твоей главы.';
+
+  @override
+  String get onboardingTryReturn =>
+      'Пропустишь несколько дней, ничего не пропадёт. Когда вернёшься, приложение отметит возвращение, а не пропуск.';
+
+  @override
+  String get onboardingTryLater => 'Сделаю позже';
+
+  @override
   String get chapterStageTry => 'Пробовать';
 
   @override

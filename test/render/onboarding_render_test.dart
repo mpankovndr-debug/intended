@@ -12,6 +12,7 @@ import 'package:intended/onboarding_v2/direction_screen.dart';
 import 'package:intended/onboarding_v2/onboarding_state.dart';
 import 'package:intended/onboarding_v2/sentence_screen.dart';
 import 'package:intended/onboarding_v2/start_small_screen.dart';
+import 'package:intended/onboarding_v2/try_it_screen.dart';
 import 'package:intended/theme/category_glyphs.dart';
 import 'package:intended/onboarding_v2/widgets/hold_to_confirm_button.dart';
 import 'package:intended/theme/theme_provider.dart';
@@ -255,6 +256,37 @@ void main() {
       await tester.pump(CuesScreen.beat);
       await tester.pumpAndSettle();
       await _shot(tester, '$_dir/onboarding_5_cues_all_$lc.png');
+    }, skip: _dir == null);
+  }
+
+  for (final locale in const [Locale('en'), Locale('ru')]) {
+    final lc = locale.languageCode;
+    testWidgets('try it, $lc', (tester) async {
+      final state = await withActions();
+      await _mount(tester, TryItScreen(onContinue: (_) {}),
+          state: state, locale: locale);
+      await _shot(tester, '$_dir/onboarding_7_try_before_$lc.png');
+
+      final first = tester.widget<Text>(find
+          .descendant(of: find.byType(ListView), matching: find.byType(Text))
+          .first);
+      await tester.tap(find.text(first.data!));
+      // The recording is real storage work: let it finish off the fake clock.
+      for (var i = 0; i < 4; i++) {
+        await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+        await tester.pump();
+      }
+      var frame = 0;
+      for (var t = 0; t <= TryItScreen.landing.inMilliseconds; t += 80) {
+        if (lc == 'en') {
+          await _shot(tester,
+              '$_dir/try_frames/f_${(frame++).toString().padLeft(3, '0')}.png',
+              ratio: 1);
+        }
+        await tester.pump(const Duration(milliseconds: 80));
+      }
+      await tester.pumpAndSettle();
+      await _shot(tester, '$_dir/onboarding_7_try_landed_$lc.png');
     }, skip: _dir == null);
   }
 

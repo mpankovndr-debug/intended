@@ -467,6 +467,13 @@ ghost tile. Tiles are plain colour, never icons: the sheet shows "the tile the m
 > Miss a few days and nothing is lost. When you come back, the app marks the return, not the gap.
 > Link: *I'll do it later*
 
+Built 30 Sep: the tap records a real moment through `CompletionService` (the same one Today uses) without
+the mood sheet, since this screen is itself the completion moment and the sheet would show the tile a
+second time. Subtitle *Do one of them now, then tap it.* says the tap means it was done. The first-square
+line renders only when the chapter's `stageOn` holds the moment's day; the return line is true because
+`MomentGrid` rings the first moment after a quiet stretch. One moment per onboarding: coming back to the
+screen shows it landed. The screen reports whether a moment was recorded, so the paywall follows only one.
+
 **8. Paywall** (existing, after the first moment, per handoff §5.4)
 > **A gentler way to keep going.** Your first square is already yours.
 

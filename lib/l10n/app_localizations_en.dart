@@ -2911,6 +2911,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cuePresetBed => 'get into bed';
 
   @override
+  String get onboardingTryTitle => 'Every time you do one, a square appears.';
+
+  @override
+  String get onboardingTrySubtitle => 'Do one of them now, then tap it.';
+
+  @override
+  String get onboardingTryFirst => 'That\'s the first square of your chapter.';
+
+  @override
+  String get onboardingTryReturn =>
+      'Miss a few days and nothing is lost. When you come back, the app marks the return, not the gap.';
+
+  @override
+  String get onboardingTryLater => 'I\'ll do it later';
+
+  @override
   String get chapterStageTry => 'Try a few';
 
   @override
