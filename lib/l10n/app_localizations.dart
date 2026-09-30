@@ -4764,7 +4764,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingSentenceTitle.
   ///
   /// In en, this message translates to:
-  /// **'Say it your way.'**
+  /// **'Say it your way'**
   String get onboardingSentenceTitle;
 
   /// No description provided for @onboardingSentencePrefix.
@@ -4794,7 +4794,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingChapterUntil.
   ///
   /// In en, this message translates to:
-  /// **'Your first chapter runs until {date}.'**
+  /// **'Until {date}.'**
   String onboardingChapterUntil(String date);
 
   /// No description provided for @onboardingChapterDecide.
@@ -4802,6 +4802,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'At the end, you decide what changed.'**
   String get onboardingChapterDecide;
+
+  /// No description provided for @onboardingChapterOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapter one'**
+  String get onboardingChapterOne;
 
   /// No description provided for @chapterStageTry.
   ///

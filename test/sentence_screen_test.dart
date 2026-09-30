@@ -85,7 +85,7 @@ void main() {
     await pump(tester);
     await hold(tester, const Duration(milliseconds: 600));
     expect(state.sentence, isNull);
-    expect(find.text('Say it your way.'), findsOneWidget);
+    expect(find.text('CHAPTER ONE'), findsNothing);
   });
 
   testWidgets('a full hold seals the words and shows the chapter',
@@ -97,11 +97,12 @@ void main() {
     expect(state.sentence, 'rest');
     expect(state.sentencePathKey, IntentionPathId.windingDown.key);
     expect(state.sentenceSealedAt, now.toUtc());
-    expect(find.text('Your first chapter runs until 31\u00A0December.'),
-        findsOneWidget);
+    expect(find.text('CHAPTER ONE'), findsOneWidget);
+    expect(find.textContaining('Until 31\u00A0December.'), findsOneWidget);
     expect(find.text('“I want to rest”'), findsOneWidget);
-    expect(find.text('Oct'), findsOneWidget);
-    expect(find.text('Dec'), findsOneWidget);
+    expect(find.text('October'), findsOneWidget);
+    expect(find.text('Try a few'), findsOneWidget);
+    expect(find.text('December'), findsOneWidget);
 
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
@@ -128,10 +129,10 @@ void main() {
   testWidgets('back from the chapter returns to the words', (tester) async {
     await pump(tester);
     await hold(tester, const Duration(milliseconds: 1300));
-    expect(find.text('Say it your way.'), findsNothing);
+    expect(find.text('CHAPTER ONE'), findsOneWidget);
     await tester.tap(find.byIcon(CupertinoIcons.chevron_left));
     await tester.pumpAndSettle();
-    expect(find.text('Say it your way.'), findsOneWidget);
+    expect(find.text('CHAPTER ONE'), findsNothing);
     expect(field(tester), windingDown);
   });
 

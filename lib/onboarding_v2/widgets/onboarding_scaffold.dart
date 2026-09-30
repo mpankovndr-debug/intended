@@ -1,19 +1,18 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-import '../../theme/app_colors.dart';
+import '../../main.dart' show AppBackground;
 import '../../theme/theme_provider.dart';
 import '../../utils/text_styles.dart';
 import '../../widgets/onboarding_progress_bar.dart';
 
-/// The frame every screen of the new onboarding shares (spec §6): the
-/// onboarding gradient and its two orbs, the step bar, an optional headline,
-/// the screen's own content, and the primary button over a fade.
+/// The frame every screen of the new onboarding shares (spec §6): the app's
+/// own painted background for the current theme, the step bar, an optional
+/// headline, the screen's own content, and the primary button over a fade.
 ///
-/// Three older screens each carry their own copy of the orbs; the new ones
-/// take them from here.
+/// The older onboarding screens drew a flat gradient with two blurred orbs
+/// and never showed the painting the rest of the app sits on; that was most
+/// of why they felt like a form.
 class OnboardingScaffold extends StatelessWidget {
   const OnboardingScaffold({
     super.key,
@@ -58,116 +57,101 @@ class OnboardingScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.watch<ThemeProvider>().colors;
-    final size = MediaQuery.of(context).size;
     final locale = Localizations.localeOf(context).toString();
     final ctaBottom = footer == null ? 60.0 : 88.0;
 
     return CupertinoPageScaffold(
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: const Alignment(0.15, -1.0),
-                end: const Alignment(-0.15, 1.0),
-                colors: [
-                  colors.onboardingBg1,
-                  colors.onboardingBg2,
-                  colors.onboardingBg3,
-                  colors.onboardingBg4,
-                ],
-                stops: const [0.0, 0.3, 0.6, 1.0],
-              ),
-            ),
-          ),
-          _Orbs(size: size, colors: colors),
-          SafeArea(
-            bottom: false,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                  child: OnboardingProgressBar(
-                    currentStep: step,
-                    totalSteps: totalSteps,
-                    onBack: onBack,
-                  ),
-                ),
-                if (title != null)
+      child: AppBackground(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            SafeArea(
+              bottom: false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(28, 28, 28, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title!,
-                          style: TextStyle(
-                            fontFamily: AppTextStyles.displayFontFor(locale),
-                            fontSize: locale.startsWith('ru') ? 26 : 28,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: -0.3,
-                            height: 1.25,
-                            color: colors.textPrimary,
-                          ),
-                        ),
-                        if (subtitle != null) ...[
-                          const SizedBox(height: 10),
-                          Text(
-                            subtitle!,
-                            style: TextStyle(
-                              fontFamily: AppTextStyles.bodyFont(context),
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: colors.ctaSecondary,
-                              height: 1.45,
-                            ),
-                          ),
-                        ],
-                      ],
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                    child: OnboardingProgressBar(
+                      currentStep: step,
+                      totalSteps: totalSteps,
+                      onBack: onBack,
                     ),
                   ),
-                Expanded(child: child),
-              ],
+                  if (title != null)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(28, 28, 28, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title!,
+                            style: TextStyle(
+                              fontFamily: AppTextStyles.displayFontFor(locale),
+                              fontSize: locale.startsWith('ru') ? 26 : 28,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.3,
+                              height: 1.25,
+                              color: colors.textPrimary,
+                            ),
+                          ),
+                          if (subtitle != null) ...[
+                            const SizedBox(height: 10),
+                            Text(
+                              subtitle!,
+                              style: TextStyle(
+                                fontFamily: AppTextStyles.bodyFont(context),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: colors.ctaSecondary,
+                                height: 1.45,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  Expanded(child: child),
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: ctaBottom + 100,
-            child: IgnorePointer(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      colors.onboardingBg4.withValues(alpha: 0.0),
-                      colors.onboardingBg4.withValues(alpha: 0.92),
-                      colors.onboardingBg4.withValues(alpha: 0.98),
-                    ],
-                    stops: const [0.0, 0.5, 1.0],
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: ctaBottom + 100,
+              child: IgnorePointer(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        colors.onboardingBg4.withValues(alpha: 0.0),
+                        colors.onboardingBg4.withValues(alpha: 0.92),
+                        colors.onboardingBg4.withValues(alpha: 0.98),
+                      ],
+                      stops: const [0.0, 0.5, 1.0],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            left: 28,
-            right: 28,
-            bottom: ctaBottom,
-            child: cta ?? OnboardingCta(label: ctaLabel!, onPressed: onCta),
-          ),
-          if (footer != null)
             Positioned(
               left: 28,
               right: 28,
-              bottom: 36,
-              child: Center(child: footer),
+              bottom: ctaBottom,
+              child: cta ?? OnboardingCta(label: ctaLabel!, onPressed: onCta),
             ),
-        ],
+            if (footer != null)
+              Positioned(
+                left: 28,
+                right: 28,
+                bottom: 36,
+                child: Center(child: footer),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -237,61 +221,6 @@ class OnboardingCta extends StatelessWidget {
                       colors.onboardingBg4,
                     ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Orbs extends StatelessWidget {
-  const _Orbs({required this.size, required this.colors});
-
-  final Size size;
-  final AppColorScheme colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Stack(
-        children: [
-          Positioned(
-            top: size.height * 0.1,
-            right: size.width * -0.05,
-            child: _orb(
-              256,
-              60,
-              colors.surfaceLightest.withValues(alpha: 0.6),
-              colors.borderMedium.withValues(alpha: 0.2),
-            ),
-          ),
-          Positioned(
-            bottom: size.height * 0.25,
-            left: size.width * -0.08,
-            child: _orb(
-              224,
-              55,
-              colors.onboardingBg1.withValues(alpha: 0.55),
-              colors.onboardingBg4.withValues(alpha: 0.18),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _orb(double diameter, double blur, Color inner, Color outer) {
-    return ImageFiltered(
-      imageFilter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-      child: Container(
-        width: diameter,
-        height: diameter,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: RadialGradient(
-            center: const Alignment(-0.35, -0.35),
-            radius: 0.9,
-            colors: [inner, outer],
           ),
         ),
       ),

@@ -420,13 +420,21 @@ shared with their focus area: Quiet Focus `productivity_plane`, Closer to People
 > Only you see this. You can change it later.
 > Button: **Hold to make it yours** (a 1.2 s press with a rising haptic; the fill completes and glows)
 
-The hold creates chapter 1 (`ChapterService.start`). On the same screen the sentence moves up into
-quotes, the chips fade, and the chapter appears:
-> **Your first chapter runs until {31 December}.**
-> At the end, you decide what changed.
-> Three segments: *Oct · Try a few* (lit), *Nov · Keep what stuck*, *Dec · Make it lighter*.
-> They show time, not progress.
+The hold seals the sentence (the chapter is written when onboarding finishes, dated from the hold).
+Then the chapter opens on the same screen, as a book's chapter opening page made of typography and space
+alone (storyboard, 30 Sep). In 2.2 s:
+everything but the sentence blurs away; the sentence travels to the middle and scales to the title
+size (one haptic as it lands); it blurs out and the quoted title blurs in; CHAPTER ONE appears; a rule
+draws outward from the centre; the three months appear one by one as a contents list with dot leaders
+(month, stage flush right, the current month strongest); then the date line and Continue. Reduce Motion
+shows the page without the journey.
+> CHAPTER ONE
+> **“I want to let the day go before I sleep”**
+> October ····· Try a few / November ····· Keep what stuck / December ····· Make it lighter
+> Until {31 December}. At the end, you decide what changed.
 > Button: **Continue**
+
+Every onboarding screen sits on the theme's own painting (`AppBackground`), not a flat gradient.
 
 **4. Start small** (replaces today's action reveal)
 > **Start with three small things.** Each takes a minute or two. Pick the ones you'd actually do.

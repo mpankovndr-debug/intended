@@ -2827,7 +2827,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Pick the closest one. You\'ll say it your own way next.';
 
   @override
-  String get onboardingSentenceTitle => 'Say it your way.';
+  String get onboardingSentenceTitle => 'Say it your way';
 
   @override
   String get onboardingSentencePrefix => 'I want to';
@@ -2846,11 +2846,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String onboardingChapterUntil(String date) {
-    return 'Your first chapter runs until $date.';
+    return 'Until $date.';
   }
 
   @override
   String get onboardingChapterDecide => 'At the end, you decide what changed.';
+
+  @override
+  String get onboardingChapterOne => 'Chapter one';
 
   @override
   String get chapterStageTry => 'Try a few';

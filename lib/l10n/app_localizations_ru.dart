@@ -2894,7 +2894,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Выбери самое близкое. Дальше скажешь своими словами.';
 
   @override
-  String get onboardingSentenceTitle => 'Скажи по-своему.';
+  String get onboardingSentenceTitle => 'Скажи по-своему';
 
   @override
   String get onboardingSentencePrefix => 'Я хочу';
@@ -2921,11 +2921,14 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String onboardingChapterUntil(String date) {
-    return 'Твоя первая глава продлится до $date.';
+    return 'До $date.';
   }
 
   @override
   String get onboardingChapterDecide => 'В конце ты решишь, что изменилось.';
+
+  @override
+  String get onboardingChapterOne => 'Глава первая';
 
   @override
   String get chapterStageTry => 'Пробовать';
