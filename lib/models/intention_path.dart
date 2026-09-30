@@ -238,6 +238,74 @@ class IntentionPath {
         IntentionPathId.yourOwnWay => l10n.pathYourOwnWayTitle,
       };
 
+  /// What "I want to …" starts as on the sentence screen: the path's own
+  /// continuation, which the person then makes theirs (spec §1). Empty for
+  /// "Your own way", which names nothing to start from.
+  String sentence(AppLocalizations l10n) => switch (id) {
+        IntentionPathId.gentleMornings => l10n.pathGentleMorningsSentence,
+        IntentionPathId.anchorsForHardDays =>
+          l10n.pathAnchorsForHardDaysSentence,
+        IntentionPathId.quietFocus => l10n.pathQuietFocusSentence,
+        IntentionPathId.windingDown => l10n.pathWindingDownSentence,
+        IntentionPathId.softerNights => l10n.pathSofterNightsSentence,
+        IntentionPathId.lookingUp => l10n.pathLookingUpSentence,
+        IntentionPathId.closerToPeople => l10n.pathCloserToPeopleSentence,
+        IntentionPathId.movingALittle => l10n.pathMovingALittleSentence,
+        IntentionPathId.throughAHardSeason =>
+          l10n.pathThroughAHardSeasonSentence,
+        IntentionPathId.yourOwnWay => '',
+      };
+
+  /// Three other ways to finish the same sentence, offered as chips.
+  List<String> sentenceIdeas(AppLocalizations l10n) => switch (id) {
+        IntentionPathId.gentleMornings => [
+            l10n.pathGentleMorningsIdea1,
+            l10n.pathGentleMorningsIdea2,
+            l10n.pathGentleMorningsIdea3,
+          ],
+        IntentionPathId.anchorsForHardDays => [
+            l10n.pathAnchorsForHardDaysIdea1,
+            l10n.pathAnchorsForHardDaysIdea2,
+            l10n.pathAnchorsForHardDaysIdea3,
+          ],
+        IntentionPathId.quietFocus => [
+            l10n.pathQuietFocusIdea1,
+            l10n.pathQuietFocusIdea2,
+            l10n.pathQuietFocusIdea3,
+          ],
+        IntentionPathId.windingDown => [
+            l10n.pathWindingDownIdea1,
+            l10n.pathWindingDownIdea2,
+            l10n.pathWindingDownIdea3,
+          ],
+        IntentionPathId.softerNights => [
+            l10n.pathSofterNightsIdea1,
+            l10n.pathSofterNightsIdea2,
+            l10n.pathSofterNightsIdea3,
+          ],
+        IntentionPathId.lookingUp => [
+            l10n.pathLookingUpIdea1,
+            l10n.pathLookingUpIdea2,
+            l10n.pathLookingUpIdea3,
+          ],
+        IntentionPathId.closerToPeople => [
+            l10n.pathCloserToPeopleIdea1,
+            l10n.pathCloserToPeopleIdea2,
+            l10n.pathCloserToPeopleIdea3,
+          ],
+        IntentionPathId.movingALittle => [
+            l10n.pathMovingALittleIdea1,
+            l10n.pathMovingALittleIdea2,
+            l10n.pathMovingALittleIdea3,
+          ],
+        IntentionPathId.throughAHardSeason => [
+            l10n.pathThroughAHardSeasonIdea1,
+            l10n.pathThroughAHardSeasonIdea2,
+            l10n.pathThroughAHardSeasonIdea3,
+          ],
+        IntentionPathId.yourOwnWay => const [],
+      };
+
   String subtitle(AppLocalizations l10n) => switch (id) {
         IntentionPathId.gentleMornings => l10n.pathGentleMorningsSubtitle,
         IntentionPathId.anchorsForHardDays =>

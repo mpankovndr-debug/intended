@@ -18,14 +18,16 @@ class OnboardingScaffold extends StatelessWidget {
   const OnboardingScaffold({
     super.key,
     required this.step,
-    required this.ctaLabel,
-    required this.onCta,
+    this.ctaLabel,
+    this.onCta,
+    this.cta,
     required this.child,
     this.title,
     this.subtitle,
     this.onBack,
     this.footer,
-  });
+  }) : assert((cta == null) != (ctaLabel == null),
+            'Give either a standard button label or a custom cta');
 
   /// Onboarding is three steps in the bar: what you want, how you'll get
   /// there, and the first moment.
@@ -40,7 +42,7 @@ class OnboardingScaffold extends StatelessWidget {
   final String? title;
   final String? subtitle;
   final Widget child;
-  final String ctaLabel;
+  final String? ctaLabel;
 
   /// Null draws the button disabled.
   final VoidCallback? onCta;
@@ -48,6 +50,10 @@ class OnboardingScaffold extends StatelessWidget {
 
   /// A quiet line under the button, such as "Skip for now".
   final Widget? footer;
+
+  /// Replaces the standard button, for a screen whose action is not a tap
+  /// (the hold on the sentence screen).
+  final Widget? cta;
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +158,7 @@ class OnboardingScaffold extends StatelessWidget {
             left: 28,
             right: 28,
             bottom: ctaBottom,
-            child: OnboardingCta(label: ctaLabel, onPressed: onCta),
+            child: cta ?? OnboardingCta(label: ctaLabel!, onPressed: onCta),
           ),
           if (footer != null)
             Positioned(

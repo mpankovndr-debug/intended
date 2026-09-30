@@ -1,3 +1,5 @@
+import '../l10n/app_localizations.dart';
+
 /// How a chapter ended, in the person's own answer (spec §2.3).
 ///
 /// The app never declares a chapter achieved or missed: it asks, and this is
@@ -175,6 +177,23 @@ class Chapter {
   int get suggestedFirstActions => firstMonthDays < shortFirstMonthDays
       ? actionsForShortFirstMonth
       : actionsForFullFirstMonth;
+
+  /// The chapter's three calendar months, as first days (UTC-flagged): one
+  /// per stage. Month 1 also holds any start-month days folded into it.
+  List<DateTime> get months {
+    final m1 = _parseMonthKey(month1Key);
+    return [
+      for (var i = 0; i < 3; i++) DateTime.utc(m1.year, m1.month + i, 1),
+    ];
+  }
+
+  /// The name of stage [stage] (1 to 3): *Try a few*, *Keep what stuck*,
+  /// *Make it lighter*.
+  static String stageName(int stage, AppLocalizations l10n) => switch (stage) {
+        1 => l10n.chapterStageTry,
+        2 => l10n.chapterStageKeep,
+        _ => l10n.chapterStageLighter,
+      };
 
   /// 1, 2 or 3 on [localDay] (a UTC-flagged calendar day, as
   /// `Moment.localDay` returns), or null outside the chapter.

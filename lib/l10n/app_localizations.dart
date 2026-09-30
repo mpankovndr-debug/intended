@@ -4761,6 +4761,282 @@ abstract class AppLocalizations {
   /// **'Pick the closest one. You\'ll say it your own way next.'**
   String get onboardingDirectionSubtitle;
 
+  /// No description provided for @onboardingSentenceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Say it your way.'**
+  String get onboardingSentenceTitle;
+
+  /// No description provided for @onboardingSentencePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'I want to'**
+  String get onboardingSentencePrefix;
+
+  /// No description provided for @onboardingSentencePrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Only you see this. You can change it later.'**
+  String get onboardingSentencePrivacy;
+
+  /// No description provided for @onboardingSentenceHold.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold to make it yours'**
+  String get onboardingSentenceHold;
+
+  /// No description provided for @onboardingSentenceLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s as long as it gets: {max} characters.'**
+  String onboardingSentenceLimit(int max);
+
+  /// No description provided for @onboardingChapterUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first chapter runs until {date}.'**
+  String onboardingChapterUntil(String date);
+
+  /// No description provided for @onboardingChapterDecide.
+  ///
+  /// In en, this message translates to:
+  /// **'At the end, you decide what changed.'**
+  String get onboardingChapterDecide;
+
+  /// No description provided for @chapterStageTry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a few'**
+  String get chapterStageTry;
+
+  /// No description provided for @chapterStageKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep what stuck'**
+  String get chapterStageKeep;
+
+  /// No description provided for @chapterStageLighter.
+  ///
+  /// In en, this message translates to:
+  /// **'Make it lighter'**
+  String get chapterStageLighter;
+
+  /// No description provided for @pathGentleMorningsSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'start my mornings slower'**
+  String get pathGentleMorningsSentence;
+
+  /// No description provided for @pathGentleMorningsIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'wake up without rushing'**
+  String get pathGentleMorningsIdea1;
+
+  /// No description provided for @pathGentleMorningsIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'start the day with something for me'**
+  String get pathGentleMorningsIdea2;
+
+  /// No description provided for @pathGentleMorningsIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'have a calmer first hour'**
+  String get pathGentleMorningsIdea3;
+
+  /// No description provided for @pathAnchorsForHardDaysSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'have something that steadies me on hard days'**
+  String get pathAnchorsForHardDaysSentence;
+
+  /// No description provided for @pathAnchorsForHardDaysIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'feel steadier when things get loud'**
+  String get pathAnchorsForHardDaysIdea1;
+
+  /// No description provided for @pathAnchorsForHardDaysIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'have one thing I can always come back to'**
+  String get pathAnchorsForHardDaysIdea2;
+
+  /// No description provided for @pathAnchorsForHardDaysIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'be kinder to myself on bad days'**
+  String get pathAnchorsForHardDaysIdea3;
+
+  /// No description provided for @pathQuietFocusSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'get things done without burning out'**
+  String get pathQuietFocusSentence;
+
+  /// No description provided for @pathQuietFocusIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'do one thing at a time'**
+  String get pathQuietFocusIdea1;
+
+  /// No description provided for @pathQuietFocusIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'end the day with energy left'**
+  String get pathQuietFocusIdea2;
+
+  /// No description provided for @pathQuietFocusIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'stop working in a rush'**
+  String get pathQuietFocusIdea3;
+
+  /// No description provided for @pathWindingDownSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'let the day go before I sleep'**
+  String get pathWindingDownSentence;
+
+  /// No description provided for @pathWindingDownIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'slow down in the evenings'**
+  String get pathWindingDownIdea1;
+
+  /// No description provided for @pathWindingDownIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'stop scrolling in bed'**
+  String get pathWindingDownIdea2;
+
+  /// No description provided for @pathWindingDownIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'sleep a bit earlier'**
+  String get pathWindingDownIdea3;
+
+  /// No description provided for @pathSofterNightsSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'stop fighting my sleep'**
+  String get pathSofterNightsSentence;
+
+  /// No description provided for @pathSofterNightsIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'fall asleep more easily'**
+  String get pathSofterNightsIdea1;
+
+  /// No description provided for @pathSofterNightsIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'have a calmer bedtime'**
+  String get pathSofterNightsIdea2;
+
+  /// No description provided for @pathSofterNightsIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'wake up more rested'**
+  String get pathSofterNightsIdea3;
+
+  /// No description provided for @pathLookingUpSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'spend less of my day on my phone'**
+  String get pathLookingUpSentence;
+
+  /// No description provided for @pathLookingUpIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'notice more of what\'s around me'**
+  String get pathLookingUpIdea1;
+
+  /// No description provided for @pathLookingUpIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'pick up my phone less'**
+  String get pathLookingUpIdea2;
+
+  /// No description provided for @pathLookingUpIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'spend evenings off screens'**
+  String get pathLookingUpIdea3;
+
+  /// No description provided for @pathCloserToPeopleSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'stay close to the people I care about'**
+  String get pathCloserToPeopleSentence;
+
+  /// No description provided for @pathCloserToPeopleIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'reach out more often'**
+  String get pathCloserToPeopleIdea1;
+
+  /// No description provided for @pathCloserToPeopleIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'be more present with friends'**
+  String get pathCloserToPeopleIdea2;
+
+  /// No description provided for @pathCloserToPeopleIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'call the people I miss'**
+  String get pathCloserToPeopleIdea3;
+
+  /// No description provided for @pathMovingALittleSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'move my body more, gently'**
+  String get pathMovingALittleSentence;
+
+  /// No description provided for @pathMovingALittleIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'move a little more'**
+  String get pathMovingALittleIdea1;
+
+  /// No description provided for @pathMovingALittleIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'take more short walks'**
+  String get pathMovingALittleIdea2;
+
+  /// No description provided for @pathMovingALittleIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'feel less stiff'**
+  String get pathMovingALittleIdea3;
+
+  /// No description provided for @pathThroughAHardSeasonSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'get through this season gently'**
+  String get pathThroughAHardSeasonSentence;
+
+  /// No description provided for @pathThroughAHardSeasonIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'get through this week'**
+  String get pathThroughAHardSeasonIdea1;
+
+  /// No description provided for @pathThroughAHardSeasonIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'look after myself a little'**
+  String get pathThroughAHardSeasonIdea2;
+
+  /// No description provided for @pathThroughAHardSeasonIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'be gentle with myself right now'**
+  String get pathThroughAHardSeasonIdea3;
+
   /// No description provided for @tellUsAboutFocusHeadline.
   ///
   /// In en, this message translates to:

@@ -9,6 +9,8 @@ import 'package:intended/l10n/app_localizations.dart';
 import 'package:intended/models/intention_path.dart';
 import 'package:intended/onboarding_v2/direction_screen.dart';
 import 'package:intended/onboarding_v2/onboarding_state.dart';
+import 'package:intended/onboarding_v2/sentence_screen.dart';
+import 'package:intended/onboarding_v2/widgets/hold_to_confirm_button.dart';
 import 'package:intended/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -117,6 +119,46 @@ void main() {
         state: OnboardingState(),
         locale: locale,
         arrange: chooseWindingDown,
+      );
+    }, skip: _dir == null);
+  }
+
+  Future<OnboardingState> windingDownState() async {
+    final state = OnboardingState();
+    await state.setSelectedIntentionPath(IntentionPathId.windingDown.key);
+    return state;
+  }
+
+  Future<void> holdToSeal(WidgetTester tester) async {
+    final gesture = await tester
+        .startGesture(tester.getCenter(find.byType(HoldToConfirmButton)));
+    for (var t = 0; t < 1300; t += 50) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    await gesture.up();
+    await tester.pumpAndSettle();
+  }
+
+  for (final locale in const [Locale('en'), Locale('ru')]) {
+    final lc = locale.languageCode;
+    testWidgets('sentence, $lc', (tester) async {
+      await _render(
+        tester,
+        'onboarding_3_sentence_$lc',
+        SentenceScreen(onContinue: () {}, now: () => DateTime(2026, 9, 29, 20)),
+        state: await windingDownState(),
+        locale: locale,
+      );
+    }, skip: _dir == null);
+
+    testWidgets('chapter, $lc', (tester) async {
+      await _render(
+        tester,
+        'onboarding_3_chapter_$lc',
+        SentenceScreen(onContinue: () {}, now: () => DateTime(2026, 9, 29, 20)),
+        state: await windingDownState(),
+        locale: locale,
+        arrange: holdToSeal,
       );
     }, skip: _dir == null);
   }

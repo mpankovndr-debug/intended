@@ -167,6 +167,9 @@ class OnboardingState extends ChangeNotifier {
   // Intention path
   String _selectedIntentionPath = 'your_own_way';
   String? _lastPreselectedPathKey;
+  String? _sentence;
+  String? _sentencePathKey;
+  DateTime? _sentenceSealedAt;
 
   /// The path key whose [IntentionPath.starterActions] have already been
   /// handed out. Null until a starters path generates for the first time.
@@ -200,6 +203,18 @@ class OnboardingState extends ChangeNotifier {
   bool get onboardingComplete => _onboardingComplete;
   String get selectedIntentionPath => _selectedIntentionPath;
   String? get lastPreselectedPathKey => _lastPreselectedPathKey;
+
+  /// The North star in the person's own words: what follows "I want to".
+  /// Null until the hold on the sentence screen seals it.
+  String? get sentence => _sentence;
+
+  /// The path the sentence was written under. Choosing another path starts
+  /// the sentence again from that path's own words.
+  String? get sentencePathKey => _sentencePathKey;
+
+  /// When the hold sealed the sentence. The first chapter is dated from this
+  /// when onboarding finishes, not from the moment it is written to storage.
+  DateTime? get sentenceSealedAt => _sentenceSealedAt;
   String? get pinnedHabit => _pinnedHabit;
   List<String> get customHabits => List.unmodifiable(_customHabits);
   Map<String, String> get customHabitFocusAreas =>
@@ -489,10 +504,43 @@ class OnboardingState extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     _selectedIntentionPath =
         prefs.getString('selected_intention_path') ?? 'your_own_way';
+    await loadSentence();
     notifyListeners();
     // Re-assert on every launch: user properties don't survive reinstall,
     // and the D7 segmentation is only as good as the property being there.
     AnalyticsService.setIntentionPath(_selectedIntentionPath);
+  }
+
+  static const _prefSentence = 'onboarding_sentence';
+  static const _prefSentencePath = 'onboarding_sentence_path';
+  static const _prefSentenceSealedAt = 'onboarding_sentence_sealed_at';
+
+  /// Seals the sentence (spec §6, screen 3). The chapter itself is written
+  /// only when onboarding finishes, so someone who quits halfway leaves no
+  /// half-made chapter behind to block their next start.
+  Future<void> sealSentence(
+    String sentence, {
+    required String pathKey,
+    required DateTime at,
+  }) async {
+    _sentence = sentence.trim();
+    _sentencePathKey = pathKey;
+    _sentenceSealedAt = at.toUtc();
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_prefSentence, _sentence!);
+    await prefs.setString(_prefSentencePath, pathKey);
+    await prefs.setString(
+        _prefSentenceSealedAt, _sentenceSealedAt!.toIso8601String());
+  }
+
+  Future<void> loadSentence() async {
+    final prefs = await SharedPreferences.getInstance();
+    _sentence = prefs.getString(_prefSentence);
+    _sentencePathKey = prefs.getString(_prefSentencePath);
+    _sentenceSealedAt =
+        DateTime.tryParse(prefs.getString(_prefSentenceSealedAt) ?? '')
+            ?.toUtc();
   }
 
   void markWelcomeSeen() {

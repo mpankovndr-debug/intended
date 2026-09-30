@@ -2827,6 +2827,153 @@ class AppLocalizationsEn extends AppLocalizations {
       'Pick the closest one. You\'ll say it your own way next.';
 
   @override
+  String get onboardingSentenceTitle => 'Say it your way.';
+
+  @override
+  String get onboardingSentencePrefix => 'I want to';
+
+  @override
+  String get onboardingSentencePrivacy =>
+      'Only you see this. You can change it later.';
+
+  @override
+  String get onboardingSentenceHold => 'Hold to make it yours';
+
+  @override
+  String onboardingSentenceLimit(int max) {
+    return 'That\'s as long as it gets: $max characters.';
+  }
+
+  @override
+  String onboardingChapterUntil(String date) {
+    return 'Your first chapter runs until $date.';
+  }
+
+  @override
+  String get onboardingChapterDecide => 'At the end, you decide what changed.';
+
+  @override
+  String get chapterStageTry => 'Try a few';
+
+  @override
+  String get chapterStageKeep => 'Keep what stuck';
+
+  @override
+  String get chapterStageLighter => 'Make it lighter';
+
+  @override
+  String get pathGentleMorningsSentence => 'start my mornings slower';
+
+  @override
+  String get pathGentleMorningsIdea1 => 'wake up without rushing';
+
+  @override
+  String get pathGentleMorningsIdea2 => 'start the day with something for me';
+
+  @override
+  String get pathGentleMorningsIdea3 => 'have a calmer first hour';
+
+  @override
+  String get pathAnchorsForHardDaysSentence =>
+      'have something that steadies me on hard days';
+
+  @override
+  String get pathAnchorsForHardDaysIdea1 =>
+      'feel steadier when things get loud';
+
+  @override
+  String get pathAnchorsForHardDaysIdea2 =>
+      'have one thing I can always come back to';
+
+  @override
+  String get pathAnchorsForHardDaysIdea3 => 'be kinder to myself on bad days';
+
+  @override
+  String get pathQuietFocusSentence => 'get things done without burning out';
+
+  @override
+  String get pathQuietFocusIdea1 => 'do one thing at a time';
+
+  @override
+  String get pathQuietFocusIdea2 => 'end the day with energy left';
+
+  @override
+  String get pathQuietFocusIdea3 => 'stop working in a rush';
+
+  @override
+  String get pathWindingDownSentence => 'let the day go before I sleep';
+
+  @override
+  String get pathWindingDownIdea1 => 'slow down in the evenings';
+
+  @override
+  String get pathWindingDownIdea2 => 'stop scrolling in bed';
+
+  @override
+  String get pathWindingDownIdea3 => 'sleep a bit earlier';
+
+  @override
+  String get pathSofterNightsSentence => 'stop fighting my sleep';
+
+  @override
+  String get pathSofterNightsIdea1 => 'fall asleep more easily';
+
+  @override
+  String get pathSofterNightsIdea2 => 'have a calmer bedtime';
+
+  @override
+  String get pathSofterNightsIdea3 => 'wake up more rested';
+
+  @override
+  String get pathLookingUpSentence => 'spend less of my day on my phone';
+
+  @override
+  String get pathLookingUpIdea1 => 'notice more of what\'s around me';
+
+  @override
+  String get pathLookingUpIdea2 => 'pick up my phone less';
+
+  @override
+  String get pathLookingUpIdea3 => 'spend evenings off screens';
+
+  @override
+  String get pathCloserToPeopleSentence =>
+      'stay close to the people I care about';
+
+  @override
+  String get pathCloserToPeopleIdea1 => 'reach out more often';
+
+  @override
+  String get pathCloserToPeopleIdea2 => 'be more present with friends';
+
+  @override
+  String get pathCloserToPeopleIdea3 => 'call the people I miss';
+
+  @override
+  String get pathMovingALittleSentence => 'move my body more, gently';
+
+  @override
+  String get pathMovingALittleIdea1 => 'move a little more';
+
+  @override
+  String get pathMovingALittleIdea2 => 'take more short walks';
+
+  @override
+  String get pathMovingALittleIdea3 => 'feel less stiff';
+
+  @override
+  String get pathThroughAHardSeasonSentence => 'get through this season gently';
+
+  @override
+  String get pathThroughAHardSeasonIdea1 => 'get through this week';
+
+  @override
+  String get pathThroughAHardSeasonIdea2 => 'look after myself a little';
+
+  @override
+  String get pathThroughAHardSeasonIdea3 => 'be gentle with myself right now';
+
+  @override
   String get tellUsAboutFocusHeadline => 'What feels important right now?';
 
   @override

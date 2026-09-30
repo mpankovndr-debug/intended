@@ -2894,6 +2894,159 @@ class AppLocalizationsRu extends AppLocalizations {
       'Выбери самое близкое. Дальше скажешь своими словами.';
 
   @override
+  String get onboardingSentenceTitle => 'Скажи по-своему.';
+
+  @override
+  String get onboardingSentencePrefix => 'Я хочу';
+
+  @override
+  String get onboardingSentencePrivacy =>
+      'Это видишь только ты. Потом можно изменить.';
+
+  @override
+  String get onboardingSentenceHold => 'Удерживай, чтобы сделать своим';
+
+  @override
+  String onboardingSentenceLimit(int max) {
+    String _temp0 = intl.Intl.pluralLogic(
+      max,
+      locale: localeName,
+      other: 'Длиннее нельзя: $max символа.',
+      many: 'Длиннее нельзя: $max символов.',
+      few: 'Длиннее нельзя: $max символа.',
+      one: 'Длиннее нельзя: $max символ.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String onboardingChapterUntil(String date) {
+    return 'Твоя первая глава продлится до $date.';
+  }
+
+  @override
+  String get onboardingChapterDecide => 'В конце ты решишь, что изменилось.';
+
+  @override
+  String get chapterStageTry => 'Пробовать';
+
+  @override
+  String get chapterStageKeep => 'Закрепить';
+
+  @override
+  String get chapterStageLighter => 'Облегчить';
+
+  @override
+  String get pathGentleMorningsSentence => 'начинать утро спокойнее';
+
+  @override
+  String get pathGentleMorningsIdea1 => 'просыпаться без спешки';
+
+  @override
+  String get pathGentleMorningsIdea2 => 'начинать день с чего-то для себя';
+
+  @override
+  String get pathGentleMorningsIdea3 => 'проводить первый час спокойнее';
+
+  @override
+  String get pathAnchorsForHardDaysSentence => 'иметь опору в трудные дни';
+
+  @override
+  String get pathAnchorsForHardDaysIdea1 =>
+      'чувствовать себя устойчивее, когда шумно';
+
+  @override
+  String get pathAnchorsForHardDaysIdea2 =>
+      'иметь то, к чему всегда можно вернуться';
+
+  @override
+  String get pathAnchorsForHardDaysIdea3 => 'быть добрее к себе в плохие дни';
+
+  @override
+  String get pathQuietFocusSentence => 'делать дела без выгорания';
+
+  @override
+  String get pathQuietFocusIdea1 => 'делать одно дело за раз';
+
+  @override
+  String get pathQuietFocusIdea2 => 'заканчивать день с силами';
+
+  @override
+  String get pathQuietFocusIdea3 => 'перестать работать в спешке';
+
+  @override
+  String get pathWindingDownSentence => 'отпускать день перед сном';
+
+  @override
+  String get pathWindingDownIdea1 => 'замедляться по вечерам';
+
+  @override
+  String get pathWindingDownIdea2 => 'не листать ленту в кровати';
+
+  @override
+  String get pathWindingDownIdea3 => 'ложиться чуть раньше';
+
+  @override
+  String get pathSofterNightsSentence => 'перестать бороться со сном';
+
+  @override
+  String get pathSofterNightsIdea1 => 'легче засыпать';
+
+  @override
+  String get pathSofterNightsIdea2 => 'спокойнее готовиться ко сну';
+
+  @override
+  String get pathSofterNightsIdea3 => 'просыпаться бодрее';
+
+  @override
+  String get pathLookingUpSentence => 'меньше времени проводить в телефоне';
+
+  @override
+  String get pathLookingUpIdea1 => 'замечать больше вокруг';
+
+  @override
+  String get pathLookingUpIdea2 => 'реже брать телефон';
+
+  @override
+  String get pathLookingUpIdea3 => 'проводить вечера без экранов';
+
+  @override
+  String get pathCloserToPeopleSentence => 'быть ближе к тем, кто мне дорог';
+
+  @override
+  String get pathCloserToPeopleIdea1 => 'чаще выходить на связь';
+
+  @override
+  String get pathCloserToPeopleIdea2 => 'быть внимательнее с друзьями';
+
+  @override
+  String get pathCloserToPeopleIdea3 => 'звонить тем, по кому скучаю';
+
+  @override
+  String get pathMovingALittleSentence => 'больше двигаться, без надрыва';
+
+  @override
+  String get pathMovingALittleIdea1 => 'двигаться чуть больше';
+
+  @override
+  String get pathMovingALittleIdea2 => 'чаще гулять';
+
+  @override
+  String get pathMovingALittleIdea3 => 'меньше сидеть';
+
+  @override
+  String get pathThroughAHardSeasonSentence => 'бережно пройти этот период';
+
+  @override
+  String get pathThroughAHardSeasonIdea1 => 'просто пережить эту неделю';
+
+  @override
+  String get pathThroughAHardSeasonIdea2 => 'немного заботиться о себе';
+
+  @override
+  String get pathThroughAHardSeasonIdea3 => 'быть мягче к себе сейчас';
+
+  @override
   String get tellUsAboutFocusHeadline => 'Что сейчас важно?';
 
   @override
