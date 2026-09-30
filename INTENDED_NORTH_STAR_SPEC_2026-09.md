@@ -387,106 +387,99 @@ is a light theme; only Deep Focus and Night Bloom are dark.
 - A return is a solid tile wearing a glow ring, with its caption directly beneath it. A pale outlined
   square reads as an empty slot.
 
-New flow: a short book in four parts. The part cards are the "chapters that explain the concept". They
-are full-screen onboarding cards, not overlays on the app (CLAUDE.md keeps overlays for the widget). A
-four-mark track (I II III IV) sits at the top and fills as you pass each part; that measures the
-onboarding, not the person. The reward is the first tile landing.
+**Final flow (decided 30 Sep): nine screens.** Each one either asks for a decision or teaches
+something the app relies on. The board (`design/onboarding_concept_2026-09-30.webp`) shows screens 2 to 8.
+It also shows two screens that were cut (the explainer card and *What you'll get back*) and draws the
+chapter as its own screen, which is now folded into screen 3.
 
-**0. Welcome** (existing screen, unchanged)
+A four-dot indicator groups the steps: dot 1 for screens 2 and 3, dot 2 for screens 4 to 6, dot 3 for
+screen 7, dot 4 for screen 8. It is one widget, so it cannot drift from screen to screen.
 
-**Part card, I · What you want** (auto-advances in about 1.5 s, or tap)
-> Everything here starts with one sentence. Yours.
+**1. Welcome** (existing screen, unchanged)
 
-**1. Pick a direction** (replaces the path list)
-Visual: a vertical stack of wide glass cards, each tinted with its path's own `accentColor` and a small
-line icon. The chosen card brightens and gains a soft glowing edge; the rest stay quiet. No stars or
-night sky: the North star is a metaphor, not a picture.
+**2. Pick a direction** (replaces the path list)
+Visual: a vertical stack of wide glass cards, each with its path icon and tinted with its path's own
+`accentColor`. The chosen card brightens and gains a soft glowing edge. No stars or night sky: the North
+star is a metaphor, not a picture.
 > **What would you like more of?**
 > Pick the closest one. You'll say it your own way next.
 Options: the existing path titles and subtitles. "Your own way" becomes *Something else*.
+Icons: only 5 icon files exist for 10 paths (`assets/icons`). `path_anchors_for_hard_days.svg` and
+`path_quiet_focus.svg` are referenced but missing, and three paths share an icon. Nothing renders
+`IntentionPath.iconAsset` today, so this is invisible now and becomes visible on this screen.
 
-**2. Say it your way** (replaces the commitment screen)
+**3. Say it your way, then the chapter** (replaces the commitment screen; one screen, two states)
 > **Say it your way.**
-> I want to *[let the day go before I sleep]*
+> I want to *[let the day go before I sleep]*   (the largest text on the screen)
 > Chips: *slow down in the evenings* · *stop scrolling in bed* · *sleep a bit earlier*
 > Only you see this. You can change it later.
 > Button: **Hold to make it yours** (a 1.2 s press with a rising haptic; the fill completes and glows)
 
-Then the sentence settles at the top of the screen:
-> **Your first chapter runs until 31 December.**
+The hold creates chapter 1 (`ChapterService.start`). Then, on the same screen, the sentence moves up and
+shrinks into quotes, the chips fade, and the chapter appears:
+> **Your first chapter runs until {31 December}.**
 > At the end, you decide what changed.
+> Three segments: *Oct · Try a few* (lit), *Nov · Keep what stuck*, *Dec · Make it lighter*.
+> They show time, not progress.
+> Button: **Continue**
 
-**Part card, II · How you'll get there**
-> Not by trying hard. By starting small.
-
-**3. Three small things**
+**4. Start small** (replaces today's action reveal)
 > **Start with three small things.**
 > Each takes a minute or two. Pick the ones you'd actually do.
-> (When month 1 is under 21 days: **Start with two small things.** You have 16 days until October.)
-Cards come from the path's `starterActions` plus a few from its catalog. A chosen card drops into a tray
-labelled *Your first month*. Focus areas show as small chips with a *change* link (no separate screen).
+> When `Chapter.suggestedFirstActions` is 2: **Start with two small things.** You have {16} days until {October}.
+Cards come from the path's `starterActions` plus a few from its catalog. Chosen cards drop into a tray.
+Focus areas show as small chips with a *change* link; there is no separate focus-areas screen.
 
-**4. Give each one a moment** (skippable)
+**5. After I…** (skippable)
 > **When will they happen?**
 > Tie each one to something you already do.
 > After I *[pour my coffee]*, I'll *take 3 slow breaths*.
-The sentence assembles as the chips are tapped. Link: *Skip for now*.
+The sentence assembles as the chips are tapped. Link: *Skip for now*. **No concept image yet.**
 
-**5. A nudge, if you want one**
+**6. A nudge** (shown only when screen 5 was skipped)
+Someone who tied an action to "after I pour my coffee" already has their prompt. The existing reminder
+screen appears only when no cue was set; the reminder stays available in Profile (*Daily reminders*).
 > **Want a nudge as well?**
 > One quiet reminder a day. Or none.
-> [ Remind me at 21:30 ] [ No reminders ]
 
-**Part card, III · How it works**
-> No streaks. Nothing to break.
-
-**6. Try it**
-A mini mosaic with a demo action. Tap it and a tile lands.
+**7. Try it**
+One mosaic teaches both ideas: tap the demo action and a tile lands; the last tile is solid with a glow
+ring, with its caption directly under the mosaic.
 > **Every time you do one, a square appears.**
-Second beat: a few days pass (a soft fade), then a tile lands with a glow ring.
-> **Miss a few days and nothing is lost.**
-> When you come back, the app marks the return, not the gap.
-
-**7. What you'll get back** (sets expectations)
-> **Every day:** each thing you do lands in your month.
-> **Every week:** what happened, in plain words.
-> **As the weeks add up:** your patterns. Some take a few weeks to show.
-> **At the end of the chapter:** you decide what changed.
-
-**Part card, IV · Your first moment**
+> **Miss a few days and nothing is lost.** When you come back, the app marks the return, not the gap.
 
 **8. Do one now**
 > **Do one now.**
-> The three actions. Tapping one runs the real completion flow, and the first tile lands in the person's
-> own, otherwise empty mosaic.
+> The chosen actions. Tapping one runs the real completion flow; the first tile lands in the person's
+> own mosaic, followed by exactly one ghost tile.
 > **That's the first square of your chapter.**
 > Link: *I'll do it later*
 
-**9. Paywall** (existing, after the first moment, per §5.4)
+**9. Paywall** (existing, after the first moment, per handoff §5.4)
 Headline tie-in: **Intended+ reads your chapter and suggests one change a month.**
+
+**Cut, with reasons:**
+- *Part and explainer cards.* They carried one slogan each, and "By starting small" is the next screen's
+  title. CLAUDE.md: silence beats filler.
+- *What you'll get back.* "Your patterns take a few weeks to show" is nearly the sentence CLAUDE.md names
+  as the failure. The same expectation lives on Insights, where each pattern says "Forming, ready in
+  about 3 weeks" (CLAUDE.md: discovery happens inline, next to the thing). Its last line is already on
+  screen 3.
 
 **Theme picker:** moves to Profile (decided); it doesn't serve the story.
 
-**Where the chapter lives in onboarding.** The hold on step 2 is the moment chapter 1 is created
-(`Chapter.start`: sentence, path, today's date and offset, the 14-day rule). Everything after it reads
-from that chapter:
+**Where the chapter lives in onboarding.** The hold on screen 3 creates chapter 1 (`Chapter.start`:
+sentence, path, today's date and offset, the 14-day rule). Everything after it reads from that chapter:
 
-| Step | What comes from the chapter |
+| Screen | What comes from the chapter |
 |---|---|
-| 2, after the hold | "Your first chapter runs until {end date}." "At the end, you decide what changed." |
-| 3, three small things | Month 1 is *Try a few*. Under 21 days it asks for two, with "You have {n} days until {month}." |
-| 7, what you'll get back | "At the end of the chapter: you decide what changed." |
+| 3, after the hold | "Your first chapter runs until {end date}." The three month segments. |
+| 4, start small | Two or three actions from `suggestedFirstActions`, with "You have {n} days until {month}." |
 | 8, first moment | "That's the first square of your chapter." The tile is the chapter's first moment. |
 | 9, paywall | "Intended+ reads your chapter and suggests one change a month." |
 
-The concept board (`design/onboarding_concept_2026-09-29.webp`) does **not** yet show the two screens
-that introduce the chapter: the reveal after the hold, and *What you'll get back*. As drawn, a new user
-first meets the word "chapter" on the last screen, without being told what one is. Draw those two
-screens before building.
-
-**Cost:** about 9 decisions against about 5 today. Part cards auto-advance, step 4 is skippable and step 6
-is one tap. Track each step's completion in `AnalyticsService` so the drop-off is visible, not guessed.
-
+**Cost:** nine screens with Welcome and the paywall; eight for anyone who sets a cue. Today's flow is
+about six. Track each screen's completion in `AnalyticsService` so drop-off is visible, not guessed.
 ---
 
 ## 7. Content cost, concretely
