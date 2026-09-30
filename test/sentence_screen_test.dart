@@ -99,7 +99,11 @@ void main() {
     expect(state.sentenceSealedAt, now.toUtc());
     expect(find.text('CHAPTER ONE'), findsOneWidget);
     expect(find.textContaining('Until 31\u00A0December.'), findsOneWidget);
-    expect(find.text('“I want to rest”'), findsOneWidget);
+    expect(
+        find.descendant(
+            of: find.byKey(const Key('chapter-phrase')),
+            matching: find.text('rest')),
+        findsOneWidget);
     expect(find.text('October'), findsOneWidget);
     expect(find.text('Try a few'), findsOneWidget);
     expect(find.text('December'), findsOneWidget);
@@ -107,6 +111,29 @@ void main() {
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
     expect(continued, 1);
+  });
+
+  testWidgets('the phrase never leaves the screen while the page opens',
+      (tester) async {
+    await pump(tester);
+    final gesture = await tester
+        .startGesture(tester.getCenter(find.byType(HoldToConfirmButton)));
+    for (var t = 0; t < 1300; t += 50) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    await gesture.up();
+    // Every frame of the opening: the phrase is there, and nothing above it
+    // is fading it out.
+    for (var t = 0; t <= SentenceScreen.opening.inMilliseconds; t += 100) {
+      await tester.pump(const Duration(milliseconds: 100));
+      final phrase = find.byKey(const Key('chapter-phrase'));
+      expect(phrase, findsOneWidget, reason: 'at $t ms');
+      final fading = tester
+          .widgetList<Opacity>(
+              find.ancestor(of: phrase, matching: find.byType(Opacity)))
+          .where((o) => o.opacity < 1);
+      expect(fading, isEmpty, reason: 'at $t ms');
+    }
   });
 
   testWidgets('an empty sentence cannot be sealed', (tester) async {

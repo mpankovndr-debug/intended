@@ -19,8 +19,9 @@ import 'widgets/onboarding_scaffold.dart';
 ///
 /// Writing: "I want to …", pre-filled with the path's own words, three other
 /// ways to finish it, and a hold to make it yours. Sealed: everything but
-/// the sentence blurs away, the sentence travels to the middle and becomes
-/// the chapter's title, and the page of a chapter opening forms around it:
+/// the phrase blurs away, and the phrase glides into its place as the
+/// chapter's title, never leaving the screen, while the page of a chapter
+/// opening forms around it:
 /// CHAPTER ONE, a rule drawn outward, the three months as a contents list,
 /// and the date it runs until. Typography and space make it a book; nothing
 /// draws one.
@@ -56,8 +57,8 @@ class _SentenceScreenState extends State<SentenceScreen>
     with SingleTickerProviderStateMixin {
   final _text = TextEditingController();
   final _stackKey = GlobalKey();
-  final _fieldKey = GlobalKey();
-  final _titleKey = GlobalKey();
+  final _phraseKey = GlobalKey();
+  final _slotKey = GlobalKey();
   late final AnimationController _open =
       AnimationController(vsync: this, duration: SentenceScreen.opening)
         ..addListener(_feelLanding);
@@ -68,23 +69,23 @@ class _SentenceScreenState extends State<SentenceScreen>
   Chapter? _chapter;
   String _sealed = '';
 
-  /// Where the sentence was written, and where its title sits on the page.
+  /// Where the phrase was written, and its place on the chapter page.
   Rect? _from;
   Rect? _to;
+
+  /// The phrase keeps the line breaks it was written with and only scales,
+  /// so no word jumps lines on the way.
+  static const double _titleScale = 0.88;
 
   // The beats of the opening, as parts of its 2.2 s.
   static const _blurOut = Interval(0.0, 0.2, curve: Curves.easeIn);
   static const _travel = Interval(0.1, 0.45, curve: Curves.easeInOutCubic);
-  // The travelling copy blurs out before the title blurs in: overlapping
-  // them read as a double exposure.
-  static const _handOut = Interval(0.42, 0.5, curve: Curves.easeIn);
-  static const _settle = Interval(0.48, 0.6, curve: Curves.easeOut);
-  static const _label = Interval(0.45, 0.6, curve: Curves.easeOut);
-  static const _rule = Interval(0.55, 0.68, curve: Curves.easeOutCubic);
-  static const _footer = Interval(0.84, 0.96, curve: Curves.easeOut);
-  static const _cta = Interval(0.88, 1.0, curve: Curves.easeOut);
+  static const _label = Interval(0.35, 0.5, curve: Curves.easeOut);
+  static const _rule = Interval(0.45, 0.58, curve: Curves.easeOutCubic);
+  static const _footer = Interval(0.78, 0.9, curve: Curves.easeOut);
+  static const _cta = Interval(0.84, 1.0, curve: Curves.easeOut);
   static Interval _row(int i) =>
-      Interval(0.62 + i * 0.07, 0.76 + i * 0.07, curve: Curves.easeOut);
+      Interval(0.52 + i * 0.07, 0.66 + i * 0.07, curve: Curves.easeOut);
 
   double _t(Interval beat) => beat.transform(_open.value);
 
@@ -143,7 +144,8 @@ class _SentenceScreenState extends State<SentenceScreen>
     );
     AnalyticsService.logOnboardingStepCompleted('sentence');
     if (!mounted) return;
-    final from = _rectOf(_fieldKey);
+    final from = _rectOf(_phraseKey);
+    final reduceMotion = MediaQuery.of(context).disableAnimations;
     setState(() {
       _sealed = sentence;
       _from = from;
@@ -159,16 +161,16 @@ class _SentenceScreenState extends State<SentenceScreen>
         offsetMinutes: at.toLocal().timeZoneOffset.inMinutes,
       );
     });
-    if (MediaQuery.of(context).disableAnimations) {
-      _open.value = 1; // Reduce Motion: the page, without the journey.
-      return;
-    }
-    // The page lays itself out invisibly first, so the title's place is known
-    // before the sentence travels to it.
+    // The page lays itself out first, so the phrase's place on it is known
+    // before the phrase moves there.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _to = _rectOf(_titleKey);
-      _open.forward(from: 0);
+      setState(() => _to = _rectOf(_slotKey));
+      if (reduceMotion) {
+        _open.value = 1; // Reduce Motion: the page, without the journey.
+      } else {
+        _open.forward(from: 0);
+      }
     });
   }
 
@@ -179,6 +181,8 @@ class _SentenceScreenState extends State<SentenceScreen>
       setState(() {
         _open.value = 0;
         _chapter = null;
+        _from = null;
+        _to = null;
         _attempt++;
       });
       return;
@@ -240,32 +244,32 @@ class _SentenceScreenState extends State<SentenceScreen>
                 ignoring: sealed,
                 child: _Writing(
                   controller: _text,
-                  fieldKey: _fieldKey,
+                  phraseKey: _phraseKey,
                   path: _path,
                   veil: sealed ? _t(_blurOut) : 0,
-                  // The written sentence hands over to its travelling copy.
-                  hideSentence: sealed,
+                  // Sealed, the phrase is carried by its static twin below.
+                  hidePhrase: sealed && _from != null,
                   onChanged: () => setState(() {}),
                 ),
               ),
               if (sealed)
                 _ChapterPage(
                   chapter: _chapter!,
-                  sentence: _sealed,
-                  titleKey: _titleKey,
+                  slotKey: _slotKey,
+                  slotHeight: (_from?.height ?? 0) * _titleScale,
                   label: _t(_label),
-                  title: _t(_settle),
                   rule: _t(_rule),
                   rows: [for (var i = 0; i < 3; i++) _t(_row(i))],
                   footer: _t(_footer),
                 ),
-              if (sealed && _from != null && _to != null && _t(_handOut) < 1)
-                _Travelling(
+              if (sealed && _from != null)
+                _Phrase(
                   sentence: _sealed,
                   from: _from!,
-                  to: _to!,
+                  to: _to ?? _from!,
                   progress: _t(_travel),
-                  out: _t(_handOut),
+                  scale: _titleScale,
+                  underline: 1 - _t(_blurOut),
                 ),
             ],
           ),
@@ -331,28 +335,66 @@ TextStyle _sentenceStyle(BuildContext context) {
   );
 }
 
+TextStyle _prefixStyle(BuildContext context) {
+  final locale = Localizations.localeOf(context).toString();
+  return TextStyle(
+    fontFamily: AppTextStyles.displayFontFor(locale),
+    fontSize: locale.startsWith('ru') ? 24 : 26,
+    fontWeight: FontWeight.w400,
+    color: context
+        .watch<ThemeProvider>()
+        .colors
+        .textPrimary
+        .withValues(alpha: 0.85),
+  );
+}
+
+/// The phrase as one block: "I want to" over the sentence. The editable
+/// field and its static twin share this layout, so the swap at the seal is
+/// invisible and the phrase never leaves the screen.
+class _PhraseLayout extends StatelessWidget {
+  const _PhraseLayout({required this.sentence});
+
+  final Widget sentence;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          AppLocalizations.of(context).onboardingSentencePrefix,
+          textAlign: TextAlign.center,
+          style: _prefixStyle(context),
+        ),
+        const SizedBox(height: 10),
+        sentence,
+      ],
+    );
+  }
+}
+
 class _Writing extends StatelessWidget {
   const _Writing({
     required this.controller,
-    required this.fieldKey,
+    required this.phraseKey,
     required this.path,
     required this.veil,
-    required this.hideSentence,
+    required this.hidePhrase,
     required this.onChanged,
   });
 
   final TextEditingController controller;
-  final GlobalKey fieldKey;
+  final GlobalKey phraseKey;
   final IntentionPath path;
   final double veil;
-  final bool hideSentence;
+  final bool hidePhrase;
   final VoidCallback onChanged;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final colors = context.watch<ThemeProvider>().colors;
-    final locale = Localizations.localeOf(context).toString();
     final body = AppTextStyles.bodyFont(context);
     final atLimit = controller.text.length >= SentenceScreen.maxLength;
 
@@ -367,55 +409,44 @@ class _Writing extends StatelessWidget {
         children: [
           _Veil(
             amount: veil,
-            child: Column(
-              children: [
-                Text(
-                  l10n.onboardingSentenceTitle.toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: body,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 3,
-                    color: colors.ctaSecondary,
-                  ),
-                ),
-                const SizedBox(height: 28),
-                Text(
-                  l10n.onboardingSentencePrefix,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: AppTextStyles.displayFontFor(locale),
-                    fontSize: locale.startsWith('ru') ? 24 : 26,
-                    fontWeight: FontWeight.w400,
-                    color: colors.textPrimary.withValues(alpha: 0.85),
-                  ),
-                ),
-              ],
+            child: Text(
+              l10n.onboardingSentenceTitle.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: body,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 3,
+                color: colors.ctaSecondary,
+              ),
             ),
           ),
-          const SizedBox(height: 10),
-          // The largest text on the screen: it is the thing being made.
+          const SizedBox(height: 28),
+          // The phrase: the largest text on the screen, the thing being made.
           Opacity(
-            opacity: hideSentence ? 0 : 1,
-            child: CupertinoTextField(
-              key: fieldKey,
-              controller: controller,
-              onChanged: (_) => onChanged(),
-              maxLength: SentenceScreen.maxLength,
-              maxLengthEnforcement: MaxLengthEnforcement.enforced,
-              minLines: 1,
-              maxLines: 4,
-              textAlign: TextAlign.center,
-              textInputAction: TextInputAction.done,
-              padding: const EdgeInsets.only(bottom: 10),
-              placeholder: '…',
-              style: _sentenceStyle(context),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: path.accentColor.withValues(alpha: 0.45),
-                    width: 1.5,
+            opacity: hidePhrase ? 0 : 1,
+            child: KeyedSubtree(
+              key: phraseKey,
+              child: _PhraseLayout(
+                sentence: CupertinoTextField(
+                  controller: controller,
+                  onChanged: (_) => onChanged(),
+                  maxLength: SentenceScreen.maxLength,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                  minLines: 1,
+                  maxLines: 4,
+                  textAlign: TextAlign.center,
+                  textInputAction: TextInputAction.done,
+                  padding: const EdgeInsets.only(bottom: 10),
+                  placeholder: '…',
+                  style: _sentenceStyle(context),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: path.accentColor.withValues(alpha: 0.45),
+                        width: 1.5,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -480,6 +511,175 @@ class _Writing extends StatelessWidget {
   }
 }
 
+/// The phrase once sealed: the static twin of what was written, in the same
+/// place and layout, which then moves and scales into its place on the
+/// chapter page and stays there. It never leaves the screen.
+class _Phrase extends StatelessWidget {
+  const _Phrase({
+    required this.sentence,
+    required this.from,
+    required this.to,
+    required this.progress,
+    required this.scale,
+    required this.underline,
+  });
+
+  final String sentence;
+  final Rect from;
+  final Rect to;
+  final double progress;
+  final double scale;
+
+  /// How much of the writing line is left, 1 to 0.
+  final double underline;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
+    final shift = (to.center - from.center) * progress;
+    return Positioned.fromRect(
+      rect: from,
+      child: IgnorePointer(
+        child: Transform.translate(
+          offset: shift,
+          child: Transform.scale(
+            scale: 1 + (scale - 1) * progress,
+            child: _PhraseLayout(
+              sentence: Container(
+                key: const Key('chapter-phrase'),
+                width: double.infinity,
+                padding: const EdgeInsets.only(bottom: 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: colors.ctaSecondary
+                          .withValues(alpha: 0.3 * underline.clamp(0, 1)),
+                      width: 1.5,
+                    ),
+                  ),
+                ),
+                child: Text(
+                  sentence,
+                  textAlign: TextAlign.center,
+                  style: _sentenceStyle(context),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A chapter's opening page: its number, a place for the phrase, a rule, the
+/// three months as a contents list, and the date it runs until. Each part is
+/// given how far it has appeared, 0 to 1.
+class _ChapterPage extends StatelessWidget {
+  const _ChapterPage({
+    required this.chapter,
+    required this.slotKey,
+    required this.slotHeight,
+    required this.label,
+    required this.rule,
+    required this.rows,
+    required this.footer,
+  });
+
+  final Chapter chapter;
+  final GlobalKey slotKey;
+
+  /// The phrase lands here; it is drawn by [_Phrase], not by the page.
+  final double slotHeight;
+  final double label;
+  final double rule;
+  final List<double> rows;
+  final double footer;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final colors = context.watch<ThemeProvider>().colors;
+    final locale = Localizations.localeOf(context).toString();
+    final body = AppTextStyles.bodyFont(context);
+    // A non-breaking space keeps "31 December" from splitting across lines.
+    final until = DateFormat('d MMMM', locale)
+        .format(chapter.lastDay)
+        .replaceAll(' ', ' ');
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(
+        32,
+        24,
+        32,
+        OnboardingScaffold.contentBottomPadding,
+      ),
+      child: Column(
+        children: [
+          _Appear(
+            amount: label,
+            child: Text(
+              l10n.onboardingChapterOne.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: body,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 4,
+                color: colors.ctaSecondary,
+              ),
+            ),
+          ),
+          const SizedBox(height: 18),
+          SizedBox(
+            key: slotKey,
+            width: double.infinity,
+            height: slotHeight,
+          ),
+          const SizedBox(height: 22),
+          // A rule drawn outward from the centre.
+          Container(
+            width: 64 * rule,
+            height: 1.5,
+            color: colors.ctaSecondary.withValues(alpha: 0.6),
+          ),
+          const SizedBox(height: 26),
+          for (var i = 0; i < 3; i++)
+            _Appear(
+              amount: rows[i],
+              child: _ContentsRow(
+                month: _monthName(chapter.months[i], locale),
+                stage: Chapter.stageName(i + 1, l10n),
+                current: i == 0,
+              ),
+            ),
+          const SizedBox(height: 26),
+          _Appear(
+            amount: footer,
+            child: Text(
+              '${l10n.onboardingChapterUntil(until)}\n'
+              '${l10n.onboardingChapterDecide}',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: body,
+                fontSize: 15,
+                height: 1.5,
+                color: colors.ctaSecondary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// "October", «Октябрь»: the standalone month, capitalised for a list.
+  static String _monthName(DateTime month, String locale) {
+    final name = DateFormat.LLLL(locale).format(month);
+    return name.isEmpty ? name : name[0].toUpperCase() + name.substring(1);
+  }
+}
+
 class _IdeaChip extends StatelessWidget {
   const _IdeaChip({
     required this.text,
@@ -527,185 +727,6 @@ class _IdeaChip extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-/// The sentence on its way from where it was written to its title's place:
-/// laid out once as written, then moved and scaled as a whole, so no word
-/// jumps lines mid-flight. It hands over to the title when it lands.
-class _Travelling extends StatelessWidget {
-  const _Travelling({
-    required this.sentence,
-    required this.from,
-    required this.to,
-    required this.progress,
-    required this.out,
-  });
-
-  final String sentence;
-  final Rect from;
-  final Rect to;
-  final double progress;
-
-  /// How far it has blurred away on landing, 0 to 1.
-  final double out;
-
-  @override
-  Widget build(BuildContext context) {
-    final style = _sentenceStyle(context);
-    final titleSize = _ChapterPage.titleSize(context);
-    final scale = 1 + (titleSize / style.fontSize! - 1) * progress;
-    final shift = (to.center - from.center) * progress;
-    return Positioned.fromRect(
-      rect: from,
-      child: IgnorePointer(
-        child: _Veil(
-          amount: out,
-          child: Transform.translate(
-            offset: shift,
-            child: Transform.scale(
-              scale: scale,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child:
-                    Text(sentence, textAlign: TextAlign.center, style: style),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// A chapter's opening page: its number, its title in quotes, a rule, the
-/// three months as a contents list, and the date it runs until. Each part
-/// is given how far it has appeared, 0 to 1.
-class _ChapterPage extends StatelessWidget {
-  const _ChapterPage({
-    required this.chapter,
-    required this.sentence,
-    required this.titleKey,
-    required this.label,
-    required this.title,
-    required this.rule,
-    required this.rows,
-    required this.footer,
-  });
-
-  final Chapter chapter;
-  final String sentence;
-  final GlobalKey titleKey;
-  final double label;
-  final double title;
-  final double rule;
-  final List<double> rows;
-  final double footer;
-
-  static double titleSize(BuildContext context) =>
-      Localizations.localeOf(context).languageCode == 'ru' ? 27 : 30;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final colors = context.watch<ThemeProvider>().colors;
-    final locale = Localizations.localeOf(context).toString();
-    final ru = locale.startsWith('ru');
-    final body = AppTextStyles.bodyFont(context);
-    final quoted = ru
-        ? '«${l10n.onboardingSentencePrefix} $sentence»'
-        : '“${l10n.onboardingSentencePrefix} $sentence”';
-    // A non-breaking space keeps "31 December" from splitting across lines.
-    final until = DateFormat('d MMMM', locale)
-        .format(chapter.lastDay)
-        .replaceAll(' ', ' ');
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(
-        32,
-        48,
-        32,
-        OnboardingScaffold.contentBottomPadding,
-      ),
-      child: Column(
-        children: [
-          _Appear(
-            amount: label,
-            child: Text(
-              l10n.onboardingChapterOne.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: body,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 4,
-                color: colors.ctaSecondary,
-              ),
-            ),
-          ),
-          const SizedBox(height: 22),
-          // The key sits outside the transform, so the title's place is
-          // measured where it will settle, not where it starts appearing.
-          SizedBox(
-            key: titleKey,
-            width: double.infinity,
-            child: _Appear(
-              amount: title,
-              child: Text(
-                quoted,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: AppTextStyles.displayFontFor(locale),
-                  fontSize: titleSize(context),
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.3,
-                  height: 1.25,
-                  color: colors.textPrimary,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 26),
-          // A rule drawn outward from the centre.
-          Container(
-            width: 64 * rule,
-            height: 1.5,
-            color: colors.ctaSecondary.withValues(alpha: 0.6),
-          ),
-          const SizedBox(height: 26),
-          for (var i = 0; i < 3; i++)
-            _Appear(
-              amount: rows[i],
-              child: _ContentsRow(
-                month: _monthName(chapter.months[i], locale),
-                stage: Chapter.stageName(i + 1, l10n),
-                current: i == 0,
-              ),
-            ),
-          const SizedBox(height: 26),
-          _Appear(
-            amount: footer,
-            child: Text(
-              '${l10n.onboardingChapterUntil(until)}\n'
-              '${l10n.onboardingChapterDecide}',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: body,
-                fontSize: 15,
-                height: 1.5,
-                color: colors.ctaSecondary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// "October", «Октябрь»: the standalone month, capitalised for a list.
-  static String _monthName(DateTime month, String locale) {
-    final name = DateFormat.LLLL(locale).format(month);
-    return name.isEmpty ? name : name[0].toUpperCase() + name.substring(1);
   }
 }
 

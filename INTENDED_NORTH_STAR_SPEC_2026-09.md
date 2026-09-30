@@ -423,13 +423,16 @@ shared with their focus area: Quiet Focus `productivity_plane`, Closer to People
 The hold seals the sentence (the chapter is written when onboarding finishes, dated from the hold).
 Then the chapter opens on the same screen, as a book's chapter opening page made of typography and space
 alone (storyboard, 30 Sep). In 2.2 s:
-everything but the sentence blurs away; the sentence travels to the middle and scales to the title
-size (one haptic as it lands); it blurs out and the quoted title blurs in; CHAPTER ONE appears; a rule
+everything but the phrase blurs away; the phrase ("I want to" over the sentence) never leaves the
+screen: it glides into its place on the page, keeping the line breaks it was written with, scales to
+title size and stays as the title, with one haptic as it lands (decided 30 Sep: no disappearing and
+reappearing, so no quote marks popping in either); CHAPTER ONE appears; a rule
 draws outward from the centre; the three months appear one by one as a contents list with dot leaders
 (month, stage flush right, the current month strongest); then the date line and Continue. Reduce Motion
 shows the page without the journey.
 > CHAPTER ONE
-> **“I want to let the day go before I sleep”**
+> I want to
+> **let the day go before I sleep**
 > October ····· Try a few / November ····· Keep what stuck / December ····· Make it lighter
 > Until {31 December}. At the end, you decide what changed.
 > Button: **Continue**
