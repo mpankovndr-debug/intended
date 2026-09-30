@@ -2887,6 +2887,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Это задаст тон ближайшим 30 дням. Выбери то, что подходит сегодня — будущая ты скажет спасибо.';
 
   @override
+  String get onboardingDirectionTitle => 'Чего тебе хочется больше?';
+
+  @override
+  String get onboardingDirectionSubtitle =>
+      'Выбери самое близкое. Дальше скажешь своими словами.';
+
+  @override
   String get tellUsAboutFocusHeadline => 'Что сейчас важно?';
 
   @override

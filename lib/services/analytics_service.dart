@@ -16,7 +16,6 @@ class AnalyticsService {
     } catch (_) {}
   }
 
-
   /// The one number the paid tier lives or dies on: whether people take the
   /// mood tap or skip it. The letter's mood line, all of what-lifts-you and
   /// the plan's texture starve on skips — this event is how we find out
@@ -79,15 +78,21 @@ class AnalyticsService {
     _analytics.logEvent(name: 'onboarding_started');
   }
 
-  static void logOnboardingStepCompleted(String stepName) {
-    _analytics.logEvent(
-      name: 'onboarding_step_completed',
-      parameters: {'step_name': stepName},
-    );
+  // Guarded like the rest: onboarding logs a step on every screen, and an
+  // analytics failure must never be what stops someone mid-onboarding.
+  static Future<void> logOnboardingStepCompleted(String stepName) async {
+    try {
+      await _analytics.logEvent(
+        name: 'onboarding_step_completed',
+        parameters: {'step_name': stepName},
+      );
+    } catch (_) {}
   }
 
-  static void logOnboardingCompleted() {
-    _analytics.logEvent(name: 'onboarding_completed');
+  static Future<void> logOnboardingCompleted() async {
+    try {
+      await _analytics.logEvent(name: 'onboarding_completed');
+    } catch (_) {}
   }
 
   // ── Habit Events ──────────────────────────────────────────────

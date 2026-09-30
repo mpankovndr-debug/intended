@@ -1126,6 +1126,8 @@
   "intentionPathSubtext": "Это задаст тон ближайшим 30 дням. Выбери то, что подходит сегодня — потом скажешь себе спасибо.",
   "tellUsAboutPathHeadline": "Что тебя сюда привело?",
   "tellUsAboutPathSubtext": "Это задаст тон ближайшим 30 дням. Выбери то, что подходит сегодня — будущая ты скажет спасибо.",
+  "onboardingDirectionTitle": "Чего тебе хочется больше?",
+  "onboardingDirectionSubtitle": "Выбери самое близкое. Дальше скажешь своими словами.",
   "tellUsAboutFocusHeadline": "Что сейчас важно?",
   "tellUsAboutFocusSubtext": "Выбери до 2. Начнём с них.",
   "commitmentTitle": "Маленькое обещание.",

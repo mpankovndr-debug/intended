@@ -2820,6 +2820,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'This shapes the next 30 days. Pick the one that fits today — your future self will thank you.';
 
   @override
+  String get onboardingDirectionTitle => 'What would you like more of?';
+
+  @override
+  String get onboardingDirectionSubtitle =>
+      'Pick the closest one. You\'ll say it your own way next.';
+
+  @override
   String get tellUsAboutFocusHeadline => 'What feels important right now?';
 
   @override

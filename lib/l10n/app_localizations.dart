@@ -4749,6 +4749,18 @@ abstract class AppLocalizations {
   /// **'This shapes the next 30 days. Pick the one that fits today — your future self will thank you.'**
   String get tellUsAboutPathSubtext;
 
+  /// No description provided for @onboardingDirectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like more of?'**
+  String get onboardingDirectionTitle;
+
+  /// No description provided for @onboardingDirectionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the closest one. You\'ll say it your own way next.'**
+  String get onboardingDirectionSubtitle;
+
   /// No description provided for @tellUsAboutFocusHeadline.
   ///
   /// In en, this message translates to:

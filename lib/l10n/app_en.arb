@@ -1458,6 +1458,8 @@
   "intentionPathUpdateNo": "No, keep my current areas",
   "tellUsAboutPathHeadline": "What brings you here?",
   "tellUsAboutPathSubtext": "This shapes the next 30 days. Pick the one that fits today — your future self will thank you.",
+  "onboardingDirectionTitle": "What would you like more of?",
+  "onboardingDirectionSubtitle": "Pick the closest one. You'll say it your own way next.",
   "tellUsAboutFocusHeadline": "What feels important right now?",
   "tellUsAboutFocusSubtext": "Pick up to 2. We'll start there.",
   "commitmentTitle": "One small promise.",
