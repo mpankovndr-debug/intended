@@ -796,6 +796,17 @@ class OnboardingState extends ChangeNotifier {
     }
 
     _startersAppliedForPath = prefs.getString(_startersAppliedForPathKey);
+    // Someone who finished onboarding before their path had starters of its
+    // own already has their actions. Without this, their first focus-area
+    // change would hand them the path's starters instead of the areas they
+    // just chose.
+    if (_startersAppliedForPath == null && _onboardingComplete) {
+      final path = prefs.getString('selected_intention_path');
+      if (path != null) {
+        _startersAppliedForPath = path;
+        await prefs.setString(_startersAppliedForPathKey, path);
+      }
+    }
 
     final savedHabits = prefs.getStringList('user_habits');
 
