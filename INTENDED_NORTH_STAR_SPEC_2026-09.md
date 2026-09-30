@@ -448,7 +448,11 @@ with a *change* link; there is no separate focus-areas screen.
 **5. After I…** (skippable)
 > **When will they happen?** Tie each one to something you already do.
 > After I *[pour my coffee]*, I'll *take 3 slow breaths*.
-Chips: *brush my teeth* · *finish dinner* · *get into bed* · *Other*. Link: *Skip for now*.
+Chips: *pour my coffee* · *brush my teeth* · *finish dinner* · *get into bed* · *Other*. Link: *Skip for now*.
+One action at a time (decided 30 Sep): "After I" stays put, the blank fills with the chosen cue, and the
+next action still without one blurs in. The cue reads on its own line above the action title, in both
+languages, because Russian action names are imperatives and cannot follow "I'll". Continue needs a cue on
+every action; *Skip for now* keeps any already set. Screen 6 shows only when no cue was set at all.
 
 **6. A nudge** (only when screen 5 was skipped)
 The existing reminder screen; the reminder stays available in Profile (*Daily reminders*).

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' show DateFormat;
@@ -12,6 +10,7 @@ import '../services/analytics_service.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
 import 'onboarding_state.dart';
+import 'widgets/blur.dart';
 import 'widgets/hold_to_confirm_button.dart';
 import 'widgets/onboarding_scaffold.dart';
 
@@ -211,7 +210,7 @@ class _SentenceScreenState extends State<SentenceScreen>
             children: [
               IgnorePointer(
                 ignoring: sealed,
-                child: _Veil(
+                child: BlurVeil(
                   amount: sealed ? _t(_blurOut) : 0,
                   child: HoldToConfirmButton(
                     key: ValueKey('hold-$_attempt'),
@@ -225,7 +224,7 @@ class _SentenceScreenState extends State<SentenceScreen>
                 Positioned.fill(
                   child: IgnorePointer(
                     ignoring: ctaIn < 0.9,
-                    child: _Appear(
+                    child: BlurAppear(
                       amount: ctaIn,
                       child: OnboardingCta(
                         label: l10n.commonContinue,
@@ -275,50 +274,6 @@ class _SentenceScreenState extends State<SentenceScreen>
           ),
         );
       },
-    );
-  }
-}
-
-/// Blurs and fades its child away as [amount] goes from 0 to 1.
-class _Veil extends StatelessWidget {
-  const _Veil({required this.amount, required this.child});
-
-  final double amount;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    if (amount <= 0) return child;
-    return Opacity(
-      opacity: (1 - amount).clamp(0.0, 1.0),
-      child: ImageFiltered(
-        imageFilter: ImageFilter.blur(sigmaX: 12 * amount, sigmaY: 12 * amount),
-        child: child,
-      ),
-    );
-  }
-}
-
-/// Brings its child in from a soft blur as [amount] goes from 0 to 1.
-class _Appear extends StatelessWidget {
-  const _Appear({required this.amount, required this.child});
-
-  final double amount;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    if (amount >= 1) return child;
-    final blur = 8 * (1 - amount);
-    return Opacity(
-      opacity: amount.clamp(0.0, 1.0),
-      child: Transform.translate(
-        offset: Offset(0, 6 * (1 - amount)),
-        child: ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-          child: child,
-        ),
-      ),
     );
   }
 }
@@ -407,7 +362,7 @@ class _Writing extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _Veil(
+          BlurVeil(
             amount: veil,
             child: Text(
               l10n.onboardingSentenceTitle.toUpperCase(),
@@ -452,7 +407,7 @@ class _Writing extends StatelessWidget {
               ),
             ),
           ),
-          _Veil(
+          BlurVeil(
             amount: veil,
             child: Column(
               children: [
@@ -616,7 +571,7 @@ class _ChapterPage extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _Appear(
+          BlurAppear(
             amount: label,
             child: Text(
               l10n.onboardingChapterOne.toUpperCase(),
@@ -645,7 +600,7 @@ class _ChapterPage extends StatelessWidget {
           ),
           const SizedBox(height: 26),
           for (var i = 0; i < 3; i++)
-            _Appear(
+            BlurAppear(
               amount: rows[i],
               child: _ContentsRow(
                 month: _monthName(chapter.months[i], locale),
@@ -654,7 +609,7 @@ class _ChapterPage extends StatelessWidget {
               ),
             ),
           const SizedBox(height: 26),
-          _Appear(
+          BlurAppear(
             amount: footer,
             child: Text(
               '${l10n.onboardingChapterUntil(until)}\n'

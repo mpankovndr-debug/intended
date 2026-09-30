@@ -4845,6 +4845,60 @@ abstract class AppLocalizations {
   /// **'That\'s as many as Today holds.'**
   String get onboardingStartCap;
 
+  /// No description provided for @onboardingCuesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'When will they happen?'**
+  String get onboardingCuesTitle;
+
+  /// No description provided for @onboardingCuesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tie each one to something you already do.'**
+  String get onboardingCuesSubtitle;
+
+  /// No description provided for @onboardingCuesPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'After I'**
+  String get onboardingCuesPrefix;
+
+  /// No description provided for @onboardingCuesOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get onboardingCuesOther;
+
+  /// No description provided for @onboardingCuesOtherHint.
+  ///
+  /// In en, this message translates to:
+  /// **'something you already do'**
+  String get onboardingCuesOtherHint;
+
+  /// No description provided for @cuePresetCoffee.
+  ///
+  /// In en, this message translates to:
+  /// **'pour my coffee'**
+  String get cuePresetCoffee;
+
+  /// No description provided for @cuePresetTeeth.
+  ///
+  /// In en, this message translates to:
+  /// **'brush my teeth'**
+  String get cuePresetTeeth;
+
+  /// No description provided for @cuePresetDinner.
+  ///
+  /// In en, this message translates to:
+  /// **'finish dinner'**
+  String get cuePresetDinner;
+
+  /// No description provided for @cuePresetBed.
+  ///
+  /// In en, this message translates to:
+  /// **'get into bed'**
+  String get cuePresetBed;
+
   /// No description provided for @chapterStageTry.
   ///
   /// In en, this message translates to:

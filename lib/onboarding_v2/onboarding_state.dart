@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/intention_path.dart';
+import '../services/action_cues.dart';
 import '../services/analytics_service.dart';
 import '../services/habit_history_service.dart';
 import '../services/moments_service.dart';
@@ -1329,6 +1330,7 @@ class OnboardingState extends ChangeNotifier {
     // passed on comes back, because the stored name matches nothing.
     await StaleNudgeDismissals.rename(oldTitle, newTitle);
     await PlanService.renameSubject(oldTitle, newTitle);
+    await ActionCues.rename(oldTitle, newTitle);
 
     // Move the moments too. Outside the id guard below on purpose: a rename
     // that only changes case or punctuation slugs to the same id, so the

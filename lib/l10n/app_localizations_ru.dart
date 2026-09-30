@@ -2960,6 +2960,34 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingStartCap => 'Больше на экран «Сегодня» не поместится.';
 
   @override
+  String get onboardingCuesTitle => 'Когда ты будешь это делать?';
+
+  @override
+  String get onboardingCuesSubtitle =>
+      'Привяжи каждое к тому, что ты и так делаешь.';
+
+  @override
+  String get onboardingCuesPrefix => 'После того как';
+
+  @override
+  String get onboardingCuesOther => 'Другое';
+
+  @override
+  String get onboardingCuesOtherHint => 'то, что ты и так делаешь';
+
+  @override
+  String get cuePresetCoffee => 'налью кофе';
+
+  @override
+  String get cuePresetTeeth => 'почищу зубы';
+
+  @override
+  String get cuePresetDinner => 'поужинаю';
+
+  @override
+  String get cuePresetBed => 'лягу в кровать';
+
+  @override
   String get chapterStageTry => 'Пробовать';
 
   @override

@@ -2883,6 +2883,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingStartCap => 'That\'s as many as Today holds.';
 
   @override
+  String get onboardingCuesTitle => 'When will they happen?';
+
+  @override
+  String get onboardingCuesSubtitle =>
+      'Tie each one to something you already do.';
+
+  @override
+  String get onboardingCuesPrefix => 'After I';
+
+  @override
+  String get onboardingCuesOther => 'Other';
+
+  @override
+  String get onboardingCuesOtherHint => 'something you already do';
+
+  @override
+  String get cuePresetCoffee => 'pour my coffee';
+
+  @override
+  String get cuePresetTeeth => 'brush my teeth';
+
+  @override
+  String get cuePresetDinner => 'finish dinner';
+
+  @override
+  String get cuePresetBed => 'get into bed';
+
+  @override
   String get chapterStageTry => 'Try a few';
 
   @override

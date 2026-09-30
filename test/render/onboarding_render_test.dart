@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intended/l10n/app_localizations.dart';
 import 'package:intended/models/intention_path.dart';
+import 'package:intended/onboarding_v2/cues_screen.dart';
 import 'package:intended/onboarding_v2/direction_screen.dart';
 import 'package:intended/onboarding_v2/onboarding_state.dart';
 import 'package:intended/onboarding_v2/sentence_screen.dart';
@@ -216,6 +217,54 @@ void main() {
       await _shot(tester, '$_dir/onboarding_4_start_small_short_$lc.png');
     }, skip: _dir == null);
   }
+
+  Future<OnboardingState> withActions() async {
+    final state = await sealed(DateTime(2026, 9, 1, 12));
+    await state.adoptChosenActions(const [
+      'Light a scented candle',
+      'Drink something warm',
+      'Notice one thing you feel',
+    ]);
+    return state;
+  }
+
+  Finder chip(int i) => find
+      .descendant(of: find.byType(Wrap), matching: find.byType(GestureDetector))
+      .at(i);
+
+  for (final locale in const [Locale('en'), Locale('ru')]) {
+    final lc = locale.languageCode;
+    testWidgets('cues, $lc', (tester) async {
+      await _mount(tester, CuesScreen(onContinue: (_) {}),
+          state: await withActions(), locale: locale);
+      await _shot(tester, '$_dir/onboarding_5_cues_blank_$lc.png');
+
+      // The chosen words land; the action has not moved on yet.
+      await tester.tap(chip(3));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 320));
+      await _shot(tester, '$_dir/onboarding_5_cues_landed_$lc.png');
+
+      // The rest, until every action has a cue.
+      for (final i in [0, 1]) {
+        await tester.pump(CuesScreen.beat);
+        await tester.pumpAndSettle();
+        await tester.tap(chip(i));
+        await tester.pump();
+      }
+      await tester.pump(CuesScreen.beat);
+      await tester.pumpAndSettle();
+      await _shot(tester, '$_dir/onboarding_5_cues_all_$lc.png');
+    }, skip: _dir == null);
+  }
+
+  testWidgets('cues, own words', (tester) async {
+    await _mount(tester, CuesScreen(onContinue: (_) {}),
+        state: await withActions(), locale: const Locale('en'));
+    await tester.tap(find.text('Other'));
+    await tester.pumpAndSettle();
+    await _shot(tester, '$_dir/onboarding_5_cues_own_en.png');
+  }, skip: _dir == null);
 
   testWidgets('start small, focus sheet', (tester) async {
     await _mount(tester, StartSmallScreen(onContinue: () {}),

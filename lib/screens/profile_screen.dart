@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../services/action_cues.dart';
 import '../services/chapter_service.dart';
 import '../services/plan_service.dart';
 import '../services/season_service.dart';
@@ -872,6 +873,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final seasons = await SeasonService.archive();
       final accepted = await PlanService.acceptedNudges();
       final chapters = await ChapterService.all();
+      final cues = await ActionCues.read();
 
       final payload = const JsonEncoder.withIndent('  ').convert({
         'app': 'Intended',
@@ -884,6 +886,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'seasons': seasons.map((k, v) => MapEntry(k, v.toJson())),
         'acceptedPlanChanges': [for (final a in accepted) a.toJson()],
         'chapters': [for (final c in chapters) c.toJson()],
+        'actionCues': ActionCues.toJson(cues),
       });
 
       final dir = await getTemporaryDirectory();
