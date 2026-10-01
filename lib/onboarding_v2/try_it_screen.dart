@@ -12,7 +12,7 @@ import '../services/analytics_service.dart';
 import '../services/completion_service.dart';
 import '../services/moments_service.dart';
 import '../theme/category_colors.dart';
-import '../theme/category_glyphs.dart';
+import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/habit_l10n.dart';
 import '../utils/text_styles.dart';
@@ -22,8 +22,9 @@ import 'widgets/blur.dart';
 import 'widgets/onboarding_scaffold.dart';
 
 /// Onboarding screen 7, "Try it" (spec §6): the first real moment. Tapping
-/// an action records a real completion, and its tile flies into the
-/// person's own month and lands with a glow, one faint ghost tile after it.
+/// an action records a real completion. The card turns into Today's done
+/// card, its tile swells for a beat, then flies into the person's own month
+/// and lands with a glow, one faint ghost tile after it (decided 1 Oct).
 ///
 /// A real moment, not a demo: people value what they made only when they
 /// finish it, and a demo tile thrown away and then repeated asks for the
@@ -44,7 +45,7 @@ class TryItScreen extends StatefulWidget {
   final VoidCallback? onBack;
   final DateTime Function()? now;
 
-  static const Duration landing = Duration(milliseconds: 1600);
+  static const Duration landing = Duration(milliseconds: 2000);
 
   /// "That's the first square of your chapter." is said only when the
   /// chapter the sentence opens really holds the moment's day.
@@ -83,7 +84,7 @@ class _TryItScreenState extends State<TryItScreen>
   final _stackKey = GlobalKey();
   final _slotKey = GlobalKey();
   final _captionKey = GlobalKey();
-  final Map<String, GlobalKey> _glyphKeys = {};
+  final Map<String, GlobalKey> _tileKeys = {};
 
   String? _done;
   Moment? _moment;
@@ -92,13 +93,21 @@ class _TryItScreenState extends State<TryItScreen>
   Rect? _to;
   bool _landed = false;
 
-  // Beats, as fractions of [TryItScreen.landing].
-  static const _sheet = Interval(0.0, 0.25, curve: Curves.easeOut);
-  static const _flight = Interval(0.15, 0.6, curve: Curves.easeInOutCubic);
-  static const _glowIn = Interval(0.6, 0.7, curve: Curves.easeOut);
-  static const _glowSettle = Interval(0.7, 1.0, curve: Curves.easeInOut);
-  static const _ghost = Interval(0.7, 0.85, curve: Curves.easeOut);
-  static const _caption = Interval(0.78, 1.0, curve: Curves.easeOut);
+  // Beats, as fractions of [TryItScreen.landing]. The tile appears on the
+  // card as Today shows it, swells, holds for a breath, then flies; the
+  // card keeps a tile of its own, as a done card on Today does.
+  static const _appear = Interval(0.0, 0.08, curve: Curves.easeOutBack);
+  static const _swell = Interval(0.08, 0.22, curve: Curves.easeOutCubic);
+  static const _sheet = Interval(0.18, 0.36, curve: Curves.easeOut);
+  static const _flight = Interval(0.28, 0.66, curve: Curves.easeInOutCubic);
+  static const _refill = Interval(0.4, 0.56, curve: Curves.easeOut);
+  static const _glowIn = Interval(0.66, 0.74, curve: Curves.easeOut);
+  static const _glowSettle = Interval(0.74, 1.0, curve: Curves.easeInOut);
+  static const _ghost = Interval(0.76, 0.88, curve: Curves.easeOut);
+  static const _caption = Interval(0.82, 1.0, curve: Curves.easeOut);
+
+  /// How much larger the tile grows before it flies.
+  static const double _swollen = 1.8;
 
   @override
   void initState() {
@@ -106,7 +115,7 @@ class _TryItScreenState extends State<TryItScreen>
     final state = context.read<OnboardingState>();
     _actions = List.of(state.userHabits);
     for (final a in _actions) {
-      _glyphKeys[a] = GlobalKey();
+      _tileKeys[a] = GlobalKey();
     }
     _land = AnimationController(vsync: this, duration: TryItScreen.landing)
       ..addListener(_onTick);
@@ -164,7 +173,7 @@ class _TryItScreenState extends State<TryItScreen>
       final still = MediaQuery.of(context).disableAnimations;
       await _bringIntoView(still);
       if (!mounted) return;
-      _from = _rectOf(_glyphKeys[action]!);
+      _from = _rectOf(_tileKeys[action]!);
       _to = _rectOf(_slotKey);
       if (still || _from == null || _to == null) {
         _landed = true;
@@ -224,7 +233,22 @@ class _TryItScreenState extends State<TryItScreen>
             : 1 - 0.55 * _glowSettle.transform(t);
     final moment = _moment;
     final category = _done == null ? null : state.getCategoryForHabit(_done!);
-    final tint = CategoryColors.of(category, theme.theme);
+
+    // The tile on the done card: in, swollen, gone while it flies, then
+    // back at its size as the card keeps its own.
+    final double cardTileScale;
+    final double cardTileOpacity;
+    if (t < _swell.begin) {
+      cardTileScale = _appear.transform(t);
+      cardTileOpacity = 1;
+    } else if (t < _flight.begin) {
+      cardTileScale = 1 + (_swollen - 1) * _swell.transform(t);
+      cardTileOpacity = 1;
+    } else {
+      cardTileScale = 1;
+      cardTileOpacity = _refill.transform(t);
+    }
+    final cardTileLift = t < _flight.begin ? _swell.transform(t) : 0.0;
 
     return OnboardingScaffold(
       step: 3,
@@ -269,9 +293,12 @@ class _TryItScreenState extends State<TryItScreen>
                   _TryCard(
                     action: action,
                     category: state.getCategoryForHabit(action),
-                    glyphKey: _glyphKeys[action]!,
+                    tileKey: _tileKeys[action]!,
                     done: _done == action,
                     dimmed: _done != null && _done != action,
+                    tileScale: cardTileScale,
+                    tileOpacity: cardTileOpacity,
+                    tileLift: cardTileLift,
                     onTap: () => _do(action),
                   ),
                   const SizedBox(height: 10),
@@ -326,16 +353,18 @@ class _TryItScreenState extends State<TryItScreen>
               ],
             ),
           ),
-          if (flying && !_landed) _flyingTile(_from!, _to!, flight, tint),
+          if (flying && !_landed && t >= _flight.begin)
+            _flyingTile(_from!, _to!, flight, category, theme.theme),
         ],
       ),
     );
   }
 
-  /// The tile on its way from the action's glyph to its place in the month:
-  /// a gentle curve, growing from the glyph's size to a tile's.
-  Widget _flyingTile(Rect from, Rect to, double p, Color color) {
-    final size = 20 + (to.width - 20) * p;
+  /// The swollen tile on its way from the card to its place in the month:
+  /// a gentle curve, settling to a tile's size and to the month's colour.
+  Widget _flyingTile(
+      Rect from, Rect to, double p, String? category, AppTheme theme) {
+    final size = to.width * (_swollen + (1 - _swollen) * p);
     // Bowed across the path, not above it: the path mostly runs down the
     // screen, and an upward arc on a downward path reads as a hesitation.
     final path = to.center - from.center;
@@ -344,44 +373,62 @@ class _TryItScreenState extends State<TryItScreen>
         : Offset(path.dy, -path.dx) / path.distance;
     final center = Offset.lerp(from.center, to.center, p)! +
         across * (40 * math.sin(math.pi * p));
+    final color = Color.lerp(CategoryColors.onCard(category, theme),
+        CategoryColors.of(category, theme), p)!;
     return Positioned(
       left: center.dx - size / 2,
       top: center.dy - size / 2,
       child: IgnorePointer(
-        child: MomentTile(color: color, size: size, glow: 0.35),
+        child: MomentTile(color: color, size: size, glow: 1 - 0.65 * p),
       ),
     );
   }
 }
 
+/// An action as Today shows it (decided 1 Oct: no new card for onboarding).
+/// Pending: the glass card with its accent bar. Done: a wash and outline in
+/// the action's focus-area colour, the bar in that colour too, and the tile
+/// on the right, with no checkmark. Mirrors `_HabitCard` in `main.dart`;
+/// keep the two in step until that card is extracted.
 class _TryCard extends StatelessWidget {
   const _TryCard({
     required this.action,
     required this.category,
-    required this.glyphKey,
+    required this.tileKey,
     required this.done,
     required this.dimmed,
+    required this.tileScale,
+    required this.tileOpacity,
+    required this.tileLift,
     required this.onTap,
   });
 
   final String action;
   final String? category;
-  final GlobalKey glyphKey;
+  final GlobalKey tileKey;
   final bool done;
   final bool dimmed;
+  final double tileScale;
+  final double tileOpacity;
+
+  /// 0 to 1: the extra light on the tile as it swells before flying.
+  final double tileLift;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.watch<ThemeProvider>();
-    final colors = theme.colors;
-    final tint = CategoryColors.of(category, theme.theme);
-    final name = localizeHabitName(action, AppLocalizations.of(context));
+    final provider = context.watch<ThemeProvider>();
+    final colors = provider.colors;
+    final isDark = provider.theme.isDark;
+    final l10n = AppLocalizations.of(context);
+    final onCard = CategoryColors.onCard(category, provider.theme);
+    final glass =
+        colors.profileCard.withValues(alpha: colors.profileCardOpacity);
+    final name = localizeHabitName(action, l10n);
 
     return Semantics(
-      button: true,
-      selected: done,
-      label: name,
+      button: !done,
+      label: done ? l10n.a11yHabitCardDone(name) : l10n.a11yHabitCardTodo(name),
       excludeSemantics: true,
       child: AnimatedOpacity(
         // Dimmed, never removed (CLAUDE.md): the other actions are still
@@ -390,58 +437,133 @@ class _TryCard extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         child: GestureDetector(
           onTap: onTap,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 280),
-            curve: Curves.easeOut,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: done
-                  ? Color.alphaBlend(tint.withValues(alpha: 0.28),
-                      const Color(0xFFFFFFFF).withValues(alpha: 0.7))
-                  : const Color(0xFFFFFFFF).withValues(alpha: 0.55),
-              border: Border.all(
-                color: done
-                    ? tint.withValues(alpha: 0.7)
-                    : const Color(0xFFFFFFFF).withValues(alpha: 0.7),
-                width: done ? 1.5 : 1,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 64),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: done ? null : glass,
+                gradient: done
+                    ? LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color.alphaBlend(
+                              onCard.withValues(alpha: isDark ? 0.13 : 0.18),
+                              glass),
+                          Color.alphaBlend(
+                              onCard.withValues(alpha: isDark ? 0.05 : 0.07),
+                              glass),
+                        ],
+                      )
+                    : null,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: done
+                      ? onCard.withValues(alpha: 0.35)
+                      : isDark
+                          ? colors.borderCard
+                              .withValues(alpha: colors.borderCardOpacity)
+                          : const Color(0xFFFFFFFF).withValues(alpha: 0.6),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: colors.textPrimary
+                        .withValues(alpha: done ? 0.02 : 0.04),
+                    blurRadius: done ? 8 : 16,
+                    offset: Offset(0, done ? 1 : 2),
+                  ),
+                  if (!done)
+                    BoxShadow(
+                      color: const Color(0xFFFFFFFF)
+                          .withValues(alpha: isDark ? 0.18 : 0.25),
+                      blurRadius: isDark ? 0.5 : 1,
+                      offset: const Offset(0, 1),
+                      blurStyle: BlurStyle.inner,
+                    ),
+                ],
               ),
-            ),
-            child: Row(
-              children: [
-                Image.asset(CategoryGlyphs.of(category),
-                    key: glyphKey, width: 32, height: 32),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Text(
-                    name,
-                    style: TextStyle(
-                      fontFamily: AppTextStyles.bodyFont(context),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      height: 1.3,
-                      color: colors.textPrimary,
-                    ),
-                  ),
-                ),
-                AnimatedOpacity(
-                  opacity: done ? 1 : 0,
-                  duration: const Duration(milliseconds: 250),
-                  child: Container(
-                    width: 24,
-                    height: 24,
+              child: Row(
+                children: [
+                  Container(
+                    width: 4,
+                    height: 26,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: tint,
+                      color: done ? onCard : colors.accentRegular,
+                      borderRadius: BorderRadius.circular(2),
                     ),
-                    child: const Icon(CupertinoIcons.checkmark,
-                        size: 14, color: Color(0xFFFFFFFF)),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: AppTextStyles.bodyFont(context),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: colors.textPrimary,
+                      ),
+                    ),
+                  ),
+                  if (done) ...[
+                    const SizedBox(width: 12),
+                    SizedBox(
+                      key: tileKey,
+                      width: 26,
+                      height: 26,
+                      child: Opacity(
+                        opacity: tileOpacity,
+                        child: Transform.scale(
+                          scale: tileScale,
+                          child: _CardTile(color: onCard, lift: tileLift),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The tile on a done card, exactly as Today draws it, with [lift] adding
+/// light while it swells before flying.
+class _CardTile extends StatelessWidget {
+  const _CardTile({required this.color, required this.lift});
+
+  final Color color;
+  final double lift;
+
+  @override
+  Widget build(BuildContext context) {
+    final hsl = HSLColor.fromColor(color);
+    final lit =
+        hsl.withLightness((hsl.lightness + 0.07).clamp(0.0, 1.0)).toColor();
+    final shade =
+        hsl.withLightness((hsl.lightness - 0.05).clamp(0.0, 1.0)).toColor();
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [lit, color, shade],
+          stops: const [0.0, 0.55, 1.0],
+        ),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.45 + 0.35 * lift),
+            blurRadius: 14 + 10 * lift,
+            spreadRadius: 1 + 2 * lift,
+          ),
+        ],
       ),
     );
   }

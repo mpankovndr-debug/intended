@@ -277,13 +277,13 @@ void main() {
         await tester.pump();
       }
       var frame = 0;
-      for (var t = 0; t <= TryItScreen.landing.inMilliseconds; t += 80) {
+      for (var t = 0; t <= TryItScreen.landing.inMilliseconds; t += 50) {
         if (lc == 'en') {
           await _shot(tester,
               '$_dir/try_frames/f_${(frame++).toString().padLeft(3, '0')}.png',
               ratio: 1);
         }
-        await tester.pump(const Duration(milliseconds: 80));
+        await tester.pump(const Duration(milliseconds: 50));
       }
       await tester.pumpAndSettle();
       await _shot(tester, '$_dir/onboarding_7_try_landed_$lc.png');

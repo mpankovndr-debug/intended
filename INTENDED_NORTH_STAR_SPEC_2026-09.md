@@ -473,6 +473,11 @@ second time. Subtitle *Do one of them now, then tap it.* says the tap means it w
 line renders only when the chapter's `stageOn` holds the moment's day; the return line is true because
 `MomentGrid` rings the first moment after a quiet stretch. One moment per onboarding: coming back to the
 screen shows it landed. The screen reports whether a moment was recorded, so the paywall follows only one.
+Revised 1 Oct: the cards are Today's own (accent bar, glass; done is the focus-area wash and outline with
+the tile on the right, no checkmark). On the tap the tile appears on the card, swells to 1.8x for a breath,
+then flies to the month, shifting from the card's swatch to the month's; the card keeps a tile of its own.
+Turning the whole card into the tile was considered and not built: the done card would leave the list,
+which Today never does, and the cards below would jump up into its place.
 
 **8. Paywall** (existing, after the first moment, per handoff §5.4)
 > **A gentler way to keep going.** Your first square is already yours.
