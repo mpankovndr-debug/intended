@@ -25,7 +25,7 @@ import 'theme/category_colors.dart';
 import 'models/intention_path.dart';
 import 'theme/theme_provider.dart';
 import 'onboarding_v2/onboarding_state.dart';
-import 'onboarding_v2/focus_areas_screen.dart';
+import 'models/focus_area.dart';
 import 'onboarding_v2/welcome_v2_screen.dart';
 import 'state/user_state.dart';
 import 'screens/paywall_screen.dart';
@@ -2600,7 +2600,7 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                                     AppColors.categoryColors[area] ??
                                         colors.accentMuted;
                                 final icon =
-                                    FocusAreasScreen.areaIcons[area];
+                                    FocusArea.icons[area];
                                 return GestureDetector(
                                   onTap: () {
                                     setState(

@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'habit_reveal_screen.dart';
 import 'onboarding_state.dart';
 import '../services/analytics_service.dart';
 import '../services/notification_scheduler.dart';
@@ -18,15 +17,14 @@ import '../widgets/onboarding_progress_bar.dart';
 class DailyReminderScreen extends StatefulWidget {
   const DailyReminderScreen({
     super.key,
-    this.onContinue,
+    required this.onContinue,
     this.onBack,
-    this.step = 3,
+    this.step = 2,
   });
 
-  /// Inside the onboarding flow (spec §6, screen 6): what comes next, and
-  /// the way back to the cues. Without them the screen keeps its old place
-  /// before the habit reveal.
-  final VoidCallback? onContinue;
+  /// Onboarding screen 6 (spec §6), asked only when no cue was set: what
+  /// comes next, and the way back to the cues.
+  final VoidCallback onContinue;
   final VoidCallback? onBack;
   final int step;
 
@@ -80,26 +78,7 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
 
     if (!mounted) return;
 
-    if (widget.onContinue != null) {
-      widget.onContinue!();
-      return;
-    }
-
-    // Navigate to Habit Reveal screen
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const HabitRevealScreen(),
-        transitionDuration: const Duration(milliseconds: 350),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
-        },
-      ),
-    );
+    widget.onContinue();
   }
 
   @override
@@ -146,10 +125,7 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                   // Column with Header + Expanded ScrollView
                   Column(
                     children: [
-                      // Progress bar. In the old flow this followed the
-                      // one-way commitment moment and had no back arrow; in
-                      // the new one it follows the cues, and back returns
-                      // to them.
+                      // Progress bar, with back to the cues.
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                         child: OnboardingProgressBar(

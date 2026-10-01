@@ -468,7 +468,7 @@ class OnboardingState extends ChangeNotifier {
 
   /// Clears current focus-area selections and applies [defaults] as the
   /// pre-selection for [pathKey]. Tracks which path was last applied so
-  /// FocusAreasScreen can detect when the path changed and re-apply.
+  /// the direction screen can tell when the path changed and re-apply.
   ///
   /// Persists, like [changeFocusAreas]. It used to mutate memory only, so a
   /// path change from ChangePathScreen was lost on restart: `loadUserHabits`

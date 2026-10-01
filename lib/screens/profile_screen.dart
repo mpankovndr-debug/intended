@@ -28,6 +28,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../main.dart';
 import '../onboarding_v2/onboarding_state.dart';
+import '../utils/habit_l10n.dart';
 import '../services/analytics_service.dart';
 import '../onboarding_v2/welcome_v2_screen.dart';
 import '../state/user_state.dart';
@@ -48,7 +49,7 @@ import 'year_in_seasons_screen.dart';
 import '../widgets/app_icon_picker.dart';
 import '../widgets/boost_offer_sheet.dart';
 import '../widgets/focus_area_card.dart';
-import '../onboarding_v2/focus_areas_screen.dart';
+import '../models/focus_area.dart';
 import '../services/backup_service.dart';
 import '../services/coach_mark_service.dart';
 import '../features/profile/faq_screen.dart';
@@ -3111,17 +3112,14 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
                       child: SingleChildScrollView(
                         padding: const EdgeInsets.fromLTRB(28, 0, 28, 160),
                         child: Column(
-                          children: FocusAreasScreen.areas.map((area) {
+                          children: OnboardingState.focusAreaOptions.map((area) {
                             final selected = _selectedAreas.contains(area);
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 14),
                               child: FocusAreaCard(
-                                label: FocusAreasScreen.localizedAreaName(
-                                    l10n, area),
-                                subtitle:
-                                    FocusAreasScreen.localizedAreaSubtitle(
-                                        l10n, area),
-                                icon: FocusAreasScreen.areaIcons[area]!,
+                                label: localizeCategoryName(area, l10n),
+                                subtitle: FocusArea.subtitle(area, l10n),
+                                icon: FocusArea.icons[area]!,
                                 selected: selected,
                                 onTap: () => _toggleArea(area),
                               ),
