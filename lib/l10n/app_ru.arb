@@ -1152,6 +1152,7 @@
   "cuePresetTeeth": "почищу зубы",
   "cuePresetDinner": "поужинаю",
   "cuePresetBed": "лягу в кровать",
+  "todayCueLine": "после того как {cue}",
   "onboardingTryTitle": "За каждое сделанное дело появляется квадрат.",
   "onboardingTrySubtitle": "Сделай одно из них сейчас и нажми на него.",
   "onboardingTryFirst": "Это первый квадрат твоей главы.",

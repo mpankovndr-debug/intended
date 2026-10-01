@@ -1487,6 +1487,8 @@
   "cuePresetTeeth": "brush my teeth",
   "cuePresetDinner": "finish dinner",
   "cuePresetBed": "get into bed",
+  "todayCueLine": "after I {cue}",
+  "@todayCueLine": {"placeholders": {"cue": {"type": "String"}}},
   "onboardingTryTitle": "Every time you do one, a square appears.",
   "onboardingTrySubtitle": "Do one of them now, then tap it.",
   "onboardingTryFirst": "That's the first square of your chapter.",

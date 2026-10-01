@@ -2915,6 +2915,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cuePresetBed => 'get into bed';
 
   @override
+  String todayCueLine(String cue) {
+    return 'after I $cue';
+  }
+
+  @override
   String get onboardingTryTitle => 'Every time you do one, a square appears.';
 
   @override

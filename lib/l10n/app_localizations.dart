@@ -4905,6 +4905,12 @@ abstract class AppLocalizations {
   /// **'get into bed'**
   String get cuePresetBed;
 
+  /// No description provided for @todayCueLine.
+  ///
+  /// In en, this message translates to:
+  /// **'after I {cue}'**
+  String todayCueLine(String cue);
+
   /// No description provided for @onboardingTryTitle.
   ///
   /// In en, this message translates to:

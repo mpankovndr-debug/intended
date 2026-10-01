@@ -328,7 +328,9 @@ The best-supported idea near Tiny Habits: implementation intentions, d = 0.65 ac
   so cues are a title-keyed map (`action_cues`). The rename-safe pattern already exists: "Everything the
   app stores under an action's *title* has to move when the title does" (`test/rename_keyed_stores_test.dart`).
   Add `ActionCues.rename`, include it in backup and export, and add strings to both ARBs.
-- **On Today:** one quiet line under the action title, "after coffee", in secondary text.
+- **On Today:** one quiet line under the action title, in secondary text. Built 1 Oct as "after I pour my
+  coffee" («после того как налью кофе»), the cue's own words, so presets and the person's own words read
+  the same way (`CueLine`, refreshed on every write to the store).
 - **Setting it:** the hold menu offers "Give it a moment: After I…" *before* the swap. That is Fogg's
   order: fix the prompt, then shrink the action, and only then swap it.
 - **Choosing a cue:** chips ("pour my coffee", "brush my teeth", "sit down at my desk", "get into bed")

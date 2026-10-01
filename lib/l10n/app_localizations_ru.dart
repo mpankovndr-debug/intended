@@ -2991,6 +2991,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cuePresetBed => 'лягу в кровать';
 
   @override
+  String todayCueLine(String cue) {
+    return 'после того как $cue';
+  }
+
+  @override
   String get onboardingTryTitle =>
       'За каждое сделанное дело появляется квадрат.';
 

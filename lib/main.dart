@@ -60,6 +60,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'widgets/quiet_bloom_overlay.dart';
 import 'widgets/widget_mood_catchup.dart';
 import 'widgets/stale_action_nudge.dart';
+import 'widgets/cue_line.dart';
 import 'widgets/upgrade_nudge_banner.dart';
 import 'services/pause_launcher.dart';
 import 'services/health_service.dart';
@@ -4806,16 +4807,32 @@ class _HabitCardState extends State<_HabitCard>
                               // "collected" this is meant to signal. The wash
                               // and outline on the card carry the state.
                               Expanded(
-                                child: Text(
-                                  localizeHabitName(widget.habitTitle, l10n),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: Responsive.sp(16),
-                                    fontWeight: FontWeight.w500,
-                                    color: colors.textPrimary,
-                                    fontFamily: AppTextStyles.bodyFont(context),
-                                  ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      localizeHabitName(widget.habitTitle, l10n),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: Responsive.sp(16),
+                                        fontWeight: FontWeight.w500,
+                                        color: colors.textPrimary,
+                                        fontFamily: AppTextStyles.bodyFont(context),
+                                      ),
+                                    ),
+                                    // What it follows, if the person tied it
+                                    // to something (§4). Lives in its own file.
+                                    CueLine(
+                                      action: widget.habitTitle,
+                                      style: TextStyle(
+                                        fontSize: Responsive.sp(13),
+                                        color: colors.textSecondary,
+                                        fontFamily: AppTextStyles.bodyFont(context),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               if (_isDoneToday) ...[

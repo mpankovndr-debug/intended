@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/action_cue.dart';
@@ -13,6 +14,11 @@ class ActionCues {
   ActionCues._();
 
   static const String key = 'action_cues';
+
+  /// Bumped on every write, so whatever shows a cue reads it again rather
+  /// than holding a copy that a write elsewhere has made stale (CLAUDE.md:
+  /// static caches must refresh on write).
+  static final ValueNotifier<int> changes = ValueNotifier(0);
 
   static Future<Map<String, ActionCue>> read() async {
     final prefs = await SharedPreferences.getInstance();
@@ -71,5 +77,6 @@ class ActionCues {
     } else {
       await prefs.setString(key, jsonEncode(toJson(all)));
     }
+    changes.value++;
   }
 }
