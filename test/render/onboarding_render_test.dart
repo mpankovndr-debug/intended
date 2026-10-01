@@ -9,6 +9,7 @@ import 'package:intended/l10n/app_localizations.dart';
 import 'package:intended/models/intention_path.dart';
 import 'package:intended/onboarding_v2/cues_screen.dart';
 import 'package:intended/onboarding_v2/direction_screen.dart';
+import 'package:intended/onboarding_v2/onboarding_flow.dart';
 import 'package:intended/onboarding_v2/onboarding_state.dart';
 import 'package:intended/onboarding_v2/sentence_screen.dart';
 import 'package:intended/onboarding_v2/start_small_screen.dart';
@@ -16,6 +17,11 @@ import 'package:intended/onboarding_v2/try_it_screen.dart';
 import 'package:intended/theme/category_glyphs.dart';
 import 'package:intended/onboarding_v2/widgets/hold_to_confirm_button.dart';
 import 'package:intended/theme/theme_provider.dart';
+import 'package:intended/models/moment.dart';
+import 'package:intended/screens/onboarding_paywall_screen.dart';
+import 'package:intended/services/moments_service.dart';
+import 'package:intended/services/revenue_cat_service.dart';
+import 'package:intended/state/user_state.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -287,6 +293,40 @@ void main() {
       }
       await tester.pumpAndSettle();
       await _shot(tester, '$_dir/onboarding_7_try_landed_$lc.png');
+    }, skip: _dir == null);
+  }
+
+  testWidgets('flow, changing screens', (tester) async {
+    await _mount(
+        tester, OnboardingFlow(finish: (_, {required recorded}) async {}),
+        state: OnboardingState(), locale: const Locale('en'));
+    await tester.tap(find.byWidgetPredicate(
+        (w) => w is DirectionCard && w.path.id == IntentionPathId.windingDown));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Continue'));
+    var frame = 0;
+    for (var t = 0; t <= OnboardingFlow.change.inMilliseconds + 80; t += 40) {
+      await _shot(tester,
+          '$_dir/flow_frames/f_${(frame++).toString().padLeft(3, '0')}.png',
+          ratio: 1);
+      await tester.pump(const Duration(milliseconds: 40));
+    }
+  }, skip: _dir == null);
+
+  for (final locale in const [Locale('en'), Locale('ru')]) {
+    final lc = locale.languageCode;
+    testWidgets('paywall after the first moment, $lc', (tester) async {
+      await MomentsService.record(
+          Moment.create(habitName: 'Light a scented candle'));
+      await _mount(
+          tester,
+          ChangeNotifierProvider(
+            create: (_) => RevenueCatService(UserState()),
+            child: const OnboardingPaywallScreen(),
+          ),
+          state: OnboardingState(),
+          locale: locale);
+      await _shot(tester, '$_dir/onboarding_8_paywall_$lc.png');
     }, skip: _dir == null);
   }
 

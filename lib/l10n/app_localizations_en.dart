@@ -1714,7 +1714,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'New features added regularly. Your subscription supports independent development.\nBuilt by one person who cares about this as much as you do.';
 
   @override
-  String get onboardingPaywallTitle => 'Intended+ reads your months';
+  String get onboardingPaywallTitle => 'A gentler way to keep going.';
+
+  @override
+  String get onboardingPaywallFirstSquare =>
+      'Your first square is already yours.';
 
   @override
   String get onboardingPaywallBody =>

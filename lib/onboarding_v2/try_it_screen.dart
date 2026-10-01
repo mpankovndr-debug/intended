@@ -15,6 +15,7 @@ import '../theme/category_colors.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/habit_l10n.dart';
+import '../utils/responsive_utils.dart';
 import '../utils/text_styles.dart';
 import '../widgets/moment_tile.dart';
 import 'onboarding_state.dart';
@@ -502,7 +503,9 @@ class _TryCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontFamily: AppTextStyles.bodyFont(context),
-                        fontSize: 16,
+                        // Today's own size; the flow's background has
+                        // already initialised the scale.
+                        fontSize: Responsive.sp(16),
                         fontWeight: FontWeight.w500,
                         color: colors.textPrimary,
                       ),

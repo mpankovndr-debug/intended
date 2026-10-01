@@ -2948,9 +2948,6 @@ class _HabitCardState extends State<_HabitCard>
   /// who don't convert during onboarding mostly never return to a paywall — so
   /// this is still the same window, just the part of it with evidence in it.
   Future<void> _maybeShowFirstCompletionPaywall() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool(_firstCompletionPaywallKey) == true) return;
-
     // No moment-count guard (review finding #5): counting moments burned the
     // one-shot flag for anyone whose *first* completion came from the widget
     // or a yesterday-log — they'd tap in-app with total == 2 and never see
@@ -2959,10 +2956,13 @@ class _HabitCardState extends State<_HabitCard>
     // many moments arrived by other doors first.
     if (!mounted) return;
     // Nothing to pitch to someone who already subscribed — including a
-    // subscription restored from their Apple ID on first launch.
-    if (context.read<RevenueCatService>().isPremium) return;
-
-    await prefs.setBool(_firstCompletionPaywallKey, true);
+    // subscription restored from their Apple ID on first launch. The claim
+    // is shared with onboarding's first moment, so only one door shows it.
+    final isPremium = context.read<RevenueCatService>().isPremium;
+    if (!await OnboardingPaywallScreen.claimFirstCompletion(
+        isPremium: isPremium)) {
+      return;
+    }
     // A breath between the sheet closing and the pitch: the completed card —
     // wash, bar, tile — gets seen before anything is asked for. §8 wants the
     // paywall "with the moment card on screen", not instead of it.
@@ -2977,9 +2977,6 @@ class _HabitCardState extends State<_HabitCard>
       ),
     );
   }
-
-  static const String _firstCompletionPaywallKey =
-      'first_completion_paywall_shown';
 
   Future<void> _checkCompletionCoachMarks() async {
     // Wait for the completion animation to finish before overlaying coach mark.

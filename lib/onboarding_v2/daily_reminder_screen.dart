@@ -16,7 +16,19 @@ import '../utils/text_styles.dart';
 import '../widgets/onboarding_progress_bar.dart';
 
 class DailyReminderScreen extends StatefulWidget {
-  const DailyReminderScreen({super.key});
+  const DailyReminderScreen({
+    super.key,
+    this.onContinue,
+    this.onBack,
+    this.step = 3,
+  });
+
+  /// Inside the onboarding flow (spec §6, screen 6): what comes next, and
+  /// the way back to the cues. Without them the screen keeps its old place
+  /// before the habit reveal.
+  final VoidCallback? onContinue;
+  final VoidCallback? onBack;
+  final int step;
 
   @override
   State<DailyReminderScreen> createState() => _DailyReminderScreenState();
@@ -67,6 +79,11 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
     }
 
     if (!mounted) return;
+
+    if (widget.onContinue != null) {
+      widget.onContinue!();
+      return;
+    }
 
     // Navigate to Habit Reveal screen
     Navigator.push(
@@ -129,15 +146,16 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                   // Column with Header + Expanded ScrollView
                   Column(
                     children: [
-                      // Progress bar — final step in the conversation arc.
-                      // No back arrow: the previous screen was the one-way
-                      // commitment moment, and we don't want to let the user
-                      // un-commit by tapping back.
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+                      // Progress bar. In the old flow this followed the
+                      // one-way commitment moment and had no back arrow; in
+                      // the new one it follows the cues, and back returns
+                      // to them.
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                         child: OnboardingProgressBar(
-                          currentStep: 3,
+                          currentStep: widget.step,
                           totalSteps: 3,
+                          onBack: widget.onBack,
                         ),
                       ),
 

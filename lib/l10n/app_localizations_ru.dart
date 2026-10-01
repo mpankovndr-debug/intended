@@ -1772,7 +1772,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Новые функции добавляются регулярно. Подписка поддерживает независимую разработку.\nСоздано одним человеком, которому это так же важно, как и тебе.';
 
   @override
-  String get onboardingPaywallTitle => 'Intended+ читает твои месяцы';
+  String get onboardingPaywallTitle => 'Бережный способ продолжать.';
+
+  @override
+  String get onboardingPaywallFirstSquare => 'Первый квадрат уже твой.';
 
   @override
   String get onboardingPaywallBody =>

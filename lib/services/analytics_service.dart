@@ -68,8 +68,10 @@ class AnalyticsService {
 
   // ── Screen Views ──────────────────────────────────────────────
 
-  static void logScreenView(String screenName) {
-    _analytics.logScreenView(screenName: screenName);
+  static Future<void> logScreenView(String screenName) async {
+    try {
+      await _analytics.logScreenView(screenName: screenName);
+    } catch (_) {}
   }
 
   // ── Onboarding Funnel ─────────────────────────────────────────
@@ -143,11 +145,13 @@ class AnalyticsService {
 
   // ── Paywall & Monetization ────────────────────────────────────
 
-  static void logPaywallShown(String source) {
-    _analytics.logEvent(
-      name: 'paywall_shown',
-      parameters: {'source': source},
-    );
+  static Future<void> logPaywallShown(String source) async {
+    try {
+      await _analytics.logEvent(
+        name: 'paywall_shown',
+        parameters: {'source': source},
+      );
+    } catch (_) {}
   }
 
   static void logPaywallDismissed(String source) {
@@ -189,11 +193,13 @@ class AnalyticsService {
 
   // ── Engagement ────────────────────────────────────────────────
 
-  static void logDailyReminderToggled(bool enabled) {
-    _analytics.logEvent(
-      name: 'daily_reminder_toggled',
-      parameters: {'enabled': enabled.toString()},
-    );
+  static Future<void> logDailyReminderToggled(bool enabled) async {
+    try {
+      await _analytics.logEvent(
+        name: 'daily_reminder_toggled',
+        parameters: {'enabled': enabled.toString()},
+      );
+    } catch (_) {}
   }
 
   static void logReminderTimeChanged() {

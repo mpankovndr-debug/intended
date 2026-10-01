@@ -13,7 +13,7 @@ import '../services/auth_service.dart';
 import '../services/backup_service.dart';
 import '../utils/profanity_filter.dart';
 import 'onboarding_state.dart';
-import 'tell_us_about_you_screen.dart';
+import 'onboarding_flow.dart';
 import '../state/user_state.dart';
 import '../services/analytics_service.dart';
 import '../theme/app_colors.dart';
@@ -107,7 +107,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
       }
     }
 
-    _navigateToFocusAreas(name: name.isEmpty ? null : name);
+    _startOnboarding(name: name.isEmpty ? null : name);
   }
 
   void _showSignInSheet(
@@ -165,7 +165,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
     if (!mounted) return;
 
     if (backupInfo == null) {
-      _navigateToFocusAreas(name: firstName);
+      _startOnboarding(name: firstName);
       return;
     }
 
@@ -213,7 +213,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                 );
               }
             } else {
-              _navigateToFocusAreas(name: firstName);
+              _startOnboarding(name: firstName);
             }
           },
           child: Text(l10n.restoreBackupConfirm),
@@ -221,7 +221,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
         CupertinoDialogAction(
           onPressed: () {
             Navigator.pop(context);
-            _navigateToFocusAreas(name: firstName);
+            _startOnboarding(name: firstName);
           },
           child: Text(l10n.restoreBackupSkip),
         ),
@@ -229,7 +229,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
     );
   }
 
-  void _navigateToFocusAreas({String? name}) {
+  void _startOnboarding({String? name}) {
     FocusScope.of(context).unfocus();
 
     final state = context.read<OnboardingState>();
@@ -249,7 +249,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const TellUsAboutYouScreen(),
+        pageBuilder: (_, __, ___) => const OnboardingFlow(),
         transitionDuration: const Duration(milliseconds: 400),
         transitionsBuilder: (_, animation, __, child) {
           return FadeTransition(opacity: animation, child: child);
@@ -638,7 +638,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
             CupertinoButton(
               padding: const EdgeInsets.symmetric(
                   horizontal: 4, vertical: 12),
-              onPressed: () => _navigateToFocusAreas(),
+              onPressed: () => _startOnboarding(),
               minimumSize: const Size(0, 0),
               child: Text(
                 l10n.onboardingSkipForNow,

@@ -3,9 +3,11 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/analytics_service.dart';
+import '../services/moments_service.dart';
 import '../services/review_request_service.dart';
 import '../services/revenue_cat_service.dart';
 import '../theme/app_colors.dart';
@@ -34,6 +36,23 @@ class OnboardingPaywallScreen extends StatefulWidget {
   /// and the "soft" moment is intentionally simpler than the full paywall.
   static const String _plan = 'yearly';
 
+  /// Set once this paywall has been shown after a first completed action,
+  /// from whichever door it came: onboarding's first moment or Today's
+  /// first tap. Never shown twice.
+  static const String firstCompletionShownKey =
+      'first_completion_paywall_shown';
+
+  /// Whether to show the paywall now, after a first completed action: once
+  /// ever, and never to someone already subscribed. Claims the one showing
+  /// when it says yes, so two doors cannot both show it.
+  static Future<bool> claimFirstCompletion({required bool isPremium}) async {
+    if (isPremium) return false;
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(firstCompletionShownKey) == true) return false;
+    await prefs.setBool(firstCompletionShownKey, true);
+    return true;
+  }
+
   @override
   State<OnboardingPaywallScreen> createState() =>
       _OnboardingPaywallScreenState();
@@ -42,6 +61,10 @@ class OnboardingPaywallScreen extends StatefulWidget {
 class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
+
+  /// How many moments the person has. "Your first square is already
+  /// yours." is said only when that is literally one.
+  int? _moments;
   late final AnimationController _entrance;
   late final Animation<double> _fadeIn;
   late final Animation<Offset> _slideUp;
@@ -55,6 +78,9 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
     // Stand down the review prompt for the rest of this session so we don't
     // pile a "rate Intended" dialog on top of someone who just declined a trial.
     ReviewRequestService.markPaywallShown();
+    MomentsService.getAll().then((all) {
+      if (mounted) setState(() => _moments = all.length);
+    });
 
     _entrance = AnimationController(
       vsync: this,
@@ -222,7 +248,9 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
                           l10n.onboardingPaywallTitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: 'Sora',
+                            // Sora has no Cyrillic (CLAUDE.md).
+                            fontFamily: AppTextStyles.displayFontFor(
+                                Localizations.localeOf(context).toString()),
                             fontSize: 30,
                             fontWeight: FontWeight.w600,
                             color: colors.textPrimary,
@@ -232,6 +260,23 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
                         ),
                       ),
                     ),
+                    if (_moments == 1) ...[
+                      const SizedBox(height: 10),
+                      FadeTransition(
+                        opacity: _fadeIn,
+                        child: Text(
+                          l10n.onboardingPaywallFirstSquare,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: AppTextStyles.bodyFont(context),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            height: 1.4,
+                            color: colors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 16),
 
                     // Three steps, not a wall (device review, SS1). Six

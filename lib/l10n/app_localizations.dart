@@ -2802,8 +2802,14 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPaywallTitle.
   ///
   /// In en, this message translates to:
-  /// **'Intended+ reads your months'**
+  /// **'A gentler way to keep going.'**
   String get onboardingPaywallTitle;
+
+  /// No description provided for @onboardingPaywallFirstSquare.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first square is already yours.'**
+  String get onboardingPaywallFirstSquare;
 
   /// No description provided for @onboardingPaywallBody.
   ///

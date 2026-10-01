@@ -481,6 +481,14 @@ which Today never does, and the cards below would jump up into its place.
 
 **8. Paywall** (existing, after the first moment, per handoff §5.4)
 > **A gentler way to keep going.** Your first square is already yours.
+Wired 1 Oct (`OnboardingFlow`): one route after Welcome. The painting is drawn once; the step bar, bottom
+fade and button pill hand over without a dip; words on the chrome change out-then-in; each screen's
+content blurs out and the next blurs in (520 ms, none with Reduce Motion). Back walks the steps actually
+taken. Finishing completes onboarding, writes chapter one dated from the seal, and opens Today; after a
+real first moment the paywall follows over Today, sharing Today's one-shot claim
+(`OnboardingPaywallScreen.claimFirstCompletion`). "Your first square is already yours." renders only when
+the person has exactly one moment, since the paywall can also follow a first in-app tap after moments
+from the widget or the yesterday-log.
 
 **Cut, with reasons:**
 - *Part and explainer cards.* They carried one slogan each, and "By starting small" is the next screen's
