@@ -56,9 +56,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 ///   RENDER_DIR=/tmp/shots flutter test test/render/screens_render_test.dart
 ///
-/// iPhone 15 size, Iris, free tier, no status bar; blur is approximate and a
-/// device still has the last word. Not reachable from here: a paywall price,
-/// which is only drawn once a store has answered.
+/// iPhone 15 size unless RENDER_SIZE says otherwise (`RENDER_SIZE=375x667`
+/// for the narrowest phone, where a wide word bites first). Iris, free tier,
+/// no status bar; blur is approximate and a device still has the last word.
+/// Not reachable from here: a paywall price, which is only drawn once a store
+/// has answered.
 ///
 /// Beside each PNG sits a `.spans.txt`: every piece of text on the screen
 /// with the font family it resolved to. A test binding has no system fonts,
@@ -67,6 +69,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// substitute its own face. Layout errors go to `.errors.txt` and text that
 /// did not fit to `.cut.txt`; neither file exists for a clean screen.
 final String? _dir = Platform.environment['RENDER_DIR'];
+final Size _size = () {
+  final raw = Platform.environment['RENDER_SIZE'];
+  if (raw == null) return const Size(393, 852);
+  final sides = raw.split('x').map(double.parse).toList();
+  return Size(sides[0], sides[1]);
+}();
 const _boundary = Key('render-boundary');
 const _home = Key('render-home');
 
@@ -171,7 +179,7 @@ Future<void> _mount(
   state.setName('Alex');
   final user = UserState();
 
-  tester.view.physicalSize = const Size(393 * 3, 852 * 3);
+  tester.view.physicalSize = _size * 3;
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
 
