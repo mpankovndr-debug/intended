@@ -50,6 +50,16 @@ class AppTextStyles {
   static String displayFontFor(String localeName) =>
       localeName.startsWith('ru') ? _bodyFontRu : _headerFont;
 
+  /// What text draws in when its own style names no family: the display face
+  /// for [localeName], then the system faces for what that face cannot draw.
+  ///
+  /// The app-wide default, installed by `LocaleTextTheme`. Pure for the same
+  /// reason [displayFontFor] is.
+  static TextStyle defaultTextStyleFor(String localeName) => TextStyle(
+        fontFamily: displayFontFor(localeName),
+        fontFamilyFallback: const ['SF Pro', 'SF Pro Rounded'],
+      );
+
   /// Adjust font size for Russian text (8% smaller)
   static double _localizedSize(double base, String locale) {
     if (locale == 'ru') {

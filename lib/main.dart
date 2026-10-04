@@ -49,6 +49,7 @@ import 'services/notification_preferences_service.dart';
 import 'services/revenue_cat_service.dart';
 import 'widgets/boost_offer_sheet.dart';
 import 'widgets/app_toast.dart';
+import 'widgets/locale_text_theme.dart';
 import 'services/widget_completion_service.dart';
 import 'services/widget_service.dart';
 import 'services/backup_service.dart';
@@ -882,14 +883,9 @@ class IntendedApp extends StatelessWidget {
         // Default to English for all other languages
         return const Locale('en');
       },
-      theme: const CupertinoThemeData(
-        textTheme: CupertinoTextThemeData(
-          textStyle: TextStyle(
-            fontFamily: 'Sora',
-            fontFamilyFallback: ['SF Pro', 'SF Pro Rounded'],
-          ),
-        ),
-      ),
+      // The default face is set here rather than in `theme:` — it follows the
+      // language, and the resolved locale only exists below Localizations.
+      builder: (context, child) => LocaleTextTheme(child: child!),
       home: Builder(
         builder: (context) {
           Responsive.init(context);

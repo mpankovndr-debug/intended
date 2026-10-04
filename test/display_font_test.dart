@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intended/utils/text_styles.dart';
 
@@ -65,10 +67,79 @@ void main() {
     }
   });
 
+  test('Montserrat draws everything the Russian strings say', () {
+    // Every bundled weight against every character of copy, not a sample.
+    // The two ornaments are missing from Sora as well, so the system face
+    // draws them in both languages; anything else missing would be Russian
+    // text in a typeface the rest of its screen is not using.
+    const ornaments = {0x2726 /* ✦ */, 0x2665 /* ♥ */};
+    final arb = jsonDecode(File('lib/l10n/app_ru.arb').readAsStringSync())
+        as Map<String, dynamic>;
+    final used = <int>{
+      for (final entry in arb.entries)
+        if (!entry.key.startsWith('@') && entry.value is String)
+          ...(entry.value as String).runes,
+    }..removeAll(const {0x09, 0x0A, 0x0D});
+
+    for (final weight in ['Regular', 'Medium', 'SemiBold', 'Bold']) {
+      final montserrat = _codePoints('assets/fonts/Montserrat-$weight.ttf');
+      expect(
+        used.difference(montserrat).difference(ornaments).map(String.fromCharCode),
+        isEmpty,
+        reason: 'Montserrat-$weight cannot draw these',
+      );
+    }
+  });
+
   test('the display face follows the locale', () {
     expect(AppTextStyles.displayFontFor('ru'), 'Montserrat');
     expect(AppTextStyles.displayFontFor('ru_RU'), 'Montserrat');
     expect(AppTextStyles.displayFontFor('en'), 'Sora');
     expect(AppTextStyles.displayFontFor('en_US'), 'Sora');
+  });
+
+  test('the default text style follows the locale', () {
+    expect(AppTextStyles.defaultTextStyleFor('ru').fontFamily, 'Montserrat');
+    // English is, to the letter, what `CupertinoApp.theme` used to carry.
+    expect(
+      AppTextStyles.defaultTextStyleFor('en'),
+      const TextStyle(
+        fontFamily: 'Sora',
+        fontFamilyFallback: ['SF Pro', 'SF Pro Rounded'],
+      ),
+    );
+  });
+
+  test('no style names Sora directly, except the wordmark', () {
+    // A style that hardcodes Sora is wrong in one of the app's two languages:
+    // forty-five of them were, and nothing said so, because a device swaps in
+    // its own face without a sound. `displayFontFor` is the way to ask.
+    //
+    // The wordmark is the exception — "Intended" is Latin in every locale and
+    // deliberately the brand face. A new one belongs in this list, with the
+    // same comment at the site that the two here carry.
+    const wordmarks = {
+      'lib/onboarding_v2/welcome_v2_screen.dart': 1,
+      'lib/widgets/season_share_card.dart': 1,
+    };
+    // Where the faces are named, once.
+    const definition = 'lib/utils/text_styles.dart';
+
+    final literal = RegExp('''['"]Sora['"]''');
+    final found = <String, int>{};
+    for (final entity in Directory('lib').listSync(recursive: true)) {
+      if (entity is! File || !entity.path.endsWith('.dart')) continue;
+      final path = entity.path.replaceAll(r'\', '/');
+      if (path == definition) continue;
+      // Code only: comments are free to talk about Sora.
+      final hits = entity
+          .readAsLinesSync()
+          .map((line) => line.split('//').first)
+          .where(literal.hasMatch)
+          .length;
+      if (hits > 0) found[path] = hits;
+    }
+
+    expect(found, wordmarks);
   });
 }
