@@ -5,8 +5,8 @@ import '../theme/theme_provider.dart';
 
 /// Intended text styles with locale-aware sizing
 ///
-/// TWO FONT ROLES, body font swapped by locale:
-/// - Headers: Sora (always — brand identity)
+/// TWO FONT ROLES, both swapped by locale — Sora has no Cyrillic:
+/// - Headers: Sora (EN) / Montserrat (RU)
 /// - Body:    Sora (EN) / Montserrat (RU)
 ///
 /// Russian text is typically 20-30% longer than English.
@@ -67,18 +67,18 @@ class AppTextStyles {
   }
 
   // ============================================================
-  // HEADERS (Sora — always)
+  // HEADERS (Sora EN / Montserrat RU)
   // ============================================================
 
   /// Display - Large welcome title
-  /// 36px, Sora, weight 600
+  /// 36px, Sora (EN) / Montserrat (RU), weight 600
   static TextStyle display(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
     return TextStyle(
       fontSize: Responsive.sp(_localizedSize(36, locale)),
       fontWeight: FontWeight.w600,
-      fontFamily: _headerFont,
+      fontFamily: displayFontFor(locale),
       color: colors.textPrimary,
       letterSpacing: -0.6,
       height: _localizedHeight(1.18, locale),
@@ -86,14 +86,14 @@ class AppTextStyles {
   }
 
   /// H1 - Screen titles ("Profile", "Your week")
-  /// 34px, Sora, weight 700
+  /// 34px, Sora (EN) / Montserrat (RU), weight 700
   static TextStyle h1(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
     return TextStyle(
       fontSize: Responsive.sp(_localizedSize(34, locale)),
       fontWeight: FontWeight.w700,
-      fontFamily: _headerFont,
+      fontFamily: displayFontFor(locale),
       color: colors.textPrimary,
       letterSpacing: -0.5,
       height: _localizedHeight(1.2, locale),
@@ -101,14 +101,14 @@ class AppTextStyles {
   }
 
   /// H2 - Modal titles ("Browse Habits", "Change focus areas?")
-  /// 28px, Sora, weight 600
+  /// 28px, Sora (EN) / Montserrat (RU), weight 600
   static TextStyle h2(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
     return TextStyle(
       fontSize: Responsive.sp(_localizedSize(28, locale)),
       fontWeight: FontWeight.w600,
-      fontFamily: _headerFont,
+      fontFamily: displayFontFor(locale),
       color: colors.ctaPrimary, // Warm brown for main titles
       letterSpacing: -0.5,
       height: _localizedHeight(1.25, locale),
@@ -116,42 +116,42 @@ class AppTextStyles {
   }
 
   /// H3 - Smaller section headers
-  /// 20px, Sora, weight 600
+  /// 20px, Sora (EN) / Montserrat (RU), weight 600
   static TextStyle h3(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
     return TextStyle(
       fontSize: Responsive.sp(_localizedSize(20, locale)),
       fontWeight: FontWeight.w600,
-      fontFamily: _headerFont,
+      fontFamily: displayFontFor(locale),
       color: colors.textPrimary,
       height: _localizedHeight(1.3, locale),
     );
   }
 
   /// Category header - "BODY & MOVEMENT", "MIND & REFLECTION"
-  /// 13px, Sora, weight 600, UPPERCASE, letter-spacing 0.5
+  /// 13px, Sora (EN) / Montserrat (RU), weight 600, UPPERCASE, letter-spacing 0.5
   static TextStyle categoryHeader(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
     return TextStyle(
       fontSize: Responsive.sp(_localizedSize(13, locale)),
       fontWeight: FontWeight.w600,
-      fontFamily: _headerFont,
+      fontFamily: displayFontFor(locale),
       color: colors.buttonDark, // Medium brown
       letterSpacing: 0.5,
     );
   }
 
   /// Section label - "PINNED", "SETTINGS", "SUPPORT"
-  /// 13px, Sora, weight 600, UPPERCASE
+  /// 13px, Sora (EN) / Montserrat (RU), weight 600, UPPERCASE
   static TextStyle sectionLabel(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
     return TextStyle(
       fontSize: Responsive.sp(_localizedSize(13, locale)),
       fontWeight: FontWeight.w600,
-      fontFamily: _headerFont,
+      fontFamily: displayFontFor(locale),
       color: colors.textDisabled,
       letterSpacing: 0.5,
     );
@@ -334,14 +334,14 @@ class AppTextStyles {
   }
 
   /// Weekly summary large text
-  /// 24px, Sora (it's a header), weight 600
+  /// 24px, Sora (EN) / Montserrat (RU) — it's a header — weight 600
   static TextStyle summaryLarge(BuildContext context) {
     final locale = _getLocale(context);
     final colors = Provider.of<ThemeProvider>(context, listen: false).colors;
     return TextStyle(
       fontSize: Responsive.sp(_localizedSize(24, locale)),
       fontWeight: FontWeight.w600,
-      fontFamily: _headerFont,
+      fontFamily: displayFontFor(locale),
       color: colors.textPrimary,
       height: _localizedHeight(1.3, locale),
     );
