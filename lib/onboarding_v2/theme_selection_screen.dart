@@ -112,7 +112,8 @@ class _ThemeSelectionScreenState extends State<ThemeSelectionScreen> {
                       Text(
                         l10n.themeSelectionTitle,
                         style: TextStyle(
-                          fontFamily: 'Sora',
+                          fontFamily: AppTextStyles.displayFontFor(
+                              Localizations.localeOf(context).toString()),
                           fontSize: 26,
                           fontWeight: FontWeight.w600,
                           color: colors.textPrimary,

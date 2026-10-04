@@ -263,7 +263,8 @@ class _CardBody extends StatelessWidget {
                     child: Text(
                       title,
                       style: TextStyle(
-                        fontFamily: 'Sora',
+                        fontFamily: AppTextStyles.displayFontFor(
+                            Localizations.localeOf(context).toString()),
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: colors.textPrimary,

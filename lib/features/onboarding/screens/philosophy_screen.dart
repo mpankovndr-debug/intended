@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../onboarding_v2/focus_areas_screen.dart';
+import '../../../utils/text_styles.dart';
 
 /// Onboarding philosophy interstitial shown after focus-area selection.
 ///
@@ -146,11 +147,12 @@ class _PhilosophyScreenState extends State<PhilosophyScreen>
                               padding: const EdgeInsets.only(bottom: 8),
                               child: Text(
                                 l10n.onboardingPhilosophyLabel.toUpperCase(),
-                                style: const TextStyle(
-                                  fontFamily: 'Sora',
+                                style: TextStyle(
+                                  fontFamily: AppTextStyles.displayFontFor(
+                                      Localizations.localeOf(context).toString()),
                                   fontSize: 11,
                                   fontWeight: FontWeight.w400,
-                                  color: Color(0xFF8C7A6B),
+                                  color: const Color(0xFF8C7A6B),
                                   letterSpacing: 1.9,
                                 ),
                               ),
@@ -231,11 +233,11 @@ class _PhilosophyScreenState extends State<PhilosophyScreen>
                   child: Text(
                     l10n.onboardingPhilosophyHeading,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'Sora',
+                    style: TextStyle(
+                      fontFamily: AppTextStyles.displayFontFor(l10n.localeName),
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF3C342A),
+                      color: const Color(0xFF3C342A),
                       height: 1.28,
                     ),
                   ),
@@ -248,11 +250,11 @@ class _PhilosophyScreenState extends State<PhilosophyScreen>
                   child: Text(
                     l10n.onboardingPhilosophyBody,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'Sora',
+                    style: TextStyle(
+                      fontFamily: AppTextStyles.displayFontFor(l10n.localeName),
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
-                      color: Color(0xFF7A6B5F),
+                      color: const Color(0xFF7A6B5F),
                       height: 1.65,
                     ),
                   ),
@@ -297,8 +299,8 @@ class _PhilosophyScreenState extends State<PhilosophyScreen>
                       alignment: Alignment.center,
                       child: Text(
                         l10n.onboardingPhilosophyCta,
-                        style: const TextStyle(
-                          fontFamily: 'Sora',
+                        style: TextStyle(
+                          fontFamily: AppTextStyles.displayFontFor(l10n.localeName),
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: CupertinoColors.white,

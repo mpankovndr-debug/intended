@@ -106,8 +106,9 @@ class _IntentionPathScreenState extends State<IntentionPathScreen> {
                         children: [
                           Text(
                             l10n.intentionPathHeadline,
-                            style: const TextStyle(
-                              fontFamily: 'Sora',
+                            style: TextStyle(
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 28,
                               fontWeight: FontWeight.w600,
                               letterSpacing: -0.3,

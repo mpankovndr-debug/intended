@@ -363,13 +363,22 @@ class FaqScreen extends StatelessWidget {
                         size: 22,
                       ),
                     ),
-                    Text(
-                      l10n.profileHelpSupport,
-                      style: TextStyle(
-                        fontFamily: 'Sora',
-                        fontSize: 28,
-                        fontWeight: FontWeight.w600,
-                        color: colors.textPrimary,
+                    // Scales down instead of overflowing: «Помощь и поддержка»
+                    // in Montserrat is 13pt wider than the row on a 393pt
+                    // screen, and more than the padding can hide at 375.
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          l10n.profileHelpSupport,
+                          style: TextStyle(
+                            fontFamily: AppTextStyles.displayFontFor(
+                                Localizations.localeOf(context).toString()),
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                            color: colors.textPrimary,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -628,7 +637,8 @@ class _FaqCategoryScreenState extends State<_FaqCategoryScreen> {
                       child: Text(
                         widget.category.title(l10n),
                         style: TextStyle(
-                          fontFamily: 'Sora',
+                          fontFamily: AppTextStyles.displayFontFor(
+                              Localizations.localeOf(context).toString()),
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
                           color: colors.textPrimary,

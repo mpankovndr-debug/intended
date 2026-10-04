@@ -333,7 +333,8 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
                           l10n.onboardingPaywallTitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: 'Sora',
+                            fontFamily: AppTextStyles.displayFontFor(
+                                Localizations.localeOf(context).toString()),
                             fontSize: 30,
                             fontWeight: FontWeight.w600,
                             color: colors.textPrimary,

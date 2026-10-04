@@ -397,6 +397,8 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
                                   l10n.appNameIntended,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
+                                    // The wordmark, not copy: Latin in every
+                                    // locale, so it stays in the brand face.
                                     fontFamily: 'Sora',
                                     fontSize: 36,
                                     fontWeight: FontWeight.w600,
@@ -698,7 +700,7 @@ class _WelcomeV2ScreenState extends State<WelcomeV2Screen>
       child: Text.rich(
         TextSpan(
           style: TextStyle(
-            fontFamily: 'Sora',
+            fontFamily: AppTextStyles.displayFontFor(l10n.localeName),
             fontSize: 11,
             fontWeight: FontWeight.w400,
             color: colors.textTertiary,
@@ -962,7 +964,8 @@ class _SignInSheetState extends State<_SignInSheet> {
                   icon: Text(
                     'G',
                     style: TextStyle(
-                      fontFamily: 'Sora',
+                      fontFamily: AppTextStyles.displayFontFor(
+                          Localizations.localeOf(context).toString()),
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       color: colors.ctaPrimary,

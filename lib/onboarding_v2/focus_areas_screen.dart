@@ -140,7 +140,8 @@ class FocusAreasScreen extends StatelessWidget {
                     Text(
                       l10n.focusAreasLimitTitle,
                       style: TextStyle(
-                        fontFamily: 'Sora',
+                        fontFamily: AppTextStyles.displayFontFor(
+                            Localizations.localeOf(context).toString()),
                         fontSize: 19,
                         fontWeight: FontWeight.w600,
                         color: colors.textPrimary,
@@ -317,7 +318,8 @@ class FocusAreasScreen extends StatelessWidget {
                                 : l10n.focusAreasStartingPointsTitle(
                                     selectedPath!.title(l10n)),
                             style: TextStyle(
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 26,
                               fontWeight: FontWeight.w600,
                               color: colors.textPrimary,

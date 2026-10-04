@@ -343,7 +343,8 @@ class _PhasePath extends StatelessWidget {
               Text(
                 l10n.tellUsAboutPathHeadline,
                 style: TextStyle(
-                  fontFamily: 'Sora',
+                  fontFamily: AppTextStyles.displayFontFor(
+                      Localizations.localeOf(context).toString()),
                   fontSize: 28,
                   fontWeight: FontWeight.w600,
                   letterSpacing: -0.3,
@@ -554,7 +555,8 @@ class _PhaseFocus extends StatelessWidget {
               Text(
                 l10n.tellUsAboutFocusHeadline,
                 style: TextStyle(
-                  fontFamily: 'Sora',
+                  fontFamily: AppTextStyles.displayFontFor(
+                      Localizations.localeOf(context).toString()),
                   fontSize: 28,
                   fontWeight: FontWeight.w600,
                   letterSpacing: -0.3,

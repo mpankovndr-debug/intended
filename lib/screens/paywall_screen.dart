@@ -204,7 +204,8 @@ class _PaywallScreenState extends State<PaywallScreen>
                         Text(
                           _resolveTitle(context, l10n),
                           style: TextStyle(
-                            fontFamily: 'Sora',
+                            fontFamily: AppTextStyles.displayFontFor(
+                                Localizations.localeOf(context).toString()),
                             fontSize: 30,
                             fontWeight: FontWeight.w600,
                             color: colors.textPrimary,
@@ -584,7 +585,8 @@ class _PaywallScreenState extends State<PaywallScreen>
                               child: Text(
                                 price,
                                 style: TextStyle(
-                                  fontFamily: 'Sora',
+                                  fontFamily: AppTextStyles.displayFontFor(
+                                      Localizations.localeOf(context).toString()),
                                   fontSize: 22,
                                   fontWeight: FontWeight.w600,
                                   color: priceColor,

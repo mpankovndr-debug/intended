@@ -182,7 +182,8 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                           l10n.intentionPathUpdateFocusAreas(pathTitle),
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: 'Sora',
+                            fontFamily: AppTextStyles.displayFontFor(
+                                Localizations.localeOf(ctx).toString()),
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                             color: colors.textPrimary,
@@ -306,7 +307,8 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                           Text(
                             l10n.profileYourPath,
                             style: TextStyle(
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 28,
                               fontWeight: FontWeight.w600,
                               color: colors.textPrimary,

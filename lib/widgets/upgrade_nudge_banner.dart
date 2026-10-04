@@ -194,7 +194,8 @@ class _UpgradeNudgeBannerState extends State<UpgradeNudgeBanner>
                           child: Text(
                             l10n.upgradeNudgeLearnMore,
                             style: TextStyle(
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: colors.ctaPrimary,

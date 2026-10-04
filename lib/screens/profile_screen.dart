@@ -388,7 +388,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           l10n.profileChangeFocusTitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: 'Sora',
+                            fontFamily: AppTextStyles.displayFontFor(
+                                Localizations.localeOf(context).toString()),
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
                             color: colors.textPrimary,
@@ -403,7 +404,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           l10n.profileChangeFocusMessage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: 'Sora',
+                            fontFamily: AppTextStyles.displayFontFor(
+                                Localizations.localeOf(context).toString()),
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: colors.ctaPrimary,
@@ -1080,7 +1082,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Text(
                   l10n.profileTitle,
                   style: TextStyle(
-                    fontFamily: 'Sora',
+                    fontFamily: AppTextStyles.displayFontFor(
+                        Localizations.localeOf(context).toString()),
                     fontSize: 32,
                     fontWeight: FontWeight.w600,
                     color: colors.textPrimary,
@@ -1252,7 +1255,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               ? l10n.appPlanBoost
                                               : l10n.appPlanCore,
                                       style: TextStyle(
-                                        fontFamily: 'Sora',
+                                        fontFamily: AppTextStyles.displayFontFor(
+                                            Localizations.localeOf(context).toString()),
                                         fontSize: 20,
                                         fontWeight: FontWeight.w600,
                                         color: colors.textPrimary,
@@ -3187,7 +3191,8 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
                           Text(
                             l10n.profileChangeFocusAreasScreenTitle,
                             style: TextStyle(
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 26,
                               fontWeight: FontWeight.w600,
                               color: colors.textPrimary,

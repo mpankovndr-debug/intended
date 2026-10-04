@@ -1903,7 +1903,8 @@ class _HabitsScreenState extends State<HabitsScreen>
                               fontSize: Responsive.sp(22),
                               fontWeight: FontWeight.w600,
                               color: colors.textPrimary,
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -2558,7 +2559,8 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
                           color: colors.textPrimary,
-                          fontFamily: 'Sora',
+                          fontFamily: AppTextStyles.displayFontFor(
+                              Localizations.localeOf(context).toString()),
                           height: 1.3,
                         ),
                       ),
@@ -3747,7 +3749,8 @@ class _HabitCardState extends State<_HabitCard>
                             l10n.replacePinTitle,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 27,
                               fontWeight: FontWeight.w600,
                               color: colors.textPrimary,
@@ -3763,7 +3766,8 @@ class _HabitCardState extends State<_HabitCard>
                                 localizeHabitName(widget.habitTitle, l10n)),
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                               color: colors.ctaPrimary,
@@ -3969,7 +3973,8 @@ class _HabitCardState extends State<_HabitCard>
                                 localizeHabitName(widget.habitTitle, l10n)),
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 25,
                               fontWeight: FontWeight.w600,
                               color: colors.textPrimary,
@@ -3985,7 +3990,8 @@ class _HabitCardState extends State<_HabitCard>
                                 localizeCategoryName(category, l10n)),
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                               color: colors.ctaPrimary,
@@ -4076,7 +4082,8 @@ class _HabitCardState extends State<_HabitCard>
                             Text(
                               l10n.swapFreeRemaining(remaining),
                               style: TextStyle(
-                                fontFamily: 'Sora',
+                                fontFamily: AppTextStyles.displayFontFor(
+                                    Localizations.localeOf(context).toString()),
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
                                 color: colors.textSecondary,
@@ -4190,7 +4197,8 @@ class _HabitCardState extends State<_HabitCard>
                               l10n.swapSuccessTitle,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontFamily: 'Sora',
+                                fontFamily: AppTextStyles.displayFontFor(
+                                    Localizations.localeOf(context).toString()),
                                 fontSize: 27,
                                 fontWeight: FontWeight.w600,
                                 color: colors.textPrimary,
@@ -4377,7 +4385,8 @@ class _HabitCardState extends State<_HabitCard>
                                   l10n.editHabitTitle,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily: 'Sora',
+                                    fontFamily: AppTextStyles.displayFontFor(
+                                        Localizations.localeOf(dialogContext).toString()),
                                     fontSize: 27,
                                     fontWeight: FontWeight.w600,
                                     color: colors.textPrimary,
@@ -4562,7 +4571,8 @@ class _HabitCardState extends State<_HabitCard>
                             l10n.deleteHabitTitle,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 27,
                               fontWeight: FontWeight.w600,
                               color: colors.textPrimary,
@@ -5129,7 +5139,8 @@ class _RescueCard extends StatelessWidget {
                 height: 1.3,
                 fontWeight: FontWeight.w600,
                 color: colors.textPrimary,
-                fontFamily: 'Sora',
+                fontFamily: AppTextStyles.displayFontFor(
+                    Localizations.localeOf(context).toString()),
               ),
             ),
             const SizedBox(height: 6),

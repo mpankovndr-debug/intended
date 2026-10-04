@@ -184,7 +184,8 @@ class _CommitmentScreenState extends State<CommitmentScreen>
                                 l10n.commitmentTitle,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontFamily: 'Sora',
+                                  fontFamily: AppTextStyles.displayFontFor(
+                                      Localizations.localeOf(context).toString()),
                                   fontSize: 30,
                                   fontWeight: FontWeight.w600,
                                   color: colors.textPrimary,

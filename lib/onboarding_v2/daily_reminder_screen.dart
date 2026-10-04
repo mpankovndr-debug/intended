@@ -154,7 +154,8 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
                                   Text(
                                     l10n.reminderSubtitle,
                                     style: TextStyle(
-                                      fontFamily: 'Sora',
+                                      fontFamily: AppTextStyles.displayFontFor(
+                                          Localizations.localeOf(context).toString()),
                                       fontSize: 26,
                                       fontWeight: FontWeight.w600,
                                       color: colors.textPrimary,

@@ -109,7 +109,8 @@ class SubscriptionManagementModal extends StatelessWidget {
                             l10n.subscriptionTitle,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 28,
                               fontWeight: FontWeight.w600,
                               color: colors.textPrimary,
@@ -122,7 +123,8 @@ class SubscriptionManagementModal extends StatelessWidget {
                             l10n.subscriptionSupporter,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'Sora',
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                               color: colors.ctaPrimary,
@@ -225,7 +227,8 @@ class SubscriptionManagementModal extends StatelessWidget {
                         l10n.subscriptionThankYou,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: 'Sora',
+                          fontFamily: AppTextStyles.displayFontFor(
+                              Localizations.localeOf(context).toString()),
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
                           color: colors.ctaPrimary,

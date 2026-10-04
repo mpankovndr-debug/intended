@@ -158,7 +158,8 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                   widget.title,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: 'Sora',
+                    fontFamily: AppTextStyles.displayFontFor(
+                        Localizations.localeOf(context).toString()),
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
                     color: colors.textPrimary,
@@ -175,7 +176,8 @@ class _BoostOfferSheetState extends State<_BoostOfferSheet> {
                     widget.description,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: 'Sora',
+                      fontFamily: AppTextStyles.displayFontFor(
+                          Localizations.localeOf(context).toString()),
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
                       color: colors.textSecondary,
