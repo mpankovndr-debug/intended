@@ -239,6 +239,10 @@ class ThemePicker extends StatelessWidget {
                       Flexible(
                         child: Text(
                           entry.name,
+                          // Two lines, because a name is the whole label:
+                          // «Розовые сумерки» and «Утренний сланец» were
+                          // being cut to «Розовые су…» on a 393pt screen.
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: compact ? 13 : 14,
@@ -303,6 +307,7 @@ class ThemePicker extends StatelessWidget {
                           Flexible(
                             child: Text(
                               entry.name,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: compact ? 13 : 14,
