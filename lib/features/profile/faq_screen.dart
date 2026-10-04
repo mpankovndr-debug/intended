@@ -633,18 +633,24 @@ class _FaqCategoryScreenState extends State<_FaqCategoryScreen> {
                         size: 22,
                       ),
                     ),
+                    // Scales down rather than ellipsize, like the title one
+                    // screen up: «Ежедневные привычки» in Montserrat is 5pt
+                    // wider than this row on a 375pt screen.
                     Expanded(
-                      child: Text(
-                        widget.category.title(l10n),
-                        style: TextStyle(
-                          fontFamily: AppTextStyles.displayFontFor(
-                              Localizations.localeOf(context).toString()),
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          color: colors.textPrimary,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          widget.category.title(l10n),
+                          style: TextStyle(
+                            fontFamily: AppTextStyles.displayFontFor(
+                                Localizations.localeOf(context).toString()),
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            color: colors.textPrimary,
+                          ),
+                          maxLines: 1,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
