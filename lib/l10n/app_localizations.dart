@@ -2802,7 +2802,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPaywallTitle.
   ///
   /// In en, this message translates to:
-  /// **'A gentler way to keep going.'**
+  /// **'See what helps, and what to change.'**
   String get onboardingPaywallTitle;
 
   /// No description provided for @onboardingPaywallFirstSquare.
@@ -2810,6 +2810,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your first square is already yours.'**
   String get onboardingPaywallFirstSquare;
+
+  /// No description provided for @onboardingPaywallReviewWhen.
+  ///
+  /// In en, this message translates to:
+  /// **'{weeks, plural, =1{a week after each one} other{{weeks} weeks after each one}}'**
+  String onboardingPaywallReviewWhen(int weeks);
+
+  /// No description provided for @onboardingPaywallReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Whether your changes helped'**
+  String get onboardingPaywallReview;
+
+  /// No description provided for @onboardingPaywallPlanWhen.
+  ///
+  /// In en, this message translates to:
+  /// **'at the start of each month'**
+  String get onboardingPaywallPlanWhen;
+
+  /// No description provided for @onboardingPaywallPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'A plan for the month ahead'**
+  String get onboardingPaywallPlan;
+
+  /// No description provided for @onboardingPaywallLetterWhen.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{after your first square} other{after your first {count} squares}}'**
+  String onboardingPaywallLetterWhen(int count);
+
+  /// No description provided for @onboardingPaywallLetter.
+  ///
+  /// In en, this message translates to:
+  /// **'A letter about your month'**
+  String get onboardingPaywallLetter;
 
   /// No description provided for @onboardingPaywallBody.
   ///
@@ -2820,19 +2856,19 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPaywallPrimaryCta.
   ///
   /// In en, this message translates to:
-  /// **'Start free trial'**
+  /// **'Start my free trial'**
   String get onboardingPaywallPrimaryCta;
 
   /// No description provided for @onboardingPaywallSecondaryCta.
   ///
   /// In en, this message translates to:
-  /// **'Not now — keep the free version'**
+  /// **'Not now, keep the free version'**
   String get onboardingPaywallSecondaryCta;
 
   /// No description provided for @onboardingPaywallDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Renews automatically until you cancel.'**
+  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}/year (about {perMonth}/month). Renews automatically until you cancel.'**
   String onboardingPaywallDisclaimer(int days, String price, String perMonth);
 
   /// No description provided for @subscriptionTitle.
@@ -6784,24 +6820,6 @@ abstract class AppLocalizations {
   /// **'tap a colour = see just those'**
   String get insightsFilterHint;
 
-  /// No description provided for @onboardingPaywallStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep small intentions — each one lands as a square in your month'**
-  String get onboardingPaywallStep1;
-
-  /// No description provided for @onboardingPaywallStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Read your month — the letter, your season, next month\'s plan'**
-  String get onboardingPaywallStep2;
-
-  /// No description provided for @onboardingPaywallStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'See what worked — measured honestly, four weeks on'**
-  String get onboardingPaywallStep3;
-
   /// No description provided for @focusAreasFromPath.
   ///
   /// In en, this message translates to:
@@ -6835,7 +6853,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPaywallLoop.
   ///
   /// In en, this message translates to:
-  /// **'…and the next month begins'**
+  /// **'Then the next month begins.'**
   String get onboardingPaywallLoop;
 
   /// No description provided for @letterQuestionStillFits.

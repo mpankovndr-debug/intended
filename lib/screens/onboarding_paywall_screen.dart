@@ -1,13 +1,16 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
+import '../models/letter.dart';
 import '../services/analytics_service.dart';
 import '../services/moments_service.dart';
+import '../services/plan_service.dart';
 import '../services/review_request_service.dart';
 import '../services/revenue_cat_service.dart';
 import '../theme/app_colors.dart';
@@ -155,45 +158,23 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
     Navigator.of(context).pop(false);
   }
 
-  /// The thread between steps: a short line and a soft chevron, centered
-  /// under the numbered ring. Vertical on purpose — a radial cycle diagram
-  /// dies on Russian line lengths, and the loop row closes the circle
-  /// without one.
-  Widget _connector(dynamic colors) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: SizedBox(
-        width: 26,
-        child: Column(
-          children: [
-            Container(
-              width: 2,
-              height: 8,
-              color: colors.ctaPrimary.withValues(alpha: 0.35),
-            ),
-            Icon(
-              CupertinoIcons.chevron_down,
-              size: 9,
-              color: colors.ctaPrimary.withValues(alpha: 0.5),
-            ),
-          ],
-        ),
-      ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final colors = context.watch<ThemeProvider>().colors;
+    final provider = context.watch<ThemeProvider>();
+    final colors = provider.colors;
     final l10n = AppLocalizations.of(context);
     final rc = context.watch<RevenueCatService>();
     final yearlyPrice = rc.yearlyPriceString ?? l10n.paywallYearlyPrice;
     final yearlyPerMonth =
         rc.yearlyPerMonthString ?? l10n.paywallYearlyPerMonth;
     final trialDays = rc.trialDaysForPlan('yearly');
+    final body = AppTextStyles.bodyFont(context);
+    const gutter = 24.0;
+
+    Widget enter(Widget child) => FadeTransition(
+          opacity: _fadeIn,
+          child: SlideTransition(position: _slideUp, child: child),
+        );
 
     // Block the system back gesture / hardware back. The user must choose
     // one of the two CTAs — there is no implicit dismiss.
@@ -204,247 +185,171 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // Background gradient — same palette as the final onboarding
-            // screens so this feels like a continuation, not an interruption.
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: const Alignment(0.15, -1.0),
-                  end: const Alignment(-0.15, 1.0),
-                  colors: [
-                    colors.onboardingBg1,
-                    colors.onboardingBg2,
-                    colors.onboardingBg3,
-                    colors.onboardingBg4,
-                  ],
-                  stops: const [0.0, 0.3, 0.6, 1.0],
+            // Iris has its own painting (decided 6 Oct). The other themes
+            // keep their gradient until each gets one: a lavender sunrise
+            // under a dark theme's light text would be unreadable.
+            if (provider.theme == AppTheme.iris)
+              _Painting(colors: colors)
+            else ...[
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: const Alignment(0.15, -1.0),
+                    end: const Alignment(-0.15, 1.0),
+                    colors: [
+                      colors.onboardingBg1,
+                      colors.onboardingBg2,
+                      colors.onboardingBg3,
+                      colors.onboardingBg4,
+                    ],
+                    stops: const [0.0, 0.3, 0.6, 1.0],
+                  ),
                 ),
               ),
-            ),
-
-            _BackgroundOrbs(colors: colors),
+              _BackgroundOrbs(colors: colors),
+            ],
 
             SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
-                child: Column(
-                  children: [
-                    const Spacer(flex: 3),
-
-                    FadeTransition(
-                      opacity: _fadeIn,
-                      child: SlideTransition(
-                        position: _slideUp,
-                        child: _BrandIcon(colors: colors),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-
-                    FadeTransition(
-                      opacity: _fadeIn,
-                      child: SlideTransition(
-                        position: _slideUp,
-                        child: Text(
-                          l10n.onboardingPaywallTitle,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            // Sora has no Cyrillic (CLAUDE.md).
-                            fontFamily: AppTextStyles.displayFontFor(
-                                Localizations.localeOf(context).toString()),
-                            fontSize: 30,
-                            fontWeight: FontWeight.w600,
-                            color: colors.textPrimary,
-                            letterSpacing: -0.5,
-                            height: 1.2,
-                          ),
-                        ),
-                      ),
-                    ),
-                    if (_moments == 1) ...[
-                      const SizedBox(height: 10),
-                      FadeTransition(
-                        opacity: _fadeIn,
-                        child: Text(
-                          l10n.onboardingPaywallFirstSquare,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: AppTextStyles.bodyFont(context),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            height: 1.4,
-                            color: colors.textSecondary,
-                          ),
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 16),
-
-                    // Three steps, not a wall (device review, SS1). Six
-                    // sentences at the exact moment someone wants to get back
-                    // to their first kept moment were being skipped whole;
-                    // a journey reads at a glance. Still one CTA and no plan
-                    // pickers — the wallet decision stays on the full paywall,
-                    // this screen only opens the door.
-                    FadeTransition(
-                      opacity: _fadeIn,
-                      child: SlideTransition(
-                        position: _slideUp,
-                        child: Column(
-                          children: [
-                            for (final (i, step) in [
-                              l10n.onboardingPaywallStep1,
-                              l10n.onboardingPaywallStep2,
-                              l10n.onboardingPaywallStep3,
-                            ].indexed) ...[
-                              if (i > 0) _connector(colors),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 26,
-                                    height: 26,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: colors.ctaPrimary
-                                          .withValues(alpha: 0.14),
-                                      border: Border.all(
-                                        color: colors.ctaPrimary
-                                            .withValues(alpha: 0.5),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      '${i + 1}',
-                                      style: TextStyle(
-                                        fontFamily:
-                                            AppTextStyles.bodyFont(context),
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: colors.ctaPrimary,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      step,
-                                      style: TextStyle(
-                                        fontFamily:
-                                            AppTextStyles.bodyFont(context),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        color: colors.textPrimary
-                                            .withValues(alpha: 0.85),
-                                        height: 1.4,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+              child: LayoutBuilder(
+                builder: (context, viewport) => SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: gutter),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: viewport.maxHeight),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        children: [
+                          const Spacer(flex: 2),
+                          enter(_BrandIcon(colors: colors)),
+                          const SizedBox(height: 24),
+                          enter(Text(
+                            l10n.onboardingPaywallTitle,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              // Sora has no Cyrillic (CLAUDE.md).
+                              fontFamily: AppTextStyles.displayFontFor(
+                                  Localizations.localeOf(context).toString()),
+                              fontSize: 30,
+                              fontWeight: FontWeight.w600,
+                              color: colors.textPrimary,
+                              letterSpacing: -0.5,
+                              height: 1.2,
+                            ),
+                          )),
+                          if (_moments == 1) ...[
+                            const SizedBox(height: 10),
+                            FadeTransition(
+                              opacity: _fadeIn,
+                              child: Text(
+                                l10n.onboardingPaywallFirstSquare,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: body,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.4,
+                                  color: colors.ctaSecondary,
+                                ),
                               ),
-                            ],
-                            _connector(colors),
-                            // The cycle closes: what worked feeds the next
-                            // month's intentions. The loop is the pitch —
-                            // this is the screen's way of saying "month
-                            // seven exists".
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 26,
-                                  height: 26,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: colors.ctaPrimary
-                                        .withValues(alpha: 0.14),
-                                    border: Border.all(
-                                      color: colors.ctaPrimary
-                                          .withValues(alpha: 0.5),
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    CupertinoIcons.arrow_2_circlepath,
-                                    size: 13,
-                                    color: colors.ctaPrimary,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    l10n.onboardingPaywallLoop,
-                                    style: TextStyle(
-                                      fontFamily:
-                                          AppTextStyles.bodyFont(context),
-                                      fontSize: 14,
-                                      fontStyle: FontStyle.italic,
-                                      fontWeight: FontWeight.w400,
-                                      color: colors.textPrimary
-                                          .withValues(alpha: 0.6),
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
                           ],
-                        ),
-                      ),
-                    ),
+                          const SizedBox(height: 28),
 
-                    const Spacer(flex: 4),
-
-                    FadeTransition(
-                      opacity: _fadeIn,
-                      child: SlideTransition(
-                        position: _slideUp,
-                        child: _PrimaryCta(
-                          colors: colors,
-                          label: l10n.onboardingPaywallPrimaryCta,
-                          isLoading: _isLoading,
-                          onPressed: _handleStartTrial,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    FadeTransition(
-                      opacity: _fadeIn,
-                      child: CupertinoButton(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        onPressed: _isLoading ? null : _handleContinueFree,
-                        child: Text(
-                          l10n.onboardingPaywallSecondaryCta,
-                          style: TextStyle(
-                            fontFamily: AppTextStyles.bodyFont(context),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: colors.textTertiary,
+                          // Only what Intended+ adds, each with when it
+                          // arrives (6 Oct): the free mosaic is not on a
+                          // screen asking for money, and someone deciding
+                          // on day 14 knows the plan is still coming. The
+                          // numbers come from the thresholds themselves.
+                          enter(_Cycle(
+                            width:
+                                MediaQuery.sizeOf(context).width - 2 * gutter,
+                            colors: colors,
+                            steps: [
+                              (
+                                l10n.onboardingPaywallLetter,
+                                l10n.onboardingPaywallLetterWhen(
+                                    Letter.minMoments),
+                              ),
+                              (
+                                l10n.onboardingPaywallPlan,
+                                l10n.onboardingPaywallPlanWhen,
+                              ),
+                              (
+                                l10n.onboardingPaywallReview,
+                                l10n.onboardingPaywallReviewWhen(
+                                    PlanService.windowDays ~/ 7),
+                              ),
+                            ],
+                          )),
+                          const SizedBox(height: 18),
+                          FadeTransition(
+                            opacity: _fadeIn,
+                            child: Text(
+                              l10n.onboardingPaywallLoop,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: body,
+                                fontSize: 16,
+                                fontStyle: FontStyle.italic,
+                                color: colors.ctaSecondary,
+                              ),
+                            ),
                           ),
-                        ),
+
+                          const Spacer(flex: 3),
+                          const SizedBox(height: 24),
+
+                          enter(_PrimaryCta(
+                            colors: colors,
+                            label: l10n.onboardingPaywallPrimaryCta,
+                            isLoading: _isLoading,
+                            onPressed: _handleStartTrial,
+                          )),
+                          const SizedBox(height: 14),
+
+                          // The price sits right under the button, at a
+                          // size people can read: what they are agreeing to
+                          // is not a footnote.
+                          FadeTransition(
+                            opacity: _fadeIn,
+                            child: Text(
+                              l10n.onboardingPaywallDisclaimer(
+                                  trialDays, yearlyPrice, yearlyPerMonth),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: body,
+                                fontSize: 13.5,
+                                color: colors.textSecondary,
+                                height: 1.45,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          FadeTransition(
+                            opacity: _fadeIn,
+                            child: CupertinoButton(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              onPressed:
+                                  _isLoading ? null : _handleContinueFree,
+                              child: Text(
+                                l10n.onboardingPaywallSecondaryCta,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: body,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: colors.ctaSecondary,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: colors.ctaSecondary
+                                      .withValues(alpha: 0.6),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                        ],
                       ),
                     ),
-
-                    const SizedBox(height: 4),
-
-                    FadeTransition(
-                      opacity: _fadeIn,
-                      child: Text(
-                        l10n.onboardingPaywallDisclaimer(
-                            trialDays, yearlyPrice, yearlyPerMonth),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: AppTextStyles.bodyFont(context),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: colors.textTertiary.withValues(alpha: 0.7),
-                          height: 1.4,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 24),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -453,6 +358,241 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
       ),
     );
   }
+}
+
+/// Iris's paywall painting under a wash, so the words stay first.
+class _Painting extends StatelessWidget {
+  const _Painting({required this.colors});
+
+  final AppColorScheme colors;
+
+  static const String asset = 'assets/images/paywall_sunrise_iris.webp';
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset(asset, fit: BoxFit.cover),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                colors.onboardingBg1.withValues(alpha: 0.45),
+                colors.onboardingBg2.withValues(alpha: 0.55),
+                colors.onboardingBg3.withValues(alpha: 0.6),
+                colors.onboardingBg4.withValues(alpha: 0.82),
+              ],
+              stops: const [0.0, 0.35, 0.65, 1.0],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The three things Intended+ adds, as the loop they make: a letter, a plan,
+/// and whether the plan's changes helped. Each step says when it arrives.
+///
+/// Laid out from measured text, not fixed boxes, so Russian's longer lines
+/// push the drawing taller instead of spilling out of it (the reason a
+/// circle was once rejected here).
+class _Cycle extends StatelessWidget {
+  const _Cycle({
+    required this.width,
+    required this.colors,
+    required this.steps,
+  });
+
+  final double width;
+  final AppColorScheme colors;
+
+  /// (what, when), in order.
+  final List<(String, String)> steps;
+
+  static const double _dot = 44;
+  static const double _gap = 8;
+
+  @override
+  Widget build(BuildContext context) {
+    final body = AppTextStyles.bodyFont(context);
+    final scaler = MediaQuery.textScalerOf(context);
+    final whatStyle = TextStyle(
+      fontFamily: body,
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      height: 1.25,
+      color: colors.textPrimary,
+    );
+    final whenStyle = TextStyle(
+      fontFamily: body,
+      fontSize: 14,
+      height: 1.3,
+      color: colors.textSecondary,
+    );
+
+    double measure(String text, TextStyle style, double maxWidth) {
+      final painter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textAlign: TextAlign.center,
+        textDirection: TextDirection.ltr,
+        textScaler: scaler,
+      )..layout(maxWidth: maxWidth);
+      return painter.height;
+    }
+
+    double labelHeight(int i, double w) =>
+        measure(steps[i].$1, whatStyle, w) +
+        2 +
+        measure(steps[i].$2, whenStyle, w);
+
+    final topWidth = width * 0.42;
+    final sideWidth = width * 0.46;
+    const r = _dot / 2;
+
+    final p1 = Offset(width / 2, r);
+    final y23 = r + r + _gap + labelHeight(0, topWidth) + 40 + r;
+    final p2 = Offset(width - sideWidth / 2, y23);
+    final p3 = Offset(sideWidth / 2, y23);
+    final sides = [labelHeight(1, sideWidth), labelHeight(2, sideWidth)];
+    final height = y23 + r + _gap + sides.reduce((a, b) => a > b ? a : b);
+
+    Widget dot(int n, Offset at) => Positioned(
+          left: at.dx - r,
+          top: at.dy - r,
+          child: ExcludeSemantics(
+            child: Container(
+              width: _dot,
+              height: _dot,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFFFFFFFF).withValues(alpha: 0.55),
+                border: Border.all(
+                    color: colors.ctaPrimary.withValues(alpha: 0.45),
+                    width: 1.5),
+              ),
+              child: Text(
+                '$n',
+                style: TextStyle(
+                  fontFamily: body,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: colors.ctaPrimary,
+                ),
+              ),
+            ),
+          ),
+        );
+
+    Widget label(int i, double left, double top, double w) => Positioned(
+          left: left,
+          top: top,
+          width: w,
+          child: Semantics(
+            sortKey: OrdinalSortKey(i.toDouble()),
+            child: Column(
+              children: [
+                Text(steps[i].$1,
+                    textAlign: TextAlign.center, style: whatStyle),
+                const SizedBox(height: 2),
+                Text(steps[i].$2,
+                    textAlign: TextAlign.center, style: whenStyle),
+              ],
+            ),
+          ),
+        );
+
+    return SizedBox(
+      width: width,
+      height: height,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _CyclePainter(
+                p1: p1,
+                p2: p2,
+                p3: p3,
+                inset: r + 6,
+                color: colors.ctaPrimary.withValues(alpha: 0.4),
+              ),
+            ),
+          ),
+          dot(1, p1),
+          dot(2, p2),
+          dot(3, p3),
+          label(0, p1.dx - topWidth / 2, p1.dy + r + _gap, topWidth),
+          label(1, width - sideWidth, p2.dy + r + _gap, sideWidth),
+          label(2, 0, p3.dy + r + _gap, sideWidth),
+        ],
+      ),
+    );
+  }
+}
+
+/// The arrows of the loop: 1 to 2 over the top right, 2 to 3 in a shallow dip
+/// between them (above their labels), 3 back to 1 over the top left.
+class _CyclePainter extends CustomPainter {
+  _CyclePainter({
+    required this.p1,
+    required this.p2,
+    required this.p3,
+    required this.inset,
+    required this.color,
+  });
+
+  final Offset p1, p2, p3;
+  final double inset;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final stroke = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round;
+    final fill = Paint()..color = color;
+
+    void arrow(Offset from, Offset control, Offset to) {
+      canvas.drawPath(
+        Path()
+          ..moveTo(from.dx, from.dy)
+          ..quadraticBezierTo(control.dx, control.dy, to.dx, to.dy),
+        stroke,
+      );
+      final dir = to - control;
+      final unit = dir / dir.distance;
+      final side = Offset(-unit.dy, unit.dx);
+      const len = 9.0, half = 5.0;
+      canvas.drawPath(
+        Path()
+          ..moveTo(to.dx + unit.dx * 2, to.dy + unit.dy * 2)
+          ..lineTo(to.dx - unit.dx * len + side.dx * half,
+              to.dy - unit.dy * len + side.dy * half)
+          ..lineTo(to.dx - unit.dx * len - side.dx * half,
+              to.dy - unit.dy * len - side.dy * half)
+          ..close(),
+        fill,
+      );
+    }
+
+    arrow(Offset(p1.dx + inset, p1.dy), Offset(p2.dx, p1.dy),
+        Offset(p2.dx, p2.dy - inset));
+    arrow(Offset(p2.dx - inset, p2.dy), Offset((p2.dx + p3.dx) / 2, p2.dy + 44),
+        Offset(p3.dx + inset, p3.dy));
+    arrow(Offset(p3.dx, p3.dy - inset), Offset(p3.dx, p1.dy),
+        Offset(p1.dx - inset, p1.dy));
+  }
+
+  @override
+  bool shouldRepaint(_CyclePainter old) =>
+      old.p1 != p1 || old.p2 != p2 || old.p3 != p3 || old.color != color;
 }
 
 class _BrandIcon extends StatelessWidget {
@@ -492,8 +632,7 @@ class _BrandIcon extends StatelessWidget {
             width: 56,
             height: 56,
             child: ColorFiltered(
-              colorFilter:
-                  ColorFilter.mode(colors.ctaPrimary, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(colors.ctaPrimary, BlendMode.srcIn),
               child: Image.asset(
                 'assets/images/intended_icon_transparent.png',
                 width: 56,

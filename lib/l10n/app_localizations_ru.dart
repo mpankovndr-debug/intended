@@ -1772,10 +1772,48 @@ class AppLocalizationsRu extends AppLocalizations {
       'Новые функции добавляются регулярно. Подписка поддерживает независимую разработку.\nСоздано одним человеком, которому это так же важно, как и тебе.';
 
   @override
-  String get onboardingPaywallTitle => 'Бережный способ продолжать.';
+  String get onboardingPaywallTitle => 'Пойми, что помогает и что поменять.';
 
   @override
   String get onboardingPaywallFirstSquare => 'Первый квадрат уже твой.';
+
+  @override
+  String onboardingPaywallReviewWhen(int weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: 'через $weeks недели после каждого',
+      many: 'через $weeks недель после каждого',
+      few: 'через $weeks недели после каждого',
+      one: 'через $weeks неделю после каждого',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get onboardingPaywallReview => 'Помогли ли твои изменения';
+
+  @override
+  String get onboardingPaywallPlanWhen => 'в начале каждого месяца';
+
+  @override
+  String get onboardingPaywallPlan => 'План на новый месяц';
+
+  @override
+  String onboardingPaywallLetterWhen(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'после первых $count квадрата',
+      many: 'после первых $count квадратов',
+      few: 'после первых $count квадратов',
+      one: 'после первых $count квадрата',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get onboardingPaywallLetter => 'Письмо о твоём месяце';
 
   @override
   String get onboardingPaywallBody =>
@@ -1786,7 +1824,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get onboardingPaywallSecondaryCta =>
-      'Не сейчас — остаться на бесплатной';
+      'Не сейчас, останусь на бесплатной';
 
   @override
   String onboardingPaywallDisclaimer(int days, String price, String perMonth) {
@@ -1798,7 +1836,7 @@ class AppLocalizationsRu extends AppLocalizations {
       few: '$days дня',
       one: '$days день',
     );
-    return '$_temp0 бесплатно, дальше $price в год — около $perMonth в месяц. Продлевается автоматически, пока не отменишь.';
+    return '$_temp0 бесплатно, дальше $price в год (около $perMonth в месяц). Продлевается автоматически, пока не отменишь.';
   }
 
   @override
@@ -3925,9 +3963,9 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       weeks,
       locale: localeName,
-      other: '$weeks недели',
-      many: '$weeks недель',
-      few: '$weeks недели',
+      other: '$weeks недели',
+      many: '$weeks недель',
+      few: '$weeks недели',
       one: 'неделю',
     );
     return 'Рано называть это закономерностью — спроси меня снова через $_temp0.';
@@ -4135,18 +4173,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get insightsFilterHint => 'нажми на цвет = только эти квадраты';
 
   @override
-  String get onboardingPaywallStep1 =>
-      'Оставляй маленькие намерения — каждое ложится квадратом в твой месяц';
-
-  @override
-  String get onboardingPaywallStep2 =>
-      'Читай свой месяц — письмо, сезон, план на следующий';
-
-  @override
-  String get onboardingPaywallStep3 =>
-      'Смотри, что сработало, — честная проверка через четыре недели';
-
-  @override
   String focusAreasFromPath(String path) {
     return '«$path» начинается с этих двух. Поменяй, если важнее что-то другое.';
   }
@@ -4165,7 +4191,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Перенеси напоминание на 21:00 — именно там жил этот месяц.';
 
   @override
-  String get onboardingPaywallLoop => '…и начинается новый месяц';
+  String get onboardingPaywallLoop => 'И начинается следующий месяц.';
 
   @override
   String letterQuestionStillFits(String path) {

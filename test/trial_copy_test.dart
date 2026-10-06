@@ -63,13 +63,13 @@ void main() {
       final text = l.onboardingPaywallDisclaimer(14, '€44.99', '€3.75');
       expect(
           text,
-          '14 days free, then €44.99/year — about €3.75 a month. '
+          '14 days free, then €44.99/year (about €3.75/month). '
           'Renews automatically until you cancel.');
 
       // A different currency must survive end to end.
       expect(
         l.onboardingPaywallDisclaimer(7, r'$49.99', r'$4.17'),
-        contains(r'about $4.17 a month'),
+        contains(r'about $4.17/month'),
       );
     });
   });

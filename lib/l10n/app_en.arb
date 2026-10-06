@@ -967,12 +967,20 @@
   "paywallTerms": "Terms",
   "paywallPrivacy": "Privacy",
   "paywallFooter": "New features added regularly. Your subscription supports independent development.\nBuilt by one person who cares about this as much as you do.",
-  "onboardingPaywallTitle": "A gentler way to keep going.",
+  "onboardingPaywallTitle": "See what helps, and what to change.",
   "onboardingPaywallFirstSquare": "Your first square is already yours.",
+  "onboardingPaywallReviewWhen": "{weeks, plural, =1{a week after each one} other{{weeks} weeks after each one}}",
+  "@onboardingPaywallReviewWhen": {"placeholders": {"weeks": {"type": "int"}}},
+  "onboardingPaywallReview": "Whether your changes helped",
+  "onboardingPaywallPlanWhen": "at the start of each month",
+  "onboardingPaywallPlan": "A plan for the month ahead",
+  "onboardingPaywallLetterWhen": "{count, plural, =1{after your first square} other{after your first {count} squares}}",
+  "@onboardingPaywallLetterWhen": {"placeholders": {"count": {"type": "int"}}},
+  "onboardingPaywallLetter": "A letter about your month",
   "onboardingPaywallBody": "The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.",
-  "onboardingPaywallPrimaryCta": "Start free trial",
-  "onboardingPaywallSecondaryCta": "Not now — keep the free version",
-  "onboardingPaywallDisclaimer": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year — about {perMonth} a month. Renews automatically until you cancel.",
+  "onboardingPaywallPrimaryCta": "Start my free trial",
+  "onboardingPaywallSecondaryCta": "Not now, keep the free version",
+  "onboardingPaywallDisclaimer": "{days, plural, =1{1 day} other{{days} days}} free, then {price}/year (about {perMonth}/month). Renews automatically until you cancel.",
   "@onboardingPaywallDisclaimer": {
     "placeholders": {
       "days": {
@@ -1987,9 +1995,6 @@
   "profileExportData": "Export my data",
   "profileExportFailed": "Export didn't finish — try again.",
   "insightsFilterHint": "tap a colour = see just those",
-  "onboardingPaywallStep1": "Keep small intentions — each one lands as a square in your month",
-  "onboardingPaywallStep2": "Read your month — the letter, your season, next month's plan",
-  "onboardingPaywallStep3": "See what worked — measured honestly, four weeks on",
   "focusAreasFromPath": "{path} starts with these two. Swap them if something else matters more.",
   "@focusAreasFromPath": {
     "placeholders": {
@@ -2002,7 +2007,7 @@
   "insightsExampleSeason": "Returning",
   "insightsExampleLetter": "Six days passed, and then you came back.",
   "insightsExamplePlan": "Move your reminder to 9 PM — that's where this month lived.",
-  "onboardingPaywallLoop": "…and the next month begins",
+  "onboardingPaywallLoop": "Then the next month begins.",
   "letterQuestionStillFits": "Is “{path}” still what you're after?",
   "@letterQuestionStillFits": {
     "placeholders": {

@@ -1714,21 +1714,55 @@ class AppLocalizationsEn extends AppLocalizations {
       'New features added regularly. Your subscription supports independent development.\nBuilt by one person who cares about this as much as you do.';
 
   @override
-  String get onboardingPaywallTitle => 'A gentler way to keep going.';
+  String get onboardingPaywallTitle => 'See what helps, and what to change.';
 
   @override
   String get onboardingPaywallFirstSquare =>
       'Your first square is already yours.';
 
   @override
+  String onboardingPaywallReviewWhen(int weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: '$weeks weeks after each one',
+      one: 'a week after each one',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get onboardingPaywallReview => 'Whether your changes helped';
+
+  @override
+  String get onboardingPaywallPlanWhen => 'at the start of each month';
+
+  @override
+  String get onboardingPaywallPlan => 'A plan for the month ahead';
+
+  @override
+  String onboardingPaywallLetterWhen(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'after your first $count squares',
+      one: 'after your first square',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get onboardingPaywallLetter => 'A letter about your month';
+
+  @override
   String get onboardingPaywallBody =>
       'The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.';
 
   @override
-  String get onboardingPaywallPrimaryCta => 'Start free trial';
+  String get onboardingPaywallPrimaryCta => 'Start my free trial';
 
   @override
-  String get onboardingPaywallSecondaryCta => 'Not now — keep the free version';
+  String get onboardingPaywallSecondaryCta => 'Not now, keep the free version';
 
   @override
   String onboardingPaywallDisclaimer(int days, String price, String perMonth) {
@@ -1738,7 +1772,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$days days',
       one: '1 day',
     );
-    return '$_temp0 free, then $price/year — about $perMonth a month. Renews automatically until you cancel.';
+    return '$_temp0 free, then $price/year (about $perMonth/month). Renews automatically until you cancel.';
   }
 
   @override
@@ -4034,18 +4068,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightsFilterHint => 'tap a colour = see just those';
 
   @override
-  String get onboardingPaywallStep1 =>
-      'Keep small intentions — each one lands as a square in your month';
-
-  @override
-  String get onboardingPaywallStep2 =>
-      'Read your month — the letter, your season, next month\'s plan';
-
-  @override
-  String get onboardingPaywallStep3 =>
-      'See what worked — measured honestly, four weeks on';
-
-  @override
   String focusAreasFromPath(String path) {
     return '$path starts with these two. Swap them if something else matters more.';
   }
@@ -4066,7 +4088,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Move your reminder to 9 PM — that\'s where this month lived.';
 
   @override
-  String get onboardingPaywallLoop => '…and the next month begins';
+  String get onboardingPaywallLoop => 'Then the next month begins.';
 
   @override
   String letterQuestionStillFits(String path) {

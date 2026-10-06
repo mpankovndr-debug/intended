@@ -97,6 +97,10 @@ Future<void> _mount(
       const AssetImage('assets/images/background_ms_iris.png'),
       context,
     );
+    await precacheImage(
+      const AssetImage('assets/images/paywall_sunrise_iris.webp'),
+      context,
+    );
     for (final path in IntentionPathId.values.map(IntentionPath.getById)) {
       await precacheImage(AssetImage(path.iconAsset), context);
     }
