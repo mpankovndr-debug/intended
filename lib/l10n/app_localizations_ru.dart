@@ -2868,7 +2868,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get legalDisclaimerSuffix => '.';
 
   @override
-  String get pathGentleMorningsTitle => 'Спокойное утро';
+  String get pathGentleMorningsTitle => 'Неспешное утро';
 
   @override
   String get pathGentleMorningsSubtitle =>
