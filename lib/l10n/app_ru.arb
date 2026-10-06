@@ -1138,7 +1138,7 @@
   "onboardingSentenceTitle": "Скажи по-своему",
   "onboardingSentencePrefix": "Я хочу",
   "onboardingSentencePrivacy": "Это видишь только ты. Потом можно изменить.",
-  "onboardingSentenceHold": "Нажми и удерживай, чтобы выбрать этот вариант",
+  "onboardingSentenceHold": "Нажми и удерживай",
   "onboardingSentenceLimit": "{max, plural, one{Не больше {max} символа.} few{Не больше {max} символов.} many{Не больше {max} символов.} other{Не больше {max} символа.}}",
   "onboardingChapterUntil": "До {date}.",
   "onboardingChapterDecide": "В конце ты решишь, что изменилось.",

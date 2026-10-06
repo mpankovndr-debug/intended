@@ -2944,8 +2944,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Это видишь только ты. Потом можно изменить.';
 
   @override
-  String get onboardingSentenceHold =>
-      'Нажми и удерживай, чтобы выбрать этот вариант';
+  String get onboardingSentenceHold => 'Нажми и удерживай';
 
   @override
   String onboardingSentenceLimit(int max) {
