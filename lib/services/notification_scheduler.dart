@@ -3,6 +3,7 @@ import 'dart:ui' show Locale, PlatformDispatcher;
 import '../l10n/app_localizations.dart';
 import '../models/intention_path.dart';
 import '../models/letter.dart';
+import '../models/week_recap.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -17,7 +18,6 @@ import 'moments_service.dart';
 import 'notification_messages.dart';
 import 'notification_preferences_service.dart';
 import 'pause_launcher.dart';
-import 'week_stats_service.dart';
 
 /// Adaptive notification frequency tiers.
 enum _AdaptiveTier {
@@ -35,25 +35,104 @@ class NotificationScheduler {
   static final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
 
-  /// Fires when the user taps the weekly notification (ID 100).
-  /// Listeners should switch to the Progress tab (index 1).
+  /// A tab switch asked for from outside the tabs — the season archive,
+  /// which sits over the Profile tab. The tabs consume it (back to -1).
   static final ValueNotifier<int> pendingTabSwitch = ValueNotifier<int>(-1);
+
+  /// The month a notification tap wants the Progress tab opened on — the
+  /// weekly and the monthly letter both land there. Set whether the tap came
+  /// in live or launched the app, and held until the tabs exist to take it:
+  /// they consume it on creation as well as on change, and set it back to
+  /// null.
+  static final ValueNotifier<DateTime?> pendingProgressMonth =
+      ValueNotifier<DateTime?>(null);
+
+  /// Notification ids. The daily reminders use 0–6.
+  static const int _weeklyId = 100;
+  static const int _monthlyLetterId = 101;
 
   /// The daily notification's "minute of breath" action (iOS category and
   /// action ids — registered once at initialize, referenced by scheduleDaily).
   static const String _pauseCategoryId = 'daily_pause';
   static const String _pauseActionId = 'open_pause';
 
-  /// True when the app was cold-started by the pause action button — the
-  /// response callback does not fire for launches from terminated, so the
-  /// launcher asks this at startup.
-  static Future<bool> launchedFromPauseAction() async {
+  /// Set once [initialize] has run. Arming needs the time zone it sets up,
+  /// and the lifecycle hooks that arm can fire before it has.
+  static bool _ready = false;
+
+  /// One path for every tap, live or launching: the action button opens the
+  /// Pause, the weekly and the letter open the Progress tab on their month,
+  /// and a daily body tap just opens the app.
+  static void _handleTap(NotificationResponse response) {
+    if (response.actionId == _pauseActionId) {
+      AnalyticsService.logNotificationOpened('pause_action');
+      PauseLauncher.pending.value = 'notification';
+      return;
+    }
+    AppUsageService.incrementNotificationsTapped();
+    AnalyticsService.logNotificationOpened(switch (response.id) {
+      _weeklyId => 'weekly',
+      _monthlyLetterId => 'monthly_letter',
+      _ => 'daily',
+    });
+    final month = progressMonthFor(
+      id: response.id,
+      payload: response.payload,
+      now: DateTime.now(),
+    );
+    if (month != null) pendingProgressMonth.value = month;
+  }
+
+  /// The month a tap should open the Progress tab on, or null for a tap that
+  /// just opens the app.
+  ///
+  /// The weekly opens on the month being lived, the only page the week card
+  /// sits on. The letter opens on the month it is about, carried in its
+  /// payload: it goes out on the 1st, when the month being lived is the new
+  /// one and holds no letter yet. A letter queued before the payload existed
+  /// has none — and was queued for the 1st after the month it names, so it
+  /// falls back to the month before today.
+  ///
+  /// Pure, so the rule can be tested without a device.
+  static DateTime? progressMonthFor({
+    required int? id,
+    required String? payload,
+    required DateTime now,
+  }) {
+    switch (id) {
+      case _weeklyId:
+        return DateTime(now.year, now.month);
+      case _monthlyLetterId:
+        return _parseMonth(payload) ?? DateTime(now.year, now.month - 1);
+      default:
+        return null;
+    }
+  }
+
+  /// The letter's payload: its month as 'yyyy-MM'.
+  static String _monthPayload(DateTime month) =>
+      '${month.year}-${month.month.toString().padLeft(2, '0')}';
+
+  static DateTime? _parseMonth(String? payload) {
+    final match = RegExp(r'^(\d{4})-(\d{2})$').firstMatch(payload ?? '');
+    if (match == null) return null;
+    final month = int.parse(match.group(2)!);
+    if (month < 1 || month > 12) return null;
+    return DateTime(int.parse(match.group(1)!), month);
+  }
+
+  /// Routes the tap that launched the app, if one did. The response callback
+  /// never fires for a launch from terminated — the plugin holds that tap for
+  /// this call instead — so [initialize] makes it, exactly once.
+  static Future<void> _routeLaunchTap() async {
     try {
       final details = await _plugin.getNotificationAppLaunchDetails();
-      return details?.didNotificationLaunchApp == true &&
-          details?.notificationResponse?.actionId == _pauseActionId;
+      final response = details?.notificationResponse;
+      if (details?.didNotificationLaunchApp == true && response != null) {
+        _handleTap(response);
+      }
     } catch (_) {
-      return false;
+      // No launch to report — the app opens where it always does.
     }
   }
 
@@ -97,27 +176,10 @@ class NotificationScheduler {
 
     await _plugin.initialize(
       settings,
-      onDidReceiveNotificationResponse: (response) {
-        // The action button routes to the Pause and nothing else; the body
-        // tap keeps its original meaning.
-        if (response.actionId == _pauseActionId) {
-          AnalyticsService.logNotificationOpened('pause_action');
-          PauseLauncher.pending.value = 'notification';
-          return;
-        }
-        AppUsageService.incrementNotificationsTapped();
-        AnalyticsService.logNotificationOpened(switch (response.id) {
-          100 => 'weekly',
-          _monthlyLetterId => 'monthly_letter',
-          _ => 'daily',
-        });
-        // Weekly (100) and the monthly letter (101) both land on the
-        // Progress tab — that's where the letter lives.
-        if (response.id == 100 || response.id == _monthlyLetterId) {
-          pendingTabSwitch.value = 1; // Progress tab index
-        }
-      },
+      onDidReceiveNotificationResponse: _handleTap,
     );
+    _ready = true;
+    await _routeLaunchTap();
   }
 
   static Future<bool> requestPermission() async {
@@ -196,9 +258,7 @@ class NotificationScheduler {
     final minute = await NotificationPreferencesService.getMinute();
 
     // Always cancel existing daily notifications before rescheduling
-    for (int i = 0; i <= 6; i++) {
-      await _plugin.cancel(i);
-    }
+    await cancelDaily();
 
     final now = tz.TZDateTime.now(tz.local);
 
@@ -290,53 +350,67 @@ class NotificationScheduler {
     }
   }
 
-  static Future<void> scheduleWeekly(AppLocalizations l10n) async {
-    final now = tz.TZDateTime.now(tz.local);
+  /// The weekly goes out on Sunday evening, as its setting says.
+  static const int _weeklyHour = 21;
 
-    // Find the next Sunday at 21:00
-    var scheduled = tz.TZDateTime(
-      tz.local,
+  /// The letter goes out on the 1st, mid-morning.
+  static const int _letterHour = 10;
+
+  /// The Sunday whose evening is the next weekly fire after [now]: today, on
+  /// a Sunday before 21:00, otherwise the coming Sunday.
+  static DateTime weeklyFireDay(DateTime now) {
+    final daysToSunday = DateTime.sunday - now.weekday;
+    final pastTonight = daysToSunday == 0 && now.hour >= _weeklyHour;
+    return DateTime(
       now.year,
       now.month,
-      now.day,
-      21,
-      0,
+      now.day + daysToSunday + (pastTonight ? 7 : 0),
     );
+  }
 
-    // Advance to next Sunday (weekday 7)
-    while (scheduled.weekday != DateTime.sunday ||
-        !scheduled.isAfter(now)) {
-      scheduled = scheduled.add(const Duration(days: 1));
-      scheduled = tz.TZDateTime(
-        tz.local,
-        scheduled.year,
-        scheduled.month,
-        scheduled.day,
-        21,
-        0,
-      );
-    }
+  /// The 1st whose 10:00 is the next letter fire after [now]: today, on a
+  /// 1st before ten, otherwise next month's. The letter it carries is for the
+  /// month before that day.
+  static DateTime letterFireDay(DateTime now) =>
+      now.day == 1 && now.hour < _letterHour
+          ? DateTime(now.year, now.month, 1)
+          : DateTime(now.year, now.month + 1, 1);
 
-    // Dynamic weekly message based on this week's check-in count
-    final prefs = await SharedPreferences.getInstance();
-    final allHabits = prefs.getStringList('habits') ?? [];
-    final weekStats = await WeekStatsService.calculate(allHabits, DateTime.now());
-    final checkIns = weekStats.completionCount; // days active this week
-
-    final String body;
-    if (checkIns == 0) {
-      body = l10n.notifWeeklyDynamic0;
-    } else if (checkIns == 1) {
-      body = l10n.notifWeeklyDynamic1;
-    } else {
-      body = l10n.notifWeeklyDynamicN(checkIns);
+  /// "Your week is ready" on Sunday evening, pointing at the week card.
+  ///
+  /// A one-shot, not a repeating alarm, because the sentence has to be true
+  /// when it lands. The repeating version baked the count it was scheduled
+  /// with into every Sunday after — stale within a week, and a count of days
+  /// presented as moments to begin with. Now it is armed only once the
+  /// coming Sunday's card already computes: moments only accumulate within a
+  /// week, so a card that exists now still exists on Sunday. A thinner week
+  /// gets silence, never "your week is ready" over a card that isn't there.
+  /// Numberless for the letter's reason: the count at arming time is not the
+  /// count on Sunday.
+  ///
+  /// [scheduleReadings] re-runs this on every open and every exit, so it
+  /// arms itself the day the week crosses the threshold.
+  static Future<void> scheduleWeekly(AppLocalizations l10n) async {
+    final now = tz.TZDateTime.now(tz.local);
+    final sunday = weeklyFireDay(now);
+    final weekStart = DateTime.utc(sunday.year, sunday.month, sunday.day - 6);
+    final moments = await MomentsService.getAll();
+    if (WeekRecap.readWeek(moments, weekStart) == null) {
+      await _withdrawPending(_weeklyId);
+      return;
     }
 
     await _plugin.zonedSchedule(
-      100,
+      _weeklyId,
       '',
-      body,
-      scheduled,
+      l10n.notifWeeklyRecap,
+      tz.TZDateTime(
+        tz.local,
+        sunday.year,
+        sunday.month,
+        sunday.day,
+        _weeklyHour,
+      ),
       NotificationDetails(
         iOS: const DarwinNotificationDetails(
           presentAlert: true,
@@ -354,39 +428,41 @@ class NotificationScheduler {
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      matchDateTimeComponents: null,
     );
   }
 
-  static const int _monthlyLetterId = 101;
-
   /// «Твоё письмо за август готово» on the 1st of next month, 10:00 — a
-  /// call, not a report. Deliberately numberless: the weekly above bakes
-  /// this week's count into a repeating notification, so three quiet weeks
-  /// replay the same stale number; the letter must never do that.
+  /// call, not a report. Deliberately numberless, like the weekly.
   ///
-  /// Scheduled only once the letter for the *current* month already
-  /// computes: moments only accumulate within a month, so a letter that
-  /// exists now still exists on the 1st — and if it doesn't exist yet,
-  /// nothing is promised. Each app open re-runs this via [rescheduleAll],
-  /// so it arms itself the day the threshold is crossed.
+  /// Scheduled only once the letter it announces already computes: moments
+  /// only accumulate within a month, so a letter that exists now still exists
+  /// on the 1st — and if it doesn't exist yet, nothing is promised. Before
+  /// ten on a 1st, the letter is the month that just closed, so an open that
+  /// morning re-arms it rather than dropping it for the new, empty month.
+  ///
+  /// Carries its month as the payload, so the tap opens the page that holds
+  /// the letter instead of the new month's. [scheduleReadings] re-runs this
+  /// on every open and every exit, so it arms itself the day the threshold is
+  /// crossed.
   static Future<void> scheduleMonthlyLetter(AppLocalizations l10n) async {
-    final moments = await MomentsService.momentsForMonth(DateTime.now());
-    if (Letter.read(moments) == null) return;
-
     final now = tz.TZDateTime.now(tz.local);
-    final firstOfNext = now.month == 12
-        ? tz.TZDateTime(tz.local, now.year + 1, 1, 1, 10)
-        : tz.TZDateTime(tz.local, now.year, now.month + 1, 1, 10);
+    final fireDay = letterFireDay(now);
+    final letterMonth = DateTime(fireDay.year, fireDay.month - 1);
+    final moments = await MomentsService.momentsForMonth(letterMonth);
+    if (Letter.read(moments) == null) {
+      await _withdrawPending(_monthlyLetterId);
+      return;
+    }
 
     // Standalone month name (LLLL): «август», not the in-context «августа».
-    final month = DateFormat('LLLL', l10n.localeName).format(now);
+    final month = DateFormat('LLLL', l10n.localeName).format(letterMonth);
 
     await _plugin.zonedSchedule(
       _monthlyLetterId,
       '',
       l10n.notifMonthlyLetter(month),
-      firstOfNext,
+      tz.TZDateTime(tz.local, fireDay.year, fireDay.month, 1, _letterHour),
       NotificationDetails(
         iOS: const DarwinNotificationDetails(
           presentAlert: true,
@@ -406,7 +482,32 @@ class NotificationScheduler {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: null,
+      payload: _monthPayload(letterMonth),
     );
+  }
+
+  /// Arms the weekly and the monthly letter when their setting is on — the
+  /// one switch covers both, since both are the reflection cadence.
+  ///
+  /// Both are one-shots whose truth depends on data that changes between
+  /// opens, so this runs on every open and every exit as well as from
+  /// [rescheduleAll]. Before this, the letter was armed only by a full
+  /// rebuild — a settings change, a new language or time zone — so most
+  /// people never had one queued at all.
+  static Future<void> scheduleReadings(AppLocalizations l10n) async {
+    if (!_ready) return;
+    if (!await NotificationPreferencesService.isWeeklyEnabled()) return;
+    await scheduleWeekly(l10n);
+    await scheduleMonthlyLetter(l10n);
+  }
+
+  /// Takes [id] out of the queue, but only while it is still queued. `cancel`
+  /// also clears a delivered notification from Notification Center, and one
+  /// already delivered was true when it landed — wiping it because the next
+  /// week is still empty would take away a tap the user hasn't made yet.
+  static Future<void> _withdrawPending(int id) async {
+    final pending = await _plugin.pendingNotificationRequests();
+    if (pending.any((n) => n.id == id)) await _plugin.cancel(id);
   }
 
   static Future<int> pendingDailyCount() async {
@@ -487,6 +588,14 @@ class NotificationScheduler {
     await _plugin.cancelAll();
   }
 
+  /// The daily reminders alone. Turning them off must not take the weekly
+  /// and the letter with them — those have a setting of their own.
+  static Future<void> cancelDaily() async {
+    for (int i = 0; i <= 6; i++) {
+      await _plugin.cancel(i);
+    }
+  }
+
   static Future<void> rescheduleAll(AppLocalizations l10n) async {
     await cancelAll();
 
@@ -496,15 +605,12 @@ class NotificationScheduler {
     // written there would claim otherwise.
     await NotificationPreferencesService.setScheduledLocale(l10n.localeName);
 
-    await scheduleDaily(l10n);
-
-    final weeklyEnabled =
-        await NotificationPreferencesService.isWeeklyEnabled();
-    if (weeklyEnabled) {
-      await scheduleWeekly(l10n);
-      // The monthly letter rides the same preference: both are the
-      // reflection cadence, and a separate toggle would need its own UI.
-      await scheduleMonthlyLetter(l10n);
+    // Each cadence answers to its own setting. This used to queue the daily
+    // reminders unconditionally, so flipping the weekly switch brought back
+    // reminders the user had turned off.
+    if (await NotificationPreferencesService.isEnabled()) {
+      await scheduleDaily(l10n);
     }
+    await scheduleReadings(l10n);
   }
 }

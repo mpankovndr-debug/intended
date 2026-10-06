@@ -4887,23 +4887,11 @@ abstract class AppLocalizations {
   /// **'Learn more'**
   String get upgradeNudgeLearnMore;
 
-  /// No description provided for @notifWeeklyDynamic0.
+  /// No description provided for @notifWeeklyRecap.
   ///
   /// In en, this message translates to:
-  /// **'Your week\'s page is ready. Every week is a fresh start.'**
-  String get notifWeeklyDynamic0;
-
-  /// No description provided for @notifWeeklyDynamic1.
-  ///
-  /// In en, this message translates to:
-  /// **'Your week is on the page — one moment of care in it.'**
-  String get notifWeeklyDynamic1;
-
-  /// No description provided for @notifWeeklyDynamicN.
-  ///
-  /// In en, this message translates to:
-  /// **'Your week is on the page — {count} moments in it.'**
-  String notifWeeklyDynamicN(int count);
+  /// **'Your week is ready. See what was in it.'**
+  String get notifWeeklyRecap;
 
   /// No description provided for @notifMonthlyLetter.
   ///
@@ -6081,6 +6069,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The one you were glad about most: {habit}.'**
   String firstWeekGladdest(String habit);
+
+  /// Eyebrow of the Sunday week card. range is the week's dates, e.g. SEP 29 – OCT 5, already uppercased.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR WEEK · {range}'**
+  String weekRecapLabel(String range);
+
+  /// No description provided for @weekRecapCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{One small thing} other{{count} small things}} for yourself.'**
+  String weekRecapCount(int count);
 
   /// No description provided for @shareSeasonGaps.
   ///

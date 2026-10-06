@@ -1176,16 +1176,7 @@
   "coachMarkReflectionShareBody": "Нажми «Поделиться», чтобы превратить это в карточку для друзей. Твои данные остаются приватными — передаётся только итог.",
   "upgradeNudgeBody": "Твоя практика растёт. Intended+ даёт пространство расти вместе с ней.",
   "upgradeNudgeLearnMore": "Узнать больше",
-  "notifWeeklyDynamic0": "Страница твоей недели готова. Каждая неделя — новый старт.",
-  "notifWeeklyDynamic1": "Твоя неделя на странице — в ней один момент заботы о себе.",
-  "notifWeeklyDynamicN": "Твоя неделя на странице — в ней моментов: {count}.",
-  "@notifWeeklyDynamicN": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
+  "notifWeeklyRecap": "Твоя неделя готова. Посмотри, что в ней было.",
   "notifMonthlyLetter": "Твоё письмо за {month} готово.",
   "@notifMonthlyLetter": {
     "placeholders": {
@@ -1410,6 +1401,8 @@
   "firstWeekLabel": "ТВОЯ ПЕРВАЯ НЕДЕЛЯ",
   "firstWeekCount": "{count, plural, one{{count} маленькое дело} few{{count} маленьких дела} many{{count} маленьких дел} other{{count} маленьких дела}} для себя за первую неделю.",
   "firstWeekGladdest": "Чаще всего в радость было это: «{habit}».",
+  "weekRecapLabel": "ТВОЯ НЕДЕЛЯ · {range}",
+  "weekRecapCount": "{count, plural, one{{count} маленькое дело} few{{count} маленьких дела} many{{count} маленьких дел} other{{count} маленьких дела}} для себя.",
   "shareSeasonGaps": "и паузы между ними короче",
   "shareSeasonLabel": "МОЙ СЕЗОН",
   "shareSeasonMorningLine": "Я прихожу сюда, пока день тихий.",

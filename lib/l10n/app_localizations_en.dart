@@ -2903,17 +2903,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get upgradeNudgeLearnMore => 'Learn more';
 
   @override
-  String get notifWeeklyDynamic0 =>
-      'Your week\'s page is ready. Every week is a fresh start.';
-
-  @override
-  String get notifWeeklyDynamic1 =>
-      'Your week is on the page — one moment of care in it.';
-
-  @override
-  String notifWeeklyDynamicN(int count) {
-    return 'Your week is on the page — $count moments in it.';
-  }
+  String get notifWeeklyRecap => 'Your week is ready. See what was in it.';
 
   @override
   String notifMonthlyLetter(String month) {
@@ -3635,6 +3625,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String firstWeekGladdest(String habit) {
     return 'The one you were glad about most: $habit.';
+  }
+
+  @override
+  String weekRecapLabel(String range) {
+    return 'YOUR WEEK · $range';
+  }
+
+  @override
+  String weekRecapCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count small things',
+      one: 'One small thing',
+    );
+    return '$_temp0 for yourself.';
   }
 
   @override

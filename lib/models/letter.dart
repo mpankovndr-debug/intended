@@ -46,7 +46,25 @@ enum LetterQuestion {
 }
 
 /// Parts of the day the letter can name, as plural nouns: "evenings".
-enum DayPart { mornings, afternoons, evenings, nights }
+enum DayPart {
+  mornings,
+  afternoons,
+  evenings,
+  nights;
+
+  /// The one hour-to-part mapping. The letter, the first week and the week
+  /// all read through it, so they can never disagree about what "in the
+  /// evening" means.
+  static DayPart ofHour(int hour) => hour < 5
+      ? DayPart.nights
+      : hour < 12
+          ? DayPart.mornings
+          : hour < 17
+              ? DayPart.afternoons
+              : hour < 22
+                  ? DayPart.evenings
+                  : DayPart.nights;
+}
 
 /// One observation, with whatever that observation needs to be stated.
 class LetterLine {
@@ -146,7 +164,7 @@ class Letter {
     }
 
     final lived = _dominantPart(moments);
-    final planned = reminderHour == null ? null : _partOf(reminderHour);
+    final planned = reminderHour == null ? null : DayPart.ofHour(reminderHour);
 
     if (lived != null && planned != null && lived != planned) {
       return Letter(
@@ -299,22 +317,12 @@ class Letter {
   static DayPart? _dominantPart(List<Moment> moments) {
     final counts = <DayPart, int>{};
     for (final m in moments) {
-      final part = _partOf(m.localHour);
+      final part = DayPart.ofHour(m.localHour);
       counts[part] = (counts[part] ?? 0) + 1;
     }
     final top = counts.entries.reduce((a, b) => a.value >= b.value ? a : b);
     return top.value / moments.length < _minPartShare ? null : top.key;
   }
-
-  static DayPart _partOf(int hour) => hour < 5
-      ? DayPart.nights
-      : hour < 12
-          ? DayPart.mornings
-          : hour < 17
-              ? DayPart.afternoons
-              : hour < 22
-                  ? DayPart.evenings
-                  : DayPart.nights;
 
   static int _gapCount(List<Moment> moments) {
     final days = _activeDays(moments);

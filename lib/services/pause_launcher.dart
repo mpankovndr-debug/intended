@@ -6,7 +6,9 @@ import 'notification_scheduler.dart';
 /// Funnels every "open the Pause" request that starts outside the app —
 /// widget taps (homeWidget://pause), the notification action button, and
 /// cold starts from either — into one notifier the home screen listens to,
-/// mirroring [NotificationScheduler.pendingTabSwitch].
+/// mirroring [NotificationScheduler.pendingProgressMonth]. The action button
+/// is routed by [NotificationScheduler], which handles every notification
+/// tap, live or launching, in one place.
 class PauseLauncher {
   PauseLauncher._();
 
@@ -16,8 +18,8 @@ class PauseLauncher {
 
   static bool _listening = false;
 
-  /// Call once after the first frame: the cold-start checks need the app
-  /// group and the notification plugin already initialized.
+  /// Call once after the first frame: the cold-start check needs the app
+  /// group already initialized.
   static Future<void> init() async {
     if (!_listening) {
       _listening = true;
@@ -27,9 +29,6 @@ class PauseLauncher {
       handleWidgetUri(await HomeWidget.initiallyLaunchedFromHomeWidget());
     } catch (_) {
       // No widget launch to report — nothing to do.
-    }
-    if (await NotificationScheduler.launchedFromPauseAction()) {
-      pending.value = 'notification';
     }
   }
 

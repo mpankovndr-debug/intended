@@ -16,6 +16,7 @@ import '../models/letter_offer_policy.dart';
 import '../models/lift.dart';
 import '../models/month_plan.dart';
 import '../models/season.dart';
+import '../models/week_recap.dart';
 import '../services/review_request_service.dart';
 import '../services/season_service.dart';
 import '../onboarding_v2/onboarding_state.dart';
@@ -75,6 +76,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Letter? _letter;
   Lift? _lift;
   FirstWeek? _firstWeek;
+  WeekRecap? _week;
   int _liftWeeksRemaining = 0;
   Set<String> _declinedNudges = const {};
   AcceptedNudge? _acceptedThisMonth;
@@ -130,6 +132,28 @@ class _InsightsScreenState extends State<InsightsScreen> {
     if (widget.isActive) AnalyticsService.logScreenView('insights');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && widget.isActive) _maybeOfferLetterPaywall();
+    });
+    InsightsScreen.jumpTo.addListener(_onJump);
+    _load();
+  }
+
+  @override
+  void dispose() {
+    InsightsScreen.jumpTo.removeListener(_onJump);
+    super.dispose();
+  }
+
+  /// A jump that arrives while this tab is already in front — the weekly or
+  /// the letter tapped with the Progress tab open — has no activation to
+  /// ride on, so it is taken here. One arriving behind another tab is left
+  /// for [didUpdateWidget].
+  void _onJump() {
+    final jump = InsightsScreen.jumpTo.value;
+    if (jump == null || !mounted || !widget.isActive) return;
+    InsightsScreen.jumpTo.value = null;
+    setState(() {
+      _anchor = DateTime(jump.year, jump.month, 1);
+      _gridFilter = null;
     });
     _load();
   }
@@ -239,6 +263,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
       );
       _liftWeeksRemaining = Lift.weeksRemaining(allMoments);
       _firstWeek = FirstWeek.read(allMoments);
+      // From the full history: a week can start in the month before.
+      _week = WeekRecap.read(allMoments);
       if (allMoments.isNotEmpty) {
         final e = allMoments.last
             .completedAt
@@ -315,6 +341,12 @@ class _InsightsScreenState extends State<InsightsScreen> {
                     _letterCard(l10n, colors, _letter!),
                 ],
               ] else ...[
+                // The Sunday read-back, on both tiers — what happened is
+                // free. Outside the month's own moments, since its week can
+                // start in the month before, and it yields to the first-week
+                // keepsake, which reads those same days in its own words.
+                if (_week != null && _firstWeek == null)
+                  _weekCard(l10n, colors, _week!),
                 // The early days, on both tiers (§12) — week one is when every
                 // pattern section is still null, so these two carry it.
                 if (_moments.isNotEmpty) ...[
@@ -1946,6 +1978,52 @@ class _InsightsScreenState extends State<InsightsScreen> {
           const SizedBox(height: 10),
           Text(
             l10n.firstWeekCount(week.momentCount),
+            style: _cardTitle(colors),
+          ),
+          if (part != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              l10n.insightsMostlyAt(_partPeriodName(l10n, part)),
+              style: _cardBody(colors),
+            ),
+          ],
+          if (week.gladdestHabit != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              l10n.firstWeekGladdest(
+                localizeHabitName(week.gladdestHabit!, l10n),
+              ),
+              style: _cardBody(colors),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// The Sunday read-back — the card the weekly notification opens on. The
+  /// first-week card's shape and sentences, so the two read as one ritual;
+  /// the dates sit in the eyebrow, because "your week" alone is ambiguous by
+  /// Wednesday.
+  Widget _weekCard(
+    AppLocalizations l10n,
+    AppColorScheme colors,
+    WeekRecap week,
+  ) {
+    final day = DateFormat.MMMd(Localizations.localeOf(context).toString());
+    final range =
+        '${day.format(week.weekStart)} – ${day.format(week.weekEnd)}';
+    final part = week.dominantPart;
+
+    return _card(
+      colors: colors,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _eyebrow(l10n.weekRecapLabel(range.toUpperCase()), colors),
+          const SizedBox(height: 10),
+          Text(
+            l10n.weekRecapCount(week.momentCount),
             style: _cardTitle(colors),
           ),
           if (part != null) ...[

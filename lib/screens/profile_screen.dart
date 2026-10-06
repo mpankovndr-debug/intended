@@ -1586,7 +1586,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   } else {
                                     await NotificationPreferencesService
                                         .setEnabled(false);
-                                    await NotificationScheduler.cancelAll();
+                                    // The daily ones only: the weekly and the
+                                    // letter have their own switch below.
+                                    await NotificationScheduler.cancelDaily();
                                     AnalyticsService.logDailyReminderToggled(
                                         false);
                                     if (mounted) {

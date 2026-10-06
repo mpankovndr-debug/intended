@@ -2,6 +2,7 @@ import Flutter
 import UIKit
 import CoreHaptics
 import HealthKit
+import UserNotifications
 import WatchConnectivity
 
 @main
@@ -18,6 +19,14 @@ import WatchConnectivity
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    // Notification taps reach flutter_local_notifications only through the
+    // notification center's delegate. FlutterAppDelegate forwards those
+    // callbacks to plugins but never claims the role itself, and nothing
+    // here did, so no tap ever reached Dart: the weekly and the letter
+    // opened wherever the app last was, and the Pause action did nothing.
+    // It has to be set before launch finishes, or the tap that launched the
+    // app is delivered to no one.
+    UNUserNotificationCenter.current().delegate = self
     let result = super.application(application, didFinishLaunchingWithOptions: launchOptions)
 
     // Try rootViewController first, then fall back to registrar's messenger

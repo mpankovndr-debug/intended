@@ -69,7 +69,7 @@ class FirstWeek {
   static DayPart? _dominantPart(List<Moment> week) {
     final counts = <DayPart, int>{};
     for (final m in week) {
-      final part = _partOf(m.localHour);
+      final part = DayPart.ofHour(m.localHour);
       counts[part] = (counts[part] ?? 0) + 1;
     }
     final top = counts.entries.reduce((a, b) => a.value >= b.value ? a : b);
@@ -93,16 +93,6 @@ class FirstWeek {
     if (ranked.length > 1 && ranked.first.value == ranked[1].value) return null;
     return ranked.first.key;
   }
-
-  static DayPart _partOf(int hour) => hour < 5
-      ? DayPart.nights
-      : hour < 12
-          ? DayPart.mornings
-          : hour < 17
-              ? DayPart.afternoons
-              : hour < 22
-                  ? DayPart.evenings
-                  : DayPart.nights;
 
   static DateTime _wallDay(Moment m) {
     final local = m.completedAt.add(Duration(minutes: m.tzOffsetMinutes));

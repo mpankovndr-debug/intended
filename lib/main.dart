@@ -802,15 +802,14 @@ void main() {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await NotificationScheduler.initialize();
 
+        final locale = WidgetsBinding.instance.platformDispatcher.locale;
+        final l10n = lookupAppLocalizations(
+          locale.languageCode == 'ru' ? const Locale('ru') : const Locale('en'),
+        );
+
         // Re-schedule daily notifications if enabled and running low
         final dailyEnabled = await NotificationPreferencesService.isEnabled();
         if (dailyEnabled) {
-          final locale = WidgetsBinding.instance.platformDispatcher.locale;
-          final l10n = lookupAppLocalizations(
-            locale.languageCode == 'ru'
-                ? const Locale('ru')
-                : const Locale('en'),
-          );
           // Before the top-up, not after: a language change rebuilds the whole
           // queue, which refills the daily count as a side effect and leaves
           // the check below with nothing to do.
@@ -821,6 +820,9 @@ void main() {
             await NotificationScheduler.scheduleDaily(l10n);
           }
         }
+        // The weekly and the letter are one-shots armed against this week's
+        // and this month's moments, so every open re-arms them.
+        await NotificationScheduler.scheduleReadings(l10n);
 
         IOSVersion.init();
         WidgetService.initialize();
@@ -1063,7 +1065,9 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    // Listen for weekly notification tap → switch to Progress tab
+    // A tap on the weekly or the letter → the Progress tab, on its month
+    NotificationScheduler.pendingProgressMonth.addListener(_onPendingProgress);
+    // The season archive → the Progress tab
     NotificationScheduler.pendingTabSwitch.addListener(_onPendingTabSwitch);
     PauseLauncher.pending.addListener(_onPendingPause);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1076,7 +1080,22 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
       // Cold-start path for the Pause: PauseLauncher.init() can set the
       // value before this listener exists, so consume once explicitly.
       _onPendingPause();
+      // Same for a notification tap that came in before the tabs existed —
+      // one made during onboarding. Left unconsumed, it also swallowed every
+      // later tap: a ValueNotifier stays silent when set to the value it
+      // already holds.
+      _onPendingProgress();
     });
+  }
+
+  void _onPendingProgress() {
+    final month = NotificationScheduler.pendingProgressMonth.value;
+    if (month == null || !mounted) return;
+    NotificationScheduler.pendingProgressMonth.value = null; // consumed
+    // The month first: Insights takes it as the tab comes forward, or at
+    // once when the tab is already in front.
+    InsightsScreen.jumpTo.value = month;
+    setState(() => _currentIndex = 1);
   }
 
   void _onPendingTabSwitch() {
@@ -1114,6 +1133,8 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    NotificationScheduler.pendingProgressMonth
+        .removeListener(_onPendingProgress);
     NotificationScheduler.pendingTabSwitch.removeListener(_onPendingTabSwitch);
     PauseLauncher.pending.removeListener(_onPendingPause);
     _userState?.removeListener(_onSubscriptionChanged);
@@ -1132,6 +1153,9 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
         // Widget completions arrive without the mood tap; offer it now, or
         // the most convenient path quietly produces the worst data.
         if (synced > 0) WidgetMoodCatchup.maybeShow(context);
+        // After the sync: widget completions count toward the week and the
+        // month as much as anything done in here.
+        NotificationScheduler.scheduleReadings(AppLocalizations.of(context));
       });
       NotificationScheduler.refreshTimezone(AppLocalizations.of(context));
       // The phone's language can change while the app is backgrounded, and
@@ -1141,6 +1165,9 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
     }
     if (state == AppLifecycleState.paused && mounted) {
       context.read<BackupService>().backup();
+      // Whatever was done this session counts toward the week and the
+      // month, so re-arm on the way out — the last chance before Sunday.
+      NotificationScheduler.scheduleReadings(AppLocalizations.of(context));
     }
   }
 
