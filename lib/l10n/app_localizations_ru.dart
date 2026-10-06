@@ -1772,10 +1772,11 @@ class AppLocalizationsRu extends AppLocalizations {
       'Новые функции добавляются регулярно. Подписка поддерживает независимую разработку.\nСоздано одним человеком, которому это так же важно, как и тебе.';
 
   @override
-  String get onboardingPaywallTitle => 'Пойми, что помогает и что поменять.';
+  String get onboardingPaywallTitle =>
+      'Заметь, что тебе помогает.\nИ что можно изменить.';
 
   @override
-  String get onboardingPaywallFirstMoment => 'Первый момент уже твой.';
+  String get onboardingPaywallFirstMoment => 'Твой первый момент уже здесь.';
 
   @override
   String onboardingPaywallReviewWhen(int weeks) {
@@ -4191,7 +4192,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Перенеси напоминание на 21:00 — именно там жил этот месяц.';
 
   @override
-  String get onboardingPaywallLoop => 'И начинается следующий месяц.';
+  String get onboardingPaywallLoop => 'А дальше начинается новый месяц.';
 
   @override
   String letterQuestionStillFits(String path) {

@@ -225,9 +225,10 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
                           enter(_Glow(
                             child: Column(
                               children: [
-                                Text(
-                                  l10n.onboardingPaywallTitle,
-                                  textAlign: TextAlign.center,
+                                _Title(
+                                  text: l10n.onboardingPaywallTitle,
+                                  width: MediaQuery.sizeOf(context).width -
+                                      2 * gutter,
                                   style: TextStyle(
                                     // Sora has no Cyrillic (CLAUDE.md).
                                     fontFamily: AppTextStyles.displayFontFor(
@@ -395,6 +396,52 @@ class _Painting extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// The headline. A title with its own line breaks (the Russian one is two
+/// sentences, one per line: 6 Oct) keeps them: the size steps down until
+/// every line fits on one line, rather than each wrapping in two. A title
+/// without breaks wraps as usual.
+class _Title extends StatelessWidget {
+  const _Title({required this.text, required this.width, required this.style});
+
+  final String text;
+  final double width;
+  final TextStyle style;
+
+  static const double smallest = 20;
+
+  /// The largest size, from [style]'s down to [smallest], at which each of
+  /// [lines] fits within [width].
+  static double fit(
+      List<String> lines, TextStyle style, double width, TextScaler scaler) {
+    for (var size = style.fontSize!; size > smallest; size -= 0.5) {
+      final fits = lines.every((line) {
+        final painter = TextPainter(
+          text: TextSpan(text: line, style: style.copyWith(fontSize: size)),
+          maxLines: 1,
+          textDirection: TextDirection.ltr,
+          textScaler: scaler,
+        )..layout();
+        return painter.width <= width;
+      });
+      if (fits) return size;
+    }
+    return smallest;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final lines = text.split('\n');
+    final size = lines.length > 1
+        ? fit(lines, style, width, MediaQuery.textScalerOf(context))
+        : style.fontSize!;
+    return Text(
+      text,
+      textAlign: TextAlign.center,
+      style: style.copyWith(fontSize: size),
     );
   }
 }

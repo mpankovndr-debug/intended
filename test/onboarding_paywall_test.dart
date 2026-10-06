@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intended/l10n/app_localizations.dart';
 import 'package:intended/models/letter.dart';
@@ -17,6 +19,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// thresholds themselves rather than numbers typed into copy.
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
+
+  // Real Montserrat, so a line's measured width is the width it will have
+  // on a phone (the test font draws every letter as a full square).
+  setUpAll(() async {
+    final loader = FontLoader('Montserrat');
+    for (final w in ['Regular', 'Medium', 'SemiBold', 'Bold']) {
+      loader.addFont(rootBundle.load('assets/fonts/Montserrat-$w.ttf'));
+    }
+    await loader.load();
+  });
 
   Future<void> pump(WidgetTester tester,
       {int moments = 0, Locale? locale}) async {
@@ -84,9 +96,28 @@ void main() {
     handle.dispose();
   });
 
+  testWidgets('a title broken by hand keeps its lines, even on a small phone',
+      (tester) async {
+    await pump(tester, moments: 1, locale: const Locale('ru'));
+    // The same screen at iPhone mini width.
+    tester.view.physicalSize = const Size(375 * 3, 812 * 3);
+    await tester.pumpAndSettle();
+    final title =
+        find.text('Заметь, что тебе помогает.\nИ что можно изменить.');
+    final paragraph = tester.renderObject<RenderParagraph>(title);
+    final laidOut = TextPainter(
+      text: paragraph.text,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+      textScaler: paragraph.textScaler,
+    )..layout(maxWidth: paragraph.size.width);
+    expect(laidOut.computeLineMetrics(), hasLength(2));
+  });
+
   testWidgets('in Russian', (tester) async {
     await pump(tester, moments: 1, locale: const Locale('ru'));
-    expect(find.text('Пойми, что помогает и что поменять.'), findsOneWidget);
+    expect(find.text('Заметь, что тебе помогает.\nИ что можно изменить.'),
+        findsOneWidget);
     expect(find.text('после первых ${Letter.minMoments}\u00A0моментов'),
         findsOneWidget);
     expect(find.text('Не сейчас, останусь на бесплатной'), findsOneWidget);
