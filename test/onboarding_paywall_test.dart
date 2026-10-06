@@ -47,7 +47,7 @@ void main() {
       (tester) async {
     await pump(tester, moments: 1);
     expect(find.text('See what helps, and what to change.'), findsOneWidget);
-    expect(find.text('after your first ${Letter.minMoments} squares'),
+    expect(find.text('after your first ${Letter.minMoments}\u00A0moments'),
         findsOneWidget);
     expect(find.text('at the start of each month'), findsOneWidget);
     expect(find.text('${PlanService.windowDays ~/ 7} weeks after each one'),
@@ -56,15 +56,15 @@ void main() {
     expect(find.textContaining('becomes a square'), findsNothing);
   });
 
-  testWidgets('"Your first square" only when there is exactly one',
+  testWidgets('"Your first moment" only when there is exactly one',
       (tester) async {
     await pump(tester, moments: 1);
-    expect(find.text('Your first square is already yours.'), findsOneWidget);
+    expect(find.text('Your first moment is already yours.'), findsOneWidget);
   });
 
-  testWidgets('no first-square line once there are more', (tester) async {
+  testWidgets('no first-moment line once there are more', (tester) async {
     await pump(tester, moments: 3);
-    expect(find.text('Your first square is already yours.'), findsNothing);
+    expect(find.text('Your first moment is already yours.'), findsNothing);
   });
 
   testWidgets('VoiceOver reads the steps in their order, not by position',
@@ -87,7 +87,7 @@ void main() {
   testWidgets('in Russian', (tester) async {
     await pump(tester, moments: 1, locale: const Locale('ru'));
     expect(find.text('Пойми, что помогает и что поменять.'), findsOneWidget);
-    expect(find.text('после первых ${Letter.minMoments} квадратов'),
+    expect(find.text('после первых ${Letter.minMoments}\u00A0моментов'),
         findsOneWidget);
     expect(find.text('Не сейчас, останусь на бесплатной'), findsOneWidget);
   });

@@ -488,11 +488,11 @@ fade and button pill hand over without a dip; words on the chrome change out-the
 content blurs out and the next blurs in (520 ms, none with Reduce Motion). Back walks the steps actually
 taken. Finishing completes onboarding, writes chapter one dated from the seal, and opens Today; after a
 real first moment the paywall follows over Today, sharing Today's one-shot claim
-(`OnboardingPaywallScreen.claimFirstCompletion`). "Your first square is already yours." renders only when
+(`OnboardingPaywallScreen.claimFirstCompletion`). "Your first moment is already yours." renders only when
 the person has exactly one moment, since the paywall can also follow a first in-app tap after moments
 from the widget or the yesterday-log.
 Revised 6 Oct with Maksim: headline "See what helps, and what to change."; three steps, only what Intended+
-adds, each saying when it arrives ("A letter about your month, after your first 8 squares"; "A plan for the
+adds, each saying when it arrives ("A letter about your month, after your first 8 moments"; "A plan for the
 month ahead, at the start of each month"; "Whether your changes helped, 4 weeks after each one"), drawn as a
 loop; the numbers come from `Letter.minMoments` and `PlanService.windowDays`. Price directly under the
 button, then "Not now, keep the free version". On Iris the background is its own painting under a wash;

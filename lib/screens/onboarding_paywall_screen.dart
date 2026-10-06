@@ -66,7 +66,7 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
 
-  /// How many moments the person has. "Your first square is already
+  /// How many moments the person has. "Your first moment is already
   /// yours." is said only when that is literally one.
   int? _moments;
   late final AnimationController _entrance;
@@ -243,7 +243,7 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
                                 if (_moments == 1) ...[
                                   const SizedBox(height: 10),
                                   Text(
-                                    l10n.onboardingPaywallFirstSquare,
+                                    l10n.onboardingPaywallFirstMoment,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontFamily: body,

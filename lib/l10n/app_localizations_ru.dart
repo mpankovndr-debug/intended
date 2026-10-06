@@ -1775,7 +1775,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingPaywallTitle => 'Пойми, что помогает и что поменять.';
 
   @override
-  String get onboardingPaywallFirstSquare => 'Первый квадрат уже твой.';
+  String get onboardingPaywallFirstMoment => 'Первый момент уже твой.';
 
   @override
   String onboardingPaywallReviewWhen(int weeks) {
@@ -1804,10 +1804,10 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'после первых $count квадрата',
-      many: 'после первых $count квадратов',
-      few: 'после первых $count квадратов',
-      one: 'после первых $count квадрата',
+      other: 'после первых $count момента',
+      many: 'после первых $count моментов',
+      few: 'после первых $count моментов',
+      one: 'после первых $count момента',
     );
     return '$_temp0';
   }

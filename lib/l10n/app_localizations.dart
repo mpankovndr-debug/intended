@@ -2805,11 +2805,11 @@ abstract class AppLocalizations {
   /// **'See what helps, and what to change.'**
   String get onboardingPaywallTitle;
 
-  /// No description provided for @onboardingPaywallFirstSquare.
+  /// No description provided for @onboardingPaywallFirstMoment.
   ///
   /// In en, this message translates to:
-  /// **'Your first square is already yours.'**
-  String get onboardingPaywallFirstSquare;
+  /// **'Your first moment is already yours.'**
+  String get onboardingPaywallFirstMoment;
 
   /// No description provided for @onboardingPaywallReviewWhen.
   ///
@@ -2838,7 +2838,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPaywallLetterWhen.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{after your first square} other{after your first {count} squares}}'**
+  /// **'{count, plural, =1{after your first moment} other{after your first {count} moments}}'**
   String onboardingPaywallLetterWhen(int count);
 
   /// No description provided for @onboardingPaywallLetter.
