@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -221,37 +222,41 @@ class _OnboardingPaywallScreenState extends State<OnboardingPaywallScreen>
                           const Spacer(flex: 2),
                           enter(_BrandIcon(colors: colors)),
                           const SizedBox(height: 24),
-                          enter(Text(
-                            l10n.onboardingPaywallTitle,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              // Sora has no Cyrillic (CLAUDE.md).
-                              fontFamily: AppTextStyles.displayFontFor(
-                                  Localizations.localeOf(context).toString()),
-                              fontSize: 30,
-                              fontWeight: FontWeight.w600,
-                              color: colors.textPrimary,
-                              letterSpacing: -0.5,
-                              height: 1.2,
+                          enter(_Glow(
+                            child: Column(
+                              children: [
+                                Text(
+                                  l10n.onboardingPaywallTitle,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    // Sora has no Cyrillic (CLAUDE.md).
+                                    fontFamily: AppTextStyles.displayFontFor(
+                                        Localizations.localeOf(context)
+                                            .toString()),
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w600,
+                                    color: colors.textPrimary,
+                                    letterSpacing: -0.5,
+                                    height: 1.2,
+                                  ),
+                                ),
+                                if (_moments == 1) ...[
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    l10n.onboardingPaywallFirstSquare,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: body,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.4,
+                                      color: colors.ctaSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
                           )),
-                          if (_moments == 1) ...[
-                            const SizedBox(height: 10),
-                            FadeTransition(
-                              opacity: _fadeIn,
-                              child: Text(
-                                l10n.onboardingPaywallFirstSquare,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: body,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.4,
-                                  color: colors.ctaSecondary,
-                                ),
-                              ),
-                            ),
-                          ],
                           const SizedBox(height: 28),
 
                           // Only what Intended+ adds, each with when it
@@ -394,8 +399,66 @@ class _Painting extends StatelessWidget {
   }
 }
 
+/// A soft, very light blue light behind words that sit on the painting, so
+/// they lift off it without a box around them (6 Oct: light blue, never
+/// white-white). A heavily blurred oval: it fades from the middle and has
+/// no edge anywhere.
+class _Glow extends StatelessWidget {
+  const _Glow({
+    required this.child,
+    this.spread = 18,
+    this.strength = 0.85,
+  });
+
+  final Widget child;
+
+  /// How far past the words the light reaches.
+  final double spread;
+  final double strength;
+
+  static const Color light = Color(0xFFE4ECFF);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _GlowPainter(
+        color: light.withValues(alpha: strength),
+        spread: spread,
+      ),
+      child: child,
+    );
+  }
+}
+
+class _GlowPainter extends CustomPainter {
+  _GlowPainter({required this.color, required this.spread});
+
+  final Color color;
+  final double spread;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final area = (Offset.zero & size).inflate(spread);
+    final sigma = area.shortestSide * 0.28;
+    canvas.drawOval(
+      area,
+      Paint()
+        ..color = color
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, sigma),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_GlowPainter old) =>
+      old.color != color || old.spread != spread;
+}
+
 /// The three things Intended+ adds, as the loop they make: a letter, a plan,
 /// and whether the plan's changes helped. Each step says when it arrives.
+///
+/// The dots sit on one circle and the arrows are arcs of it (6 Oct); the arc
+/// from 2 back round to 3 is flatter than the circle, because the full curve
+/// would run through the labels under 2 and 3.
 ///
 /// Laid out from measured text, not fixed boxes, so Russian's longer lines
 /// push the drawing taller instead of spilling out of it (the reason a
@@ -413,8 +476,11 @@ class _Cycle extends StatelessWidget {
   /// (what, when), in order.
   final List<(String, String)> steps;
 
-  static const double _dot = 44;
+  static const double _dot = 52;
   static const double _gap = 8;
+
+  /// How far the arc from 2 to 3 dips below the dots.
+  static const double _dip = 22;
 
   @override
   Widget build(BuildContext context) {
@@ -450,15 +516,21 @@ class _Cycle extends StatelessWidget {
         measure(steps[i].$2, whenStyle, w);
 
     final topWidth = width * 0.42;
-    final sideWidth = width * 0.46;
+    final sideWidth = width * 0.44;
     const r = _dot / 2;
 
     final p1 = Offset(width / 2, r);
-    final y23 = r + r + _gap + labelHeight(0, topWidth) + 40 + r;
+    final y23 = r + r + _gap + labelHeight(0, topWidth) + 36 + r;
     final p2 = Offset(width - sideWidth / 2, y23);
     final p3 = Offset(sideWidth / 2, y23);
     final sides = [labelHeight(1, sideWidth), labelHeight(2, sideWidth)];
     final height = y23 + r + _gap + sides.reduce((a, b) => a > b ? a : b);
+
+    // The circle through the three dots: centred on the middle line.
+    final d = p2.dx - p1.dx;
+    final cy = (d * d + y23 * y23 - r * r) / (2 * (y23 - r));
+    final centre = Offset(width / 2, cy);
+    final radius = cy - r;
 
     Widget dot(int n, Offset at) => Positioned(
           left: at.dx - r,
@@ -470,16 +542,23 @@ class _Cycle extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFFFFFFF).withValues(alpha: 0.55),
+                color: _Glow.light.withValues(alpha: 0.8),
                 border: Border.all(
-                    color: colors.ctaPrimary.withValues(alpha: 0.45),
+                    color: colors.ctaPrimary.withValues(alpha: 0.35),
                     width: 1.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: _Glow.light.withValues(alpha: 0.9),
+                    blurRadius: 18,
+                    spreadRadius: 2,
+                  ),
+                ],
               ),
               child: Text(
                 '$n',
                 style: TextStyle(
                   fontFamily: body,
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.w600,
                   color: colors.ctaPrimary,
                 ),
@@ -494,14 +573,18 @@ class _Cycle extends StatelessWidget {
           width: w,
           child: Semantics(
             sortKey: OrdinalSortKey(i.toDouble()),
-            child: Column(
-              children: [
-                Text(steps[i].$1,
-                    textAlign: TextAlign.center, style: whatStyle),
-                const SizedBox(height: 2),
-                Text(steps[i].$2,
-                    textAlign: TextAlign.center, style: whenStyle),
-              ],
+            child: _Glow(
+              spread: 14,
+              strength: 0.85,
+              child: Column(
+                children: [
+                  Text(steps[i].$1,
+                      textAlign: TextAlign.center, style: whatStyle),
+                  const SizedBox(height: 2),
+                  Text(steps[i].$2,
+                      textAlign: TextAlign.center, style: whenStyle),
+                ],
+              ),
             ),
           ),
         );
@@ -512,14 +595,30 @@ class _Cycle extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
+          // A wide, soft light inside the circle, so the loop reads as one
+          // object lifted off the painting.
+          Positioned(
+            left: centre.dx - radius * 0.85,
+            top: centre.dy - radius * 0.85,
+            width: radius * 1.7,
+            height: radius * 1.7,
+            child: const _Glow(
+              spread: 0,
+              strength: 0.7,
+              child: SizedBox.expand(),
+            ),
+          ),
           Positioned.fill(
             child: CustomPaint(
               painter: _CyclePainter(
+                centre: centre,
+                radius: radius,
                 p1: p1,
                 p2: p2,
                 p3: p3,
                 inset: r + 6,
-                color: colors.ctaPrimary.withValues(alpha: 0.4),
+                dip: _dip,
+                color: colors.ctaPrimary.withValues(alpha: 0.45),
               ),
             ),
           ),
@@ -535,19 +634,26 @@ class _Cycle extends StatelessWidget {
   }
 }
 
-/// The arrows of the loop: 1 to 2 over the top right, 2 to 3 in a shallow dip
-/// between them (above their labels), 3 back to 1 over the top left.
+/// The arrows of the loop, clockwise: 1 to 2 and 3 to 1 along the circle
+/// through the dots, 2 to 3 along a flatter arc that stays above their
+/// labels.
 class _CyclePainter extends CustomPainter {
   _CyclePainter({
+    required this.centre,
+    required this.radius,
     required this.p1,
     required this.p2,
     required this.p3,
     required this.inset,
+    required this.dip,
     required this.color,
   });
 
+  final Offset centre;
+  final double radius;
   final Offset p1, p2, p3;
   final double inset;
+  final double dip;
   final Color color;
 
   @override
@@ -559,40 +665,65 @@ class _CyclePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
     final fill = Paint()..color = color;
 
-    void arrow(Offset from, Offset control, Offset to) {
-      canvas.drawPath(
-        Path()
-          ..moveTo(from.dx, from.dy)
-          ..quadraticBezierTo(control.dx, control.dy, to.dx, to.dy),
-        stroke,
-      );
-      final dir = to - control;
+    // A filled head at [tip], pointing along [dir].
+    void head(Offset tip, Offset dir) {
       final unit = dir / dir.distance;
       final side = Offset(-unit.dy, unit.dx);
-      const len = 9.0, half = 5.0;
+      const len = 10.0, half = 5.5;
       canvas.drawPath(
         Path()
-          ..moveTo(to.dx + unit.dx * 2, to.dy + unit.dy * 2)
-          ..lineTo(to.dx - unit.dx * len + side.dx * half,
-              to.dy - unit.dy * len + side.dy * half)
-          ..lineTo(to.dx - unit.dx * len - side.dx * half,
-              to.dy - unit.dy * len - side.dy * half)
+          ..moveTo(tip.dx + unit.dx * 2, tip.dy + unit.dy * 2)
+          ..lineTo(tip.dx - unit.dx * len + side.dx * half,
+              tip.dy - unit.dy * len + side.dy * half)
+          ..lineTo(tip.dx - unit.dx * len - side.dx * half,
+              tip.dy - unit.dy * len - side.dy * half)
           ..close(),
         fill,
       );
     }
 
-    arrow(Offset(p1.dx + inset, p1.dy), Offset(p2.dx, p1.dy),
-        Offset(p2.dx, p2.dy - inset));
-    arrow(Offset(p2.dx - inset, p2.dy), Offset((p2.dx + p3.dx) / 2, p2.dy + 44),
-        Offset(p3.dx + inset, p3.dy));
-    arrow(Offset(p3.dx, p3.dy - inset), Offset(p3.dx, p1.dy),
-        Offset(p1.dx - inset, p1.dy));
+    double angleOf(Offset p) => math.atan2(p.dy - centre.dy, p.dx - centre.dx);
+    final gap = inset / radius;
+    final rect = Rect.fromCircle(center: centre, radius: radius);
+
+    // Along the circle, clockwise from [from] to [to] (radians), leaving
+    // room around each dot.
+    void along(double from, double to) {
+      final start = from + gap;
+      final end = to - gap;
+      canvas.drawArc(rect, start, end - start, false, stroke);
+      final tip = centre + Offset(math.cos(end), math.sin(end)) * radius;
+      head(tip, Offset(-math.sin(end), math.cos(end)));
+    }
+
+    final a1 = angleOf(p1), a2 = angleOf(p2), a3 = angleOf(p3);
+    along(a1, a2);
+    along(a3, a1 + 2 * math.pi);
+
+    // 2 to 3: a shallow arc under the dots, clockwise.
+    final from = Offset(p2.dx - inset * 0.8, p2.dy + inset * 0.45);
+    final to = Offset(p3.dx + inset * 0.8, p3.dy + inset * 0.45);
+    final chord = (from - to).distance;
+    final r2 = (chord * chord / 4 + dip * dip) / (2 * dip);
+    canvas.drawPath(
+      Path()
+        ..moveTo(from.dx, from.dy)
+        ..arcToPoint(to, radius: Radius.circular(r2), clockwise: true),
+      stroke,
+    );
+    final c2 = Offset((from.dx + to.dx) / 2, from.dy + dip - r2);
+    final v = to - c2;
+    head(to, Offset(-v.dy, v.dx));
   }
 
   @override
   bool shouldRepaint(_CyclePainter old) =>
-      old.p1 != p1 || old.p2 != p2 || old.p3 != p3 || old.color != color;
+      old.centre != centre ||
+      old.radius != radius ||
+      old.p1 != p1 ||
+      old.p2 != p2 ||
+      old.p3 != p3 ||
+      old.color != color;
 }
 
 class _BrandIcon extends StatelessWidget {
