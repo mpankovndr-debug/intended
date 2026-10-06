@@ -187,8 +187,10 @@ void main() {
         l.paywallTrialHintMonthly(14, '€5,99'),
         l.onboardingPaywallDisclaimer(14, '€44,99', '€3,75'),
       ]) {
-        expect(text, contains('Продлевается автоматически'));
-        expect(text, contains('пока не отменишь'));
+        // Auto-renewal disclosed, and in «ты»: "until you cancel" in the
+        // ты form, never the вы one.
+        expect(text, contains('автоматически'));
+        expect(text, contains('отменишь'));
         expect(text, isNot(contains('отмените')));
       }
     });

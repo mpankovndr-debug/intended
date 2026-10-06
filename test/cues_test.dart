@@ -40,7 +40,7 @@ void main() {
       expect(coffee.label(lookupAppLocalizations(const Locale('en'))),
           'pour my coffee');
       expect(coffee.label(lookupAppLocalizations(const Locale('ru'))),
-          'налью кофе');
+          'налью себе кофе');
     });
   });
 
@@ -265,8 +265,8 @@ void main() {
 
     testWidgets('in Russian the cue reads on its own line', (tester) async {
       await pump(tester, locale: const Locale('ru'));
-      expect(find.text('После того как'), findsOneWidget);
-      expect(find.text('налью кофе'), findsOneWidget);
+      expect(find.text('После того как я'), findsOneWidget);
+      expect(find.text('налью себе кофе'), findsOneWidget);
       expect(find.text('Пропустить'), findsOneWidget);
     });
   });

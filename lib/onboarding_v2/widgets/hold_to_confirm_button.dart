@@ -149,19 +149,28 @@ class _HoldToConfirmButtonState extends State<HoldToConfirmButton>
                     ),
                   ),
                 ),
+                // Centred and padded, on up to two lines, so a longer label
+                // (Russian runs about a third longer) stays inside the pill.
                 Center(
-                  child: Text(
-                    widget.label,
-                    style: TextStyle(
-                      fontFamily: AppTextStyles.bodyFont(context),
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      color: enabled
-                          ? const Color(0xFFFFFFFF)
-                          : Color.alphaBlend(
-                              colors.ctaPrimary.withValues(alpha: 0.65),
-                              colors.onboardingBg4,
-                            ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      widget.label,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: AppTextStyles.bodyFont(context),
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                        color: enabled
+                            ? const Color(0xFFFFFFFF)
+                            : Color.alphaBlend(
+                                colors.ctaPrimary.withValues(alpha: 0.65),
+                                colors.onboardingBg4,
+                              ),
+                        height: 1.2,
+                      ),
                     ),
                   ),
                 ),

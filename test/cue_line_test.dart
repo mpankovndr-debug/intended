@@ -38,7 +38,7 @@ void main() {
   testWidgets('in Russian', (tester) async {
     await ActionCues.set('Walk', ActionCue.own('выйду из душа'));
     await pump(tester, 'Walk', locale: const Locale('ru'));
-    expect(find.text('после того как выйду из душа'), findsOneWidget);
+    expect(find.text('после того как я выйду из душа'), findsOneWidget);
   });
 
   testWidgets('a cue set while the card is on screen appears', (tester) async {

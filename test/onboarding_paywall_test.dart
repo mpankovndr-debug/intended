@@ -120,6 +120,6 @@ void main() {
         findsOneWidget);
     expect(find.text('после первых ${Letter.minMoments}\u00A0моментов'),
         findsOneWidget);
-    expect(find.text('Не сейчас, останусь на бесплатной'), findsOneWidget);
+    expect(find.text('Не сейчас, продолжить бесплатно'), findsOneWidget);
   });
 }

@@ -76,7 +76,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get onboardingDescriptor =>
-      'Без стриков. Без оценок. Просто маленькие шаги, которые возвращают тебя к себе.';
+      'Без стриков и оценок. Просто маленькие шаги, которые помогают лучше услышать себя.';
 
   @override
   String get onboardingNamePrompt => 'Как тебя зовут?';
@@ -187,18 +187,17 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String reminderAroundTime(String time) {
-    return 'Около $time';
+    return 'Примерно в $time';
   }
 
   @override
-  String get reminderTimeLabel => 'Напомнить в';
+  String get reminderTimeLabel => 'Напоминать в';
 
   @override
   String get reminderTimePicker => 'Время напоминания';
 
   @override
-  String get reminderSwitchHint =>
-      'Включи, чтобы выбрать время ежедневного напоминания.';
+  String get reminderSwitchHint => 'Включи напоминание, чтобы выбрать время.';
 
   @override
   String get reminderNoWorries =>
@@ -1783,16 +1782,16 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       weeks,
       locale: localeName,
-      other: 'через $weeks недели после каждого',
-      many: 'через $weeks недель после каждого',
-      few: 'через $weeks недели после каждого',
-      one: 'через $weeks неделю после каждого',
+      other: 'через $weeks недели после каждого изменения',
+      many: 'через $weeks недель после каждого изменения',
+      few: 'через $weeks недели после каждого изменения',
+      one: 'через $weeks неделю после каждого изменения',
     );
     return '$_temp0';
   }
 
   @override
-  String get onboardingPaywallReview => 'Помогли ли твои изменения';
+  String get onboardingPaywallReview => 'Проверка результата';
 
   @override
   String get onboardingPaywallPlanWhen => 'в начале каждого месяца';
@@ -1824,8 +1823,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingPaywallPrimaryCta => 'Начать пробный период';
 
   @override
-  String get onboardingPaywallSecondaryCta =>
-      'Не сейчас, останусь на бесплатной';
+  String get onboardingPaywallSecondaryCta => 'Не сейчас, продолжить бесплатно';
 
   @override
   String onboardingPaywallDisclaimer(int days, String price, String perMonth) {
@@ -1837,7 +1835,7 @@ class AppLocalizationsRu extends AppLocalizations {
       few: '$days дня',
       one: '$days день',
     );
-    return '$_temp0 бесплатно, дальше $price в год (около $perMonth в месяц). Продлевается автоматически, пока не отменишь.';
+    return '$_temp0 бесплатно, затем $price в год (около $perMonth в месяц). Подписка будет продлеваться автоматически, пока ты её не отменишь.';
   }
 
   @override
@@ -2206,7 +2204,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitBodyScan => 'Последи за телом - 2 минуты';
 
   @override
-  String get habitGentleMovement => '5 минут мягкой разминки';
+  String get habitGentleMovement => 'Пять минут лёгкой растяжки';
 
   @override
   String get habitMindfulMeal => 'Один осознанный приём пищи';
@@ -2236,7 +2234,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitTenSecondPause => 'Пауза на 1 минуту';
 
   @override
-  String get habitNoticeFeeling => 'Заметь, что чувствуешь сейчас';
+  String get habitNoticeFeeling => 'Прислушайся к своим ощущениям';
 
   @override
   String get habitGroundingBreath => 'Три заземляющих вдоха';
@@ -2251,10 +2249,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitNoticeSound => 'Заметь один звук вокруг тебя';
 
   @override
-  String get habitFeelFeet => 'Почувствуй ступни на полу';
+  String get habitFeelFeet => 'Почувствуй опору под ногами';
 
   @override
-  String get habitHandOnHeart => 'Положи руку на сердце на 30 секунд';
+  String get habitHandOnHeart => 'Положи ладонь на грудь на 30 секунд';
 
   @override
   String get habitGratefulThing =>
@@ -2315,7 +2313,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get habitSendMessage => 'Напиши одно сообщение тому, кто тебе дорог';
 
   @override
-  String get habitAppreciatePerson => 'Подумай о человеке, которого ценишь';
+  String get habitAppreciatePerson => 'Вспомни человека, которого ценишь';
 
   @override
   String get habitAskHowAreYou => 'Спроси кого-нибудь, как дела';
@@ -2637,10 +2635,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get restoreBackupMessage =>
-      'Мы нашли твои данные из прошлой сессии. Восстановить?';
+      'Мы нашли твои данные с прошлого раза. Восстановить?';
 
   @override
-  String get restoreBackupConfirm => 'Восстановить';
+  String get restoreBackupConfirm => 'Восстановить данные';
 
   @override
   String get restoreBackupSkip => 'Начать заново';
@@ -2870,11 +2868,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get legalDisclaimerSuffix => '.';
 
   @override
-  String get pathGentleMorningsTitle => 'Мягкое утро';
+  String get pathGentleMorningsTitle => 'Спокойное утро';
 
   @override
   String get pathGentleMorningsSubtitle =>
-      'Мягкий, осознанный способ начать день';
+      'Бережный и осознанный способ начать день';
 
   @override
   String get pathAnchorsForHardDaysTitle => 'Опоры в трудные дни';
@@ -2933,7 +2931,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get onboardingDirectionSubtitle =>
-      'Выбери самое близкое. Дальше скажешь своими словами.';
+      'Выбери, что ближе. Потом скажешь своими словами.';
 
   @override
   String get onboardingSentenceTitle => 'Скажи по-своему';
@@ -2946,17 +2944,18 @@ class AppLocalizationsRu extends AppLocalizations {
       'Это видишь только ты. Потом можно изменить.';
 
   @override
-  String get onboardingSentenceHold => 'Удерживай, чтобы сделать своим';
+  String get onboardingSentenceHold =>
+      'Нажми и удерживай, чтобы выбрать этот вариант';
 
   @override
   String onboardingSentenceLimit(int max) {
     String _temp0 = intl.Intl.pluralLogic(
       max,
       locale: localeName,
-      other: 'Длиннее нельзя: $max символа.',
-      many: 'Длиннее нельзя: $max символов.',
-      few: 'Длиннее нельзя: $max символа.',
-      one: 'Длиннее нельзя: $max символ.',
+      other: 'Не больше $max символа.',
+      many: 'Не больше $max символов.',
+      few: 'Не больше $max символов.',
+      one: 'Не больше $max символа.',
     );
     return '$_temp0';
   }
@@ -2973,14 +2972,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingChapterOne => 'Глава первая';
 
   @override
-  String get onboardingStartTitleThree => 'Начни с трёх маленьких дел.';
+  String get onboardingStartTitleThree => 'Начни с трёх простых дел.';
 
   @override
-  String get onboardingStartTitleTwo => 'Начни с двух маленьких дел.';
+  String get onboardingStartTitleTwo => 'Начни с двух простых дел.';
 
   @override
   String get onboardingStartSubtitle =>
-      'Каждое займёт минуту-другую. Выбери те, что правда будешь делать.';
+      'Каждое займёт минуту-другую. Выбери те, что и правда будешь делать.';
 
   @override
   String onboardingStartShortMonth(int days, String month) {
@@ -3002,14 +3001,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingStartCap => 'Больше на экран «Сегодня» не поместится.';
 
   @override
-  String get onboardingCuesTitle => 'Когда ты будешь это делать?';
+  String get onboardingCuesTitle => 'Когда ты будешь выполнять эти действия?';
 
   @override
   String get onboardingCuesSubtitle =>
       'Привяжи каждое к тому, что ты и так делаешь.';
 
   @override
-  String get onboardingCuesPrefix => 'После того как';
+  String get onboardingCuesPrefix => 'После того как я';
 
   @override
   String get onboardingCuesOther => 'Другое';
@@ -3018,7 +3017,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingCuesOtherHint => 'то, что ты и так делаешь';
 
   @override
-  String get cuePresetCoffee => 'налью кофе';
+  String get cuePresetCoffee => 'налью себе кофе';
 
   @override
   String get cuePresetTeeth => 'почищу зубы';
@@ -3027,16 +3026,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cuePresetDinner => 'поужинаю';
 
   @override
-  String get cuePresetBed => 'лягу в кровать';
+  String get cuePresetBed => 'лягу спать';
 
   @override
   String todayCueLine(String cue) {
-    return 'после того как $cue';
+    return 'после того как я $cue';
   }
 
   @override
-  String get onboardingTryTitle =>
-      'За каждое сделанное дело появляется квадрат.';
+  String get onboardingTryTitle => 'За каждое действие — квадратик.';
 
   @override
   String get onboardingTrySubtitle =>
@@ -3047,19 +3045,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get onboardingTryReturn =>
-      'Пропустишь несколько дней, ничего не пропадёт. Когда вернёшься, приложение отметит возвращение, а не пропуск.';
+      'Пропустишь несколько дней — ничего не пропадёт. Когда вернёшься, приложение отметит возвращение, а не пропуск.';
 
   @override
   String get onboardingTryLater => 'Сделаю позже';
 
   @override
-  String get chapterStageTry => 'Пробовать';
+  String get chapterStageTry => 'Попробуй несколько';
 
   @override
-  String get chapterStageKeep => 'Закрепить';
+  String get chapterStageKeep => 'Оставь то, что подошло';
 
   @override
-  String get chapterStageLighter => 'Облегчить';
+  String get chapterStageLighter => 'Упрости';
 
   @override
   String get pathGentleMorningsSentence => 'начинать утро спокойнее';
@@ -3074,15 +3072,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pathGentleMorningsIdea3 => 'проводить первый час спокойнее';
 
   @override
-  String get pathAnchorsForHardDaysSentence => 'иметь опору в трудные дни';
+  String get pathAnchorsForHardDaysSentence =>
+      'чувствовать опору в трудные дни';
 
   @override
   String get pathAnchorsForHardDaysIdea1 =>
-      'чувствовать себя устойчивее, когда шумно';
+      'чувствовать себя устойчивее, когда вокруг шумно';
 
   @override
   String get pathAnchorsForHardDaysIdea2 =>
-      'иметь то, к чему всегда можно вернуться';
+      'иметь что-то, что поможет собраться в трудный момент';
 
   @override
   String get pathAnchorsForHardDaysIdea3 => 'быть добрее к себе в плохие дни';
@@ -3097,7 +3096,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pathQuietFocusIdea2 => 'заканчивать день с силами';
 
   @override
-  String get pathQuietFocusIdea3 => 'перестать работать в спешке';
+  String get pathQuietFocusIdea3 => 'не работать впопыхах';
 
   @override
   String get pathWindingDownSentence => 'отпускать день перед сном';
@@ -3127,7 +3126,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pathLookingUpSentence => 'меньше времени проводить в телефоне';
 
   @override
-  String get pathLookingUpIdea1 => 'замечать больше вокруг';
+  String get pathLookingUpIdea1 => 'больше замечать вокруг';
 
   @override
   String get pathLookingUpIdea2 => 'реже брать телефон';
@@ -3148,7 +3147,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pathCloserToPeopleIdea3 => 'звонить тем, по кому скучаю';
 
   @override
-  String get pathMovingALittleSentence => 'больше двигаться, без надрыва';
+  String get pathMovingALittleSentence => 'двигаться больше и бережнее к себе';
 
   @override
   String get pathMovingALittleIdea1 => 'двигаться чуть больше';
@@ -3169,13 +3168,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pathThroughAHardSeasonIdea2 => 'немного заботиться о себе';
 
   @override
-  String get pathThroughAHardSeasonIdea3 => 'быть мягче к себе сейчас';
+  String get pathThroughAHardSeasonIdea3 => 'быть сейчас к себе помягче';
 
   @override
-  String get tellUsAboutFocusHeadline => 'Что сейчас важно?';
+  String get tellUsAboutFocusHeadline => 'Что для тебя сейчас важнее всего?';
 
   @override
-  String get tellUsAboutFocusSubtext => 'Выбери до 2. Начнём с них.';
+  String get tellUsAboutFocusSubtext =>
+      'Выбери не больше двух. С этого и начнём.';
 
   @override
   String get commitmentTitle => 'Маленькое обещание.';
@@ -4043,10 +4043,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pathMoreIntentions => 'ЕЩЁ НАМЕРЕНИЯ';
 
   @override
-  String get pathSofterNightsTitle => 'Мягкие ночи';
+  String get pathSofterNightsTitle => 'Спокойные ночи';
 
   @override
-  String get pathSofterNightsSubtitle => 'Чтобы сон приходил сам';
+  String get pathSofterNightsSubtitle => 'Чтобы засыпать было легче';
 
   @override
   String get intentionSofterNights => 'Сон, который приходит легче';
@@ -4055,8 +4055,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pathLookingUpTitle => 'Поднять глаза';
 
   @override
-  String get pathLookingUpSubtitle =>
-      'Меньше листания — больше всего остального';
+  String get pathLookingUpSubtitle => 'Меньше экранного времени';
 
   @override
   String get intentionLookingUp => 'Больше жизни вне экрана';
@@ -4081,23 +4080,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get intentionMovingALittle => 'Немного движения почти каждый день';
 
   @override
-  String get pathThroughAHardSeasonTitle => 'Сквозь трудный сезон';
+  String get pathThroughAHardSeasonTitle => 'Пережить непростой период';
 
   @override
   String get pathThroughAHardSeasonSubtitle =>
-      'Самые маленькие шаги для самых тяжёлых месяцев';
+      'Маленькие шаги в самые тяжёлые месяцы';
 
   @override
   String get intentionThroughAHardSeason => 'Бережнее к себе в это время';
 
   @override
-  String get habitScreensAwayBed => 'Убери экраны за 20 минут до сна';
+  String get habitScreensAwayBed =>
+      'Отложи телефон и другие устройства за 20 минут до сна';
 
   @override
   String get habitDimLights => 'Приглуши свет за час до сна';
 
   @override
-  String get habitMealWithoutPhone => 'Один приём пищи без телефона';
+  String get habitMealWithoutPhone => 'Поешь один раз без телефона';
 
   @override
   String insightsFilterLine(String area, int count, int days) {
