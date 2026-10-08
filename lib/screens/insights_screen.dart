@@ -963,33 +963,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
   }
 
 
-  /// The part of day most moments fall in, or null when nothing dominates.
-  /// Reads localHour, which is why it had to be stored rather than derived.
+  /// The part of day more than half the month's moments fall in, or null when
+  /// none does. Reads localHour, which is why it had to be stored rather than
+  /// derived.
   String? _dominantPeriod(AppLocalizations l10n) {
     if (_moments.length < 3) return null;
-    final buckets = <String, int>{};
-    for (final m in _moments) {
-      final h = m.localHour;
-      final key = h < 5
-          ? 'late'
-          : h < 12
-              ? 'morning'
-              : h < 17
-                  ? 'afternoon'
-                  : h < 22
-                      ? 'evening'
-                      : 'late';
-      buckets[key] = (buckets[key] ?? 0) + 1;
-    }
-    final top = buckets.entries.reduce((a, b) => a.value >= b.value ? a : b);
-    // Only claim a pattern when it is actually one.
-    if (top.value / _moments.length < 0.5) return null;
-    return switch (top.key) {
-      'morning' => l10n.insightsPeriodMorning,
-      'afternoon' => l10n.insightsPeriodAfternoon,
-      'evening' => l10n.insightsPeriodEvening,
-      _ => l10n.insightsPeriodLateNight,
-    };
+    // The card says "Most of them in the evening" — the same sentence the
+    // first week's card says on this page, so it is read through the same
+    // rule rather than a copy of it.
+    final part = FirstWeek.majorityPart(_moments);
+    return part == null ? null : _partPeriodName(l10n, part);
   }
 
   Widget _emptyPrimer(AppColorScheme colors) {

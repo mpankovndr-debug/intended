@@ -23,7 +23,7 @@ class FirstWeek {
   /// Moments in the seven days from the first one.
   final int momentCount;
 
-  /// Where the week's moments clustered, when half of them did.
+  /// Where the week's moments clustered, when more than half of them did.
   final DayPart? dominantPart;
 
   /// The action marked "glad I did" most, when one clearly was.
@@ -66,15 +66,28 @@ class FirstWeek {
     );
   }
 
+  /// The part of the day holding more than half of [moments], or null when
+  /// none does.
+  ///
+  /// Public because the month card says the same sentence — "Most of them in
+  /// the evening" — about the month, on the same page. It reads the month
+  /// through here, so the two cards can never disagree about what "most"
+  /// means.
+  static DayPart? majorityPart(List<Moment> moments) => _dominantPart(moments);
+
   static DayPart? _dominantPart(List<Moment> week) {
     final counts = <DayPart, int>{};
     for (final m in week) {
       final part = _partOf(m.localHour);
       counts[part] = (counts[part] ?? 0) + 1;
     }
-    final top = counts.entries.reduce((a, b) => a.value >= b.value ? a : b);
-    // Half the week or it isn't a cluster, just an assortment.
-    return top.value / week.length < 0.5 ? null : top.key;
+    // The card says "Most of them in the evening", so the part has to hold
+    // more than half the week. At exactly half two parts can tie, and neither
+    // is most of anything.
+    for (final entry in counts.entries) {
+      if (entry.value * 2 > week.length) return entry.key;
+    }
+    return null;
   }
 
   /// The habit marked glad most often — needs at least two glads and a clear
