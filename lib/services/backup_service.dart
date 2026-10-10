@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +10,9 @@ class BackupService extends ChangeNotifier {
   DateTime? _lastBackupTime;
   bool _isBackingUp = false;
   DateTime? _lastBackupRequest;
+
+  /// The one backup that requests inside the debounce window fold into.
+  Timer? _trailing;
 
   DateTime? get lastBackupTime => _lastBackupTime;
   bool get isBackingUp => _isBackingUp;
@@ -35,19 +39,61 @@ class BackupService extends ChangeNotifier {
     }
   }
 
+  /// How long a backup asked for at [now] has to wait, or null to run it
+  /// now: the rest of the 30s since [lastRequest], or a full interval while
+  /// one is still [busy] past it. [immediately] skips the window, never a
+  /// backup in flight.
+  @visibleForTesting
+  static Duration? deferBy({
+    required DateTime? lastRequest,
+    required DateTime now,
+    required bool busy,
+    bool immediately = false,
+  }) {
+    final since = lastRequest == null ? null : now.difference(lastRequest);
+    // A clock set back makes [since] negative. Read that as no recent
+    // request: as a wait, it was every backup dropped until the clock
+    // caught up again.
+    final rest =
+        since == null || since.isNegative || since >= _minBackupInterval
+            ? null
+            : _minBackupInterval - since;
+    if (busy) return rest ?? _minBackupInterval;
+    return immediately ? null : rest;
+  }
+
   /// Back up all SharedPreferences to Firestore.
   /// Silently no-ops if user is not signed in.
-  /// Debounced: skips if called within 30s of the last backup.
-  Future<void> backup() async {
+  ///
+  /// Debounced: a call within 30s of the last backup is deferred to the end
+  /// of that window, folded with every other call inside it. It used to be
+  /// dropped, so the cloud copy missed the window's last changes until some
+  /// later backup — and a restore before then never brought them back.
+  ///
+  /// [immediately] skips the window, for the app leaving the foreground and
+  /// for "Back up now". A deferred backup's timer doesn't run while iOS has
+  /// the app suspended, and is lost if the app is killed.
+  Future<void> backup({bool immediately = false}) async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null || _isBackingUp) return;
+    if (user == null) return;
 
-    // Debounce rapid backup requests
     final now = DateTime.now();
-    if (_lastBackupRequest != null &&
-        now.difference(_lastBackupRequest!) < _minBackupInterval) {
+    final wait = deferBy(
+      lastRequest: _lastBackupRequest,
+      now: now,
+      busy: _isBackingUp,
+      immediately: immediately,
+    );
+    if (wait != null) {
+      _trailing ??= Timer(wait, () {
+        _trailing = null;
+        backup();
+      });
       return;
     }
+    // This backup reads everything as it is now, so a pending one is moot.
+    _trailing?.cancel();
+    _trailing = null;
     _lastBackupRequest = now;
 
     _isBackingUp = true;
@@ -275,6 +321,12 @@ class BackupService extends ChangeNotifier {
       if (key == excluded || key.startsWith(excluded)) return true;
     }
     return false;
+  }
+
+  @override
+  void dispose() {
+    _trailing?.cancel();
+    super.dispose();
   }
 }
 

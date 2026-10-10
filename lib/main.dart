@@ -1177,7 +1177,8 @@ class _MainTabsState extends State<MainTabs> with WidgetsBindingObserver {
       context.read<RevenueCatService>().refreshPurchaseStatus();
     }
     if (state == AppLifecycleState.paused && mounted) {
-      context.read<BackupService>().backup();
+      // Not deferred: a timer doesn't run while the app is suspended.
+      context.read<BackupService>().backup(immediately: true);
     }
   }
 

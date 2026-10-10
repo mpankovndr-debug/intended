@@ -2767,7 +2767,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         const SizedBox(height: 4),
         GestureDetector(
-          onTap: isBackingUp ? null : () => backup.backup(),
+          onTap: isBackingUp ? null : () => backup.backup(immediately: true),
           child: Text(
             isBackingUp
                 ? l10n.profileBackingUp
