@@ -4881,6 +4881,12 @@ abstract class AppLocalizations {
   /// **'change'**
   String get onboardingStartFocusChange;
 
+  /// No description provided for @onboardingStartFocusLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{path} focuses on {areas}'**
+  String onboardingStartFocusLine(String path, String areas);
+
   /// No description provided for @onboardingStartCap.
   ///
   /// In en, this message translates to:
@@ -6829,7 +6835,7 @@ abstract class AppLocalizations {
   /// No description provided for @focusAreasLimitToast.
   ///
   /// In en, this message translates to:
-  /// **'Two keeps the focus — set one down first.'**
+  /// **'Two areas keep the focus. Unselect one first.'**
   String get focusAreasLimitToast;
 
   /// No description provided for @insightsExampleSeason.

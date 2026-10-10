@@ -357,12 +357,16 @@ void main() {
     await _shot(tester, '$_dir/onboarding_5_cues_own_en.png');
   }, skip: _dir == null);
 
-  testWidgets('start small, focus sheet', (tester) async {
-    await _mount(tester, StartSmallScreen(onContinue: () {}),
-        state: await sealed(DateTime(2026, 9, 1, 12)),
-        locale: const Locale('en'));
-    await tester.tap(find.text('change'));
-    await tester.pumpAndSettle();
-    await _shot(tester, '$_dir/onboarding_4_focus_sheet_en.png');
-  }, skip: _dir == null);
+  for (final locale in const [Locale('en'), Locale('ru')]) {
+    final lc = locale.languageCode;
+    testWidgets('start small, focus sheet at the limit, $lc', (tester) async {
+      await _mount(tester, StartSmallScreen(onContinue: () {}),
+          state: await sealed(DateTime(2026, 9, 1, 12)), locale: locale);
+      await tester.tap(find.byKey(const Key('start-small-focus')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(lc == 'ru' ? 'Отношения' : 'Relationships'));
+      await tester.pump();
+      await _shot(tester, '$_dir/onboarding_4_focus_sheet_$lc.png');
+    }, skip: _dir == null);
+  }
 }

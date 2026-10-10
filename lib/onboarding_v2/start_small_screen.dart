@@ -145,36 +145,56 @@ class _StartSmallScreenState extends State<StartSmallScreen> {
           OnboardingScaffold.contentBottomPadding,
         ),
         children: [
-          Row(
-            children: [
-              Flexible(
-                child: Text(
-                  localizeCategoryList(state.focusAreas, l10n),
-                  style: TextStyle(
-                    fontFamily: body,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: colors.textPrimary.withValues(alpha: 0.65),
+          // Says where the areas came from (10 Oct): the direction set
+          // them. One paragraph, so a long line wraps with "change" still
+          // after the areas; the whole line opens the sheet, so the target
+          // is never just one small word. Russian reads the areas in lower
+          // case after a colon.
+          Semantics(
+            button: true,
+            child: GestureDetector(
+              key: const Key('start-small-focus'),
+              behavior: HitTestBehavior.opaque,
+              onTap: _changeFocus,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Text.rich(
+                  TextSpan(
+                    style: TextStyle(
+                      fontFamily: body,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      height: 1.35,
+                      color: colors.textPrimary.withValues(alpha: 0.65),
+                    ),
+                    children: [
+                      TextSpan(
+                        text: l10n.onboardingStartFocusLine(
+                          _path(state).title(l10n),
+                          Localizations.localeOf(context).languageCode == 'ru'
+                              ? localizeCategoryList(state.focusAreas, l10n)
+                                  .toLowerCase()
+                              : localizeCategoryList(state.focusAreas, l10n),
+                        ),
+                      ),
+                      // Non-breaking: a wrap takes the last area along, never
+                      // leaves the dot or "change" alone.
+                      const TextSpan(text: '\u00A0\u00B7\u00A0'),
+                      TextSpan(
+                        text: l10n.onboardingStartFocusChange,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: colors.ctaPrimary,
+                          decoration: TextDecoration.underline,
+                          decorationColor:
+                              colors.ctaPrimary.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              CupertinoButton(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                minimumSize: const Size(44, 44),
-                onPressed: _changeFocus,
-                child: Text(
-                  l10n.onboardingStartFocusChange,
-                  style: TextStyle(
-                    fontFamily: body,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: colors.ctaPrimary,
-                    decoration: TextDecoration.underline,
-                    decorationColor: colors.ctaPrimary.withValues(alpha: 0.5),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
           const SizedBox(height: 8),
           for (var i = 0; i < shown.length; i += 2)
@@ -330,8 +350,15 @@ class ActionCard extends StatelessWidget {
 
 /// Choosing the focus areas the actions come from. They follow the path by
 /// default; this is the way to change them (decided 30 Sep, option A).
-class _FocusSheet extends StatelessWidget {
+class _FocusSheet extends StatefulWidget {
   const _FocusSheet();
+
+  @override
+  State<_FocusSheet> createState() => _FocusSheetState();
+}
+
+class _FocusSheetState extends State<_FocusSheet> {
+  bool _atLimit = false;
 
   @override
   Widget build(BuildContext context) {
@@ -385,12 +412,37 @@ class _FocusSheet extends StatelessWidget {
                     area: area,
                     selected: state.isSelected(area),
                     onTap: () {
+                      // At two, a third tap says why nothing changed: a
+                      // vibration alone reads as "nothing happened" (the
+                      // old focus screen learned this on device). Said
+                      // here, under the chips, like the cap on actions: a
+                      // toast would sit on top of them.
+                      if (!state.isSelected(area) &&
+                          state.focusAreas.length >= state.maxFocusAreas()) {
+                        HapticFeedback.lightImpact();
+                        setState(() => _atLimit = true);
+                        return;
+                      }
                       HapticFeedback.selectionClick();
+                      setState(() => _atLimit = false);
                       state.toggleFocusArea(area);
                     },
                   ),
               ],
             ),
+            if (_atLimit)
+              Padding(
+                padding: const EdgeInsets.only(top: 14),
+                child: Text(
+                  l10n.focusAreasLimitToast,
+                  style: TextStyle(
+                    fontFamily: body,
+                    fontSize: 13,
+                    color: colors.textPrimary.withValues(alpha: 0.6),
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+              ),
             const SizedBox(height: 18),
             OnboardingCta(
               label: l10n.commonDone,

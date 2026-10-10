@@ -2997,6 +2997,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingStartFocusChange => 'изменить';
 
   @override
+  String onboardingStartFocusLine(String path, String areas) {
+    return '$path: $areas';
+  }
+
+  @override
   String get onboardingStartCap => 'Больше на экран «Сегодня» не поместится.';
 
   @override
@@ -4178,7 +4183,8 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get focusAreasLimitToast => 'Две — это фокус. Сначала отпусти одну.';
+  String get focusAreasLimitToast =>
+      'Двух направлений достаточно, чтобы не распыляться. Сначала сними одну отметку.';
 
   @override
   String get insightsExampleSeason => 'Возвращение';

@@ -184,6 +184,48 @@ void main() {
           unorderedEquals(first));
     });
 
+    testWidgets('says the direction chose the areas', (tester) async {
+      await setUpState(DateTime(2026, 9, 1, 12));
+      await pump(tester);
+      expect(
+          find.text('Winding Down focuses on Health and Mood\u00A0\u00B7\u00A0change',
+              findRichText: true),
+          findsOneWidget);
+    });
+
+    testWidgets('in Russian the areas follow a colon, in lower case',
+        (tester) async {
+      await setUpState(DateTime(2026, 9, 1, 12));
+      await pump(tester, locale: const Locale('ru'));
+      expect(
+          find.text('Спокойный вечер: здоровье и настроение\u00A0\u00B7\u00A0изменить',
+              findRichText: true),
+          findsOneWidget);
+    });
+
+    testWidgets('a third area says why nothing changed', (tester) async {
+      const limit = 'Two areas keep the focus. Unselect one first.';
+      await setUpState(DateTime(2026, 9, 1, 12));
+      await pump(tester);
+      await tester.tap(find.byKey(const Key('start-small-focus')));
+      await tester.pumpAndSettle();
+      expect(find.text(limit), findsNothing);
+
+      await tester.tap(find.text('Relationships'));
+      await tester.pump();
+      expect(state.focusAreas, ['Health', 'Mood']);
+      expect(find.text(limit), findsOneWidget);
+
+      // Room again once one is unselected, and the reason goes with it.
+      await tester.tap(find.text('Mood').last);
+      await tester.pump();
+      expect(find.text(limit), findsNothing);
+      await tester.tap(find.text('Relationships'));
+      await tester.pump();
+      expect(state.focusAreas, ['Health', 'Relationships']);
+      expect(find.text(limit), findsNothing);
+    });
+
     testWidgets('coming back keeps the choice', (tester) async {
       await setUpState(DateTime(2026, 9, 1, 12));
       final path = IntentionPath.getById(IntentionPathId.windingDown);

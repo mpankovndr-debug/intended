@@ -1485,6 +1485,8 @@
   "onboardingStartShortMonth": "{days, plural, one{You have 1 day until {month}.} other{You have {days} days until {month}.}}",
   "@onboardingStartShortMonth": {"placeholders": {"days": {"type": "int"}, "month": {"type": "String"}}},
   "onboardingStartFocusChange": "change",
+  "onboardingStartFocusLine": "{path} focuses on {areas}",
+  "@onboardingStartFocusLine": {"placeholders": {"path": {"type": "String"}, "areas": {"type": "String"}}},
   "onboardingStartCap": "That's as many as Today holds.",
   "onboardingCuesTitle": "When will they happen?",
   "onboardingCuesSubtitle": "Tie each one to something you already do.",
@@ -2003,7 +2005,7 @@
       }
     }
   },
-  "focusAreasLimitToast": "Two keeps the focus — set one down first.",
+  "focusAreasLimitToast": "Two areas keep the focus. Unselect one first.",
   "insightsExampleSeason": "Returning",
   "insightsExampleLetter": "Six days passed, and then you came back.",
   "insightsExamplePlan": "Move your reminder to 9 PM — that's where this month lived.",

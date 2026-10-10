@@ -2918,6 +2918,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingStartFocusChange => 'change';
 
   @override
+  String onboardingStartFocusLine(String path, String areas) {
+    return '$path focuses on $areas';
+  }
+
+  @override
   String get onboardingStartCap => 'That\'s as many as Today holds.';
 
   @override
@@ -4074,7 +4079,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get focusAreasLimitToast =>
-      'Two keeps the focus — set one down first.';
+      'Two areas keep the focus. Unselect one first.';
 
   @override
   String get insightsExampleSeason => 'Returning';
