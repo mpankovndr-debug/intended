@@ -482,6 +482,15 @@ class AnalyticsService {
 
   // ── Tester flag ───────────────────────────────────────────────
 
+  /// Debug builds send nothing: every fresh simulator install would
+  /// otherwise count as a new user who never returns. Release builds
+  /// collect, and testers there are tagged by [applyTesterFlag].
+  static Future<void> applyCollectionPolicy() async {
+    try {
+      await _analytics.setAnalyticsCollectionEnabled(!kDebugMode);
+    } catch (_) {}
+  }
+
   /// Shared-preferences key behind the hidden toggle in Profile.
   static const testerPrefKey = 'is_tester';
 

@@ -732,6 +732,7 @@ void main() {
         // Already initialized (e.g. hot restart)
       }
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(kDebugMode == false);
+      await AnalyticsService.applyCollectionPolicy();
 
       FlutterError.onError =
           FirebaseCrashlytics.instance.recordFlutterFatalError;
