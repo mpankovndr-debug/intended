@@ -19,14 +19,12 @@ class DailyReminderScreen extends StatefulWidget {
     super.key,
     required this.onContinue,
     this.onBack,
-    this.step = 2,
   });
 
   /// Onboarding screen 6 (spec §6), asked only when no cue was set: what
   /// comes next, and the way back to the cues.
   final VoidCallback onContinue;
   final VoidCallback? onBack;
-  final int step;
 
   @override
   State<DailyReminderScreen> createState() => _DailyReminderScreenState();
@@ -100,7 +98,7 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: OnboardingScaffold(
-        step: widget.step,
+        place: OnboardingPlace.reminder,
         onBack: widget.onBack,
         title: l10n.reminderSubtitle,
         subtitle: l10n.reminderDescription,

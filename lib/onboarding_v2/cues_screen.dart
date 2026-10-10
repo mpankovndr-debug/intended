@@ -158,7 +158,7 @@ class _CuesScreenState extends State<CuesScreen> {
     final still = MediaQuery.of(context).disableAnimations;
 
     return OnboardingScaffold(
-      step: 2,
+      place: OnboardingPlace.cues,
       onBack: _back,
       title: l10n.onboardingCuesTitle,
       subtitle: l10n.onboardingCuesSubtitle,

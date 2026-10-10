@@ -204,7 +204,7 @@ class _SentenceScreenState extends State<SentenceScreen>
         final sealed = _chapter != null;
         final ctaIn = sealed ? _t(_cta) : 0.0;
         return OnboardingScaffold(
-          step: 1,
+          place: OnboardingPlace.sentence,
           onBack: widget.onBack == null && !sealed ? null : _back,
           cta: Stack(
             children: [

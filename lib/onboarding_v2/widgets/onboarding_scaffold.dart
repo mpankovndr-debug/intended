@@ -18,7 +18,7 @@ import 'blur.dart';
 class OnboardingScaffold extends StatelessWidget {
   const OnboardingScaffold({
     super.key,
-    required this.step,
+    required this.place,
     this.ctaLabel,
     this.onCta,
     this.cta,
@@ -38,8 +38,8 @@ class OnboardingScaffold extends StatelessWidget {
   /// the button.
   static const double contentBottomPadding = 200;
 
-  /// 1-based position in the step bar.
-  final int step;
+  /// Where this screen sits in the step bar.
+  final OnboardingPlace place;
   final String? title;
   final String? subtitle;
   final Widget child;
@@ -86,7 +86,8 @@ class OnboardingScaffold extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                 child: chrome(OnboardingProgressBar(
-                  currentStep: step,
+                  currentStep: place.part,
+                  currentFill: place.fill,
                   totalSteps: totalSteps,
                   onBack: onBack,
                 )),
@@ -227,6 +228,28 @@ class OnboardingStepScope extends InheritedWidget {
   @override
   bool updateShouldNotify(OnboardingStepScope oldWidget) =>
       oldWidget.value != value || oldWidget.leaving != leaving;
+}
+
+/// Where each onboarding screen sits in the three-part step bar (spec §6):
+/// what you want, how you'll start, the first moment. A part with several
+/// screens fills a little more on each, so the bar moves on every screen
+/// (10 Oct); the reminder is the last of its part, so skipping it never
+/// moves the bar backwards.
+enum OnboardingPlace {
+  direction(1, 1 / 2),
+  sentence(1, 1),
+  startSmall(2, 1 / 3),
+  cues(2, 2 / 3),
+  reminder(2, 1),
+  tryIt(3, 1);
+
+  const OnboardingPlace(this.part, this.fill);
+
+  /// 1 to 3.
+  final int part;
+
+  /// How much of [part] is filled on this screen, 0 to 1.
+  final double fill;
 }
 
 /// The quiet way past an optional step, worded and drawn the same on every

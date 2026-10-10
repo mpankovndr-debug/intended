@@ -343,7 +343,7 @@ void main() {
     final lc = locale.languageCode;
     testWidgets('reminder, $lc', (tester) async {
       await _mount(tester,
-          DailyReminderScreen(onContinue: () {}, onBack: () {}, step: 2),
+          DailyReminderScreen(onContinue: () {}, onBack: () {}),
           state: await withActions(), locale: locale);
       await _shot(tester, '$_dir/onboarding_6_reminder_$lc.png');
     }, skip: _dir == null);

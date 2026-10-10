@@ -9,11 +9,16 @@ class OnboardingProgressBar extends StatelessWidget {
     required this.currentStep,
     required this.totalSteps,
     this.onBack,
+    this.currentFill = 1,
   });
 
   final int currentStep;
   final int totalSteps;
   final VoidCallback? onBack;
+
+  /// How much of the current segment is filled, 0 to 1: a part with several
+  /// screens fills a little more on each, so the bar moves every time.
+  final double currentFill;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +51,11 @@ class OnboardingProgressBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 children: List.generate(totalSteps, (index) {
-                  final isFilled = index < currentStep;
+                  final fill = index < currentStep - 1
+                      ? 1.0
+                      : index == currentStep - 1
+                          ? currentFill.clamp(0.0, 1.0)
+                          : 0.0;
 
                   return Expanded(
                     child: Padding(
@@ -55,7 +64,7 @@ class OnboardingProgressBar extends StatelessWidget {
                         right: index == totalSteps - 1 ? 0 : 3,
                       ),
                       child: _Segment(
-                        isFilled: isFilled,
+                        fill: fill,
                         ctaPrimary: colors.ctaPrimary,
                         ctaSecondary: colors.ctaSecondary,
                         mutedColor: colors.borderMedium.withValues(alpha: 0.45),
@@ -77,13 +86,13 @@ class OnboardingProgressBar extends StatelessWidget {
 
 class _Segment extends StatelessWidget {
   const _Segment({
-    required this.isFilled,
+    required this.fill,
     required this.ctaPrimary,
     required this.ctaSecondary,
     required this.mutedColor,
   });
 
-  final bool isFilled;
+  final double fill;
   final Color ctaPrimary;
   final Color ctaSecondary;
   final Color mutedColor;
@@ -94,15 +103,24 @@ class _Segment extends StatelessWidget {
       borderRadius: BorderRadius.circular(4),
       child: SizedBox(
         height: 4,
-        child: isFilled
-            ? Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [ctaPrimary, ctaSecondary],
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            if (fill < 1) Container(color: mutedColor),
+            if (fill > 0)
+              FractionallySizedBox(
+                alignment: Alignment.centerLeft,
+                widthFactor: fill,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [ctaPrimary, ctaSecondary],
+                    ),
                   ),
                 ),
-              )
-            : Container(color: mutedColor),
+              ),
+          ],
+        ),
       ),
     );
   }

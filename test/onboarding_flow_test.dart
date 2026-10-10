@@ -9,6 +9,7 @@ import 'package:intended/onboarding_v2/onboarding_flow.dart';
 import 'package:intended/onboarding_v2/onboarding_state.dart';
 import 'package:intended/onboarding_v2/start_small_screen.dart';
 import 'package:intended/onboarding_v2/try_it_screen.dart';
+import 'package:intended/onboarding_v2/widgets/onboarding_scaffold.dart';
 import 'package:intended/onboarding_v2/widgets/hold_to_confirm_button.dart';
 import 'package:intended/screens/onboarding_paywall_screen.dart';
 import 'package:intended/services/chapter_service.dart';
@@ -22,6 +23,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// finish, which writes chapter one and claims the paywall's one showing.
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
+
+  test('the step bar moves forward on every screen, never back', () {
+    final order = OnboardingPlace.values; // flow order
+    for (var i = 1; i < order.length; i++) {
+      final before = order[i - 1], now = order[i];
+      final forward = now.part > before.part ||
+          (now.part == before.part && now.fill > before.fill);
+      expect(forward, isTrue, reason: '${before.name} -> ${now.name}');
+    }
+    // Skipping the reminder goes from the cues straight to Try it.
+    expect(OnboardingPlace.tryIt.part,
+        greaterThan(OnboardingPlace.cues.part));
+  });
 
   test('the reminder is asked only when no cue was set', () {
     expect(OnboardingFlow.afterCues(anyCue: true), OnboardingStep.tryIt);

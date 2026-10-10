@@ -138,7 +138,6 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             onBack: _back,
           ),
         OnboardingStep.reminder => DailyReminderScreen(
-            step: 2,
             onContinue: () => _go(OnboardingStep.tryIt),
             onBack: _back,
           ),

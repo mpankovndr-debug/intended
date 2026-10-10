@@ -120,7 +120,7 @@ class _StartSmallScreenState extends State<StartSmallScreen> {
     final body = AppTextStyles.bodyFont(context);
 
     return OnboardingScaffold(
-      step: 2,
+      place: OnboardingPlace.startSmall,
       onBack: widget.onBack,
       title:
           short ? l10n.onboardingStartTitleTwo : l10n.onboardingStartTitleThree,

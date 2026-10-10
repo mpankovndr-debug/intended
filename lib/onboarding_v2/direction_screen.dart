@@ -64,7 +64,7 @@ class _DirectionScreenState extends State<DirectionScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return OnboardingScaffold(
-      step: 1,
+      place: OnboardingPlace.direction,
       onBack: widget.onBack,
       title: l10n.onboardingDirectionTitle,
       subtitle: l10n.onboardingDirectionSubtitle,

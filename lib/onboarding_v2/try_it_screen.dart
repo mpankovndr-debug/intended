@@ -252,7 +252,7 @@ class _TryItScreenState extends State<TryItScreen>
     final cardTileLift = t < _flight.begin ? _swell.transform(t) : 0.0;
 
     return OnboardingScaffold(
-      step: 3,
+      place: OnboardingPlace.tryIt,
       onBack: widget.onBack,
       title: l10n.onboardingTryTitle,
       subtitle: l10n.onboardingTrySubtitle,
