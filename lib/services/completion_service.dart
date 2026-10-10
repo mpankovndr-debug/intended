@@ -19,15 +19,26 @@ class CompletionService {
 
   /// [on] is a *local* date for the yesterday-log; a live completion leaves
   /// it null and is also counted in analytics, as it always was.
-  static Future<Moment> record(String habitTitle, {DateTime? on}) async {
-    await HabitTracker.markDone(habitTitle, on: on);
-    if (on == null) AnalyticsService.logHabitCompleted(habitTitle);
+  static Future<Moment> record(String habitTitle, {DateTime? on}) =>
+      commit(draft(habitTitle, on: on), live: on == null);
 
-    final moment = Moment.create(
-      habitName: habitTitle,
-      category: ReflectionService.categoryForHabit(habitTitle),
-      at: on,
-    );
+  /// The moment a tap on [habitTitle] would record, not yet stored. The
+  /// completion sheet shows it and keeps it only on Done, so a wrong card
+  /// closed with the X writes nothing. [on] as for [record].
+  static Moment draft(String habitTitle, {DateTime? on}) => Moment.create(
+        habitName: habitTitle,
+        category: ReflectionService.categoryForHabit(habitTitle),
+        at: on,
+      );
+
+  /// Writes [moment] to both stores: [record], for a [draft] the sheet has
+  /// added a mood or note to. [live] is false for the yesterday-log, which
+  /// analytics never counted.
+  static Future<Moment> commit(Moment moment, {required bool live}) async {
+    // The moment's own wall clock, so the key lands on the day the moment
+    // says — even when Done comes after midnight on a tap from before it.
+    await HabitTracker.markDone(moment.habitName, on: moment.localWallClock);
+    if (live) AnalyticsService.logHabitCompleted(moment.habitName);
     await MomentsService.record(moment);
     MilestoneService.invalidate();
     return moment;

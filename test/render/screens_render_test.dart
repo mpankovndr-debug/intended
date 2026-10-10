@@ -20,6 +20,7 @@ import 'package:intended/models/intention_path.dart';
 import 'package:intended/models/moment.dart';
 import 'package:intended/onboarding_v2/onboarding_state.dart';
 import 'package:intended/onboarding_v2/welcome_v2_screen.dart';
+import 'package:intended/screens/habit_completion_modal.dart';
 import 'package:intended/screens/insights_screen.dart';
 import 'package:intended/screens/onboarding_paywall_screen.dart';
 import 'package:intended/screens/paywall_screen.dart';
@@ -590,6 +591,22 @@ void main() {
       await _tap(tester, find.text(other.title(l10n)));
       await _tap(tester, find.text(l10n.commonSave));
     },
+  );
+  // Step 1 of the completion sheet, with its X for the wrong card tapped.
+  _render(
+    'completion_sheet',
+    () => CupertinoPageScaffold(
+      backgroundColor: const Color(0xFFEAE4F2),
+      child: HabitCompletionModal(
+        draft: Moment.create(
+          habitName: 'Take 3 slow breaths',
+          category: 'Health',
+          at: DateTime(2026, 10, 10, 9, 5),
+        ),
+        monthCategories: const ['Mind', 'Health', 'Health'],
+        onDone: (_) async {},
+      ),
+    ),
   );
   _render('paywall', () => const PaywallScreen());
   _render(

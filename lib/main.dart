@@ -2950,30 +2950,34 @@ class _HabitCardState extends State<_HabitCard>
 
     HapticFeedback.mediumImpact();
 
-    // No confirmation step (§5.2) — the tap *is* the completion. Record it
-    // first so the sheet only has to ask how it landed, and so a dismissed
-    // sheet still leaves the moment safely stored.
-    final moment = await CompletionService.record(widget.habitTitle);
-    final category = moment.category;
-    if (mounted) context.read<BackupService>().backup();
+    // No confirmation step (§5.2), but no record on the tap either: people
+    // do tap the wrong card, and a moment written on the tap left them no
+    // way back. The tap drafts it, the sheet's Done keeps it, and its X
+    // closes with nothing written. Done was already the sheet's way out, so
+    // this costs no extra tap.
+    final draft = CompletionService.draft(widget.habitTitle);
+    final monthCategories = [
+      ...await MomentsService.categoriesForMonth(draft.localWallClock),
+      draft.category,
+    ];
 
-    final monthCategories = await MomentsService.categoriesForMonth(
-      moment.localWallClock,
-    );
-
+    var kept = false;
     if (mounted) {
       await showCupertinoDialog<void>(
         context: context,
         barrierDismissible: true,
         builder: (_) => HabitCompletionModal(
-          habitTitle: widget.habitTitle,
-          momentId: moment.id,
-          category: category,
+          draft: draft,
           monthCategories: monthCategories,
-          completedAt: moment.completedAt,
+          onDone: (answered) async {
+            await CompletionService.commit(answered, live: true);
+            kept = true;
+            if (mounted) context.read<BackupService>().backup();
+          },
         ),
       );
     }
+    if (!kept) return; // Closed with the X: nothing happened.
 
     if (mounted) {
       setState(() {
@@ -3149,30 +3153,29 @@ class _HabitCardState extends State<_HabitCard>
     // not today. A Moment without its `habit_done_` key left anything
     // counting from one store disagreeing with anything counting from the
     // other, for the same habit.
-    final moment =
-        await CompletionService.record(widget.habitTitle, on: yesterday);
-    final category = moment.category;
-    if (!mounted) return;
-    context.read<BackupService>().backup();
+    // Drafted, and kept on the sheet's Done, as a live completion is.
+    final draft = CompletionService.draft(widget.habitTitle, on: yesterday);
     HapticFeedback.lightImpact();
 
     // The same two-step sheet a live completion gets. A yesterday-moment
     // without the mood tap starved the letter and the ranking of the one
     // signal they read, and there was no way to add it afterwards — the tap
     // costs a second and the sheet already knows how to be skipped.
-    final monthCategories = await MomentsService.categoriesForMonth(
-      moment.localWallClock,
-    );
+    final monthCategories = [
+      ...await MomentsService.categoriesForMonth(draft.localWallClock),
+      draft.category,
+    ];
     if (!mounted) return;
     await showCupertinoDialog<void>(
       context: context,
       barrierDismissible: true,
       builder: (_) => HabitCompletionModal(
-        habitTitle: widget.habitTitle,
-        momentId: moment.id,
-        category: category,
+        draft: draft,
         monthCategories: monthCategories,
-        completedAt: moment.completedAt,
+        onDone: (answered) async {
+          await CompletionService.commit(answered, live: false);
+          if (mounted) context.read<BackupService>().backup();
+        },
       ),
     );
   }

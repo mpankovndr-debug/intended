@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intended/main.dart' show HabitTracker;
+import 'package:intended/models/moment.dart';
 import 'package:intended/services/completion_service.dart';
 import 'package:intended/services/moments_service.dart';
 import 'package:intended/services/reflection_service.dart';
@@ -33,5 +34,23 @@ void main() {
     expect(await HabitTracker.wasDone(action, now), isFalse);
     expect(moment.localDay,
         DateTime.utc(yesterday.year, yesterday.month, yesterday.day));
+  });
+
+  test('a draft writes nothing until it is committed, with its answers',
+      () async {
+    final draft = CompletionService.draft(action);
+    expect(await MomentsService.getAll(), isEmpty);
+    expect(await HabitTracker.wasDone(action, DateTime.now()), isFalse);
+
+    await CompletionService.commit(
+      draft.copyWith(mood: MomentMood.gladIDid, note: 'after lunch'),
+      live: true,
+    );
+
+    final all = await MomentsService.getAll();
+    expect(all.map((m) => m.id), [draft.id]);
+    expect(all.single.mood, MomentMood.gladIDid);
+    expect(all.single.note, 'after lunch');
+    expect(await HabitTracker.wasDone(action, DateTime.now()), isTrue);
   });
 }

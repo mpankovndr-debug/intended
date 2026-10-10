@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../models/moment.dart';
 import '../services/analytics_service.dart';
-import '../services/moments_service.dart';
 import '../theme/theme_provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/category_colors.dart';
@@ -16,10 +15,11 @@ import '../widgets/moment_tile.dart';
 
 /// The completion sheet, in two steps (§5.2).
 ///
-/// The old "Did you do this today?" confirmation is gone: nobody taps a habit
-/// card by accident, so asking was friction phrased as an interrogation. By
-/// the time this opens the moment is already recorded — this sheet only asks
-/// how it landed, then shows where it went.
+/// The old "Did you do this today?" confirmation is gone: asking was friction
+/// phrased as an interrogation. But people do tap the wrong card, so the
+/// moment is only drafted when this opens: Done keeps it, and the X closes
+/// the sheet with nothing written. Done was already the way out of the
+/// sheet, so keeping on Done costs no extra tap.
 ///
 /// Step 2 is the part that teaches the whole system. The tile animating in at
 /// the end of the row is what explains that completions accumulate into a
@@ -33,22 +33,22 @@ import '../widgets/moment_tile.dart';
 class HabitCompletionModal extends StatefulWidget {
   const HabitCompletionModal({
     super.key,
-    required this.habitTitle,
-    required this.momentId,
-    required this.category,
+    required this.draft,
     required this.monthCategories,
-    required this.completedAt,
+    required this.onDone,
   });
 
-  final String habitTitle;
-  final String momentId;
-  final String? category;
+  /// The moment the tap would record, not yet stored
+  /// ([CompletionService.draft]).
+  final Moment draft;
 
-  /// Categories of this month's moments, oldest first, including the one just
-  /// recorded as the final entry — that last tile is the one that animates in.
+  /// Categories of this month's moments, oldest first, with the draft's own
+  /// as the final entry — that last tile is the one that animates in.
   final List<String?> monthCategories;
 
-  final DateTime completedAt;
+  /// Stores the draft, with the mood and note given, when Done is tapped.
+  /// Nothing else stores it.
+  final Future<void> Function(Moment answered) onDone;
 
   /// Most recent tiles shown in the step-2 row. Enough to feel like an
   /// accumulation, few enough to stay one glance.
@@ -67,10 +67,6 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
   bool _showStep2 = false;
   bool _noteOpen = false;
   bool _tileLanded = false;
-
-  /// Set once Done has written mood + note. Guards the dispose-time
-  /// save below from writing a second time.
-  bool _annotated = false;
   MomentMood? _mood;
   final _noteController = TextEditingController();
 
@@ -117,19 +113,6 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
 
   @override
   void dispose() {
-    // A note typed and then dismissed by tapping the barrier used to vanish:
-    // the moment was already recorded, so there was no second chance to
-    // attach it. Fire-and-forget is safe here — annotate only touches
-    // storage, never this context. The mood needs no salvage: it was
-    // persisted on tap. Log it here so analytics matches storage.
-    if (!_annotated) {
-      if (_mood != null) {
-        AnalyticsService.logMoodResponse(_mood!.key);
-      }
-      if (_noteController.text.trim().isNotEmpty) {
-        MomentsService.annotate(widget.momentId, note: _noteController.text);
-      }
-    }
     _tileController.dispose();
     _noteController.dispose();
     super.dispose();
@@ -138,12 +121,8 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
   void _pickMood(MomentMood mood) {
     if (_showStep2) return;
     HapticFeedback.selectionClick();
+    // Switching pills overwrites; there is no deselect back to none.
     setState(() => _mood = mood);
-    // Persisted on tap, not on Done: the sheet is barrier-dismissible, and
-    // an answer given then swiped away should still count. `annotate` keeps
-    // the old mood when passed null, so switching pills simply overwrites —
-    // there is no deselect back to none.
-    MomentsService.annotate(widget.momentId, mood: mood);
   }
 
   Future<void> _submit() async {
@@ -152,11 +131,10 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
     AnalyticsService.logMoodResponse(_mood?.key);
     setState(() => _showStep2 = true);
 
-    _annotated = true;
-    await MomentsService.annotate(
-      widget.momentId,
-      mood: _mood,
-      note: _noteController.text,
+    // Kept before the landing plays, so a sheet closed mid-animation still
+    // leaves the moment stored.
+    await widget.onDone(
+      widget.draft.copyWith(mood: _mood, note: _noteController.text),
     );
 
     if (!mounted) return;
@@ -173,7 +151,8 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
   }
 
   String _timeLabel() {
-    final local = widget.completedAt.toLocal();
+    // The draft's own recorded offset, never the device's current zone.
+    final local = widget.draft.localWallClock;
     final minute = local.minute.toString().padLeft(2, '0');
     // Follow the device's clock convention: «10:57 PM» on an otherwise
     // Russian sheet reads as foreign as an untranslated word would.
@@ -211,36 +190,59 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
           child: AnimatedSize(
             duration: const Duration(milliseconds: 260),
             curve: Curves.easeOutCubic,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-              decoration: BoxDecoration(
-                color: colors.cardBackground,
-                borderRadius: BorderRadius.circular(28),
-                // Volume (design review): flat against the dimmed backdrop the
-                // sheet read as a label, not an object. A drop shadow below
-                // and a hairline of light along the top edge lift it off.
-                border: Border.all(
-                  color: const Color(0xFFFFFFFF).withValues(alpha: 0.55),
-                  width: 1,
+            child: Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+                  decoration: BoxDecoration(
+                    color: colors.cardBackground,
+                    borderRadius: BorderRadius.circular(28),
+                    // Volume (design review): flat against the dimmed backdrop the
+                    // sheet read as a label, not an object. A drop shadow below
+                    // and a hairline of light along the top edge lift it off.
+                    border: Border.all(
+                      color: const Color(0xFFFFFFFF).withValues(alpha: 0.55),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF000000).withValues(alpha: 0.18),
+                        blurRadius: 36,
+                        offset: const Offset(0, 14),
+                      ),
+                      BoxShadow(
+                        color: const Color(0xFFFFFFFF).withValues(alpha: 0.30),
+                        blurRadius: 0,
+                        offset: const Offset(0, 1),
+                        blurStyle: BlurStyle.inner,
+                      ),
+                    ],
+                  ),
+                  child: _showStep2
+                      ? _buildStep2(l10n, colors, theme)
+                      : _buildStep1(l10n, colors),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF000000).withValues(alpha: 0.18),
-                    blurRadius: 36,
-                    offset: const Offset(0, 14),
+                // The X, for the wrong card tapped: nothing is kept until
+                // Done, so closing here writes nothing. Step 1 only — after
+                // Done the moment is kept and the sheet leaves on its own.
+                if (!_showStep2)
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      minimumSize: const Size(44, 44),
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Icon(
+                        CupertinoIcons.xmark,
+                        size: 18,
+                        color: colors.textTertiary,
+                        semanticLabel: l10n.commonClose,
+                      ),
+                    ),
                   ),
-                  BoxShadow(
-                    color: const Color(0xFFFFFFFF).withValues(alpha: 0.30),
-                    blurRadius: 0,
-                    offset: const Offset(0, 1),
-                    blurStyle: BlurStyle.inner,
-                  ),
-                ],
-              ),
-              child: _showStep2
-                  ? _buildStep2(l10n, colors, theme)
-                  : _buildStep1(l10n, colors),
+              ],
             ),
           ),
         ),
@@ -256,7 +258,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
         // Step 1 only: step 2's hero is the landing tile, and on small
         // phones the sheet plus keyboard needs the height back.
         Image.asset(
-          CategoryGlyphs.of(widget.category),
+          CategoryGlyphs.of(widget.draft.category),
           width: 54,
           height: 54,
         ),
@@ -264,7 +266,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
         Text(
           // The stored name is a canonical English ID; render through the
           // resolver or a Russian sheet shows the raw English string.
-          localizeHabitName(widget.habitTitle, l10n),
+          localizeHabitName(widget.draft.habitName, l10n),
           textAlign: TextAlign.center,
           style: AppTextStyles.h2(context),
         ),
@@ -456,7 +458,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
         ),
         const SizedBox(height: 24),
         Text(
-          localizeHabitName(widget.habitTitle, l10n),
+          localizeHabitName(widget.draft.habitName, l10n),
           textAlign: TextAlign.center,
           style: AppTextStyles.h2(context),
         ),
