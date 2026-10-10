@@ -15,7 +15,6 @@ import 'onboarding_state.dart';
 import 'sentence_screen.dart';
 import 'start_small_screen.dart';
 import 'try_it_screen.dart';
-import 'widgets/blur.dart';
 import 'widgets/onboarding_scaffold.dart';
 
 /// The screens after Welcome, in order (spec §6). The reminder is asked
@@ -138,14 +137,10 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 _go(OnboardingFlow.afterCues(anyCue: anyCue)),
             onBack: _back,
           ),
-        // The existing reminder screen draws its own background, so it
-        // dissolves whole rather than handing its chrome over.
-        OnboardingStep.reminder => _Dissolve(
-            child: DailyReminderScreen(
-              step: 2,
-              onContinue: () => _go(OnboardingStep.tryIt),
-              onBack: _back,
-            ),
+        OnboardingStep.reminder => DailyReminderScreen(
+            step: 2,
+            onContinue: () => _go(OnboardingStep.tryIt),
+            onBack: _back,
           ),
         OnboardingStep.tryIt => TryItScreen(
             onContinue: _finish,
@@ -185,22 +180,5 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
         ),
       ),
     );
-  }
-}
-
-/// For a screen that paints its own background: blurs out whole, and in
-/// whole, on the same beats as the content of the others.
-class _Dissolve extends StatelessWidget {
-  const _Dissolve({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final scope = OnboardingStepScope.maybeOf(context);
-    if (scope == null) return child;
-    return scope.leaving
-        ? BlurVeil(amount: scope.contentVeil, child: child)
-        : BlurAppear(amount: scope.contentAppear, child: child);
   }
 }

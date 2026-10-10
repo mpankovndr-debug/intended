@@ -152,7 +152,6 @@ class _CuesScreenState extends State<CuesScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final state = context.watch<OnboardingState>();
-    final colors = context.watch<ThemeProvider>().colors;
     final accent = IntentionPath.getById(
             IntentionPathId.fromKey(state.selectedIntentionPath))
         .accentColor;
@@ -165,20 +164,7 @@ class _CuesScreenState extends State<CuesScreen> {
       subtitle: l10n.onboardingCuesSubtitle,
       ctaLabel: l10n.commonContinue,
       onCta: _loaded && CuesScreen.allSet(_actions, _cues) ? _finish : null,
-      footer: CupertinoButton(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        minimumSize: const Size(44, 36),
-        onPressed: _finish,
-        child: Text(
-          l10n.onboardingSkipForNow,
-          style: TextStyle(
-            fontFamily: AppTextStyles.bodyFont(context),
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            color: colors.textPrimary.withValues(alpha: 0.6),
-          ),
-        ),
-      ),
+      footer: OnboardingSkip(onPressed: _finish),
       child: !_loaded || _actions.isEmpty
           ? const SizedBox.shrink()
           : ListView(

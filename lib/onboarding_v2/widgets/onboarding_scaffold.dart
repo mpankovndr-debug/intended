@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../main.dart' show AppBackground;
 import '../../theme/theme_provider.dart';
 import '../../utils/text_styles.dart';
@@ -226,6 +227,33 @@ class OnboardingStepScope extends InheritedWidget {
   @override
   bool updateShouldNotify(OnboardingStepScope oldWidget) =>
       oldWidget.value != value || oldWidget.leaving != leaving;
+}
+
+/// The quiet way past an optional step, worded and drawn the same on every
+/// screen that has one (10 Oct): "Skip for now".
+class OnboardingSkip extends StatelessWidget {
+  const OnboardingSkip({super.key, required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
+    return CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      minimumSize: const Size(44, 36),
+      onPressed: onPressed,
+      child: Text(
+        AppLocalizations.of(context).onboardingSkipForNow,
+        style: TextStyle(
+          fontFamily: AppTextStyles.bodyFont(context),
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
+          color: colors.textPrimary.withValues(alpha: 0.6),
+        ),
+      ),
+    );
+  }
 }
 
 /// The primary onboarding button: the brand gradient when it can be pressed,

@@ -142,7 +142,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(DailyReminderScreen), findsOneWidget);
 
-      await tester.tap(find.text('Skip'));
+      await tester.tap(find.text('Skip for now'));
       await tester.pumpAndSettle();
       expect(find.byType(TryItScreen), findsOneWidget);
 
@@ -150,7 +150,7 @@ void main() {
       await tester.tap(find.byIcon(CupertinoIcons.chevron_left));
       await tester.pumpAndSettle();
       expect(find.byType(DailyReminderScreen), findsOneWidget);
-      await tester.tap(find.text('Skip'));
+      await tester.tap(find.text('Skip for now'));
       await tester.pumpAndSettle();
 
       await tester.tap(find.text(state.userHabits.first));
