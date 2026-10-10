@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intended/l10n/app_localizations.dart';
 import 'package:intended/models/intention_path.dart';
 import 'package:intended/onboarding_v2/cues_screen.dart';
+import 'package:intended/onboarding_v2/daily_reminder_screen.dart';
 import 'package:intended/onboarding_v2/direction_screen.dart';
 import 'package:intended/onboarding_v2/onboarding_flow.dart';
 import 'package:intended/onboarding_v2/onboarding_state.dart';
@@ -99,6 +100,10 @@ Future<void> _mount(
     );
     await precacheImage(
       const AssetImage('assets/images/paywall_sunrise_iris.webp'),
+      context,
+    );
+    await precacheImage(
+      const AssetImage('assets/images/intended_icon_transparent.png'),
       context,
     );
     for (final path in IntentionPathId.values.map(IntentionPath.getById)) {
@@ -331,6 +336,16 @@ void main() {
           state: OnboardingState(),
           locale: locale);
       await _shot(tester, '$_dir/onboarding_8_paywall_$lc.png');
+    }, skip: _dir == null);
+  }
+
+  for (final locale in const [Locale('en'), Locale('ru')]) {
+    final lc = locale.languageCode;
+    testWidgets('reminder, $lc', (tester) async {
+      await _mount(tester,
+          DailyReminderScreen(onContinue: () {}, onBack: () {}, step: 2),
+          state: await withActions(), locale: locale);
+      await _shot(tester, '$_dir/onboarding_6_reminder_$lc.png');
     }, skip: _dir == null);
   }
 
