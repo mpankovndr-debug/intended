@@ -64,3 +64,6 @@ Intended-Growth-Kit.pdf
 
 # Claude Code local state (settings + isolated-session worktrees)
 .claude/
+
+# Marketing material (reels, screenshots) lives outside the app repo
+marketing/
