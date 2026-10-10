@@ -57,8 +57,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///   RENDER_DIR=/tmp/shots flutter test test/render/screens_render_test.dart
 ///
 /// iPhone 15 size unless RENDER_SIZE says otherwise (`RENDER_SIZE=375x667`
-/// for the narrowest phone, where a wide word bites first). Iris, free tier,
-/// no status bar; blur is approximate and a device still has the last word.
+/// for the narrowest phone, where a wide word bites first). Iris, no status
+/// bar, and the free tier unless a screen asks for the paid one; blur is
+/// approximate and a device still has the last word.
 /// Not reachable from here: a paywall price, which is only drawn once a store
 /// has answered.
 ///
@@ -159,6 +160,7 @@ Future<void> _mount(
   Locale locale,
   Widget home, {
   Map<String, Object> prefs = const {},
+  bool paid = false,
 }) async {
   await _loadFonts();
   await _fakeFirebase();
@@ -178,6 +180,7 @@ Future<void> _mount(
   await state.loadSelectedIntentionPath();
   state.setName('Alex');
   final user = UserState();
+  if (paid) user.setSubscription(true);
 
   tester.view.physicalSize = _size * 3;
   tester.view.devicePixelRatio = 3;
@@ -352,6 +355,7 @@ void _render(
   Widget Function() build, {
   Future<void> Function(WidgetTester tester, AppLocalizations l10n)? then,
   Map<String, Object> Function(Locale locale)? prefs,
+  bool paid = false,
 }) {
   for (final locale in const [Locale('en'), Locale('ru')]) {
     final lc = locale.languageCode;
@@ -362,7 +366,13 @@ void _render(
         errors.add(details.exceptionAsString().split('\n').take(3).join(' / '));
       };
       try {
-        await _mount(tester, locale, build(), prefs: prefs?.call(locale) ?? {});
+        await _mount(
+          tester,
+          locale,
+          build(),
+          prefs: prefs?.call(locale) ?? {},
+          paid: paid,
+        );
         if (then != null) {
           await then(
             tester,
@@ -417,6 +427,39 @@ Map<String, Object> _withOwnAction(Locale locale) {
     'custom_habits': [own],
     'custom_habit_focus_areas': jsonEncode({own: 'Mood'}),
     'pinned_habit': 'Drink something warm',
+  };
+}
+
+/// A month with something in it: a warm drink every evening since the first
+/// of last month, a feeling noticed every other morning, a candle every third
+/// night, and one quiet week in the middle of last month. Counted back from
+/// the clock, because the page reads the clock for itself — so in the first
+/// days of a month the season is still forming and its word is the short one.
+Map<String, Object> _withAMonth(Locale _) {
+  final now = DateTime.now();
+  final moments = <Moment>[];
+  void add(DateTime at, String habit, String area) {
+    if (at.isBefore(now)) {
+      moments.add(Moment.create(habitName: habit, category: area, at: at));
+    }
+  }
+
+  for (var day = DateTime(now.year, now.month - 1, 1);
+      !day.isAfter(now);
+      day = DateTime(day.year, day.month, day.day + 1)) {
+    final quiet = day.month != now.month && day.day >= 12 && day.day <= 18;
+    if (quiet) continue;
+    DateTime at(int hour) => DateTime(day.year, day.month, day.day, hour);
+    if (day.day.isEven) add(at(8), 'Notice one thing you feel', 'Mood');
+    add(at(20), 'Drink something warm', 'Health');
+    if (day.day % 3 == 0) {
+      add(at(21), 'Light a scented candle', 'Home & organization');
+    }
+  }
+  return {
+    // Newest first, the order the service keeps them in.
+    'moments_collection':
+        jsonEncode([for (final m in moments.reversed) m.toJson()]),
   };
 }
 
@@ -609,6 +652,20 @@ void main() {
   _render('onb_paywall', () => const OnboardingPaywallScreen());
 
   _render('insights', () => const InsightsScreen());
+  // The page with a month on it, which is where its headings are: the
+  // sentence over the grid and the season's word. Empty, it shows neither.
+  _render(
+    'insights_month',
+    () => const InsightsScreen(),
+    prefs: _withAMonth,
+  );
+  // …and the tier that reads the month back.
+  _render(
+    'insights_month_paid',
+    () => const InsightsScreen(),
+    prefs: _withAMonth,
+    paid: true,
+  );
   _render('year_in_seasons', () => const YearInSeasonsScreen());
 
   // The two pickers name no family at all: whatever they show is the app-wide
