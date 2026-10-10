@@ -146,106 +146,132 @@ class _ChangePathScreenState extends State<ChangePathScreen> {
                 borderRadius: BorderRadius.circular(32),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(28, 30, 28, 24),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: const Alignment(0.0, 2.41),
-                        end: const Alignment(0.0, -2.41),
-                        colors: [
-                          colors.modalBg1.withOpacity(0.96),
-                          colors.modalBg2.withOpacity(0.93),
-                          colors.modalBg3.withOpacity(0.95),
-                        ],
-                        stops: const [0.0, 0.5, 1.0],
-                      ),
-                      borderRadius: BorderRadius.circular(32),
-                      border: Border.all(
-                        color: isDark
-                            ? colors.borderCard
-                                .withOpacity(colors.borderCardOpacity)
-                            : const Color(0xFFFFFFFF).withOpacity(0.5),
-                        width: 1.5,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: colors.modalShadow.withOpacity(0.2),
-                          blurRadius: 40,
-                          offset: const Offset(0, 16),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          l10n.intentionPathUpdateFocusAreas(pathTitle),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: AppTextStyles.displayFontFor(
-                                Localizations.localeOf(ctx).toString()),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: colors.textPrimary,
-                            letterSpacing: -0.2,
-                            height: 1.35,
+                  child: Stack(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(28, 30, 28, 24),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: const Alignment(0.0, 2.41),
+                            end: const Alignment(0.0, -2.41),
+                            colors: [
+                              colors.modalBg1.withOpacity(0.96),
+                              colors.modalBg2.withOpacity(0.93),
+                              colors.modalBg3.withOpacity(0.95),
+                            ],
+                            stops: const [0.0, 0.5, 1.0],
                           ),
-                        ),
-                        const SizedBox(height: 26),
-                        SizedBox(
-                          width: double.infinity,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  colors.ctaPrimary.withOpacity(0.92),
-                                  colors.ctaSecondary.withOpacity(0.88),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(24),
-                              border: Border.all(
-                                color: colors.ctaPrimary.withOpacity(0.4),
-                                width: 1,
-                              ),
+                          borderRadius: BorderRadius.circular(32),
+                          border: Border.all(
+                            color: isDark
+                                ? colors.borderCard
+                                    .withOpacity(colors.borderCardOpacity)
+                                : const Color(0xFFFFFFFF).withOpacity(0.5),
+                            width: 1.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: colors.modalShadow.withOpacity(0.2),
+                              blurRadius: 40,
+                              offset: const Offset(0, 16),
                             ),
-                            child: CupertinoButton(
-                              onPressed: () => Navigator.pop(ctx, true),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Kept clear of the close button, and centred.
+                            Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 15),
-                              borderRadius: BorderRadius.circular(24),
+                                  const EdgeInsets.symmetric(horizontal: 16),
                               child: Text(
-                                l10n.intentionPathUpdateYes,
+                                l10n.intentionPathUpdateFocusAreas(pathTitle),
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontFamily: AppTextStyles.bodyFont(context),
-                                  fontSize: 16,
+                                  fontFamily: AppTextStyles.displayFontFor(
+                                      Localizations.localeOf(ctx).toString()),
+                                  fontSize: 20,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFFFFFFFF),
+                                  color: colors.textPrimary,
+                                  letterSpacing: -0.2,
+                                  height: 1.35,
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: double.infinity,
-                          child: CupertinoButton(
-                            onPressed: () => Navigator.pop(ctx, false),
-                            padding: const EdgeInsets.symmetric(vertical: 11),
-                            child: Text(
-                              l10n.intentionPathUpdateNo,
-                              style: TextStyle(
-                                fontFamily: AppTextStyles.bodyFont(context),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: colors.textTertiary,
+                            const SizedBox(height: 26),
+                            SizedBox(
+                              width: double.infinity,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      colors.ctaPrimary.withOpacity(0.92),
+                                      colors.ctaSecondary.withOpacity(0.88),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(
+                                    color: colors.ctaPrimary.withOpacity(0.4),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: CupertinoButton(
+                                  onPressed: () => Navigator.pop(ctx, true),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                  borderRadius: BorderRadius.circular(24),
+                                  child: Text(
+                                    l10n.intentionPathUpdateYes,
+                                    style: TextStyle(
+                                      fontFamily: AppTextStyles.bodyFont(context),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xFFFFFFFF),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: double.infinity,
+                              child: CupertinoButton(
+                                onPressed: () => Navigator.pop(ctx, false),
+                                padding: const EdgeInsets.symmetric(vertical: 11),
+                                child: Text(
+                                  l10n.intentionPathUpdateNo,
+                                  style: TextStyle(
+                                    fontFamily: AppTextStyles.bodyFont(context),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color: colors.textTertiary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // A way out for the person who tapped the wrong path:
+                      // both answers below change it.
+                      Positioned(
+                        top: 6,
+                        right: 6,
+                        child: CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(44, 44),
+                          onPressed: () => Navigator.pop(ctx),
+                          child: Icon(
+                            CupertinoIcons.xmark,
+                            size: 18,
+                            color: colors.textTertiary,
+                            semanticLabel: l10n.commonClose,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
