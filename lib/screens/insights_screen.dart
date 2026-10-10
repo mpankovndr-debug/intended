@@ -1371,6 +1371,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
 
     final forming = season.pole == Season.beginning;
     final word = SeasonL10n.word(season.pole, l10n);
+    final title = AppTextStyles.h1(context);
     final line = SeasonL10n.line(season.pole, l10n, season.sampleSize);
 
     return _card(
@@ -1381,11 +1382,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
           _eyebrow(l10n.seasonLabel, colors),
           const SizedBox(height: 10),
           // Below the page title on purpose: the season is the biggest thing
-          // *in* a card, never bigger than the screen it sits on.
+          // *in* a card, never bigger than the screen it sits on. The title
+          // shrinks in Russian and on a narrow phone, so the size is worked
+          // out from it rather than fixed.
           Text(
             word,
-            style: AppTextStyles.h1(context).copyWith(
-              fontSize: 30,
+            style: title.copyWith(
+              fontSize: AppTextStyles.seasonWordSize(title.fontSize!),
               color: colors.textPrimary,
             ),
           ),

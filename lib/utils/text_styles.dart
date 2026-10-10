@@ -62,6 +62,21 @@ class AppTextStyles {
         fontFamilyFallback: const ['SF Pro', 'SF Pro Rounded'],
       );
 
+  /// The size of the season's word under a page title set at [titleSize].
+  ///
+  /// 30pt, and never more than 96% of the title: the word is the biggest
+  /// thing in its card and must not outgrow the screen it sits on. On a
+  /// full-width screen that changes nothing — 30 under 34 in English, 30
+  /// under 31.3 in Russian. It bites where the title has shrunk further: on
+  /// a 375pt phone in Russian the title is 29.8pt, and a fixed 30 stood
+  /// over it.
+  ///
+  /// Pure, so the rule can be tested without a context.
+  static double seasonWordSize(double titleSize) {
+    final ceiling = titleSize * 0.96;
+    return ceiling < 30 ? ceiling : 30;
+  }
+
   /// Adjust font size for Russian text (8% smaller)
   static double _localizedSize(double base, String locale) {
     if (locale == 'ru') {
