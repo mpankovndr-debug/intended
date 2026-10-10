@@ -3050,7 +3050,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onboardingTryLater => 'Сделаю позже';
 
   @override
-  String get chapterStageTry => 'Попробуй несколько';
+  String get chapterStageTry => 'Попробуй разное';
 
   @override
   String get chapterStageKeep => 'Оставь то, что подошло';
