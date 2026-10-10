@@ -54,6 +54,41 @@ class HabitCompletionModal extends StatefulWidget {
   /// accumulation, few enough to stay one glance.
   static const int maxTilesShown = 24;
 
+  /// The mood pills' label size, and the smallest it fits down to.
+  static const double pillFontSizeMax = 13;
+  static const double pillFontSizeMin = 11;
+
+  /// The largest size, from [style]'s down to [pillFontSizeMin], at which
+  /// every word of [labels] fits [width] on one line, so three pills can
+  /// share a row. A word broken inside itself («Нейтральн / о», Russian at
+  /// 375pt) reads as a mistake; labels still wrap between their words. Null
+  /// when even the smallest size won't do: the pills then go one per line.
+  static double? pillFontSize(
+    List<String> labels,
+    TextStyle style,
+    double width,
+    TextScaler scaler,
+  ) {
+    final words = {
+      for (final label in labels) ...label.split(' ').where((w) => w.isNotEmpty),
+    };
+    for (var size = style.fontSize!; size >= pillFontSizeMin; size -= 0.5) {
+      final fits = words.every((word) {
+        final painter = TextPainter(
+          text: TextSpan(text: word, style: style.copyWith(fontSize: size)),
+          maxLines: 1,
+          textDirection: TextDirection.ltr,
+          textScaler: scaler,
+        )..layout();
+        final fitsHere = painter.width <= width;
+        painter.dispose();
+        return fitsHere;
+      });
+      if (fits) return size;
+    }
+    return null;
+  }
+
   @override
   State<HabitCompletionModal> createState() => _HabitCompletionModalState();
 }
@@ -287,20 +322,47 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
           ),
         ),
         const SizedBox(height: 16),
-        // IntrinsicHeight + stretch: «Было непросто» wraps to two lines and
-        // its pill towered over the other two until all three shared height.
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(child: _moodPill(l10n.completionMoodGlad, MomentMood.gladIDid, colors)),
-              const SizedBox(width: 8),
-              Expanded(child: _moodPill(l10n.completionMoodNeutral, MomentMood.neutral, colors)),
-              const SizedBox(width: 8),
-              Expanded(child: _moodPill(l10n.completionMoodTookEffort, MomentMood.tookEffort, colors)),
-            ],
-          ),
-        ),
+        LayoutBuilder(builder: (context, constraints) {
+          final moods = [
+            (l10n.completionMoodGlad, MomentMood.gladIDid),
+            (l10n.completionMoodNeutral, MomentMood.neutral),
+            (l10n.completionMoodTookEffort, MomentMood.tookEffort),
+          ];
+          final style = _pillStyle();
+          final size = HabitCompletionModal.pillFontSize(
+            [for (final (label, _) in moods) label],
+            style,
+            (constraints.maxWidth - 2 * _pillGap) / 3 - 2 * _pillPadding,
+            MediaQuery.textScalerOf(context),
+          );
+          if (size == null) {
+            // Too long for three abreast even at the smallest size: one per
+            // line, at full size, as wide as the buttons below them.
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (final (i, (label, mood)) in moods.indexed) ...[
+                  if (i > 0) const SizedBox(height: _pillGap),
+                  _moodPill(label, mood, colors, style.fontSize!),
+                ],
+              ],
+            );
+          }
+          // IntrinsicHeight + stretch: «Было непросто» wraps to two lines and
+          // its pill towered over the other two until all three shared
+          // height.
+          return IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (final (i, (label, mood)) in moods.indexed) ...[
+                  if (i > 0) const SizedBox(width: _pillGap),
+                  Expanded(child: _moodPill(label, mood, colors, size)),
+                ],
+              ],
+            ),
+          );
+        }),
         const SizedBox(height: 18),
         if (_noteOpen)
           CupertinoTextField(
@@ -396,7 +458,21 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
   Color _themedFill(AppColorScheme colors) =>
       Color.lerp(colors.bgGradientTop, colors.ctaPrimary, 0.12)!;
 
-  Widget _moodPill(String label, MomentMood mood, AppColorScheme colors) {
+  static const double _pillGap = 8;
+  static const double _pillPadding = 4;
+
+  /// A pill label's style, before its size is fitted and its colour set.
+  TextStyle _pillStyle() => AppTextStyles.body(context).copyWith(
+        fontSize: HabitCompletionModal.pillFontSizeMax,
+        fontWeight: FontWeight.w600,
+      );
+
+  Widget _moodPill(
+    String label,
+    MomentMood mood,
+    AppColorScheme colors,
+    double fontSize,
+  ) {
     final selected = _mood == mood;
     final fg = selected ? colors.buttonText : colors.textPrimary;
     // Words only, no faces: a frown on "took effort" graded hard-but-worth-it
@@ -404,7 +480,10 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
     // avoid (see MomentMood). The month grid already carries the answer as
     // a tint; the pill needs nothing but its label.
     return CupertinoButton(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
+      padding: const EdgeInsets.symmetric(
+        vertical: 14,
+        horizontal: _pillPadding,
+      ),
       minimumSize: Size.zero,
       borderRadius: BorderRadius.circular(16),
       color: selected
@@ -414,11 +493,7 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
       child: Text(
         label,
         textAlign: TextAlign.center,
-        style: AppTextStyles.body(context).copyWith(
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
-          color: fg,
-        ),
+        style: _pillStyle().copyWith(fontSize: fontSize, color: fg),
       ),
     );
   }
