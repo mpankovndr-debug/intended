@@ -42,8 +42,10 @@ class AppTextStyles {
   ///
   /// Sora carries no Cyrillic whatsoever: 0 of the 64 letters А–я are in the
   /// font file. Russian set in Sora does not produce tofu — iOS substitutes
-  /// the system face silently — it simply stops being the brand, which is why
-  /// this went unnoticed. Montserrat is the Cyrillic display face.
+  /// Helvetica silently (a 22pt w600 heading in a simulator capture overlays
+  /// Helvetica Bold to within a third of a point) — it simply stops being the
+  /// brand, which is why this went unnoticed. Montserrat is the Cyrillic
+  /// display face, and sets 7–11% wider than that Helvetica did.
   ///
   /// Takes the locale name rather than a `BuildContext` so the choice stays a
   /// pure function that a test can call.

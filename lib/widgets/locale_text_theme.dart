@@ -7,7 +7,8 @@ import '../utils/text_styles.dart';
 /// Whatever names no family of its own — a bare `Text`, a button label, a
 /// text field — draws in this. It used to be Sora for everyone, set on
 /// `CupertinoApp.theme`. Sora has no Cyrillic, so in Russian every such
-/// string fell to the system face: the theme names and the app-icon labels
+/// string fell to the platform's fallback face (see
+/// `AppTextStyles.displayFontFor`): the theme names and the app-icon labels
 /// in the pickers, sitting among text that was otherwise all Montserrat.
 ///
 /// `CupertinoApp.theme` is read above `Localizations` and cannot see the
