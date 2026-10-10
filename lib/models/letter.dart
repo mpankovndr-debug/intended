@@ -303,6 +303,10 @@ class Letter {
       counts[part] = (counts[part] ?? 0) + 1;
     }
     final top = counts.entries.reduce((a, b) => a.value >= b.value ? a : b);
+    // The question sets this part against the one the reminder sits in, so
+    // it has to be ahead on its own. Level with another, which of the two
+    // got named was only ever the order the moments were read in.
+    if (counts.values.where((v) => v == top.value).length > 1) return null;
     return top.value / moments.length < _minPartShare ? null : top.key;
   }
 

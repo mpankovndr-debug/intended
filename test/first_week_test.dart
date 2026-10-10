@@ -64,6 +64,52 @@ void main() {
     expect(FirstWeek.read(scattered, now: _day(8))!.dominantPart, isNull);
   });
 
+  test('half the week is not most of it', () {
+    // The card says "Most of them in the evening." Two evenings out of four
+    // isn't most — and with two mornings beside them, which part got named
+    // came down to the order the moments were read in.
+    final tied = [
+      _on(1, hour: 8),
+      _on(2, hour: 20),
+      _on(3, hour: 8),
+      _on(4, hour: 20),
+    ];
+    expect(FirstWeek.read(tied, now: _day(8))!.dominantPart, isNull);
+    expect(
+      FirstWeek.read(tied.reversed.toList(), now: _day(8))!.dominantPart,
+      isNull,
+    );
+
+    // Half with nothing level beside it is still only half.
+    final half = [
+      _on(1, hour: 20),
+      _on(2, hour: 20),
+      _on(3, hour: 8),
+      _on(4, hour: 14),
+    ];
+    expect(FirstWeek.read(half, now: _day(8))!.dominantPart, isNull);
+
+    // One more evening, and it is most of them.
+    expect(
+      FirstWeek.read([...tied, _on(5, hour: 20)], now: _day(8))!.dominantPart,
+      DayPart.evenings,
+    );
+  });
+
+  test('the month card reads "most of them" through the same rule', () {
+    // Twelve moments across a fortnight — nothing to do with the first
+    // week's window. Six evenings is half of them; a seventh makes it most.
+    final month = [
+      for (var day = 1; day <= 6; day++) _on(day, hour: 20),
+      for (var day = 7; day <= 12; day++) _on(day, hour: 8),
+    ];
+    expect(FirstWeek.majorityPart(month), isNull);
+    expect(
+      FirstWeek.majorityPart([...month, _on(13, hour: 20)]),
+      DayPart.evenings,
+    );
+  });
+
   test('the gladdest action needs two glads and a clear winner', () {
     expect(
       FirstWeek.read(_week, now: _day(8))!.gladdestHabit,

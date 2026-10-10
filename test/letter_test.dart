@@ -204,9 +204,47 @@ void main() {
     });
 
     test('a day with no shape gets no timing question', () {
-      // Spread across the clock: proposing a time would be a coin flip.
-      final moments = [for (var i = 0; i < 12; i++) _on(i + 1, hour: i + 5)];
+      // Spread right round the clock, a third of it in the fullest part:
+      // proposing a time would be a coin flip. The 9am reminder sits in a
+      // different part, so only the floor keeps the question away.
+      final moments = [for (var i = 0; i < 12; i++) _on(i + 1, hour: i * 2)];
       expect(_read(moments)!.question, isNot(LetterQuestion.planForPart));
+    });
+
+    test('a day split evenly between two parts gets no timing question', () {
+      // A morning and an evening, every day. "Plan for mornings instead of
+      // evenings" would be wrong about half the month — and which half got
+      // named was only ever the order the moments were read in.
+      final moments = [
+        for (var day = 1; day <= 6; day++) ...[
+          _on(day, hour: 9),
+          _on(day, hour: 20),
+        ],
+      ];
+      expect(
+        _read(moments, reminderHour: 20)!.question,
+        isNot(LetterQuestion.planForPart),
+      );
+      expect(
+        _read(moments.reversed.toList(), reminderHour: 9)!.question,
+        isNot(LetterQuestion.planForPart),
+      );
+    });
+
+    test('half the month in one part is a shape, when nothing is level', () {
+      // Six late evenings, three mornings, three afternoons. The question
+      // never says "most" — it needs one part clearly ahead of where the
+      // reminder sits, and twice the mornings is.
+      final moments = [
+        ..._daily(6, hour: 22),
+        ..._daily(3, startDay: 7, hour: 9),
+        ..._daily(3, startDay: 10, hour: 14),
+      ];
+      final letter = _read(moments, reminderHour: 9)!;
+
+      expect(letter.question, LetterQuestion.planForPart);
+      expect(letter.part!.lived, DayPart.nights);
+      expect(letter.part!.planned, DayPart.mornings);
     });
 
     test('falls back to the quiet stretches when the day has no lesson', () {
