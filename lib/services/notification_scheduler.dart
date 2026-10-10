@@ -25,7 +25,6 @@ import 'notification_messages.dart';
 import 'notification_preferences_service.dart';
 import 'pause_launcher.dart';
 import 'return_note_service.dart';
-import 'week_stats_service.dart';
 
 /// Adaptive notification frequency tiers.
 enum _AdaptiveTier {
@@ -415,20 +414,10 @@ class NotificationScheduler {
       slot.minute,
     );
 
-    // Dynamic weekly message based on this week's check-in count
-    final prefs = await SharedPreferences.getInstance();
-    final allHabits = prefs.getStringList('habits') ?? [];
-    final weekStats = await WeekStatsService.calculate(allHabits, DateTime.now());
-    final checkIns = weekStats.completionCount; // days active this week
-
-    final String body;
-    if (checkIns == 0) {
-      body = l10n.notifWeeklyDynamic0;
-    } else if (checkIns == 1) {
-      body = l10n.notifWeeklyDynamic1;
-    } else {
-      body = l10n.notifWeeklyDynamicN(checkIns);
-    }
+    // Numberless on purpose. This repeats every Sunday with the text it
+    // was scheduled with, so a count baked in here would be repeated week
+    // after week — and it counted days active, not moments.
+    final body = l10n.notifWeeklyRecap;
 
     await _plugin.zonedSchedule(
       100,
@@ -707,6 +696,41 @@ class NotificationScheduler {
     // and rebuild a queue that was already correct.
     if (previous != l10n.localeName) {
       await NotificationPreferencesService.setScheduledLocale(l10n.localeName);
+    }
+  }
+
+  /// Bumped when the weekly's text changes. A queued notification carries
+  /// its text, and the weekly repeats with it every Sunday, so a new line
+  /// reaches nobody who already has one queued until something re-arms it.
+  static const int weeklyTextVersion = 1;
+  static const String _weeklyTextKey = 'weekly_text_version';
+
+  /// Whether the queued weekly still speaks an older text. Pure, like
+  /// [needsLocaleRebuild]. [stamp] is null on installs that predate it;
+  /// nothing queued means nothing to re-arm, so nobody gains a weekly.
+  static bool needsWeeklyRearm({
+    required int? stamp,
+    required bool weeklyQueued,
+  }) =>
+      weeklyQueued && (stamp ?? 0) < weeklyTextVersion;
+
+  /// Re-arms the queued weekly in place once per [weeklyTextVersion]. Up to
+  /// 2.1.2 it said "N moments" with the N from the day it was armed.
+  static Future<void> refreshWeeklyText(AppLocalizations l10n) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final stamp = prefs.getInt(_weeklyTextKey);
+      if ((stamp ?? 0) >= weeklyTextVersion) return;
+      final pending = await _plugin.pendingNotificationRequests();
+      if (needsWeeklyRearm(
+        stamp: stamp,
+        weeklyQueued: pending.any((r) => r.id == 100),
+      )) {
+        await scheduleWeekly(l10n);
+      }
+      await prefs.setInt(_weeklyTextKey, weeklyTextVersion);
+    } catch (e, st) {
+      FirebaseCrashlytics.instance.recordError(e, st, fatal: false);
     }
   }
 

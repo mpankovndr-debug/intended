@@ -2386,17 +2386,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get upgradeNudgeLearnMore => 'Learn more';
 
   @override
-  String get notifWeeklyDynamic0 =>
-      'Your week\'s page is ready. Every week is a fresh start.';
-
-  @override
-  String get notifWeeklyDynamic1 =>
-      'Your week is on the page — one moment of care in it.';
-
-  @override
-  String notifWeeklyDynamicN(int count) {
-    return 'Your week is on the page — $count moments in it.';
-  }
+  String get notifWeeklyRecap => 'Your week is ready. See what was in it.';
 
   @override
   String notifMonthlyLetter(String month) {

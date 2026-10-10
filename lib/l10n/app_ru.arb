@@ -866,16 +866,7 @@
   "coachMarkSmartNotificationsBody": "Intended подстраивает напоминания под твой ритм. Заходишь часто — даём тебе больше пространства. Пропадаешь — одно мягкое сообщение.",
   "upgradeNudgeBody": "Твоя практика растёт. Intended+ даёт пространство расти вместе с ней.",
   "upgradeNudgeLearnMore": "Узнать больше",
-  "notifWeeklyDynamic0": "Страница твоей недели готова. Каждая неделя — новый старт.",
-  "notifWeeklyDynamic1": "Твоя неделя на странице — в ней один момент заботы о себе.",
-  "notifWeeklyDynamicN": "Твоя неделя на странице — в ней моментов: {count}.",
-  "@notifWeeklyDynamicN": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
+  "notifWeeklyRecap": "Твоя неделя готова. Посмотри, что в ней было.",
   "notifMonthlyLetter": "Твоё письмо за {month} готово.",
   "@notifMonthlyLetter": {
     "placeholders": {

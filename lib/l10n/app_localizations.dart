@@ -4149,23 +4149,11 @@ abstract class AppLocalizations {
   /// **'Learn more'**
   String get upgradeNudgeLearnMore;
 
-  /// No description provided for @notifWeeklyDynamic0.
+  /// No description provided for @notifWeeklyRecap.
   ///
   /// In en, this message translates to:
-  /// **'Your week\'s page is ready. Every week is a fresh start.'**
-  String get notifWeeklyDynamic0;
-
-  /// No description provided for @notifWeeklyDynamic1.
-  ///
-  /// In en, this message translates to:
-  /// **'Your week is on the page — one moment of care in it.'**
-  String get notifWeeklyDynamic1;
-
-  /// No description provided for @notifWeeklyDynamicN.
-  ///
-  /// In en, this message translates to:
-  /// **'Your week is on the page — {count} moments in it.'**
-  String notifWeeklyDynamicN(int count);
+  /// **'Your week is ready. See what was in it.'**
+  String get notifWeeklyRecap;
 
   /// No description provided for @notifMonthlyLetter.
   ///

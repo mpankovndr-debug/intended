@@ -2460,17 +2460,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get upgradeNudgeLearnMore => 'Узнать больше';
 
   @override
-  String get notifWeeklyDynamic0 =>
-      'Страница твоей недели готова. Каждая неделя — новый старт.';
-
-  @override
-  String get notifWeeklyDynamic1 =>
-      'Твоя неделя на странице — в ней один момент заботы о себе.';
-
-  @override
-  String notifWeeklyDynamicN(int count) {
-    return 'Твоя неделя на странице — в ней моментов: $count.';
-  }
+  String get notifWeeklyRecap =>
+      'Твоя неделя готова. Посмотри, что в ней было.';
 
   @override
   String notifMonthlyLetter(String month) {

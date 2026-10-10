@@ -822,6 +822,8 @@ void main() {
         // Every open pushes the come-back note another quiet stretch out, so
         // it only ever fires into real silence. No-op unless accepted.
         await NotificationScheduler.scheduleReturnNote(startupL10n);
+        // A weekly queued by an older build still carries its old text.
+        await NotificationScheduler.refreshWeeklyText(startupL10n);
         if (dailyEnabled) {
           final l10n = startupL10n;
           // Before the top-up, not after: a language change rebuilds the whole
