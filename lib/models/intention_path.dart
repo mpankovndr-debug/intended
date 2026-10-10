@@ -60,6 +60,10 @@ extension IntentionPathVoice on IntentionPathId {
 
 class IntentionPath {
   final IntentionPathId id;
+
+  /// The path's glyph, in the same soft style as the focus-area glyphs.
+  /// Three paths share one with the focus area they are about (Quiet Focus,
+  /// Closer to People, Your own way); the rest have their own.
   final String iconAsset;
   final String titleKey;
   final String subtitleKey;
@@ -87,39 +91,63 @@ class IntentionPath {
   static final List<IntentionPath> _all = [
     IntentionPath(
       id: IntentionPathId.gentleMornings,
-      iconAsset: 'assets/icons/path_gentle_mornings.svg',
+      iconAsset: 'assets/glyphs/path_sun.png',
       titleKey: 'pathGentleMorningsTitle',
       subtitleKey: 'pathGentleMorningsSubtitle',
       defaultFocusAreas: const ['Health', 'Mood'],
+      starterActions: const [
+        'Open the curtains',
+        'Drink something warm',
+        'Stretch for 30 seconds',
+        'Make your bed',
+      ],
       accentColor: const Color(0xFFE09A4A), // warm amber — sunrise
     ),
     IntentionPath(
       id: IntentionPathId.anchorsForHardDays,
-      iconAsset: 'assets/icons/path_anchors_for_hard_days.svg',
+      iconAsset: 'assets/glyphs/path_anchor.png',
       titleKey: 'pathAnchorsForHardDaysTitle',
       subtitleKey: 'pathAnchorsForHardDaysSubtitle',
       defaultFocusAreas: const ['Mood', 'Self-care'],
+      starterActions: const [
+        'Feel your feet on the ground',
+        'Place hand on heart for 30 seconds',
+        'Take 5 slow, deep breaths',
+        'Do one kind thing for yourself',
+      ],
       accentColor: const Color(0xFF7AA090), // sage teal — stillness
     ),
     IntentionPath(
       id: IntentionPathId.quietFocus,
-      iconAsset: 'assets/icons/path_quiet_focus.svg',
+      iconAsset: 'assets/glyphs/productivity_plane.png',
       titleKey: 'pathQuietFocusTitle',
       subtitleKey: 'pathQuietFocusSubtitle',
       defaultFocusAreas: const ['Self-care', 'Mood'],
+      starterActions: const [
+        'Leave your phone across the room',
+        'Look away from your screen for 30 seconds',
+        'Stand up and roll your shoulders',
+        'Rest for 5 minutes',
+      ],
       accentColor: const Color(0xFF6E8FB5), // muted blue — focused stillness
     ),
     IntentionPath(
       id: IntentionPathId.windingDown,
-      iconAsset: 'assets/icons/path_winding_down.svg',
+      iconAsset: 'assets/glyphs/path_candle.png',
       titleKey: 'pathWindingDownTitle',
       subtitleKey: 'pathWindingDownSubtitle',
       defaultFocusAreas: const ['Health', 'Mood'],
+      starterActions: const [
+        'Light a scented candle',
+        'Drink something warm',
+        'Put on something comfortable',
+        'Notice one thing you feel',
+      ],
       accentColor: const Color(0xFF9285B5), // dusty lavender — dusk
     ),
     IntentionPath(
       id: IntentionPathId.softerNights,
-      iconAsset: 'assets/icons/path_winding_down.svg',
+      iconAsset: 'assets/glyphs/path_moon.png',
       titleKey: 'pathSofterNightsTitle',
       subtitleKey: 'pathSofterNightsSubtitle',
       defaultFocusAreas: const ['Health', 'Self-care'],
@@ -133,7 +161,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.lookingUp,
-      iconAsset: 'assets/icons/path_finding_calm.svg',
+      iconAsset: 'assets/glyphs/path_kite.png',
       titleKey: 'pathLookingUpTitle',
       subtitleKey: 'pathLookingUpSubtitle',
       defaultFocusAreas: const ['Mood', 'Health'],
@@ -147,7 +175,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.closerToPeople,
-      iconAsset: 'assets/icons/path_gratitude_self_love.svg',
+      iconAsset: 'assets/glyphs/relationships_hearts.png',
       titleKey: 'pathCloserToPeopleTitle',
       subtitleKey: 'pathCloserToPeopleSubtitle',
       defaultFocusAreas: const ['Relationships', 'Mood'],
@@ -161,7 +189,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.movingALittle,
-      iconAsset: 'assets/icons/path_gentle_mornings.svg',
+      iconAsset: 'assets/glyphs/path_shoe.png',
       titleKey: 'pathMovingALittleTitle',
       subtitleKey: 'pathMovingALittleSubtitle',
       defaultFocusAreas: const ['Health', 'Self-care'],
@@ -175,7 +203,7 @@ class IntentionPath {
     ),
     IntentionPath(
       id: IntentionPathId.throughAHardSeason,
-      iconAsset: 'assets/icons/path_finding_calm.svg',
+      iconAsset: 'assets/glyphs/path_umbrella.png',
       titleKey: 'pathThroughAHardSeasonTitle',
       subtitleKey: 'pathThroughAHardSeasonSubtitle',
       defaultFocusAreas: const ['Self-care', 'Mood'],
@@ -191,7 +219,7 @@ class IntentionPath {
     // Not surfaced in [pickerOptions].
     IntentionPath(
       id: IntentionPathId.yourOwnWay,
-      iconAsset: 'assets/icons/path_your_own_way.svg',
+      iconAsset: 'assets/glyphs/custom_star.png',
       titleKey: 'pathYourOwnWayTitle',
       subtitleKey: 'pathYourOwnWaySubtitle',
       defaultFocusAreas: const [],
@@ -232,6 +260,74 @@ class IntentionPath {
         IntentionPathId.throughAHardSeason =>
           l10n.pathThroughAHardSeasonTitle,
         IntentionPathId.yourOwnWay => l10n.pathYourOwnWayTitle,
+      };
+
+  /// What "I want to …" starts as on the sentence screen: the path's own
+  /// continuation, which the person then makes theirs (spec §1). Empty for
+  /// "Your own way", which names nothing to start from.
+  String sentence(AppLocalizations l10n) => switch (id) {
+        IntentionPathId.gentleMornings => l10n.pathGentleMorningsSentence,
+        IntentionPathId.anchorsForHardDays =>
+          l10n.pathAnchorsForHardDaysSentence,
+        IntentionPathId.quietFocus => l10n.pathQuietFocusSentence,
+        IntentionPathId.windingDown => l10n.pathWindingDownSentence,
+        IntentionPathId.softerNights => l10n.pathSofterNightsSentence,
+        IntentionPathId.lookingUp => l10n.pathLookingUpSentence,
+        IntentionPathId.closerToPeople => l10n.pathCloserToPeopleSentence,
+        IntentionPathId.movingALittle => l10n.pathMovingALittleSentence,
+        IntentionPathId.throughAHardSeason =>
+          l10n.pathThroughAHardSeasonSentence,
+        IntentionPathId.yourOwnWay => '',
+      };
+
+  /// Three other ways to finish the same sentence, offered as chips.
+  List<String> sentenceIdeas(AppLocalizations l10n) => switch (id) {
+        IntentionPathId.gentleMornings => [
+            l10n.pathGentleMorningsIdea1,
+            l10n.pathGentleMorningsIdea2,
+            l10n.pathGentleMorningsIdea3,
+          ],
+        IntentionPathId.anchorsForHardDays => [
+            l10n.pathAnchorsForHardDaysIdea1,
+            l10n.pathAnchorsForHardDaysIdea2,
+            l10n.pathAnchorsForHardDaysIdea3,
+          ],
+        IntentionPathId.quietFocus => [
+            l10n.pathQuietFocusIdea1,
+            l10n.pathQuietFocusIdea2,
+            l10n.pathQuietFocusIdea3,
+          ],
+        IntentionPathId.windingDown => [
+            l10n.pathWindingDownIdea1,
+            l10n.pathWindingDownIdea2,
+            l10n.pathWindingDownIdea3,
+          ],
+        IntentionPathId.softerNights => [
+            l10n.pathSofterNightsIdea1,
+            l10n.pathSofterNightsIdea2,
+            l10n.pathSofterNightsIdea3,
+          ],
+        IntentionPathId.lookingUp => [
+            l10n.pathLookingUpIdea1,
+            l10n.pathLookingUpIdea2,
+            l10n.pathLookingUpIdea3,
+          ],
+        IntentionPathId.closerToPeople => [
+            l10n.pathCloserToPeopleIdea1,
+            l10n.pathCloserToPeopleIdea2,
+            l10n.pathCloserToPeopleIdea3,
+          ],
+        IntentionPathId.movingALittle => [
+            l10n.pathMovingALittleIdea1,
+            l10n.pathMovingALittleIdea2,
+            l10n.pathMovingALittleIdea3,
+          ],
+        IntentionPathId.throughAHardSeason => [
+            l10n.pathThroughAHardSeasonIdea1,
+            l10n.pathThroughAHardSeasonIdea2,
+            l10n.pathThroughAHardSeasonIdea3,
+          ],
+        IntentionPathId.yourOwnWay => const [],
       };
 
   String subtitle(AppLocalizations l10n) => switch (id) {

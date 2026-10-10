@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/chapter.dart';
 import '../models/intention_path.dart';
+import '../services/action_cues.dart';
 import '../services/analytics_service.dart';
 import '../services/habit_history_service.dart';
 import '../services/moments_service.dart';
@@ -60,6 +62,17 @@ class OnboardingState extends ChangeNotifier {
   /// vanished when a custom pushed the list past the cap — see
   /// [visibleHabits], which no longer truncates anything.
   static const int maxActiveHabits = 6;
+
+  /// The focus areas a person can choose from. Retired areas are not here;
+  /// they live on only in [retiredFocusAreas], for migrating old choices.
+  static const List<String> focusAreaOptions = [
+    'Health',
+    'Mood',
+    'Home & organization',
+    'Relationships',
+    'Creativity',
+    'Self-care',
+  ];
 
   /// Whether another action can be added without breaking that ceiling.
   bool get canAddHabit => userHabits.length < maxActiveHabits;
@@ -167,6 +180,9 @@ class OnboardingState extends ChangeNotifier {
   // Intention path
   String _selectedIntentionPath = 'your_own_way';
   String? _lastPreselectedPathKey;
+  String? _sentence;
+  String? _sentencePathKey;
+  DateTime? _sentenceSealedAt;
 
   /// The path key whose [IntentionPath.starterActions] have already been
   /// handed out. Null until a starters path generates for the first time.
@@ -200,6 +216,18 @@ class OnboardingState extends ChangeNotifier {
   bool get onboardingComplete => _onboardingComplete;
   String get selectedIntentionPath => _selectedIntentionPath;
   String? get lastPreselectedPathKey => _lastPreselectedPathKey;
+
+  /// The North star in the person's own words: what follows "I want to".
+  /// Null until the hold on the sentence screen seals it.
+  String? get sentence => _sentence;
+
+  /// The path the sentence was written under. Choosing another path starts
+  /// the sentence again from that path's own words.
+  String? get sentencePathKey => _sentencePathKey;
+
+  /// When the hold sealed the sentence. The first chapter is dated from this
+  /// when onboarding finishes, not from the moment it is written to storage.
+  DateTime? get sentenceSealedAt => _sentenceSealedAt;
   String? get pinnedHabit => _pinnedHabit;
   List<String> get customHabits => List.unmodifiable(_customHabits);
   Map<String, String> get customHabitFocusAreas =>
@@ -441,7 +469,7 @@ class OnboardingState extends ChangeNotifier {
 
   /// Clears current focus-area selections and applies [defaults] as the
   /// pre-selection for [pathKey]. Tracks which path was last applied so
-  /// FocusAreasScreen can detect when the path changed and re-apply.
+  /// the direction screen can tell when the path changed and re-apply.
   ///
   /// Persists, like [changeFocusAreas]. It used to mutate memory only, so a
   /// path change from ChangePathScreen was lost on restart: `loadUserHabits`
@@ -490,10 +518,58 @@ class OnboardingState extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     _selectedIntentionPath =
         prefs.getString('selected_intention_path') ?? 'your_own_way';
+    await loadSentence();
     notifyListeners();
     // Re-assert on every launch: user properties don't survive reinstall,
     // and the D7 segmentation is only as good as the property being there.
     AnalyticsService.setIntentionPath(_selectedIntentionPath);
+  }
+
+  static const _prefSentence = 'onboarding_sentence';
+  static const _prefSentencePath = 'onboarding_sentence_path';
+  static const _prefSentenceSealedAt = 'onboarding_sentence_sealed_at';
+
+  /// The chapter the sealed sentence will open, for the screens after the
+  /// seal to read before onboarding finishes and writes the real one: its
+  /// dates come from the moment of sealing, as the real one's will.
+  /// Before a seal, dated [now].
+  Chapter previewChapter({DateTime Function()? now}) {
+    final at = _sentenceSealedAt ?? (now ?? DateTime.now)();
+    return Chapter.start(
+      id: 'preview',
+      sentence: _sentence ?? '…',
+      pathKey: _selectedIntentionPath,
+      startedAt: at,
+      offsetMinutes: at.toLocal().timeZoneOffset.inMinutes,
+    );
+  }
+
+  /// Seals the sentence (spec §6, screen 3). The chapter itself is written
+  /// only when onboarding finishes, so someone who quits halfway leaves no
+  /// half-made chapter behind to block their next start.
+  Future<void> sealSentence(
+    String sentence, {
+    required String pathKey,
+    required DateTime at,
+  }) async {
+    _sentence = sentence.trim();
+    _sentencePathKey = pathKey;
+    _sentenceSealedAt = at.toUtc();
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_prefSentence, _sentence!);
+    await prefs.setString(_prefSentencePath, pathKey);
+    await prefs.setString(
+        _prefSentenceSealedAt, _sentenceSealedAt!.toIso8601String());
+  }
+
+  Future<void> loadSentence() async {
+    final prefs = await SharedPreferences.getInstance();
+    _sentence = prefs.getString(_prefSentence);
+    _sentencePathKey = prefs.getString(_prefSentencePath);
+    _sentenceSealedAt =
+        DateTime.tryParse(prefs.getString(_prefSentenceSealedAt) ?? '')
+            ?.toUtc();
   }
 
   void markWelcomeSeen() {
@@ -589,6 +665,28 @@ class OnboardingState extends ChangeNotifier {
       await prefs.remove('pinned_habit');
     }
 
+    notifyListeners();
+  }
+
+  /// The actions chosen on "Start small" (spec §6, screen 4): exactly these,
+  /// then any of the person's own. The path's starter actions count as spent,
+  /// so a later refresh draws from the focus areas like any other path.
+  Future<void> adoptChosenActions(List<String> chosen) async {
+    final previous = userHabits.toSet();
+    userHabits = [
+      ...chosen,
+      ..._customHabits.where((custom) => !chosen.contains(custom)),
+    ];
+    _recordAdopted(userHabits.where((h) => !previous.contains(h)));
+    _startersAppliedForPath = _selectedIntentionPath;
+    final pinnedCleared =
+        _pinnedHabit != null && !userHabits.contains(_pinnedHabit);
+    if (pinnedCleared) _pinnedHabit = null;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('user_habits', userHabits);
+    await _saveHabitAdoptions(prefs);
+    await prefs.setString(_startersAppliedForPathKey, _selectedIntentionPath);
+    if (pinnedCleared) await prefs.remove('pinned_habit');
     notifyListeners();
   }
 
@@ -704,6 +802,17 @@ class OnboardingState extends ChangeNotifier {
     }
 
     _startersAppliedForPath = prefs.getString(_startersAppliedForPathKey);
+    // Someone who finished onboarding before their path had starters of its
+    // own already has their actions. Without this, their first focus-area
+    // change would hand them the path's starters instead of the areas they
+    // just chose.
+    if (_startersAppliedForPath == null && _onboardingComplete) {
+      final path = prefs.getString('selected_intention_path');
+      if (path != null) {
+        _startersAppliedForPath = path;
+        await prefs.setString(_startersAppliedForPathKey, path);
+      }
+    }
 
     final savedHabits = prefs.getStringList('user_habits');
 
@@ -1216,6 +1325,7 @@ class OnboardingState extends ChangeNotifier {
     // passed on comes back, because the stored name matches nothing.
     await StaleNudgeDismissals.rename(oldTitle, newTitle);
     await PlanService.renameSubject(oldTitle, newTitle);
+    await ActionCues.rename(oldTitle, newTitle);
 
     // Move the moments too. Outside the id guard below on purpose: a rename
     // that only changes case or punctuation slugs to the same id, so the

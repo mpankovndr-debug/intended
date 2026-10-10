@@ -12,21 +12,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intended/features/onboarding/screens/intention_path_screen.dart';
-import 'package:intended/features/onboarding/screens/philosophy_screen.dart';
 import 'package:intended/features/profile/change_path_screen.dart';
 import 'package:intended/features/profile/faq_screen.dart';
 import 'package:intended/l10n/app_localizations.dart';
 import 'package:intended/main.dart' show HabitsScreen, IntendedApp;
 import 'package:intended/models/intention_path.dart';
 import 'package:intended/models/moment.dart';
-import 'package:intended/onboarding_v2/commitment_screen.dart';
-import 'package:intended/onboarding_v2/daily_reminder_screen.dart';
-import 'package:intended/onboarding_v2/focus_areas_screen.dart';
-import 'package:intended/onboarding_v2/habit_reveal_screen.dart';
 import 'package:intended/onboarding_v2/onboarding_state.dart';
-import 'package:intended/onboarding_v2/tell_us_about_you_screen.dart';
-import 'package:intended/onboarding_v2/theme_selection_screen.dart';
 import 'package:intended/onboarding_v2/welcome_v2_screen.dart';
 import 'package:intended/screens/insights_screen.dart';
 import 'package:intended/screens/onboarding_paywall_screen.dart';
@@ -624,31 +616,8 @@ void main() {
       await _tap(tester, find.text(l10n.onboardingAlreadyHaveAccount));
     },
   );
-  _render(
-    'onb_philosophy',
-    () => PhilosophyScreen(
-      onContinue: () {},
-      selectedAreas: const ['Health', 'Mood'],
-    ),
-  );
-  _render('onb_intention_path', () => const IntentionPathScreen());
-  _render('onb_tell_us', () => const TellUsAboutYouScreen());
-  _render('onb_focus_areas', () => const FocusAreasScreen());
-  // Two areas come chosen, which is the allowance: a third is refused, with
-  // a dialog.
-  _render(
-    'onb_focus_limit',
-    () => const FocusAreasScreen(),
-    then: (tester, l10n) async {
-      final third = find.text(localizeCategoryName('Relationships', l10n));
-      await tester.ensureVisible(third);
-      await _tap(tester, third);
-    },
-  );
-  _render('onb_theme', () => const ThemeSelectionScreen());
-  _render('onb_habit_reveal', () => const HabitRevealScreen());
-  _render('onb_commitment', () => const CommitmentScreen());
-  _render('onb_reminder', () => const DailyReminderScreen());
+  // The steps between these two are the new flow, which has its own renders
+  // in onboarding_render_test.dart.
   _render('onb_paywall', () => const OnboardingPaywallScreen());
 
   _render('insights', () => const InsightsScreen());

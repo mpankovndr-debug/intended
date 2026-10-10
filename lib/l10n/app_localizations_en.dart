@@ -93,6 +93,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingLetsGetStarted => 'Let\'s get started';
 
   @override
+  String get onboardingSkipForNow => 'Skip for now';
+
+  @override
   String get onboardingContinueWithoutName => 'Continue without a name';
 
   @override
@@ -1208,13 +1211,55 @@ class AppLocalizationsEn extends AppLocalizations {
       'New features added regularly. Your subscription supports independent development.\nBuilt by one person who cares about this as much as you do.';
 
   @override
-  String get onboardingPaywallTitle => 'Intended+ reads your months';
+  String get onboardingPaywallTitle => 'See what helps, and what to change.';
 
   @override
-  String get onboardingPaywallPrimaryCta => 'Start free trial';
+  String get onboardingPaywallFirstMoment =>
+      'Your first moment is already yours.';
 
   @override
-  String get onboardingPaywallSecondaryCta => 'Not now — keep the free version';
+  String onboardingPaywallReviewWhen(int weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: '$weeks weeks after each one',
+      one: 'a week after each one',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get onboardingPaywallReview => 'Whether your changes helped';
+
+  @override
+  String get onboardingPaywallPlanWhen => 'at the start of each month';
+
+  @override
+  String get onboardingPaywallPlan => 'A plan for the month ahead';
+
+  @override
+  String onboardingPaywallLetterWhen(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'after your first $count moments',
+      one: 'after your first moment',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get onboardingPaywallLetter => 'A letter about your month';
+
+  @override
+  String get onboardingPaywallBody =>
+      'The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.';
+
+  @override
+  String get onboardingPaywallPrimaryCta => 'Start my free trial';
+
+  @override
+  String get onboardingPaywallSecondaryCta => 'Not now, keep the free version';
 
   @override
   String onboardingPaywallDisclaimerNoTrial(String price, String perMonth) {
@@ -2053,6 +2098,244 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tellUsAboutPathSubtext =>
       'This shapes the next 30 days. Pick the one that fits today — your future self will thank you.';
+
+  @override
+  String get onboardingDirectionTitle => 'What would you like more of?';
+
+  @override
+  String get onboardingDirectionSubtitle =>
+      'Pick the closest one. You\'ll say it your own way next.';
+
+  @override
+  String get onboardingSentenceTitle => 'Say it your way';
+
+  @override
+  String get onboardingSentencePrefix => 'I want to';
+
+  @override
+  String get onboardingSentencePrivacy =>
+      'Only you see this. You can change it later.';
+
+  @override
+  String get onboardingSentenceHold => 'Hold to make it yours';
+
+  @override
+  String onboardingSentenceLimit(int max) {
+    return 'That\'s as long as it gets: $max characters.';
+  }
+
+  @override
+  String onboardingChapterUntil(String date) {
+    return 'Until $date.';
+  }
+
+  @override
+  String get onboardingChapterDecide => 'At the end, you decide what changed.';
+
+  @override
+  String get onboardingChapterOne => 'Chapter one';
+
+  @override
+  String get onboardingStartTitleThree => 'Start with three small things.';
+
+  @override
+  String get onboardingStartTitleTwo => 'Start with two small things.';
+
+  @override
+  String get onboardingStartSubtitle =>
+      'Each takes a minute or two. Pick the ones you\'d actually do.';
+
+  @override
+  String onboardingStartShortMonth(int days, String month) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'You have $days days until $month.',
+      one: 'You have 1 day until $month.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get onboardingStartFocusChange => 'change';
+
+  @override
+  String onboardingStartFocusLine(String path, String areas) {
+    return '$path focuses on $areas';
+  }
+
+  @override
+  String get onboardingStartCap => 'That\'s as many as Today holds.';
+
+  @override
+  String get onboardingCuesTitle => 'When will they happen?';
+
+  @override
+  String get onboardingCuesSubtitle =>
+      'Tie each one to something you already do.';
+
+  @override
+  String get onboardingCuesPrefix => 'After I';
+
+  @override
+  String get onboardingCuesOther => 'Other';
+
+  @override
+  String get onboardingCuesOtherHint => 'something you already do';
+
+  @override
+  String get cuePresetCoffee => 'pour my coffee';
+
+  @override
+  String get cuePresetTeeth => 'brush my teeth';
+
+  @override
+  String get cuePresetDinner => 'finish dinner';
+
+  @override
+  String get cuePresetBed => 'get into bed';
+
+  @override
+  String todayCueLine(String cue) {
+    return 'after I $cue';
+  }
+
+  @override
+  String get onboardingTryTitle => 'Every time you do one, a square appears.';
+
+  @override
+  String get onboardingTrySubtitle => 'Do one of them now, then tap it.';
+
+  @override
+  String get onboardingTryFirst => 'That\'s the first square of your chapter.';
+
+  @override
+  String get onboardingTryReturn =>
+      'Miss a few days and nothing is lost. When you come back, the app marks the return, not the gap.';
+
+  @override
+  String get onboardingTryLater => 'I\'ll do it later';
+
+  @override
+  String get chapterStageTry => 'Try a few';
+
+  @override
+  String get chapterStageKeep => 'Keep what stuck';
+
+  @override
+  String get chapterStageLighter => 'Make it effortless';
+
+  @override
+  String get pathGentleMorningsSentence => 'start my mornings slower';
+
+  @override
+  String get pathGentleMorningsIdea1 => 'wake up without rushing';
+
+  @override
+  String get pathGentleMorningsIdea2 => 'start the day with something for me';
+
+  @override
+  String get pathGentleMorningsIdea3 => 'have a calmer first hour';
+
+  @override
+  String get pathAnchorsForHardDaysSentence =>
+      'have something that steadies me on hard days';
+
+  @override
+  String get pathAnchorsForHardDaysIdea1 =>
+      'feel steadier when things get loud';
+
+  @override
+  String get pathAnchorsForHardDaysIdea2 =>
+      'have one thing I can always come back to';
+
+  @override
+  String get pathAnchorsForHardDaysIdea3 => 'be kinder to myself on bad days';
+
+  @override
+  String get pathQuietFocusSentence => 'get things done without burning out';
+
+  @override
+  String get pathQuietFocusIdea1 => 'do one thing at a time';
+
+  @override
+  String get pathQuietFocusIdea2 => 'end the day with energy left';
+
+  @override
+  String get pathQuietFocusIdea3 => 'stop working in a rush';
+
+  @override
+  String get pathWindingDownSentence => 'let the day go before I sleep';
+
+  @override
+  String get pathWindingDownIdea1 => 'slow down in the evenings';
+
+  @override
+  String get pathWindingDownIdea2 => 'stop scrolling in bed';
+
+  @override
+  String get pathWindingDownIdea3 => 'sleep a bit earlier';
+
+  @override
+  String get pathSofterNightsSentence => 'stop fighting my sleep';
+
+  @override
+  String get pathSofterNightsIdea1 => 'fall asleep more easily';
+
+  @override
+  String get pathSofterNightsIdea2 => 'have a calmer bedtime';
+
+  @override
+  String get pathSofterNightsIdea3 => 'wake up more rested';
+
+  @override
+  String get pathLookingUpSentence => 'spend less of my day on my phone';
+
+  @override
+  String get pathLookingUpIdea1 => 'notice more of what\'s around me';
+
+  @override
+  String get pathLookingUpIdea2 => 'pick up my phone less';
+
+  @override
+  String get pathLookingUpIdea3 => 'spend evenings off screens';
+
+  @override
+  String get pathCloserToPeopleSentence =>
+      'stay close to the people I care about';
+
+  @override
+  String get pathCloserToPeopleIdea1 => 'reach out more often';
+
+  @override
+  String get pathCloserToPeopleIdea2 => 'be more present with friends';
+
+  @override
+  String get pathCloserToPeopleIdea3 => 'call the people I miss';
+
+  @override
+  String get pathMovingALittleSentence => 'move my body more, gently';
+
+  @override
+  String get pathMovingALittleIdea1 => 'move a little more';
+
+  @override
+  String get pathMovingALittleIdea2 => 'take more short walks';
+
+  @override
+  String get pathMovingALittleIdea3 => 'feel less stiff';
+
+  @override
+  String get pathThroughAHardSeasonSentence => 'get through this season gently';
+
+  @override
+  String get pathThroughAHardSeasonIdea1 => 'get through this week';
+
+  @override
+  String get pathThroughAHardSeasonIdea2 => 'look after myself a little';
+
+  @override
+  String get pathThroughAHardSeasonIdea3 => 'be gentle with myself right now';
 
   @override
   String get tellUsAboutFocusHeadline => 'What feels important right now?';
@@ -2998,25 +3281,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insightsFilterHint => 'tap a colour = see just those';
 
   @override
-  String get onboardingPaywallStep1 =>
-      'Keep small intentions — each one lands as a square in your month';
-
-  @override
-  String get onboardingPaywallStep2 =>
-      'Read your month — the letter, your season, next month\'s plan';
-
-  @override
-  String get onboardingPaywallStep3 =>
-      'See what worked — measured honestly, four weeks on';
-
-  @override
   String focusAreasFromPath(String path) {
     return '$path starts with these two. Swap them if something else matters more.';
   }
 
   @override
   String get focusAreasLimitToast =>
-      'Two keeps the focus — set one down first.';
+      'Two areas keep the focus. Unselect one first.';
 
   @override
   String get insightsExampleSeason => 'Returning';
@@ -3030,7 +3301,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Move your reminder to 9 PM — that\'s where this month lived.';
 
   @override
-  String get onboardingPaywallLoop => '…and the next month begins';
+  String get onboardingPaywallLoop => 'Then the next month begins.';
 
   @override
   String letterQuestionStillFits(String path) {

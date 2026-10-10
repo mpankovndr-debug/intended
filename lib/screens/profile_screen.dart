@@ -11,6 +11,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../services/action_cues.dart';
+import '../services/chapter_service.dart';
 import '../services/plan_service.dart';
 import '../services/season_service.dart';
 import '../widgets/app_toast.dart';
@@ -27,6 +29,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../main.dart';
 import '../onboarding_v2/onboarding_state.dart';
+import '../utils/habit_l10n.dart';
 import '../services/analytics_service.dart';
 import '../onboarding_v2/welcome_v2_screen.dart';
 import '../state/user_state.dart';
@@ -48,7 +51,7 @@ import 'year_in_seasons_screen.dart';
 import '../widgets/app_icon_picker.dart';
 import '../widgets/boost_offer_sheet.dart';
 import '../widgets/focus_area_card.dart';
-import '../onboarding_v2/focus_areas_screen.dart';
+import '../models/focus_area.dart';
 import '../services/backup_service.dart';
 import '../services/coach_mark_service.dart';
 import 'apple_health_screen.dart';
@@ -900,8 +903,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   /// Everything the app knows, as one JSON file into the share sheet.
   ///
   /// Plain export, no lock-in: moments with their moods and notes, frozen
-  /// seasons, accepted plan changes, and the current setup. Local-first
-  /// privacy is only credible when the data has a door.
+  /// seasons, accepted plan changes, chapters, and the current setup.
+  /// Local-first privacy is only credible when the data has a door.
   Future<void> _exportData() async {
     final l10n = AppLocalizations.of(context);
     try {
@@ -909,6 +912,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final moments = await MomentsService.getAll();
       final seasons = await SeasonService.archive();
       final accepted = await PlanService.acceptedNudges();
+      final chapters = await ChapterService.all();
+      final cues = await ActionCues.read();
 
       final payload = const JsonEncoder.withIndent('  ').convert({
         'app': 'Intended',
@@ -920,6 +925,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'moments': [for (final m in moments) m.toJson()],
         'seasons': seasons.map((k, v) => MapEntry(k, v.toJson())),
         'acceptedPlanChanges': [for (final a in accepted) a.toJson()],
+        'chapters': [for (final c in chapters) c.toJson()],
+        'actionCues': ActionCues.toJson(cues),
       });
 
       final dir = await getTemporaryDirectory();
@@ -3220,17 +3227,14 @@ class _FocusAreaChangeScreenState extends State<_FocusAreaChangeScreen> {
                       child: SingleChildScrollView(
                         padding: const EdgeInsets.fromLTRB(28, 0, 28, 160),
                         child: Column(
-                          children: FocusAreasScreen.areas.map((area) {
+                          children: OnboardingState.focusAreaOptions.map((area) {
                             final selected = _selectedAreas.contains(area);
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 14),
                               child: FocusAreaCard(
-                                label: FocusAreasScreen.localizedAreaName(
-                                    l10n, area),
-                                subtitle:
-                                    FocusAreasScreen.localizedAreaSubtitle(
-                                        l10n, area),
-                                icon: FocusAreasScreen.areaIcons[area]!,
+                                label: localizeCategoryName(area, l10n),
+                                subtitle: FocusArea.subtitle(area, l10n),
+                                icon: FocusArea.icons[area]!,
                                 selected: selected,
                                 onTap: () => _toggleArea(area),
                               ),

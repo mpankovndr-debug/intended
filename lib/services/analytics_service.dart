@@ -21,7 +21,6 @@ class AnalyticsService {
     } catch (_) {}
   }
 
-
   /// The one number the paid tier lives or dies on: whether people take the
   /// mood tap or skip it. The letter's mood line, all of what-lifts-you and
   /// the plan's texture starve on skips — this event is how we find out
@@ -74,8 +73,10 @@ class AnalyticsService {
 
   // ── Screen Views ──────────────────────────────────────────────
 
-  static void logScreenView(String screenName) {
-    _analytics.logScreenView(screenName: screenName);
+  static Future<void> logScreenView(String screenName) async {
+    try {
+      await _analytics.logScreenView(screenName: screenName);
+    } catch (_) {}
   }
 
   // ── Onboarding Funnel ─────────────────────────────────────────
@@ -87,11 +88,19 @@ class AnalyticsService {
   /// [nameProvided] is only sent by the Welcome screen's `name_entry` step,
   /// so the funnel can split "typed a name" from "continued without one".
   /// Other steps leave it null and the parameter is simply absent.
-  static void logOnboardingStepCompleted(String stepName, {bool? nameProvided}) {
-    _analytics.logEvent(
-      name: 'onboarding_step_completed',
-      parameters: onboardingStepParams(stepName, nameProvided: nameProvided),
-    );
+  ///
+  /// Guarded like the rest: onboarding logs a step on every screen, and an
+  /// analytics failure must never be what stops someone mid-onboarding.
+  static Future<void> logOnboardingStepCompleted(
+    String stepName, {
+    bool? nameProvided,
+  }) async {
+    try {
+      await _analytics.logEvent(
+        name: 'onboarding_step_completed',
+        parameters: onboardingStepParams(stepName, nameProvided: nameProvided),
+      );
+    } catch (_) {}
   }
 
   /// Pure so it can be pinned by a test: `name_provided` is encoded as the
@@ -106,17 +115,21 @@ class AnalyticsService {
         if (nameProvided != null) 'name_provided': nameProvided.toString(),
       };
 
-  static void logOnboardingCompleted() {
-    _analytics.logEvent(name: 'onboarding_completed');
+  static Future<void> logOnboardingCompleted() async {
+    try {
+      await _analytics.logEvent(name: 'onboarding_completed');
+    } catch (_) {}
   }
 
   // ── Habit Events ──────────────────────────────────────────────
 
-  static void logHabitCompleted(String habitName) {
-    _analytics.logEvent(
-      name: 'habit_completed',
-      parameters: {'habit_name': habitName},
-    );
+  static Future<void> logHabitCompleted(String habitName) async {
+    try {
+      await _analytics.logEvent(
+        name: 'habit_completed',
+        parameters: {'habit_name': habitName},
+      );
+    } catch (_) {}
   }
 
   static void logCustomHabitCreated(String habitName) {
@@ -156,11 +169,13 @@ class AnalyticsService {
 
   // ── Paywall & Monetization ────────────────────────────────────
 
-  static void logPaywallShown(String source) {
-    _analytics.logEvent(
-      name: 'paywall_shown',
-      parameters: {'source': source},
-    );
+  static Future<void> logPaywallShown(String source) async {
+    try {
+      await _analytics.logEvent(
+        name: 'paywall_shown',
+        parameters: {'source': source},
+      );
+    } catch (_) {}
   }
 
   static void logPaywallDismissed(String source) {
@@ -315,11 +330,13 @@ class AnalyticsService {
 
   // ── Engagement ────────────────────────────────────────────────
 
-  static void logDailyReminderToggled(bool enabled) {
-    _analytics.logEvent(
-      name: 'daily_reminder_toggled',
-      parameters: {'enabled': enabled.toString()},
-    );
+  static Future<void> logDailyReminderToggled(bool enabled) async {
+    try {
+      await _analytics.logEvent(
+        name: 'daily_reminder_toggled',
+        parameters: {'enabled': enabled.toString()},
+      );
+    } catch (_) {}
   }
 
   static void logReminderTimeChanged() {

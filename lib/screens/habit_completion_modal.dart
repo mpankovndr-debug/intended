@@ -12,6 +12,7 @@ import '../theme/category_colors.dart';
 import '../theme/category_glyphs.dart';
 import '../utils/habit_l10n.dart';
 import '../utils/text_styles.dart';
+import '../widgets/moment_tile.dart';
 
 /// The completion sheet, in two steps (§5.2).
 ///
@@ -479,41 +480,11 @@ class _HabitCompletionModalState extends State<HabitCompletionModal>
   }
 
   Widget _tile(String? category, AppTheme theme, {required bool isNewest}) {
-    final color = CategoryColors.of(category, theme);
     final scale = isNewest ? _tileScale.value : 1.0;
     final glow = isNewest ? _glow.value : 0.0;
-    // The grid's own inner gradient, so the tile that lands here is literally
-    // the tile the month page shows.
-    final hsl = HSLColor.fromColor(color);
-    final lit =
-        hsl.withLightness((hsl.lightness + 0.07).clamp(0.0, 1.0)).toColor();
-    final shade =
-        hsl.withLightness((hsl.lightness - 0.05).clamp(0.0, 1.0)).toColor();
-
     return Transform.scale(
       scale: scale,
-      child: Container(
-        width: 26,
-        height: 26,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [lit, color, shade],
-            stops: const [0.0, 0.55, 1.0],
-          ),
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: glow > 0
-              ? [
-                  BoxShadow(
-                    color: color.withValues(alpha: 0.7 * glow),
-                    blurRadius: 16 * glow,
-                    spreadRadius: 3 * glow,
-                  ),
-                ]
-              : null,
-        ),
-      ),
+      child: MomentTile(color: CategoryColors.of(category, theme), glow: glow),
     );
   }
 }

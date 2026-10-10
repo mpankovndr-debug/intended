@@ -254,6 +254,12 @@ abstract class AppLocalizations {
   /// **'Let\'s get started'**
   String get onboardingLetsGetStarted;
 
+  /// No description provided for @onboardingSkipForNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get onboardingSkipForNow;
+
   /// No description provided for @onboardingContinueWithoutName.
   ///
   /// In en, this message translates to:
@@ -1998,19 +2004,67 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPaywallTitle.
   ///
   /// In en, this message translates to:
-  /// **'Intended+ reads your months'**
+  /// **'See what helps, and what to change.'**
   String get onboardingPaywallTitle;
+
+  /// No description provided for @onboardingPaywallFirstMoment.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first moment is already yours.'**
+  String get onboardingPaywallFirstMoment;
+
+  /// No description provided for @onboardingPaywallReviewWhen.
+  ///
+  /// In en, this message translates to:
+  /// **'{weeks, plural, =1{a week after each one} other{{weeks} weeks after each one}}'**
+  String onboardingPaywallReviewWhen(int weeks);
+
+  /// No description provided for @onboardingPaywallReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Whether your changes helped'**
+  String get onboardingPaywallReview;
+
+  /// No description provided for @onboardingPaywallPlanWhen.
+  ///
+  /// In en, this message translates to:
+  /// **'at the start of each month'**
+  String get onboardingPaywallPlanWhen;
+
+  /// No description provided for @onboardingPaywallPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'A plan for the month ahead'**
+  String get onboardingPaywallPlan;
+
+  /// No description provided for @onboardingPaywallLetterWhen.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{after your first moment} other{after your first {count} moments}}'**
+  String onboardingPaywallLetterWhen(int count);
+
+  /// No description provided for @onboardingPaywallLetter.
+  ///
+  /// In en, this message translates to:
+  /// **'A letter about your month'**
+  String get onboardingPaywallLetter;
+
+  /// No description provided for @onboardingPaywallBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The squares show what happened — Intended+ says what it means. A four-line letter about your month. A plan for the next one, built from what actually happened, with an honest answer to whether it worked. A quiet word before you drift, while the week can still change. Plus all ten themes, icons and widgets, yours from day one.'**
+  String get onboardingPaywallBody;
 
   /// No description provided for @onboardingPaywallPrimaryCta.
   ///
   /// In en, this message translates to:
-  /// **'Start free trial'**
+  /// **'Start my free trial'**
   String get onboardingPaywallPrimaryCta;
 
   /// No description provided for @onboardingPaywallSecondaryCta.
   ///
   /// In en, this message translates to:
-  /// **'Not now — keep the free version'**
+  /// **'Not now, keep the free version'**
   String get onboardingPaywallSecondaryCta;
 
   /// The onboarding disclaimer when the store reports no free trial on the yearly plan.
@@ -3591,6 +3645,432 @@ abstract class AppLocalizations {
   /// **'This shapes the next 30 days. Pick the one that fits today — your future self will thank you.'**
   String get tellUsAboutPathSubtext;
 
+  /// No description provided for @onboardingDirectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like more of?'**
+  String get onboardingDirectionTitle;
+
+  /// No description provided for @onboardingDirectionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the closest one. You\'ll say it your own way next.'**
+  String get onboardingDirectionSubtitle;
+
+  /// No description provided for @onboardingSentenceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Say it your way'**
+  String get onboardingSentenceTitle;
+
+  /// No description provided for @onboardingSentencePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'I want to'**
+  String get onboardingSentencePrefix;
+
+  /// No description provided for @onboardingSentencePrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Only you see this. You can change it later.'**
+  String get onboardingSentencePrivacy;
+
+  /// No description provided for @onboardingSentenceHold.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold to make it yours'**
+  String get onboardingSentenceHold;
+
+  /// No description provided for @onboardingSentenceLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s as long as it gets: {max} characters.'**
+  String onboardingSentenceLimit(int max);
+
+  /// No description provided for @onboardingChapterUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Until {date}.'**
+  String onboardingChapterUntil(String date);
+
+  /// No description provided for @onboardingChapterDecide.
+  ///
+  /// In en, this message translates to:
+  /// **'At the end, you decide what changed.'**
+  String get onboardingChapterDecide;
+
+  /// No description provided for @onboardingChapterOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapter one'**
+  String get onboardingChapterOne;
+
+  /// No description provided for @onboardingStartTitleThree.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with three small things.'**
+  String get onboardingStartTitleThree;
+
+  /// No description provided for @onboardingStartTitleTwo.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with two small things.'**
+  String get onboardingStartTitleTwo;
+
+  /// No description provided for @onboardingStartSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Each takes a minute or two. Pick the ones you\'d actually do.'**
+  String get onboardingStartSubtitle;
+
+  /// No description provided for @onboardingStartShortMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, one{You have 1 day until {month}.} other{You have {days} days until {month}.}}'**
+  String onboardingStartShortMonth(int days, String month);
+
+  /// No description provided for @onboardingStartFocusChange.
+  ///
+  /// In en, this message translates to:
+  /// **'change'**
+  String get onboardingStartFocusChange;
+
+  /// No description provided for @onboardingStartFocusLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{path} focuses on {areas}'**
+  String onboardingStartFocusLine(String path, String areas);
+
+  /// No description provided for @onboardingStartCap.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s as many as Today holds.'**
+  String get onboardingStartCap;
+
+  /// No description provided for @onboardingCuesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'When will they happen?'**
+  String get onboardingCuesTitle;
+
+  /// No description provided for @onboardingCuesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tie each one to something you already do.'**
+  String get onboardingCuesSubtitle;
+
+  /// No description provided for @onboardingCuesPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'After I'**
+  String get onboardingCuesPrefix;
+
+  /// No description provided for @onboardingCuesOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get onboardingCuesOther;
+
+  /// No description provided for @onboardingCuesOtherHint.
+  ///
+  /// In en, this message translates to:
+  /// **'something you already do'**
+  String get onboardingCuesOtherHint;
+
+  /// No description provided for @cuePresetCoffee.
+  ///
+  /// In en, this message translates to:
+  /// **'pour my coffee'**
+  String get cuePresetCoffee;
+
+  /// No description provided for @cuePresetTeeth.
+  ///
+  /// In en, this message translates to:
+  /// **'brush my teeth'**
+  String get cuePresetTeeth;
+
+  /// No description provided for @cuePresetDinner.
+  ///
+  /// In en, this message translates to:
+  /// **'finish dinner'**
+  String get cuePresetDinner;
+
+  /// No description provided for @cuePresetBed.
+  ///
+  /// In en, this message translates to:
+  /// **'get into bed'**
+  String get cuePresetBed;
+
+  /// No description provided for @todayCueLine.
+  ///
+  /// In en, this message translates to:
+  /// **'after I {cue}'**
+  String todayCueLine(String cue);
+
+  /// No description provided for @onboardingTryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Every time you do one, a square appears.'**
+  String get onboardingTryTitle;
+
+  /// No description provided for @onboardingTrySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Do one of them now, then tap it.'**
+  String get onboardingTrySubtitle;
+
+  /// No description provided for @onboardingTryFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s the first square of your chapter.'**
+  String get onboardingTryFirst;
+
+  /// No description provided for @onboardingTryReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'Miss a few days and nothing is lost. When you come back, the app marks the return, not the gap.'**
+  String get onboardingTryReturn;
+
+  /// No description provided for @onboardingTryLater.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll do it later'**
+  String get onboardingTryLater;
+
+  /// No description provided for @chapterStageTry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a few'**
+  String get chapterStageTry;
+
+  /// No description provided for @chapterStageKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep what stuck'**
+  String get chapterStageKeep;
+
+  /// No description provided for @chapterStageLighter.
+  ///
+  /// In en, this message translates to:
+  /// **'Make it effortless'**
+  String get chapterStageLighter;
+
+  /// No description provided for @pathGentleMorningsSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'start my mornings slower'**
+  String get pathGentleMorningsSentence;
+
+  /// No description provided for @pathGentleMorningsIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'wake up without rushing'**
+  String get pathGentleMorningsIdea1;
+
+  /// No description provided for @pathGentleMorningsIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'start the day with something for me'**
+  String get pathGentleMorningsIdea2;
+
+  /// No description provided for @pathGentleMorningsIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'have a calmer first hour'**
+  String get pathGentleMorningsIdea3;
+
+  /// No description provided for @pathAnchorsForHardDaysSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'have something that steadies me on hard days'**
+  String get pathAnchorsForHardDaysSentence;
+
+  /// No description provided for @pathAnchorsForHardDaysIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'feel steadier when things get loud'**
+  String get pathAnchorsForHardDaysIdea1;
+
+  /// No description provided for @pathAnchorsForHardDaysIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'have one thing I can always come back to'**
+  String get pathAnchorsForHardDaysIdea2;
+
+  /// No description provided for @pathAnchorsForHardDaysIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'be kinder to myself on bad days'**
+  String get pathAnchorsForHardDaysIdea3;
+
+  /// No description provided for @pathQuietFocusSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'get things done without burning out'**
+  String get pathQuietFocusSentence;
+
+  /// No description provided for @pathQuietFocusIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'do one thing at a time'**
+  String get pathQuietFocusIdea1;
+
+  /// No description provided for @pathQuietFocusIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'end the day with energy left'**
+  String get pathQuietFocusIdea2;
+
+  /// No description provided for @pathQuietFocusIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'stop working in a rush'**
+  String get pathQuietFocusIdea3;
+
+  /// No description provided for @pathWindingDownSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'let the day go before I sleep'**
+  String get pathWindingDownSentence;
+
+  /// No description provided for @pathWindingDownIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'slow down in the evenings'**
+  String get pathWindingDownIdea1;
+
+  /// No description provided for @pathWindingDownIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'stop scrolling in bed'**
+  String get pathWindingDownIdea2;
+
+  /// No description provided for @pathWindingDownIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'sleep a bit earlier'**
+  String get pathWindingDownIdea3;
+
+  /// No description provided for @pathSofterNightsSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'stop fighting my sleep'**
+  String get pathSofterNightsSentence;
+
+  /// No description provided for @pathSofterNightsIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'fall asleep more easily'**
+  String get pathSofterNightsIdea1;
+
+  /// No description provided for @pathSofterNightsIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'have a calmer bedtime'**
+  String get pathSofterNightsIdea2;
+
+  /// No description provided for @pathSofterNightsIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'wake up more rested'**
+  String get pathSofterNightsIdea3;
+
+  /// No description provided for @pathLookingUpSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'spend less of my day on my phone'**
+  String get pathLookingUpSentence;
+
+  /// No description provided for @pathLookingUpIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'notice more of what\'s around me'**
+  String get pathLookingUpIdea1;
+
+  /// No description provided for @pathLookingUpIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'pick up my phone less'**
+  String get pathLookingUpIdea2;
+
+  /// No description provided for @pathLookingUpIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'spend evenings off screens'**
+  String get pathLookingUpIdea3;
+
+  /// No description provided for @pathCloserToPeopleSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'stay close to the people I care about'**
+  String get pathCloserToPeopleSentence;
+
+  /// No description provided for @pathCloserToPeopleIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'reach out more often'**
+  String get pathCloserToPeopleIdea1;
+
+  /// No description provided for @pathCloserToPeopleIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'be more present with friends'**
+  String get pathCloserToPeopleIdea2;
+
+  /// No description provided for @pathCloserToPeopleIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'call the people I miss'**
+  String get pathCloserToPeopleIdea3;
+
+  /// No description provided for @pathMovingALittleSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'move my body more, gently'**
+  String get pathMovingALittleSentence;
+
+  /// No description provided for @pathMovingALittleIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'move a little more'**
+  String get pathMovingALittleIdea1;
+
+  /// No description provided for @pathMovingALittleIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'take more short walks'**
+  String get pathMovingALittleIdea2;
+
+  /// No description provided for @pathMovingALittleIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'feel less stiff'**
+  String get pathMovingALittleIdea3;
+
+  /// No description provided for @pathThroughAHardSeasonSentence.
+  ///
+  /// In en, this message translates to:
+  /// **'get through this season gently'**
+  String get pathThroughAHardSeasonSentence;
+
+  /// No description provided for @pathThroughAHardSeasonIdea1.
+  ///
+  /// In en, this message translates to:
+  /// **'get through this week'**
+  String get pathThroughAHardSeasonIdea1;
+
+  /// No description provided for @pathThroughAHardSeasonIdea2.
+  ///
+  /// In en, this message translates to:
+  /// **'look after myself a little'**
+  String get pathThroughAHardSeasonIdea2;
+
+  /// No description provided for @pathThroughAHardSeasonIdea3.
+  ///
+  /// In en, this message translates to:
+  /// **'be gentle with myself right now'**
+  String get pathThroughAHardSeasonIdea3;
+
   /// No description provided for @tellUsAboutFocusHeadline.
   ///
   /// In en, this message translates to:
@@ -5130,24 +5610,6 @@ abstract class AppLocalizations {
   /// **'tap a colour = see just those'**
   String get insightsFilterHint;
 
-  /// No description provided for @onboardingPaywallStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep small intentions — each one lands as a square in your month'**
-  String get onboardingPaywallStep1;
-
-  /// No description provided for @onboardingPaywallStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Read your month — the letter, your season, next month\'s plan'**
-  String get onboardingPaywallStep2;
-
-  /// No description provided for @onboardingPaywallStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'See what worked — measured honestly, four weeks on'**
-  String get onboardingPaywallStep3;
-
   /// No description provided for @focusAreasFromPath.
   ///
   /// In en, this message translates to:
@@ -5157,7 +5619,7 @@ abstract class AppLocalizations {
   /// No description provided for @focusAreasLimitToast.
   ///
   /// In en, this message translates to:
-  /// **'Two keeps the focus — set one down first.'**
+  /// **'Two areas keep the focus. Unselect one first.'**
   String get focusAreasLimitToast;
 
   /// No description provided for @insightsExampleSeason.
@@ -5181,7 +5643,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingPaywallLoop.
   ///
   /// In en, this message translates to:
-  /// **'…and the next month begins'**
+  /// **'Then the next month begins.'**
   String get onboardingPaywallLoop;
 
   /// No description provided for @letterQuestionStillFits.

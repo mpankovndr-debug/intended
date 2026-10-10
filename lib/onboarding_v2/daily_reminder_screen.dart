@@ -5,18 +5,26 @@ import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'habit_reveal_screen.dart';
 import 'onboarding_state.dart';
+import 'widgets/onboarding_scaffold.dart';
 import '../services/analytics_service.dart';
 import '../services/notification_scheduler.dart';
 import '../services/notification_preferences_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/theme_provider.dart';
 import '../utils/text_styles.dart';
-import '../widgets/onboarding_progress_bar.dart';
 
 class DailyReminderScreen extends StatefulWidget {
-  const DailyReminderScreen({super.key});
+  const DailyReminderScreen({
+    super.key,
+    required this.onContinue,
+    this.onBack,
+  });
+
+  /// Onboarding screen 6 (spec §6), asked only when no cue was set: what
+  /// comes next, and the way back to the cues.
+  final VoidCallback onContinue;
+  final VoidCallback? onBack;
 
   @override
   State<DailyReminderScreen> createState() => _DailyReminderScreenState();
@@ -68,339 +76,59 @@ class _DailyReminderScreenState extends State<DailyReminderScreen> {
 
     if (!mounted) return;
 
-    // Navigate to Habit Reveal screen
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const HabitRevealScreen(),
-        transitionDuration: const Duration(milliseconds: 350),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
-        },
-      ),
-    );
+    widget.onContinue();
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.watch<ThemeProvider>().colors;
     final l10n = AppLocalizations.of(context);
-    final size = MediaQuery.of(context).size;
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final state = context.watch<OnboardingState>();
+    final name = state.name;
+    final hint = TextStyle(
+      fontFamily: AppTextStyles.bodyFont(context),
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      color: colors.textTertiary,
+      height: 1.5,
+    );
 
-    return CupertinoPageScaffold(
-      resizeToAvoidBottomInset: false,
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Stack(
-          fit: StackFit.expand,
+    // The shared onboarding frame (6 Oct): the same painting, step bar,
+    // headline and button as every other screen before the paywall.
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: OnboardingScaffold(
+        place: OnboardingPlace.reminder,
+        onBack: widget.onBack,
+        title: l10n.reminderSubtitle,
+        subtitle: l10n.reminderDescription,
+        ctaLabel: name != null && name.isNotEmpty
+            ? l10n.reminderLetsGo(name)
+            : l10n.commonStart,
+        onCta: _handleContinue,
+        footer: OnboardingSkip(onPressed: _handleContinue),
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(
+              28, 40, 28, OnboardingScaffold.contentBottomPadding),
           children: [
-            // Base gradient background
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: const Alignment(0.18, -1.0),
-                  end: const Alignment(-0.18, 1.0),
-                  colors: [
-                    colors.onboardingBg1,
-                    colors.onboardingBg2,
-                    colors.onboardingBg3,
-                    colors.onboardingBg4,
-                  ],
-                  stops: const [0.0, 0.35, 0.7, 1.0],
-                ),
+            _buildToggleCard(state, colors, l10n),
+            if (!state.dailyReminderEnabled && !_permissionDenied)
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 6),
+                child: Text(l10n.reminderSwitchHint,
+                    textAlign: TextAlign.center, style: hint),
               ),
-            ),
-
-            // Background orbs
-            RepaintBoundary(
-              child: _buildBackgroundOrbs(size, colors),
-            ),
-
-            // Content
-            SafeArea(
-              bottom: false,
-              child: Stack(
-                children: [
-                  // Column with Header + Expanded ScrollView
-                  Column(
-                    children: [
-                      // Progress bar — final step in the conversation arc.
-                      // No back arrow: the previous screen was the one-way
-                      // commitment moment, and we don't want to let the user
-                      // un-commit by tapping back.
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
-                        child: OnboardingProgressBar(
-                          currentStep: 3,
-                          totalSteps: 3,
-                        ),
-                      ),
-
-                      // Main content
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 28),
-                          child: Consumer<OnboardingState>(
-                            builder: (context, state, _) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 32),
-                                  Text(
-                                    l10n.reminderSubtitle,
-                                    style: TextStyle(
-                                      fontFamily: AppTextStyles.displayFontFor(
-                                          Localizations.localeOf(context).toString()),
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.w600,
-                                      color: colors.textPrimary,
-                                      height: 1.3,
-                                      letterSpacing: -0.3,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    l10n.reminderDescription,
-                                    style: TextStyle(
-                                      fontFamily: AppTextStyles.bodyFont(context),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      color: colors.ctaSecondary,
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 60),
-
-                                  // Toggle card
-                                  _buildToggleCard(state, colors, l10n),
-
-                                  // Helper text directly under daily reminder card
-                                  if (!state.dailyReminderEnabled &&
-                                      !_permissionDenied)
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 10, bottom: 6),
-                                      child: Center(
-                                        child: Text(
-                                          l10n.reminderSwitchHint,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontFamily: AppTextStyles.bodyFont(
-                                                context),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                            color: colors.textTertiary,
-                                            height: 1.5,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-
-                                  // Permission denied text under daily reminder card
-                                  if (_permissionDenied)
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 10, bottom: 6),
-                                      child: Center(
-                                        child: Text(
-                                          l10n.reminderNoWorries,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontFamily: AppTextStyles.bodyFont(
-                                                context),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                            color: colors.textTertiary,
-                                            height: 1.5,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-
-                                  const SizedBox(height: 16),
-
-                                  // Weekly summary toggle
-                                  _buildWeeklySummaryCard(state, colors, l10n),
-
-                                  const SizedBox(height: 160),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Gradient overlay
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: bottomInset,
-                    height: 180,
-                    child: IgnorePointer(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              colors.onboardingBg4.withOpacity(0.0),
-                              colors.onboardingBg4.withOpacity(0.92),
-                              colors.onboardingBg4.withOpacity(0.98),
-                            ],
-                            stops: const [0.0, 0.5, 1.0],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Buttons
-                  Positioned(
-                    left: 28,
-                    right: 28,
-                    bottom: 34 + bottomInset,
-                    child: Consumer<OnboardingState>(
-                      builder: (context, state, _) {
-                        final userName = state.name;
-                        final hasName = userName != null && userName.isNotEmpty;
-                        return Column(
-                          children: [
-                            // Start button
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: colors.textPrimary.withOpacity(0.3),
-                                    blurRadius: 24,
-                                    offset: const Offset(0, 8),
-                                  ),
-                                ],
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(24),
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                          colors.ctaPrimary.withOpacity(0.92),
-                                          colors.ctaSecondary.withOpacity(0.88),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(24),
-                                    ),
-                                    child: CupertinoButton(
-                                      onPressed: _handleContinue,
-                                      padding:
-                                          const EdgeInsets.symmetric(vertical: 16),
-                                      child: Text(
-                                        hasName
-                                            ? l10n.reminderLetsGo(userName)
-                                            : l10n.commonStart,
-                                        style: TextStyle(
-                                          fontFamily: AppTextStyles.bodyFont(context),
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color(0xFFFFFFFF),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            // Skip button
-                            CupertinoButton(
-                              padding: const EdgeInsets.all(12),
-                              onPressed: _handleContinue,
-                              child: Text(
-                                l10n.commonSkip,
-                                style: TextStyle(
-                                  fontFamily: AppTextStyles.bodyFont(context),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: colors.textTertiary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ],
+            if (_permissionDenied)
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 6),
+                child: Text(l10n.reminderNoWorries,
+                    textAlign: TextAlign.center, style: hint),
               ),
-            ),
+            const SizedBox(height: 16),
+            _buildWeeklySummaryCard(state, colors, l10n),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildBackgroundOrbs(Size size, AppColorScheme colors) {
-    return Stack(
-      children: [
-        // Orb 1 - Top Left
-        Positioned(
-          top: size.height * 0.05,
-          left: size.width * -0.1,
-          child: ImageFiltered(
-            imageFilter: ImageFilter.blur(sigmaX: 65, sigmaY: 65),
-            child: Container(
-              width: 288,
-              height: 288,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  center: const Alignment(-0.35, -0.35),
-                  radius: 0.9,
-                  colors: [
-                    colors.surfaceLightest.withOpacity(0.65),
-                    colors.borderMedium.withOpacity(0.22),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-
-        // Orb 2 - Bottom Right
-        Positioned(
-          bottom: size.height * 0.15,
-          right: size.width * -0.08,
-          child: ImageFiltered(
-            imageFilter: ImageFilter.blur(sigmaX: 58, sigmaY: 58),
-            child: Container(
-              width: 240,
-              height: 240,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  center: const Alignment(-0.4, -0.4),
-                  radius: 0.9,
-                  colors: [
-                    colors.onboardingBg1.withOpacity(0.6),
-                    colors.onboardingBg4.withOpacity(0.2),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 

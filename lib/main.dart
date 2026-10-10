@@ -25,7 +25,7 @@ import 'theme/category_colors.dart';
 import 'models/intention_path.dart';
 import 'theme/theme_provider.dart';
 import 'onboarding_v2/onboarding_state.dart';
-import 'onboarding_v2/focus_areas_screen.dart';
+import 'models/focus_area.dart';
 import 'onboarding_v2/welcome_v2_screen.dart';
 import 'state/user_state.dart';
 import 'screens/paywall_screen.dart';
@@ -37,7 +37,7 @@ import 'screens/habit_completion_modal.dart';
 import 'models/moment.dart';
 import 'models/rescue.dart';
 import 'services/moments_service.dart';
-import 'services/milestone_service.dart';
+import 'services/completion_service.dart';
 import 'services/reflection_service.dart';
 import 'services/season_service.dart';
 import 'utils/profanity_filter.dart'; // Add this
@@ -62,6 +62,7 @@ import 'widgets/widget_mood_catchup.dart';
 import 'services/return_note_service.dart';
 import 'widgets/return_note_offer_card.dart';
 import 'widgets/stale_action_nudge.dart';
+import 'widgets/cue_line.dart';
 import 'widgets/upgrade_nudge_banner.dart';
 import 'screens/gratitude_page_screen.dart';
 import 'widgets/practices_card.dart';
@@ -2656,7 +2657,7 @@ class _CreateCustomHabitScreenState extends State<_CreateCustomHabitScreen> {
                                     AppColors.categoryColors[area] ??
                                         colors.accentMuted;
                                 final icon =
-                                    FocusAreasScreen.areaIcons[area];
+                                    FocusArea.icons[area];
                                 return GestureDetector(
                                   onTap: () {
                                     setState(
@@ -2951,16 +2952,8 @@ class _HabitCardState extends State<_HabitCard>
     // No confirmation step (§5.2) — the tap *is* the completion. Record it
     // first so the sheet only has to ask how it landed, and so a dismissed
     // sheet still leaves the moment safely stored.
-    await HabitTracker.markDone(widget.habitTitle);
-    AnalyticsService.logHabitCompleted(widget.habitTitle);
-
-    final category = ReflectionService.categoryForHabit(widget.habitTitle);
-    final moment = Moment.create(
-      habitName: widget.habitTitle,
-      category: category,
-    );
-    await MomentsService.record(moment);
-    MilestoneService.invalidate();
+    final moment = await CompletionService.record(widget.habitTitle);
+    final category = moment.category;
     if (mounted) context.read<BackupService>().backup();
 
     final monthCategories = await MomentsService.categoriesForMonth(
@@ -3013,9 +3006,6 @@ class _HabitCardState extends State<_HabitCard>
   /// who don't convert during onboarding mostly never return to a paywall — so
   /// this is still the same window, just the part of it with evidence in it.
   Future<void> _maybeShowFirstCompletionPaywall() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool(_firstCompletionPaywallKey) == true) return;
-
     // No moment-count guard (review finding #5): counting moments burned the
     // one-shot flag for anyone whose *first* completion came from the widget
     // or a yesterday-log — they'd tap in-app with total == 2 and never see
@@ -3024,10 +3014,13 @@ class _HabitCardState extends State<_HabitCard>
     // many moments arrived by other doors first.
     if (!mounted) return;
     // Nothing to pitch to someone who already subscribed — including a
-    // subscription restored from their Apple ID on first launch.
-    if (context.read<RevenueCatService>().isPremium) return;
-
-    await prefs.setBool(_firstCompletionPaywallKey, true);
+    // subscription restored from their Apple ID on first launch. The claim
+    // is shared with onboarding's first moment, so only one door shows it.
+    final isPremium = context.read<RevenueCatService>().isPremium;
+    if (!await OnboardingPaywallScreen.claimFirstCompletion(
+        isPremium: isPremium)) {
+      return;
+    }
     // A breath between the sheet closing and the pitch: the completed card —
     // wash, bar, tile — gets seen before anything is asked for. §8 wants the
     // paywall "with the moment card on screen", not instead of it.
@@ -3042,9 +3035,6 @@ class _HabitCardState extends State<_HabitCard>
       ),
     );
   }
-
-  static const String _firstCompletionPaywallKey =
-      'first_completion_paywall_shown';
 
   Future<void> _checkCompletionCoachMarks() async {
     // Wait for the completion animation to finish before overlaying coach mark.
@@ -3158,16 +3148,9 @@ class _HabitCardState extends State<_HabitCard>
     // not today. A Moment without its `habit_done_` key left anything
     // counting from one store disagreeing with anything counting from the
     // other, for the same habit.
-    await HabitTracker.markDone(widget.habitTitle, on: yesterday);
-
-    final category = ReflectionService.categoryForHabit(widget.habitTitle);
-    final moment = Moment.create(
-      habitName: widget.habitTitle,
-      category: category,
-      at: yesterday,
-    );
-    await MomentsService.record(moment);
-    MilestoneService.invalidate();
+    final moment =
+        await CompletionService.record(widget.habitTitle, on: yesterday);
+    final category = moment.category;
     if (!mounted) return;
     context.read<BackupService>().backup();
     HapticFeedback.lightImpact();
@@ -4889,16 +4872,32 @@ class _HabitCardState extends State<_HabitCard>
                               // "collected" this is meant to signal. The wash
                               // and outline on the card carry the state.
                               Expanded(
-                                child: Text(
-                                  localizeHabitName(widget.habitTitle, l10n),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: Responsive.sp(16),
-                                    fontWeight: FontWeight.w500,
-                                    color: colors.textPrimary,
-                                    fontFamily: AppTextStyles.bodyFont(context),
-                                  ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      localizeHabitName(widget.habitTitle, l10n),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: Responsive.sp(16),
+                                        fontWeight: FontWeight.w500,
+                                        color: colors.textPrimary,
+                                        fontFamily: AppTextStyles.bodyFont(context),
+                                      ),
+                                    ),
+                                    // What it follows, if the person tied it
+                                    // to something (§4). Lives in its own file.
+                                    CueLine(
+                                      action: widget.habitTitle,
+                                      style: TextStyle(
+                                        fontSize: Responsive.sp(13),
+                                        color: colors.textSecondary,
+                                        fontFamily: AppTextStyles.bodyFont(context),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               if (_isDoneToday) ...[
