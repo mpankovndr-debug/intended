@@ -27,8 +27,8 @@ class MomentGrid extends StatelessWidget {
     super.key,
     required this.moments,
     required this.theme,
-    this.tileSize = 30,
-    this.spacing = 8,
+    this.tileSize = defaultTileSize,
+    this.spacing = defaultSpacing,
     this.showGhost = true,
     this.lightenReturns = false,
     this.highlightCategory,
@@ -59,6 +59,25 @@ class MomentGrid extends StatelessWidget {
 
   /// Makes tiles tappable. Called with the index into [moments].
   final void Function(int index)? onTileTap;
+
+  /// Named so that what stands in for the grid before it has anything in it
+  /// — the day-one primer — is cut to the same tile and the same gap.
+  static const double defaultTileSize = 30;
+  static const double defaultSpacing = 8;
+
+  /// How many tiles one row holds in [width], and never more than [atMost]:
+  /// the sum `Wrap` does, as a pure function so it can be tested without
+  /// laying anything out. A width with no bound holds [atMost].
+  static int tilesPerRow(
+    double width, {
+    required int atMost,
+    double tileSize = defaultTileSize,
+    double spacing = defaultSpacing,
+  }) {
+    if (!width.isFinite) return atMost;
+    final fit = ((width + spacing) / (tileSize + spacing)).floor();
+    return fit.clamp(0, atMost);
+  }
 
   @override
   Widget build(BuildContext context) {

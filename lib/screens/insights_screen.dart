@@ -993,24 +993,34 @@ class _InsightsScreenState extends State<InsightsScreen> {
   }
 
   Widget _emptyPrimer(AppColorScheme colors) {
-    return Row(
-      children: List.generate(
-        8,
-        (i) => Padding(
-          padding: EdgeInsets.only(right: i == 7 ? 0 : 8),
-          child: Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(9),
-              border: Border.all(
-                color: colors.textSecondary.withValues(alpha: 0.30),
-                width: 1.2,
+    // One row of the grid's own tiles, and no more of them than a row of the
+    // grid holds: eight on most phones, seven on a 375pt one, where a fixed
+    // eight ran 11pt past the card.
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final count = MomentGrid.tilesPerRow(constraints.maxWidth, atMost: 8);
+        return Row(
+          children: List.generate(
+            count,
+            (i) => Padding(
+              padding: EdgeInsets.only(
+                right: i == count - 1 ? 0 : MomentGrid.defaultSpacing,
+              ),
+              child: Container(
+                width: MomentGrid.defaultTileSize,
+                height: MomentGrid.defaultTileSize,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(9),
+                  border: Border.all(
+                    color: colors.textSecondary.withValues(alpha: 0.30),
+                    width: 1.2,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
