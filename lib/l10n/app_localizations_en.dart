@@ -2976,7 +2976,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chapterStageKeep => 'Keep what stuck';
 
   @override
-  String get chapterStageLighter => 'Make it lighter';
+  String get chapterStageLighter => 'Make it effortless';
 
   @override
   String get pathGentleMorningsSentence => 'start my mornings slower';

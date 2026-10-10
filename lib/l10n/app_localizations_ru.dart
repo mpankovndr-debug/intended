@@ -3056,7 +3056,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chapterStageKeep => 'Оставь то, что подошло';
 
   @override
-  String get chapterStageLighter => 'Упрости';
+  String get chapterStageLighter => 'Встрой в рутину';
 
   @override
   String get pathGentleMorningsSentence => 'начинать утро спокойнее';

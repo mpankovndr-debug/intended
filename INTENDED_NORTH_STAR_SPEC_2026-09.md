@@ -67,7 +67,9 @@ Prefill per path (EN; RU written at build time, «ты», native read):
 - A chapter is **three months**, ending on the last day of a month (a landmark: Dai, Milkman & Riis 2014).
 - **Start rule.** If at least 14 days are left in the month you start in, that month is month 1.
   If fewer, those days fold into month 1, and month 1 is the next calendar month.
-- **Stages are the months:** month 1 *Try a few*, month 2 *Keep what stuck*, month 3 *Make it lighter*.
+- **Stages are the months:** month 1 *Try a few*, month 2 *Keep what stuck*, month 3 *Make it effortless*
+  (renamed 10 Oct from *Make it lighter*, which read as unclear; RU «Попробуй разное / Оставь то, что
+  подошло / Встрой в рутину»): shrink what you kept to the smallest version that still helps.
   The monthly plan proposes the next stage from evidence; the person accepts with a button (paid).
   An empty month offers the first step again. There is no "behind".
 - **The end is a date, shown as a date**, never a countdown. The person can also end it early.

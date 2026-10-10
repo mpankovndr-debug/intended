@@ -4992,7 +4992,7 @@ abstract class AppLocalizations {
   /// No description provided for @chapterStageLighter.
   ///
   /// In en, this message translates to:
-  /// **'Make it lighter'**
+  /// **'Make it effortless'**
   String get chapterStageLighter;
 
   /// No description provided for @pathGentleMorningsSentence.

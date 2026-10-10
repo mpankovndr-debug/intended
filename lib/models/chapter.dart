@@ -63,7 +63,7 @@ class ChapterClose {
 
 /// About three months under one sentence in the person's own words
 /// (spec §2). Stages are the months: *Try a few*, *Keep what stuck*,
-/// *Make it lighter*. A chapter ends on a date, or when the person says so —
+/// *Make it effortless*. A chapter ends on a date, or when the person says so —
 /// never because the app decides it is done.
 ///
 /// Moments are not tagged with a chapter. A chapter is a range of the
@@ -188,7 +188,7 @@ class Chapter {
   }
 
   /// The name of stage [stage] (1 to 3): *Try a few*, *Keep what stuck*,
-  /// *Make it lighter*.
+  /// *Make it effortless*.
   static String stageName(int stage, AppLocalizations l10n) => switch (stage) {
         1 => l10n.chapterStageTry,
         2 => l10n.chapterStageKeep,
